@@ -9,28 +9,31 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <!-- Skip to main content link for keyboard users -->
+    <a href="#home" class="skip-to-content">Skip to main content</a>
+    
     <!-- Navigation -->
-    <nav class="navbar">
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
         <div class="nav-container">
             <div class="nav-logo">
                 <i class="fas fa-utensils"></i>
                 <span>ShareBite</span>
             </div>
-            <ul class="nav-menu">
-                <li><a href="#home" class="nav-link">Home</a></li>
-                <li><a href="#features" class="nav-link">Features</a></li>
-                <li><a href="#listings" class="nav-link">Listings</a></li>
-                <li><a href="#about" class="nav-link">About</a></li>
-                <li><a href="#contact" class="nav-link">Contact</a></li>
+            <ul class="nav-menu" role="menubar">
+                <li role="none"><a href="#home" class="nav-link" role="menuitem">Home</a></li>
+                <li role="none"><a href="#features" class="nav-link" role="menuitem">Features</a></li>
+                <li role="none"><a href="#listings" class="nav-link" role="menuitem">Listings</a></li>
+                <li role="none"><a href="#about" class="nav-link" role="menuitem">About</a></li>
+                <li role="none"><a href="#contact" class="nav-link" role="menuitem">Contact</a></li>
             </ul>
             <div class="user-actions">
-                <button class="role-switch" id="roleSwitch">
-                    <i class="fas fa-exchange-alt"></i>
+                <button class="role-switch" id="roleSwitch" aria-label="Switch between donor and collector roles">
+                    <i class="fas fa-exchange-alt" aria-hidden="true"></i>
                     <span id="currentRole">Donor</span>
                 </button>
-                <button class="login-btn">Login</button>
+                <button class="login-btn" aria-label="Login to your account">Login</button>
             </div>
-            <div class="hamburger">
+            <div class="hamburger" role="button" aria-label="Toggle mobile menu" aria-expanded="false" tabindex="0">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -39,7 +42,7 @@
     </nav>
 
     <!-- Hero Section -->
-    <section id="home" class="hero">
+    <section id="home" class="hero" role="banner">
         <div class="hero-container">
             <div class="hero-content">
                 <h1 class="hero-title">
@@ -50,12 +53,12 @@
                     Connect restaurants and households with NGOs and volunteers to redistribute fresh leftover food and fight hunger while reducing waste.
                 </p>
                 <div class="hero-buttons">
-                    <button class="btn btn-primary" id="donateFood">
-                        <i class="fas fa-heart"></i>
+                    <button class="btn btn-primary" id="donateFood" aria-label="Donate food to those in need">
+                        <i class="fas fa-heart" aria-hidden="true"></i>
                         Donate Food
                     </button>
-                    <button class="btn btn-secondary" id="findFood">
-                        <i class="fas fa-search"></i>
+                    <button class="btn btn-secondary" id="findFood" aria-label="Find available food donations">
+                        <i class="fas fa-search" aria-hidden="true"></i>
                         Find Food
                     </button>
                 </div>
@@ -110,7 +113,7 @@
                 <h2 class="section-title">How ShareBite Works</h2>
                 <p class="section-subtitle">Simple steps to make a difference</p>
             </div>
-            <div class="features-grid">
+            <div class="features-grid" role="list">
                 <div class="feature-card" data-aos="fade-up">
                     <div class="feature-icon donor-icon">
                         <i class="fas fa-store"></i>
@@ -149,49 +152,49 @@
             
             <!-- Filter Bar -->
             <div class="filter-bar">
-                <div class="filter-group">
-                    <button class="filter-btn active" data-filter="all">All</button>
-                    <button class="filter-btn" data-filter="restaurant">Restaurant</button>
-                    <button class="filter-btn" data-filter="household">Household</button>
-                    <button class="filter-btn" data-filter="bakery">Bakery</button>
+                <div class="filter-group" role="group" aria-label="Filter food listings by category">
+                    <button class="filter-btn active" data-filter="all" aria-pressed="true">All</button>
+                    <button class="filter-btn" data-filter="restaurant" aria-pressed="false">Restaurant</button>
+                    <button class="filter-btn" data-filter="household" aria-pressed="false">Household</button>
+                    <button class="filter-btn" data-filter="bakery" aria-pressed="false">Bakery</button>
                 </div>
                 <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search by location or food type...">
+                    <i class="fas fa-search" aria-hidden="true"></i>
+                    <input type="text" placeholder="Search by location or food type..." aria-label="Search food listings by location or type">
                 </div>
-                <button class="add-listing-btn" id="addListingBtn">
-                    <i class="fas fa-plus"></i>
+                <button class="add-listing-btn" id="addListingBtn" aria-label="Add new food listing">
+                    <i class="fas fa-plus" aria-hidden="true"></i>
                     Add Listing
                 </button>
             </div>
 
             <!-- Food Cards Grid -->
-            <div class="food-grid" id="foodGrid">
+            <div class="food-grid" id="foodGrid" role="list" aria-label="Available food listings">
                 <!-- Sample listings will be generated by JavaScript -->
             </div>
         </div>
     </section>
 
     <!-- Add Listing Modal -->
-    <div class="modal" id="addListingModal">
+    <div class="modal" id="addListingModal" role="dialog" aria-labelledby="modalTitle" aria-modal="true">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Add Food Listing</h3>
-                <button class="close-modal">&times;</button>
+                <h3 id="modalTitle">Add Food Listing</h3>
+                <button class="close-modal" aria-label="Close modal">&times;</button>
             </div>
             <form class="listing-form" id="listingForm">
                 <div class="form-group">
                     <label for="foodType">Food Type</label>
-                    <input type="text" id="foodType" required placeholder="e.g., Pizza, Sandwiches, Fruits">
+                    <input type="text" id="foodType" required placeholder="e.g., Pizza, Sandwiches, Fruits" aria-required="true">
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label for="quantity">Quantity</label>
-                        <input type="text" id="quantity" required placeholder="e.g., 10 portions">
+                        <input type="text" id="quantity" required placeholder="e.g., 10 portions" aria-required="true">
                     </div>
                     <div class="form-group">
                         <label for="category">Category</label>
-                        <select id="category" required>
+                        <select id="category" required aria-required="true">
                             <option value="">Select Category</option>
                             <option value="restaurant">Restaurant</option>
                             <option value="household">Household</option>
@@ -202,38 +205,38 @@
                 </div>
                 <div class="form-group">
                     <label for="description">Description</label>
-                    <textarea id="description" rows="3" placeholder="Additional details about the food..."></textarea>
+                    <textarea id="description" rows="3" placeholder="Additional details about the food..." aria-label="Additional description of the food"></textarea>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label for="freshUntil">Fresh Until</label>
-                        <input type="datetime-local" id="freshUntil" required>
+                        <input type="datetime-local" id="freshUntil" required aria-required="true">
                     </div>
                     <div class="form-group">
                         <label for="pickupTime">Preferred Pickup Time</label>
-                        <input type="time" id="pickupTime" required>
+                        <input type="time" id="pickupTime" required aria-required="true">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="location">Pickup Location</label>
-                    <input type="text" id="location" required placeholder="Address or landmark">
+                    <input type="text" id="location" required placeholder="Address or landmark" aria-required="true">
                 </div>
                 <div class="form-group">
                     <label for="contact">Contact Information</label>
-                    <input type="text" id="contact" required placeholder="Phone number or email">
+                    <input type="text" id="contact" required placeholder="Phone number or email" aria-required="true">
                 </div>
                 <div class="form-group">
                     <label for="photo">Food Photo (Optional)</label>
-                    <input type="file" id="photo" accept="image/*">
+                    <input type="file" id="photo" accept="image/*" aria-label="Upload food photo (optional)">
                     <div class="file-upload-area" id="photoUpload">
-                        <i class="fas fa-cloud-upload-alt"></i>
+                        <i class="fas fa-cloud-upload-alt" aria-hidden="true"></i>
                         <span>Click to upload or drag and drop</span>
                     </div>
                 </div>
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" id="cancelForm">Cancel</button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-plus"></i>
+                    <button type="button" class="btn btn-secondary" id="cancelForm" aria-label="Cancel and close form">Cancel</button>
+                    <button type="submit" class="btn btn-primary" aria-label="Submit food listing">
+                        <i class="fas fa-plus" aria-hidden="true"></i>
                         Add Listing
                     </button>
                 </div>
@@ -285,20 +288,20 @@
     </section>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer class="footer" role="contentinfo">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
                     <div class="footer-logo">
-                        <i class="fas fa-utensils"></i>
+                        <i class="fas fa-utensils" aria-hidden="true"></i>
                         <span>ShareBite</span>
                     </div>
                     <p>Making a difference, one meal at a time. Join us in the fight against food waste and hunger.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <div class="social-links" role="navigation" aria-label="Social media links">
+                        <a href="#" aria-label="Visit our Facebook page"><i class="fab fa-facebook" aria-hidden="true"></i></a>
+                        <a href="#" aria-label="Visit our Twitter profile"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+                        <a href="#" aria-label="Visit our Instagram profile"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+                        <a href="#" aria-label="Visit our LinkedIn page"><i class="fab fa-linkedin" aria-hidden="true"></i></a>
                     </div>
                 </div>
                 <div class="footer-section">
@@ -336,7 +339,7 @@
     </footer>
 
     <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-overlay" id="loadingOverlay" role="status" aria-live="polite">
         <div class="loading-spinner">
             <div class="spinner"></div>
             <p>Loading ShareBite...</p>

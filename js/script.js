@@ -313,10 +313,14 @@ class ShareBite {
         
         filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                // Remove active class from all buttons
-                filterBtns.forEach(b => b.classList.remove('active'));
-                // Add active class to clicked button
+                // Remove active class from all buttons and update aria-pressed
+                filterBtns.forEach(b => {
+                    b.classList.remove('active');
+                    b.setAttribute('aria-pressed', 'false');
+                });
+                // Add active class to clicked button and update aria-pressed
                 btn.classList.add('active');
+                btn.setAttribute('aria-pressed', 'true');
                 
                 // Set current filter
                 this.currentFilter = btn.getAttribute('data-filter');
@@ -362,9 +366,33 @@ class ShareBite {
         const hamburger = document.querySelector('.hamburger');
         const navMenu = document.querySelector('.nav-menu');
         
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
+        const toggleMenu = () => {
+            const isActive = hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
+            
+            // Update ARIA attributes for accessibility
+            hamburger.setAttribute('aria-expanded', isActive);
+        };
+        
+        // Click event
+        hamburger.addEventListener('click', toggleMenu);
+        
+        // Keyboard event for accessibility (Enter and Space keys)
+        hamburger.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleMenu();
+            }
+        });
+        
+        // Close menu when clicking nav links
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+                hamburger.setAttribute('aria-expanded', 'false');
+            });
         });
     }
 
@@ -587,36 +615,36 @@ class ShareBite {
         const pickupTime = this.formatTime(listing.pickupTime);
         
         return `
-            <div class="food-card" data-id="${listing.id}">
+            <div class="food-card" data-id="${listing.id}" role="listitem">
                 <div class="food-image">
-                    ${listing.photo ? `<img src="${URL.createObjectURL(listing.photo)}" alt="${listing.foodType}">` : `<i class="fas fa-${this.getFoodIcon(listing.category)}"></i>`}
+                    ${listing.photo ? `<img src="${URL.createObjectURL(listing.photo)}" alt="${listing.foodType}">` : `<i class="fas fa-${this.getFoodIcon(listing.category)}" aria-hidden="true"></i>`}
                     <div class="food-category">${this.capitalizeFirst(listing.category)}</div>
                 </div>
                 <div class="food-details">
                     <h3 class="food-title">${listing.foodType}</h3>
                     <p class="food-description">${listing.description}</p>
                     <div class="food-meta">
-                        <span class="quantity"><i class="fas fa-utensils"></i> ${listing.quantity}</span>
-                        <span class="freshness"><i class="fas fa-clock"></i> ${freshUntil}</span>
+                        <span class="quantity"><i class="fas fa-utensils" aria-hidden="true"></i> ${listing.quantity}</span>
+                        <span class="freshness"><i class="fas fa-clock" aria-hidden="true"></i> ${freshUntil}</span>
                     </div>
                     <div class="food-location">
-                        <i class="fas fa-map-marker-alt"></i>
+                        <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
                         <span>${listing.location}</span>
                     </div>
                     <div class="food-meta" style="margin-bottom: 1rem;">
                         <span style="color: var(--medium-gray); font-size: 0.9rem;">
-                            <i class="fas fa-user"></i> ${listing.donor}
+                            <i class="fas fa-user" aria-hidden="true"></i> ${listing.donor}
                         </span>
                         <span style="color: var(--medium-gray); font-size: 0.9rem;">
-                            <i class="fas fa-clock"></i> ${timeAgo}
+                            <i class="fas fa-clock" aria-hidden="true"></i> ${timeAgo}
                         </span>
                     </div>
                     <div class="food-actions">
-                        <button class="claim-btn" data-id="${listing.id}">
-                            <i class="fas fa-hand-paper"></i> Claim Food
+                        <button class="claim-btn" data-id="${listing.id}" aria-label="Claim ${listing.foodType} from ${listing.location}">
+                            <i class="fas fa-hand-paper" aria-hidden="true"></i> Claim Food
                         </button>
-                        <button class="contact-btn" data-contact="${listing.contact}">
-                            <i class="fas fa-phone"></i>
+                        <button class="contact-btn" data-contact="${listing.contact}" aria-label="Contact donor at ${listing.contact}">
+                            <i class="fas fa-phone" aria-hidden="true"></i>
                         </button>
                     </div>
                 </div>

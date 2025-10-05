@@ -65,6 +65,52 @@ body {
     padding: var(--container-padding);
 }
 
+/* Skip to Content Link for Accessibility */
+.skip-to-content {
+    position: absolute;
+    top: -100px;
+    left: 0;
+    background: var(--primary-color);
+    color: var(--white);
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 0 0 var(--border-radius) 0;
+    z-index: 10000;
+    transition: var(--transition-medium);
+}
+
+.skip-to-content:focus {
+    top: 0;
+    outline: 3px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+/* Enhanced Focus Indicators for Accessibility */
+a:focus,
+button:focus,
+input:focus,
+textarea:focus,
+select:focus,
+.nav-link:focus,
+.filter-btn:focus {
+    outline: 3px solid var(--accent-color);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(255, 193, 7, 0.2);
+}
+
+.hamburger:focus {
+    outline: 3px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+/* Ensure visible focus on all interactive elements */
+*:focus-visible {
+    outline: 3px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+
 /* Navigation */
 .navbar {
     position: fixed;
