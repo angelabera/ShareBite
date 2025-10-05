@@ -8,6 +8,7 @@ class ShareBite {
         this.currentFilter = 'all';
         
         this.init();
+        this.initTheme(); // add theme initialization after base init
     }
 
     init() {
@@ -16,6 +17,37 @@ class ShareBite {
         this.renderFoodListings();
         this.startAnimations();
         this.hideLoadingOverlay();
+    }
+
+    initTheme() {
+        const stored = localStorage.getItem('sharebite-theme');
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = stored || (prefersDark ? 'dark' : 'light');
+        this.applyTheme(theme);
+        this.setupThemeToggle();
+    }
+
+    setupThemeToggle() {
+        const btn = document.getElementById('themeToggle');
+        if (!btn) return;
+        btn.addEventListener('click', () => {
+            const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+            this.applyTheme(newTheme);
+            localStorage.setItem('sharebite-theme', newTheme);
+        });
+    }
+
+    applyTheme(theme) {
+        const root = document.documentElement;
+        if (theme === 'dark') {
+            root.classList.add('dark');
+            const icon = document.querySelector('#themeToggle i');
+            if (icon) { icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); }
+        } else {
+            root.classList.remove('dark');
+            const icon = document.querySelector('#themeToggle i');
+            if (icon) { icon.classList.remove('fa-sun'); icon.classList.add('fa-moon'); }
+        }
     }
 
     setupEventListeners() {
@@ -893,3 +925,16 @@ if ('serviceWorker' in navigator) {
 
 // Export for potential testing or external use
 window.ShareBite = ShareBite;
+
+// Clear caches and trigger SW skipWaiting for debugging updates
+window.clearShareBiteCaches = async function() {
+    if ('caches' in window) {
+        const keys = await caches.keys();
+        await Promise.all(keys.map(k => caches.delete(k)));
+        console.log('[ShareBite] All caches cleared');
+    }
+    if (navigator.serviceWorker?.controller) {
+        navigator.serviceWorker.controller.postMessage('SKIP_WAITING');
+        console.log('[ShareBite] Sent SKIP_WAITING to service worker');
+    }
+};
