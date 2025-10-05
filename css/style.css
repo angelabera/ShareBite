@@ -1356,3 +1356,108 @@ html, body, .feature-card, .food-card, .navbar, .modal-content, .footer, .stats-
 .slide-in-up {
     animation: slideInUp 0.5s ease;
 }
+
+/* Info Modal Styling */
+.modal-body {
+    padding: 2rem;
+    color: #1a1a1a;
+    line-height: 1.8;
+}
+
+.modal-body h3 {
+    font-size: 1.5rem;
+    color: var(--primary-dark);
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 700;
+}
+
+.modal-body p {
+    margin-bottom: 1rem;
+    color: #2c2c2c;
+    text-align: left;
+    font-weight: 500;
+}
+
+.modal-body p strong {
+    color: var(--primary-dark);
+    font-weight: 700;
+    font-size: 1.15rem;
+    display: block;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.modal-body ul {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 1.5rem;
+}
+
+.modal-body ul li {
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    background: var(--light-gray);
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--primary-color);
+    transition: var(--transition-fast);
+    color: #1a1a1a;
+    font-weight: 500;
+}
+
+.modal-body ul li:hover {
+    background: #e8f5e9;
+    transform: translateX(5px);
+    box-shadow: var(--shadow-light);
+}
+
+.modal-body ul li strong {
+    color: var(--primary-dark);
+    font-size: 1rem;
+    display: inline;
+    margin: 0;
+    font-weight: 700;
+}
+
+.modal-body em {
+    display: block;
+    text-align: center;
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: var(--primary-gradient);
+    color: white;
+    border-radius: var(--border-radius);
+    font-style: normal;
+    font-weight: 500;
+}
+
+/* Dark mode support for info modal */
+:root.dark .modal-body {
+    color: #f5f5f5;
+}
+
+:root.dark .modal-body h3 {
+    color: var(--primary-light);
+}
+
+:root.dark .modal-body p {
+    color: #e0e0e0;
+}
+
+:root.dark .modal-body p strong {
+    color: var(--primary-light);
+}
+
+:root.dark .modal-body ul li {
+    background: rgba(255, 255, 255, 0.08);
+    border-left-color: var(--primary-light);
+    color: #f0f0f0;
+}
+
+:root.dark .modal-body ul li:hover {
+    background: rgba(76, 175, 80, 0.15);
+}
+
+:root.dark .modal-body ul li strong {
+    color: #a5d6a7;
+}
