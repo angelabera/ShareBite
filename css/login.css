@@ -1,0 +1,118 @@
+/* Theme Variables */
+:root {
+    --primary-color: #ffc107; /* golden yellow accent */
+    --bg-gradient: linear-gradient(135deg, #0a0f29 0%, #13294b 50%, #0a0f29 100%);
+    --card-bg: rgba(20, 27, 45, 0.9); /* semi-transparent dark card */
+    --text-color: #f5f5f5;
+    --border-radius: 12px;
+    --transition-speed: 0.3s;
+}
+
+/* Body Styling */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg-gradient);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    backdrop-filter: blur(4px);
+}
+
+/* Login Container */
+.login-container {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+.login-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6);
+}
+
+/* Logo */
+.login-logo {
+    width: 70px;
+    margin-bottom: 1rem;
+}
+
+/* Heading */
+h2 {
+    margin-bottom: 1.2rem;
+    color: var(--primary-color);
+}
+
+/* Form Group */
+.form-group {
+    margin-bottom: 1.2rem;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
+    color: #ccc;
+}
+
+.form-group input[type="email"],
+.form-group input[type="password"] {
+    width: 100%;
+    padding: 0.7rem;
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.08);
+    color: var(--text-color);
+    box-sizing: border-box;
+    transition: border var(--transition-speed), background var(--transition-speed);
+}
+
+.form-group input:focus {
+    border: 1px solid var(--primary-color);
+    background-color: rgba(255, 255, 255, 0.15);
+    outline: none;
+}
+
+/* Login Button */
+button.btn-primary {
+    width: 100%;
+    padding: 0.8rem;
+    border: none;
+    border-radius: var(--border-radius);
+    background: var(--primary-color);
+    color: #000;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background var(--transition-speed), transform var(--transition-speed);
+}
+
+button.btn-primary:hover {
+    background: #ffda47;
+    transform: scale(1.03);
+}
+
+/* Footer Links */
+.login-footer {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: #ccc;
+}
+
+.login-footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color var(--transition-speed);
+}
+
+.login-footer a:hover {
+    color: #ffe57f;
+}
