@@ -6,7 +6,7 @@ class ShareBite {
         this.foodListings = [];
         this.filteredListings = [];
         this.currentFilter = 'all';
-        
+
         this.init();
         this.initTheme(); // add theme initialization after base init
     }
@@ -53,33 +53,36 @@ class ShareBite {
     setupEventListeners() {
         // Navigation
         this.setupNavigation();
-        
+
         // Role switching
         this.setupRoleSwitch();
-        
+
         // Modal functionality
         this.setupModal();
-        
+
         // Form handling
         this.setupFormHandling();
-        
+
         // Filtering and search
         this.setupFilteringAndSearch();
-        
+
         // Smooth scrolling
         this.setupSmoothScrolling();
-        
+
         // Responsive navigation
         this.setupResponsiveNav();
-        
+
         // Hero button interactions
         this.setupHeroButtons();
-        
+
         // Statistics counter animation
         this.setupStatsAnimation();
-        
+
         // Scroll effects
         this.setupScrollEffects();
+
+        // Footer links
+        this.setupFooterLinks();
     }
 
     setupNavigation() {
@@ -99,14 +102,14 @@ class ShareBite {
     setupRoleSwitch() {
         const roleSwitch = document.getElementById('roleSwitch');
         const currentRoleSpan = document.getElementById('currentRole');
-        
+
         roleSwitch.addEventListener('click', () => {
             this.currentRole = this.currentRole === 'donor' ? 'collector' : 'donor';
             currentRoleSpan.textContent = this.currentRole.charAt(0).toUpperCase() + this.currentRole.slice(1);
-            
+
             // Update UI based on role
             this.updateUIForRole();
-            
+
             // Add animation effect
             roleSwitch.style.transform = 'scale(0.9)';
             setTimeout(() => {
@@ -119,7 +122,7 @@ class ShareBite {
         const donateBtn = document.getElementById('donateFood');
         const findBtn = document.getElementById('findFood');
         const addListingBtn = document.getElementById('addListingBtn');
-        
+
         if (this.currentRole === 'collector') {
             donateBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
             findBtn.innerHTML = '<i class="fas fa-heart"></i> Help Others';
@@ -150,7 +153,7 @@ class ShareBite {
 
         closeModalBtn.addEventListener('click', closeModal);
         cancelBtn.addEventListener('click', closeModal);
-        
+
         // Close modal when clicking outside
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
@@ -212,12 +215,12 @@ class ShareBite {
 
     setupFormHandling() {
         const form = document.getElementById('listingForm');
-        
+
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             this.handleFormSubmission();
         });
-        
+
         // Set minimum date/time for freshness
         const freshUntilInput = document.getElementById('freshUntil');
         const now = new Date();
@@ -227,7 +230,7 @@ class ShareBite {
 
     handleFormSubmission() {
         const formData = this.getFormData();
-        
+
         if (this.validateFormData(formData)) {
             this.addNewListing(formData);
             this.showSuccessMessage();
@@ -254,20 +257,20 @@ class ShareBite {
 
     validateFormData(data) {
         const requiredFields = ['foodType', 'quantity', 'category', 'freshUntil', 'pickupTime', 'location', 'contact'];
-        
+
         for (let field of requiredFields) {
             if (!data[field] || data[field].trim() === '') {
                 this.showErrorMessage(`Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}.`);
                 return false;
             }
         }
-        
+
         const freshDate = new Date(data.freshUntil);
         if (freshDate <= new Date()) {
             this.showErrorMessage('Fresh until date must be in the future.');
             return false;
         }
-        
+
         return true;
     }
 
@@ -292,7 +295,7 @@ class ShareBite {
             <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
             <span>${message}</span>
         `;
-        
+
         // Add toast styles
         toast.style.cssText = `
             position: fixed;
@@ -309,9 +312,9 @@ class ShareBite {
             animation: slideInRight 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
             box-shadow: var(--shadow-heavy);
         `;
-        
+
         document.body.appendChild(toast);
-        
+
         setTimeout(() => {
             if (toast.parentNode) {
                 toast.parentNode.removeChild(toast);
@@ -331,7 +334,7 @@ class ShareBite {
             <i class="fas fa-cloud-upload-alt"></i>
             <span>Click to upload or drag and drop</span>
         `;
-        
+
         // Reset minimum date
         const freshUntilInput = document.getElementById('freshUntil');
         const now = new Date();
@@ -342,17 +345,17 @@ class ShareBite {
     setupFilteringAndSearch() {
         const filterBtns = document.querySelectorAll('.filter-btn');
         const searchInput = document.querySelector('.search-box input');
-        
+
         filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 // Remove active class from all buttons
                 filterBtns.forEach(b => b.classList.remove('active'));
                 // Add active class to clicked button
                 btn.classList.add('active');
-                
+
                 // Set current filter
                 this.currentFilter = btn.getAttribute('data-filter');
-                
+
                 // Filter and render listings
                 this.filterListings();
                 this.renderFoodListings();
@@ -373,18 +376,18 @@ class ShareBite {
     filterListings() {
         this.filteredListings = this.foodListings.filter(listing => {
             const matchesFilter = this.currentFilter === 'all' || listing.category === this.currentFilter;
-            const matchesSearch = !this.searchQuery || 
+            const matchesSearch = !this.searchQuery ||
                 listing.foodType.toLowerCase().includes(this.searchQuery) ||
                 listing.location.toLowerCase().includes(this.searchQuery) ||
                 listing.description.toLowerCase().includes(this.searchQuery);
-            
+
             return matchesFilter && matchesSearch;
         });
     }
 
     setupSmoothScrolling() {
         const scrollIndicator = document.querySelector('.scroll-indicator');
-        
+
         scrollIndicator.addEventListener('click', () => {
             document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
         });
@@ -393,7 +396,7 @@ class ShareBite {
     setupResponsiveNav() {
         const hamburger = document.querySelector('.hamburger');
         const navMenu = document.querySelector('.nav-menu');
-        
+
         hamburger.addEventListener('click', () => {
             hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
@@ -403,7 +406,7 @@ class ShareBite {
     setupHeroButtons() {
         const donateBtn = document.getElementById('donateFood');
         const findBtn = document.getElementById('findFood');
-        
+
         donateBtn.addEventListener('click', () => {
             if (this.currentRole === 'donor') {
                 document.getElementById('addListingModal').style.display = 'block';
@@ -412,7 +415,7 @@ class ShareBite {
                 document.getElementById('listings').scrollIntoView({ behavior: 'smooth' });
             }
         });
-        
+
         findBtn.addEventListener('click', () => {
             document.getElementById('listings').scrollIntoView({ behavior: 'smooth' });
         });
@@ -421,16 +424,16 @@ class ShareBite {
     setupStatsAnimation() {
         const stats = document.querySelectorAll('.stat-number');
         let animated = false;
-        
+
         const animateStats = () => {
             if (animated) return;
-            
+
             stats.forEach(stat => {
                 const target = parseInt(stat.getAttribute('data-count'));
                 const duration = 2000;
                 const increment = target / (duration / 16);
                 let current = 0;
-                
+
                 const updateStat = () => {
                     current += increment;
                     if (current < target) {
@@ -440,13 +443,13 @@ class ShareBite {
                         stat.textContent = target;
                     }
                 };
-                
+
                 updateStat();
             });
-            
+
             animated = true;
         };
-        
+
         // Trigger animation when hero section is in view
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -455,7 +458,7 @@ class ShareBite {
                 }
             });
         });
-        
+
         const heroStats = document.querySelector('.hero-stats');
         if (heroStats) {
             observer.observe(heroStats);
@@ -474,7 +477,7 @@ class ShareBite {
                 navbar.style.boxShadow = 'none';
             }
         });
-        
+
         // Animate elements on scroll
         this.setupScrollAnimations();
     }
@@ -484,7 +487,7 @@ class ShareBite {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
         };
-        
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -492,7 +495,7 @@ class ShareBite {
                 }
             });
         }, observerOptions);
-        
+
         // Observe elements to animate
         const elementsToAnimate = document.querySelectorAll('.feature-card, .food-card, .impact-item');
         elementsToAnimate.forEach(el => {
@@ -581,7 +584,7 @@ class ShareBite {
                 donor: "Healthy Eats Cafe"
             }
         ];
-        
+
         this.foodListings = sampleListings;
         this.filteredListings = sampleListings;
     }
@@ -595,7 +598,7 @@ class ShareBite {
 
     renderFoodListings() {
         const foodGrid = document.getElementById('foodGrid');
-        
+
         if (this.filteredListings.length === 0) {
             foodGrid.innerHTML = `
                 <div class="no-listings">
@@ -606,9 +609,9 @@ class ShareBite {
             `;
             return;
         }
-        
+
         foodGrid.innerHTML = this.filteredListings.map(listing => this.createFoodCard(listing)).join('');
-        
+
         // Add event listeners to food cards
         this.setupFoodCardInteractions();
     }
@@ -617,7 +620,7 @@ class ShareBite {
         const timeAgo = this.getTimeAgo(listing.createdAt);
         const freshUntil = this.formatDateTime(listing.freshUntil);
         const pickupTime = this.formatTime(listing.pickupTime);
-        
+
         return `
             <div class="food-card" data-id="${listing.id}">
                 <div class="food-image">
@@ -665,7 +668,7 @@ class ShareBite {
                 this.handleClaimFood(listingId);
             });
         });
-        
+
         // Contact buttons
         const contactBtns = document.querySelectorAll('.contact-btn');
         contactBtns.forEach(btn => {
@@ -679,19 +682,19 @@ class ShareBite {
     handleClaimFood(listingId) {
         const listing = this.foodListings.find(l => l.id === listingId);
         if (!listing) return;
-        
+
         // Show confirmation dialog
         const confirmed = confirm(`Claim "${listing.foodType}" from ${listing.donor}?\n\nPickup: ${listing.location}\nTime: ${this.formatTime(listing.pickupTime)}\nContact: ${listing.contact}`);
-        
+
         if (confirmed) {
             // Remove listing from available items
             this.foodListings = this.foodListings.filter(l => l.id !== listingId);
             this.filterListings();
             this.renderFoodListings();
-            
+
             // Show success message
             this.showToast(`Successfully claimed "${listing.foodType}"! Check your email for pickup details.`, 'success');
-            
+
             // Animate removal
             const card = document.querySelector(`[data-id="${listingId}"]`);
             if (card) {
@@ -738,7 +741,7 @@ class ShareBite {
         const diff = now - date;
         const minutes = Math.floor(diff / 60000);
         const hours = Math.floor(minutes / 60);
-        
+
         if (minutes < 60) {
             return `${minutes}m ago`;
         } else if (hours < 24) {
@@ -754,7 +757,7 @@ class ShareBite {
         const now = new Date();
         const diff = date - now;
         const hours = Math.floor(diff / (1000 * 60 * 60));
-        
+
         if (hours < 24) {
             return `${hours}h left`;
         } else {
@@ -776,10 +779,10 @@ class ShareBite {
         featureCards.forEach((card, index) => {
             card.style.animationDelay = `${index * 0.2}s`;
         });
-        
+
         // Add floating animation to hero elements
         this.startFloatingAnimations();
-        
+
         // Add periodic pulse to CTA buttons
         this.startButtonPulse();
     }
@@ -927,7 +930,7 @@ if ('serviceWorker' in navigator) {
 window.ShareBite = ShareBite;
 
 // Clear caches and trigger SW skipWaiting for debugging updates
-window.clearShareBiteCaches = async function() {
+window.clearShareBiteCaches = async function () {
     if ('caches' in window) {
         const keys = await caches.keys();
         await Promise.all(keys.map(k => caches.delete(k)));
@@ -937,4 +940,261 @@ window.clearShareBiteCaches = async function() {
         navigator.serviceWorker.controller.postMessage('SKIP_WAITING');
         console.log('[ShareBite] Sent SKIP_WAITING to service worker');
     }
+};
+
+// Add footer links functionality
+ShareBite.prototype.setupFooterLinks = function () {
+    const footerLinks = document.querySelectorAll('.footer-link');
+
+    const footerData = {
+        'list-food': {
+            title: 'List Food',
+            content: `
+                <h3>How to List Food</h3>
+                <p>As a donor, you can list surplus food in just a few simple steps:</p>
+                <ul>
+                    <li><strong>Step 1:</strong> Click on "Add Listing" button in the listings section</li>
+                    <li><strong>Step 2:</strong> Fill in food details (type, quantity, freshness)</li>
+                    <li><strong>Step 3:</strong> Add pickup location and preferred time</li>
+                    <li><strong>Step 4:</strong> Upload a photo (optional but recommended)</li>
+                    <li><strong>Step 5:</strong> Submit and wait for collectors to respond</li>
+                </ul>
+                <p><strong>Best Practices:</strong></p>
+                <ul>
+                    <li>Be accurate about food quantity and freshness</li>
+                    <li>Provide clear pickup instructions</li>
+                    <li>Respond promptly to collector requests</li>
+                    <li>Package food safely and hygienically</li>
+                </ul>
+            `
+        },
+        'donor-guidelines': {
+            title: 'Donor Guidelines',
+            content: `
+                <h3>Guidelines for Food Donors</h3>
+                <p><strong>Food Safety:</strong></p>
+                <ul>
+                    <li>Only donate fresh, unexpired food items</li>
+                    <li>Store food at appropriate temperatures until pickup</li>
+                    <li>Package food securely to prevent contamination</li>
+                    <li>Label allergens clearly</li>
+                </ul>
+                <p><strong>Legal Protection:</strong></p>
+                <ul>
+                    <li>Donors are protected under Good Samaritan Food Donation Act</li>
+                    <li>Ensure food quality meets safety standards</li>
+                    <li>Keep records of donations for tax purposes</li>
+                </ul>
+                <p><strong>Quality Standards:</strong></p>
+                <ul>
+                    <li>Food should be edible and nutritious</li>
+                    <li>Avoid donating heavily processed or unhealthy items</li>
+                    <li>Fresh produce should be clean and unblemished</li>
+                </ul>
+            `
+        },
+        'track-impact': {
+            title: 'Track Your Impact',
+            content: `
+                <h3>Track Your Contribution</h3>
+                <p>See the difference you're making in your community:</p>
+                <ul>
+                    <li><strong>Meals Saved:</strong> Total number of meals you've donated</li>
+                    <li><strong>Carbon Footprint:</strong> Environmental impact of waste reduction</li>
+                    <li><strong>People Helped:</strong> Estimated number of people fed</li>
+                    <li><strong>Food Value:</strong> Monetary value of donated food</li>
+                </ul>
+                <p><strong>Achievements:</strong></p>
+                <ul>
+                    <li>Bronze Donor: 10+ meals donated</li>
+                    <li>Silver Donor: 50+ meals donated</li>
+                    <li>Gold Donor: 100+ meals donated</li>
+                    <li>Platinum Donor: 500+ meals donated</li>
+                </ul>
+                <p><em>Login to view your personalized impact dashboard!</em></p>
+            `
+        },
+        'support': {
+            title: 'Support',
+            content: `
+                <h3>Get Help & Support</h3>
+                <p><strong>Contact Us:</strong></p>
+                <ul>
+                    <li>Email: support@sharebite.com</li>
+                    <li>Phone: +1-800-SHAREBITE</li>
+                    <li>Hours: Monday-Friday, 9AM-6PM</li>
+                </ul>
+                <p><strong>FAQs:</strong></p>
+                <ul>
+                    <li>How do I list food items?</li>
+                    <li>What types of food can I donate?</li>
+                    <li>How long does pickup take?</li>
+                    <li>Is there a minimum donation amount?</li>
+                </ul>
+                <p><strong>Resources:</strong></p>
+                <ul>
+                    <li>Food Safety Guidelines PDF</li>
+                    <li>Donor Training Videos</li>
+                    <li>Community Forum</li>
+                    <li>Blog & Success Stories</li>
+                </ul>
+            `
+        },
+        'find-food': {
+            title: 'Find Food',
+            content: `
+                <h3>How to Find Food</h3>
+                <p>As a collector (NGO, volunteer, or individual), you can find available food:</p>
+                <ul>
+                    <li><strong>Browse Listings:</strong> View all available food donations in your area</li>
+                    <li><strong>Filter Options:</strong> Search by food type, location, or quantity</li>
+                    <li><strong>Contact Donors:</strong> Request pickup through our platform</li>
+                    <li><strong>Coordinate Pickup:</strong> Schedule convenient pickup time</li>
+                    <li><strong>Confirm Receipt:</strong> Mark collection complete after pickup</li>
+                </ul>
+                <p><strong>Collector Responsibilities:</strong></p>
+                <ul>
+                    <li>Pick up food at scheduled time</li>
+                    <li>Maintain proper food handling practices</li>
+                    <li>Distribute to those in need promptly</li>
+                    <li>Report any issues or concerns</li>
+                </ul>
+            `
+        },
+        'register-ngo': {
+            title: 'Register NGO',
+            content: `
+                <h3>NGO Registration</h3>
+                <p>Register your organization to access food donations:</p>
+                <p><strong>Registration Requirements:</strong></p>
+                <ul>
+                    <li>Valid NGO registration documents</li>
+                    <li>Tax-exempt status verification (if applicable)</li>
+                    <li>Organization mission statement</li>
+                    <li>Proof of food handling capabilities</li>
+                    <li>Contact information for authorized representatives</li>
+                </ul>
+                <p><strong>Benefits of Registration:</strong></p>
+                <ul>
+                    <li>Priority access to food donations</li>
+                    <li>Bulk collection options</li>
+                    <li>Regular donor partnerships</li>
+                    <li>Impact reporting tools</li>
+                    <li>Promotional opportunities</li>
+                </ul>
+                <p><em>Click the Login button and select "Register as NGO" to get started!</em></p>
+            `
+        },
+        'volunteer': {
+            title: 'Volunteer',
+            content: `
+                <h3>Become a Volunteer</h3>
+                <p>Join our community of volunteers fighting food waste and hunger:</p>
+                <p><strong>Volunteer Opportunities:</strong></p>
+                <ul>
+                    <li><strong>Food Collection:</strong> Pick up donations and deliver to distribution centers</li>
+                    <li><strong>Distribution Helper:</strong> Assist NGOs in distributing food to communities</li>
+                    <li><strong>Community Organizer:</strong> Coordinate local food drives</li>
+                    <li><strong>Ambassador:</strong> Spread awareness about food waste reduction</li>
+                </ul>
+                <p><strong>Requirements:</strong></p>
+                <ul>
+                    <li>Age 18+ (or 16+ with parental consent)</li>
+                    <li>Reliable transportation (for collection roles)</li>
+                    <li>Background check (for regular volunteers)</li>
+                    <li>Food safety training (provided by ShareBite)</li>
+                </ul>
+                <p><strong>Time Commitment:</strong> Flexible - from 2 hours/month to regular weekly shifts</p>
+            `
+        },
+        'resources': {
+            title: 'Resources',
+            content: `
+                <h3>Helpful Resources</h3>
+                <p><strong>Educational Materials:</strong></p>
+                <ul>
+                    <li>Food Waste Statistics & Impact</li>
+                    <li>Food Safety & Handling Guide</li>
+                    <li>Nutrition Information</li>
+                    <li>Sustainability Best Practices</li>
+                </ul>
+                <p><strong>Training & Certification:</strong></p>
+                <ul>
+                    <li>Food Handler Certification Course</li>
+                    <li>Volunteer Training Videos</li>
+                    <li>NGO Management Webinars</li>
+                    <li>Community Building Workshops</li>
+                </ul>
+                <p><strong>Tools & Downloads:</strong></p>
+                <ul>
+                    <li>Food Donation Receipt Template</li>
+                    <li>Pickup Schedule Planner</li>
+                    <li>Impact Calculator</li>
+                    <li>ShareBite Mobile App</li>
+                </ul>
+                <p><strong>Partner Organizations:</strong></p>
+                <ul>
+                    <li>Local Food Banks Directory</li>
+                    <li>NGO Network</li>
+                    <li>Government Food Programs</li>
+                </ul>
+            `
+        }
+    };
+
+    footerLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const infoType = link.getAttribute('data-info');
+            const data = footerData[infoType];
+
+            if (data) {
+                this.showInfoModal(data.title, data.content);
+            }
+        });
+    });
+};
+
+ShareBite.prototype.showInfoModal = function (title, content) {
+    // Create modal if it doesn't exist
+    let infoModal = document.getElementById('infoModal');
+
+    if (!infoModal) {
+        infoModal = document.createElement('div');
+        infoModal.id = 'infoModal';
+        infoModal.className = 'modal';
+        infoModal.innerHTML = `
+            <div class="modal-content" style="max-width: 600px;">
+                <div class="modal-header">
+                    <h3 id="infoModalTitle"></h3>
+                    <button class="close-modal" id="closeInfoModal">&times;</button>
+                </div>
+                <div class="modal-body" id="infoModalContent" style="max-height: 400px; overflow-y: auto;">
+                </div>
+            </div>
+        `;
+        document.body.appendChild(infoModal);
+
+        // Setup close functionality
+        const closeBtn = document.getElementById('closeInfoModal');
+        closeBtn.addEventListener('click', () => {
+            infoModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+
+        infoModal.addEventListener('click', (e) => {
+            if (e.target === infoModal) {
+                infoModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+    }
+
+    // Update modal content
+    document.getElementById('infoModalTitle').textContent = title;
+    document.getElementById('infoModalContent').innerHTML = content;
+
+    // Show modal
+    infoModal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
 };
