@@ -13,7 +13,11 @@ class ShareBite {
 
     init() {
         this.setupEventListeners();
-        this.generateSampleListings();
+        this.loadListingsFromStorage();
+        if (!this.foodListings || this.foodListings.length === 0) {
+            this.generateSampleListings();
+            this.saveListingsToStorage();
+        }
         this.renderFoodListings();
         this.startAnimations();
         this.hideLoadingOverlay();
@@ -213,9 +217,9 @@ class ShareBite {
     setupFormHandling() {
         const form = document.getElementById('listingForm');
         
-        form.addEventListener('submit', (e) => {
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            this.handleFormSubmission();
+            await this.handleFormSubmission();
         });
         
         // Set minimum date/time for freshness
@@ -225,11 +229,15 @@ class ShareBite {
         freshUntilInput.min = now.toISOString().slice(0, 16);
     }
 
-    handleFormSubmission() {
-        const formData = this.getFormData();
-        
+    handleFormSubmission = async () => {
+        const baseData = this.getFormDataBase();
+        const photoFile = document.getElementById('photo').files[0];
+        const photoData = photoFile ? await this.readFileAsDataURL(photoFile) : null;
+        const formData = { ...baseData, photoData };
         if (this.validateFormData(formData)) {
+            formData.quantity = this.normalizeQuantity(formData.quantity);
             this.addNewListing(formData);
+            this.saveListingsToStorage();
             this.showSuccessMessage();
             this.closeModalAndReset();
         }
@@ -252,29 +260,84 @@ class ShareBite {
         };
     }
 
+    getFormDataBase() {
+        return {
+            id: Date.now(),
+            foodType: document.getElementById('foodType').value.trim(),
+            quantity: document.getElementById('quantity').value.trim(),
+            category: document.getElementById('category').value,
+            description: document.getElementById('description').value.trim(),
+            freshUntil: document.getElementById('freshUntil').value,
+            pickupTime: document.getElementById('pickupTime').value,
+            location: document.getElementById('location').value.trim(),
+            contact: document.getElementById('contact').value.trim(),
+            createdAt: new Date(),
+            donor: 'Current User'
+        };
+    }
+
+    normalizeQuantity(value) {
+        const v = value.trim();
+		const numMatch = v.match(/\d+(?:[\.,]\d+)?/);
+		if (!numMatch) return v;
+		let num = numMatch[0].replace(',', '.');
+		if (/^\d+(?:[\.,]\d+)?$/.test(v)) return `${num} portions`;
+		return v.replace(numMatch[0], num);
+    }
+
+    async readFileAsDataURL(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    }
+
     validateFormData(data) {
         const requiredFields = ['foodType', 'quantity', 'category', 'freshUntil', 'pickupTime', 'location', 'contact'];
-        
         for (let field of requiredFields) {
             if (!data[field] || data[field].trim() === '') {
                 this.showErrorMessage(`Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}.`);
                 return false;
             }
         }
-        
         const freshDate = new Date(data.freshUntil);
         if (freshDate <= new Date()) {
             this.showErrorMessage('Fresh until date must be in the future.');
             return false;
         }
-        
+        const contactOk = this.isValidContact(data.contact);
+        if (!contactOk) {
+            this.showErrorMessage('Enter a valid email or phone number.');
+            return false;
+        }
+        const qtyOk = this.isValidQuantity(data.quantity);
+        if (!qtyOk) {
+            this.showErrorMessage('Enter a valid quantity.');
+            return false;
+        }
         return true;
+    }
+
+    isValidContact(value) {
+        const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+        const phoneRe = /^(?:\+?[0-9]{1,3}[\s.-]?)?(?:\(?\d{3}\)?[\s.-]?)?\d{3}[\s.-]?\d{4}$/;
+        return emailRe.test(value) || phoneRe.test(value);
+    }
+
+    isValidQuantity(value) {
+        const v = value.trim();
+        if (!v) return false;
+        const numMatch = v.match(/\d+(?:[\.,]\d+)?/);
+        return !!numMatch;
     }
 
     addNewListing(data) {
         this.foodListings.unshift(data);
         this.filterListings();
         this.renderFoodListings();
+        this.saveListingsToStorage();
     }
 
     showSuccessMessage() {
@@ -617,11 +680,10 @@ class ShareBite {
         const timeAgo = this.getTimeAgo(listing.createdAt);
         const freshUntil = this.formatDateTime(listing.freshUntil);
         const pickupTime = this.formatTime(listing.pickupTime);
-        
         return `
             <div class="food-card" data-id="${listing.id}">
                 <div class="food-image">
-                    ${listing.photo ? `<img src="${URL.createObjectURL(listing.photo)}" alt="${listing.foodType}">` : `<i class="fas fa-${this.getFoodIcon(listing.category)}"></i>`}
+                    ${listing.photoData ? `<img src="${listing.photoData}" alt="${listing.foodType}">` : `<i class="fas fa-${this.getFoodIcon(listing.category)}"></i>`}
                     <div class="food-category">${this.capitalizeFirst(listing.category)}</div>
                 </div>
                 <div class="food-details">
@@ -814,99 +876,41 @@ class ShareBite {
             }, 500);
         }, 1500); // Show loading for 1.5 seconds
     }
-}
 
-// Additional CSS animations via JavaScript
-function addDynamicStyles() {
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
+    loadListingsFromStorage() {
+        try {
+            const raw = localStorage.getItem('sharebite-listings');
+            if (!raw) {
+                this.foodListings = [];
+                this.filteredListings = [];
+                return;
             }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+            const parsed = JSON.parse(raw);
+            const revived = parsed.map(item => ({
+                ...item,
+                createdAt: item.createdAt ? new Date(item.createdAt) : new Date()
+            }));
+            this.foodListings = revived;
+            this.filteredListings = revived;
+        } catch (e) {
+            this.foodListings = [];
+            this.filteredListings = [];
         }
-        
-        @keyframes fadeOut {
-            from {
-                opacity: 1;
-                transform: scale(1);
-            }
-            to {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-        }
-        
-        .animate-in {
-            animation: slideInUp 0.6s ease forwards;
-        }
-        
-        .no-listings {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 4rem 2rem;
-            color: var(--medium-gray);
-        }
-        
-        .no-listings h3 {
-            margin-bottom: 0.5rem;
-            color: var(--dark-gray);
-        }
-        
-        /* Hamburger menu animation */
-        .hamburger.active span:nth-child(1) {
-            transform: rotate(-45deg) translate(-5px, 6px);
-        }
-        
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
-        }
-        
-        .hamburger.active span:nth-child(3) {
-            transform: rotate(45deg) translate(-5px, -6px);
-        }
-        
-        /* Mobile menu styles */
-        @media (max-width: 768px) {
-            .nav-menu.active {
-                display: flex;
-                position: fixed;
-                top: 70px;
-                left: 0;
-                width: 100%;
-                height: calc(100vh - 70px);
-                background: rgba(255, 255, 255, 0.98);
-                flex-direction: column;
-                justify-content: flex-start;
-                align-items: center;
-                padding-top: 2rem;
-                backdrop-filter: blur(10px);
-                animation: slideInUp 0.3s ease;
-            }
-            
-            .nav-menu.active .nav-link {
-                margin: 1rem 0;
-                font-size: 1.2rem;
-            }
-        }
-    `;
-    document.head.appendChild(style);
+    }
+
+    saveListingsToStorage() {
+        try {
+            const serializable = this.foodListings.map(item => ({
+                ...item,
+                createdAt: item.createdAt instanceof Date ? item.createdAt.toISOString() : item.createdAt
+            }));
+            localStorage.setItem('sharebite-listings', JSON.stringify(serializable));
+        } catch (e) {}
+    }
 }
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', () => {
-    addDynamicStyles();
     new ShareBite();
 });
 
