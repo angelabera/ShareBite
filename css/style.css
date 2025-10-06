@@ -309,7 +309,7 @@ body {
 
 .hero-container {
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 2rem;
     padding: var(--container-padding);
     display: grid;
     grid-template-columns: 1fr 1fr;
