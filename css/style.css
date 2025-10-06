@@ -1399,6 +1399,15 @@ body {
         grid-template-columns: 1fr 1fr;
         gap: 2rem;
     }
+
+    .about-text{
+        text-align: center;
+    }
+
+    .impact-stats .impact-item{
+        margin: auto;
+        margin-bottom: 1rem;
+    }
 }
 
 @media (max-width: 768px) {
