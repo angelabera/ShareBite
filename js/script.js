@@ -106,12 +106,6 @@ class ShareBite {
             
             // Update UI based on role
             this.updateUIForRole();
-            
-            // Add animation effect
-            roleSwitch.style.transform = 'scale(0.9)';
-            setTimeout(() => {
-                roleSwitch.style.transform = 'scale(1)';
-            }, 150);
         });
     }
 

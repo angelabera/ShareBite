@@ -534,8 +534,8 @@ body {
     right: 1rem;
     background: var(--accent-color);
     color: white;
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -1493,6 +1493,15 @@ body {
     .listing-form {
         padding: 1rem;
     }
+    
+    .filter-group {
+        flex-direction: column;
+    }
+
+    .food-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+
 }
 
 /* Dark Mode Styles */
