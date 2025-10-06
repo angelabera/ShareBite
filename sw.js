@@ -1,8 +1,8 @@
-// Basic Service Worker for ShareBite
-// Provides simple offline caching of core assets when served over HTTP (not file://)
-// Note: Service workers require a secure context (https or localhost)
+// // Basic Service Worker for ShareBite
+// // Provides simple offline caching of core assets when served over HTTP (not file://)
+// // Note: Service workers require a secure context (https or localhost)
 
-// Increment this version when making structural/content changes you want to invalidate
+// // Increment this version when making structural/content changes you want to invalidate
 const CACHE_VERSION = 'v3'; // bumped for role-switch styling + cache-busting
 const CACHE_NAME = `sharebite-static-${CACHE_VERSION}`;
 const CORE_ASSETS = [
@@ -66,3 +66,5 @@ self.addEventListener('message', (event) => {
     self.skipWaiting();
   }
 });
+
+

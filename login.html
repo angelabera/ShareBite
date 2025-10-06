@@ -2,11 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4CAF50">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="ShareBite">
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - ShareBite</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --primary-green: #4CAF50;
@@ -21,7 +29,7 @@
             --subtext-color-light: #555;
             --input-bg-light: #fdfdfd;
             --input-border-light: #ddd;
-
+            
             /* Dark Mode */
             --bg-gradient-start-dark: #1C1C1C;
             --bg-gradient-end-dark: #2C2C2C;
@@ -46,222 +54,373 @@
             min-height: 100vh;
             padding: 1rem;
             background: linear-gradient(135deg, var(--bg-gradient-start-light), var(--bg-gradient-end-light));
-            color: var(--text-color-light);
-            transition: background 0.4s, color 0.4s;
+            transition: all 0.3s ease;
         }
 
-        body.dark-mode {
+        body.dark-theme {
             background: linear-gradient(135deg, var(--bg-gradient-start-dark), var(--bg-gradient-end-dark));
-            color: var(--text-color-dark);
         }
 
-        .theme-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: 1px solid var(--input-border-light);
-            color: var(--text-color-light);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.2rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.3s;
-        }
-
-        body.dark-mode .theme-toggle {
-            border-color: var(--input-border-dark);
-            color: var(--text-color-dark);
-        }
-
-        .theme-toggle:hover {
-            transform: scale(1.1) rotate(15deg);
-        }
-
-        .auth-container {
-            background-color: var(--card-bg-light);
-            padding: 3rem;
-            border-radius: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        .login-container {
+            background: var(--card-bg-light);
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
             width: 100%;
-            max-width: 480px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        body.dark-theme .login-container {
+            background: var(--card-bg-dark);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .login-header {
             text-align: center;
-            animation: fadeIn 0.8s ease-out forwards;
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        body.dark-mode .auth-container {
-            background-color: var(--card-bg-dark);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .auth-container h1 {
-            margin-bottom: 0.75rem;
-            font-weight: 600;
-            font-size: 1.8rem;
-        }
-
-        .auth-container p.subtitle {
-            color: var(--subtext-color-light);
             margin-bottom: 2rem;
         }
-        
-        body.dark-mode .auth-container p.subtitle {
+
+        .login-header h1 {
+            color: var(--text-color-light);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        body.dark-theme .login-header h1 {
+            color: var(--text-color-dark);
+        }
+
+        .login-header p {
+            color: var(--subtext-color-light);
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        body.dark-theme .login-header p {
             color: var(--subtext-color-dark);
         }
 
         .form-group {
             margin-bottom: 1.5rem;
-            text-align: left;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 0.5rem;
+            color: var(--text-color-light);
             font-weight: 500;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        body.dark-theme .form-group label {
+            color: var(--text-color-dark);
         }
 
         .form-group input {
             width: 100%;
-            padding: 0.85rem 1rem;
-            border: 1px solid var(--input-border-light);
-            background-color: var(--input-bg-light);
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--input-border-light);
+            border-radius: 12px;
+            background: var(--input-bg-light);
             color: var(--text-color-light);
-            border-radius: 8px;
-            font-family: 'Poppins', sans-serif;
             font-size: 1rem;
-            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
         }
-        
-        body.dark-mode .form-group input {
-            border-color: var(--input-border-dark);
-            background-color: var(--input-bg-dark);
+
+        body.dark-theme .form-group input {
+            border: 2px solid var(--input-border-dark);
+            background: var(--input-bg-dark);
             color: var(--text-color-dark);
         }
 
         .form-group input:focus {
             outline: none;
             border-color: var(--primary-green);
-            box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2);
-        }
-        
-        .form-options {
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 1.5rem;
-            font-size: 0.9rem;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
         }
 
-        .forgot-password-link {
-            color: var(--secondary-orange);
-            text-decoration: none;
+        .form-group input::placeholder {
+            color: var(--subtext-color-light);
         }
 
-        .forgot-password-link:hover {
-            text-decoration: underline;
+        body.dark-theme .form-group input::placeholder {
+            color: var(--subtext-color-dark);
         }
 
-        .btn {
+        .login-btn {
             width: 100%;
-            padding: 0.9rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary-green), #45a049);
             border: none;
-            border-radius: 8px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.1rem;
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 1rem;
         }
 
-        .btn-primary {
-            background-color: var(--primary-green);
-            color: #fff;
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
         }
 
-        .btn-primary:hover {
-            background-color: #45a049;
-            transform: translateY(-3px);
-            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        .forgot-password {
+            text-align: center;
+            margin: 1.5rem 0;
         }
 
-        .register-link {
-            margin-top: 1.5rem;
-            display: block;
-            color: var(--secondary-orange);
+        .forgot-password a {
+            color: var(--primary-green);
             text-decoration: none;
             font-weight: 500;
+            transition: color 0.3s ease;
         }
 
-        .register-link:hover {
+        .forgot-password a:hover {
+            color: #45a049;
             text-decoration: underline;
+        }
+
+        .signup-link {
+            text-align: center;
+            color: var(--subtext-color-light);
+            transition: color 0.3s ease;
+        }
+
+        body.dark-theme .signup-link {
+            color: var(--subtext-color-dark);
+        }
+
+        .signup-link a {
+            color: var(--primary-green);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .signup-link a:hover {
+            color: #45a049;
+            text-decoration: underline;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        body.dark-theme .theme-toggle {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-theme .theme-toggle:hover {
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .theme-toggle i {
+            color: var(--primary-green);
+            font-size: 1rem;
         }
 
         /* Responsive Design */
-        @media (max-width: 520px) {
-            .auth-container {
-                padding: 2rem;
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 2rem 1.5rem;
+                margin: 1rem;
             }
-            .auth-container h1 {
-                font-size: 1.5rem;
+            
+            .login-header h1 {
+                font-size: 1.75rem;
             }
+        }
+
+        /* Loading animation */
+        .login-btn.loading {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .login-btn.loading::after {
+            content: '';
+            width: 16px;
+            height: 16px;
+            margin: 0 0 0 10px;
+            border: 2px solid transparent;
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Back to Home Link */
+        .back-home {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        .back-home a {
+            display: flex;
+            align-items: center;
+            color: var(--primary-green);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            background: rgba(76, 175, 80, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .back-home a:hover {
+            background: rgba(76, 175, 80, 0.2);
+            transform: translateX(-3px);
+        }
+
+        .back-home i {
+            margin-right: 0.5rem;
         }
     </style>
 </head>
+
 <body>
-
-    <button id="theme-toggle" class="theme-toggle" title="Toggle dark mode">🌙</button>
-
-    <div class="auth-container">
-        <h1>Welcome Back to ShareBite</h1>
-        <p class="subtitle">Log in to continue your journey with us.</p>
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="Enter your email" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password" required>
-            </div>
-            <div class="form-options">
-                <a href="#" class="forgot-password-link">Forgot Password?</a>
-            </div>
-            <button type="submit" class="btn btn-primary">Login</button>
-        </form>
-        <a href="register.html" class="register-link">Don't have an account? Register</a>
+    <!-- Back to Home -->
+    <div class="back-home">
+        <a href="index.html">
+            <i class="fas fa-arrow-left"></i>
+            Back to ShareBite
+        </a>
     </div>
 
-    <script src="js/theme.js"></script>
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <!-- Login Container -->
+    <div class="login-container">
+        <div class="login-header">
+            <h1>Welcome Back to ShareBite</h1>
+            <p>Log in to continue your journey with us.</p>
+        </div>
+
+        <form class="login-form" id="loginForm">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your email">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Enter your password">
+            </div>
+
+            <button type="submit" class="login-btn" id="loginBtn">
+                Log In
+            </button>
+
+            <div class="forgot-password">
+                <a href="#" id="forgotPassword">Forgot Password?</a>
+            </div>
+
+            <div class="signup-link">
+                Don't have an account? <a href="register.html">Register</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Font Awesome for icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    
+    <!-- Theme Toggle Script -->
     <script>
-        // --- Form Submission ---
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        const body = document.body;
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('sharebitetheme');
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-theme');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-theme');
+            
+            if (body.classList.contains('dark-theme')) {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                localStorage.setItem('sharebitetheme', 'dark');
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                localStorage.setItem('sharebitetheme', 'light');
+            }
+        });
+
+        // Login form functionality
         const loginForm = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
 
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
+            
+            // Add loading state
+            loginBtn.classList.add('loading');
+            loginBtn.textContent = 'Logging in...';
+            
+            // Simulate login process
+            setTimeout(() => {
+                // Remove loading state
+                loginBtn.classList.remove('loading');
+                loginBtn.textContent = 'Log In';
+                
+                // Redirect to dashboard or show success message
+                alert('Login successful! Redirecting to ShareBite...');
+                window.location.href = 'index.html';
+            }, 2000);
+        });
 
-            // Get form values
-            const email = loginForm.email.value;
-            const password = loginForm.password.value;
-
-            console.log('Logging in user:', { email });
-
-            // TODO: Connect to auth.js for Firebase or backend login
-
-            alert('Login form submitted! (See console for details)');
+        // Forgot password functionality
+        document.getElementById('forgotPassword').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Password reset functionality would be implemented here.');
         });
     </script>
-
 </body>
 </html>

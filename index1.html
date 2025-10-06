@@ -444,7 +444,7 @@
             <h4>For Collectors</h4>
             <ul>
               <li><a href="#">Find Food</a></li>
-              <li><a href="ngo-register.html">Register NGO</a></li>
+              <li><a href="#">Register NGO</a></li>
               <li><a href="#">Volunteer</a></li>
               <li><a href="#">Resources</a></li>
             </ul>
@@ -471,3 +471,276 @@
     <script src="js/script.js"></script>
   </body>
 </html>
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Add this in the <head> section -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#4CAF50">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="ShareBite">
+    <meta name="msapplication-TileColor" content="#4CAF50">
+     <meta name="msapplication-config" content="./browserconfig.xml">
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ShareBite - Food Waste Reducer</title>
+
+    <!-- Main Styles -->
+    <link rel="stylesheet" href="css/style.css?v=darkmode-fix-1" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link rel="icon" type="image/svg+xml" href="logo/logo.svg" />
+
+    <!-- ✅ Add PWA Manifest + Theme Color -->
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#4CAF50" />
+  </head>
+
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="nav-logo">
+          <i class="fas fa-utensils"></i>
+          <span>ShareBite</span>
+        </div>
+        <ul class="nav-menu">
+          <li><a href="#home" class="nav-link">Home</a></li>
+          <li><a href="#features" class="nav-link">Features</a></li>
+          <li><a href="#listings" class="nav-link">Listings</a></li>
+          <li><a href="#about" class="nav-link">About</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+        <div class="user-actions">
+          <button
+            id="themeToggle"
+            class="theme-toggle"
+            aria-label="Toggle dark mode"
+          >
+            <i class="fas fa-moon"></i>
+          </button>
+          <button class="role-switch" id="roleSwitch">
+            <i class="fas fa-exchange-alt"></i>
+            <span id="currentRole">Donor</span>
+          </button>
+          <button
+            class="login-btn"
+            onclick="window.location.href='login.html'"
+          >
+            Login
+          </button>
+        </div>
+        <div class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+      <div class="hero-container">
+        <div class="hero-content">
+          <h1 class="hero-title">
+            Reduce Food Waste,<br />
+            <span class="gradient-text">Feed Communities</span>
+          </h1>
+          <p class="hero-description">
+            Connect restaurants and households with NGOs and volunteers to
+            redistribute fresh leftover food and fight hunger while reducing
+            waste.
+          </p>
+          <div class="hero-buttons">
+            <button class="btn btn-primary" id="donateFood">
+              <i class="fas fa-heart"></i>
+              Donate Food
+            </button>
+            <button class="btn btn-secondary" id="findFood">
+              <i class="fas fa-search"></i>
+              Find Food
+            </button>
+          </div>
+          <div class="hero-stats">
+            <div class="stat">
+              <span class="stat-number" data-count="1500">0</span>
+              <span class="stat-label">Meals Saved</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number" data-count="250">0</span>
+              <span class="stat-label">Active Donors</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number" data-count="85">0</span>
+              <span class="stat-label">NGO Partners</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="floating-card food-card-1">
+            <i class="fas fa-pizza-slice"></i>
+            <span>Fresh Pizza</span>
+          </div>
+          <div class="floating-card food-card-2">
+            <i class="fas fa-bread-slice"></i>
+            <span>Bakery Items</span>
+          </div>
+          <div class="floating-card food-card-3">
+            <i class="fas fa-apple-alt"></i>
+            <span>Fresh Fruits</span>
+          </div>
+          <div class="hero-illustration">
+            <div class="plate">
+              <div class="food-items">
+                <div class="food-item item-1"></div>
+                <div class="food-item item-2"></div>
+                <div class="food-item item-3"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scroll-indicator">
+        <i class="fas fa-chevron-down"></i>
+      </div>
+    </section>
+
+    <!-- ... (Features, Listings, About, Footer unchanged) ... -->
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <div class="footer-logo">
+              <i class="fas fa-utensils"></i>
+              <span>ShareBite</span>
+            </div>
+            <p>
+              Making a difference, one meal at a time. Join us in the fight
+              against food waste and hunger.
+            </p>
+            <div class="social-links">
+              <a href="#"><i class="fab fa-facebook"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+              <a href="#"><i class="fab fa-linkedin"></i></a>
+            </div>
+          </div>
+          <div class="footer-section">
+            <h4>Quick Links</h4>
+            <ul>
+              <li><a href="#home">Home</a></li>
+              <li><a href="#features">How It Works</a></li>
+              <li><a href="#listings">Food Listings</a></li>
+              <li><a href="#about">About Us</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h4>For Donors</h4>
+            <ul>
+              <li><a href="#">List Food</a></li>
+              <li><a href="#">Donor Guidelines</a></li>
+              <li><a href="#">Track Impact</a></li>
+              <li><a href="#">Support</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h4>For Collectors</h4>
+            <ul>
+              <li><a href="#">Find Food</a></li>
+              <li><a href="#">Register NGO</a></li>
+              <li><a href="#">Volunteer</a></li>
+              <li><a href="#">Resources</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>
+            &copy; 2024 ShareBite. All rights reserved. | Privacy Policy | Terms
+            of Service
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Loading ShareBite...</p>
+      </div>
+    </div>
+
+    <!-- Existing Scripts -->
+    <script src="js/theme.js"></script>
+    <script src="js/script.js"></script>
+
+    <!-- ✅ Register Service Worker -->
+    <script>
+// Register service worker for PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('./service-worker.js')
+      .then(function(registration) {
+        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+      }, function(err) {
+        console.log('ServiceWorker registration failed: ', err);
+      });
+  });
+}
+
+// PWA install prompt
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  
+  // Show install button or prompt
+  console.log('PWA install prompt ready');
+  
+  // You can create an install button here
+  const installBtn = document.createElement('button');
+  installBtn.textContent = '📱 Install App';
+  installBtn.style.cssText = `
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 14px;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+    z-index: 1000;
+  `;
+  
+  installBtn.addEventListener('click', () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult) => {
+        console.log(choiceResult.outcome);
+        deferredPrompt = null;
+        installBtn.remove();
+      });
+    }
+  });
+  
+  document.body.appendChild(installBtn);
+});
+</script>
+
+  </body>
+</html> -->
