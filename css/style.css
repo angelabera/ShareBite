@@ -1362,10 +1362,10 @@ html, body, .feature-card, .food-card, .navbar, .modal-content, .footer, .stats-
 }
 .contact-container{
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
+    grid-template-columns: 1fr;
+    gap: 2rem;
     margin-left:5rem;
-    align-items: center;
+    align-items:start;
 }
 .contact-header h2{
     font-size: var(--h2-size);
@@ -1380,17 +1380,17 @@ html, body, .feature-card, .food-card, .navbar, .modal-content, .footer, .stats-
 .contact-header p{
     font-size: 1.1rem;
     color: var(--medium-gray);
-    line-height: 1.7;
+    line-height: 1.7rem;
     margin-bottom: 2rem;
 }
 .contact-section p i{
     color: var(--primary-color);
-    margin-right: 1.5rem;
-    font-size: 2rem;
+    margin-right:1rem;
+    font-size: 1.5rem;
 }
 .contact-section p{
-    line-height: 3rem;
-    font-size: 2rem;
+    line-height: 2.5rem;
+    font-size: 1.2rem;
     letter-spacing: 1px;
 }
 .contact-section p span{
