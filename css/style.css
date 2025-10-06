@@ -28,7 +28,7 @@
     --hero-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     
     /* Typography */
-    --font-family: 'Poppins', sans-serif;
+   --font-family: 'Inter', sans-serif;
     --h1-size: 3.5rem;
     --h2-size: 2.5rem;
     --h3-size: 1.8rem;
@@ -527,8 +527,8 @@ body {
     right: 1rem;
     background: var(--accent-color);
     color: white;
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -805,6 +805,247 @@ body {
 
 .close-modal:hover {
     color: var(--black);
+}
+/* Multi-Step Form Progress Bar */
+.form-progress {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem;
+    background: var(--light-gray);
+    margin: 0;
+}
+
+.progress-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+    position: relative;
+    opacity: 0.5;
+    transition: var(--transition-medium);
+}
+
+.progress-step.active {
+    opacity: 1;
+}
+
+.progress-step.completed {
+    opacity: 1;
+}
+
+.step-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: white;
+    border: 3px solid var(--medium-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1rem;
+    transition: var(--transition-medium);
+    z-index: 2;
+}
+
+.progress-step.active .step-circle {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+    transform: scale(1.1);
+}
+
+.progress-step.completed .step-circle {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+.progress-step.completed .step-circle::before {
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+}
+
+.progress-step.completed .step-circle {
+    font-size: 0;
+}
+
+.step-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-align: center;
+    color: var(--dark-gray);
+}
+
+.progress-line {
+    height: 3px;
+    background: var(--medium-gray);
+    flex: 1;
+    margin: 0 -1rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    transition: var(--transition-medium);
+}
+
+.progress-line::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background: var(--primary-color);
+    transition: width 0.5s ease;
+}
+
+.progress-step.completed ~ .progress-line::after {
+    width: 100%;
+}
+
+.form-step {
+    display: none;
+    animation: fadeInStep 0.4s ease;
+}
+
+.form-step.active {
+    display: block;
+}
+
+.step-title {
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+    color: var(--black);
+    font-weight: 600;
+}
+
+@keyframes fadeInStep {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.file-upload-area {
+    margin-top: 0.5rem;
+    border: 3px dashed var(--medium-gray);
+    border-radius: var(--border-radius);
+    padding: 3rem 2rem;
+    text-align: center;
+    transition: var(--transition-medium);
+    cursor: pointer;
+    background: var(--light-gray);
+}
+
+.file-upload-area:hover {
+    border-color: var(--primary-color);
+    background: rgba(76, 175, 80, 0.05);
+    transform: translateY(-2px);
+}
+
+.file-upload-area.drag-over {
+    border-color: var(--primary-color);
+    background: rgba(76, 175, 80, 0.1);
+    border-style: solid;
+}
+
+.file-upload-area i {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.file-upload-area span {
+    display: block;
+    font-weight: 500;
+    color: var(--dark-gray);
+    margin-bottom: 0.5rem;
+}
+
+.file-upload-area small {
+    color: var(--medium-gray);
+    font-size: 0.85rem;
+}
+
+.image-preview {
+    margin-top: 1rem;
+    display: none;
+    position: relative;
+}
+
+.image-preview.active {
+    display: block;
+}
+
+.image-preview img {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-medium);
+}
+
+.image-preview .remove-image {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--secondary-color);
+    color: white;
+    border: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-medium);
+    box-shadow: var(--shadow-medium);
+}
+
+.image-preview .remove-image:hover {
+    background: var(--secondary-dark);
+    transform: scale(1.1);
+}
+
+.form-navigation {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--light-gray);
+}
+
+.form-navigation .btn {
+    min-width: 120px;
+}
+
+@media (max-width: 768px) {
+    .form-progress {
+        padding: 1.5rem 1rem;
+    }
+    
+    .step-label {
+        font-size: 0.75rem;
+    }
+    
+    .step-circle {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
+    }
+    
+    .progress-line {
+        margin: 0 -0.5rem;
+    }
 }
 
 .listing-form {
@@ -1356,6 +1597,7 @@ html, body, .feature-card, .food-card, .navbar, .modal-content, .footer, .stats-
 .slide-in-up {
     animation: slideInUp 0.5s ease;
 }
+/* -------------------- Contact Section -------------------- */
 .contactInfo{
     padding: var(--section-padding);
     background: var(--light-gray);
@@ -1411,4 +1653,682 @@ html, body, .feature-card, .food-card, .navbar, .modal-content, .footer, .stats-
   .contact-section p i {
     font-size: 1.5rem;
   }
+}
+/* -------------------- Existing Animation Code -------------------- */
+.hero-title {
+    opacity: 0;
+    animation: slideInUp 1s ease 0.3s forwards;
+}
+
+.hero-description {
+    opacity: 0;
+    animation: slideInUp 1s ease 0.5s forwards;
+}
+
+.hero-buttons {
+    opacity: 0;
+    animation: slideInUp 1s ease 0.7s forwards;
+}
+
+.hero-stats {
+    opacity: 0;
+    animation: slideInUp 1s ease 0.9s forwards;
+}
+
+/* Floating animations for hero cards */
+@keyframes floatSlow {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(2deg); }
+}
+
+@keyframes floatMedium {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(-2deg); }
+}
+
+@keyframes floatFast {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-25px) rotate(3deg); }
+}
+
+.floating-card.food-card-1 {
+    animation: floatSlow 4s ease-in-out infinite;
+}
+
+.floating-card.food-card-2 {
+    animation: floatMedium 5s ease-in-out infinite;
+}
+
+.floating-card.food-card-3 {
+    animation: floatFast 3.5s ease-in-out infinite;
+}
+
+/* Plate rotation animation */
+.plate {
+    animation: float 6s ease-in-out infinite, subtleRotate 20s linear infinite;
+}
+
+@keyframes subtleRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Food items orbital animation */
+.food-item {
+    animation: orbit 10s linear infinite;
+}
+
+.item-1 {
+    animation: orbit 10s linear infinite, pulse 2s ease-in-out infinite;
+}
+
+.item-2 {
+    animation: orbit 10s linear infinite 3.3s, pulse 2s ease-in-out infinite 0.5s;
+}
+
+.item-3 {
+    animation: orbit 10s linear infinite 6.6s, pulse 2s ease-in-out infinite 1s;
+}
+
+@keyframes orbit {
+    0% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(30px, -20px) scale(1.1); }
+    50% { transform: translate(0, -40px) scale(1); }
+    75% { transform: translate(-30px, -20px) scale(0.9); }
+    100% { transform: translate(0, 0) scale(1); }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.feature-card {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUpStagger 0.8s ease forwards;
+}
+
+.feature-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.feature-card:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.feature-card:nth-child(3) {
+    animation-delay: 0.5s;
+}
+
+@keyframes fadeInUpStagger {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.feature-icon {
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.feature-card:hover .feature-icon {
+    transform: scale(1.1) rotate(360deg);
+}
+
+.food-card {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.food-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s ease;
+    z-index: 1;
+}
+
+.food-card:hover::before {
+    left: 100%;
+}
+
+.food-card:hover {
+    transform: translateY(-8px) scale(1.02);
+}
+
+.food-card:hover .food-image {
+    transform: scale(1.05);
+}
+
+.food-image {
+    transition: transform 0.5s ease;
+    overflow: hidden;
+}
+
+.btn {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+}
+
+.btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn:active {
+    transform: scale(0.95);
+}
+
+.claim-btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.claim-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.5s ease, height 0.5s ease;
+}
+
+.claim-btn:hover::after {
+    width: 200%;
+    height: 200%;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8) rotateX(20deg);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1) rotateX(0deg);
+    }
+}
+
+.modal {
+    animation: modalFadeIn 0.3s ease;
+}
+
+.modal-content {
+    animation: modalSlideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.progress-step {
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.progress-step.active .step-circle {
+    animation: pulseGlow 1.5s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+    }
+    50% {
+        box-shadow: 0 0 0 10px rgba(76, 175, 80, 0);
+    }
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    animation: inputFocus 0.3s ease;
+}
+
+@keyframes inputFocus {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.02);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.file-upload-area {
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.file-upload-area:hover {
+    transform: translateY(-5px);
+}
+
+.file-upload-area i {
+    transition: all 0.3s ease;
+}
+
+.file-upload-area:hover i {
+    transform: scale(1.2) rotate(10deg);
+    color: var(--primary-dark);
+}
+
+.image-preview {
+    animation: zoomIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.remove-image {
+    animation: rotateIn 0.3s ease;
+}
+
+@keyframes rotateIn {
+    from {
+        opacity: 0;
+        transform: rotate(-180deg) scale(0);
+    }
+    to {
+        opacity: 1;
+        transform: rotate(0deg) scale(1);
+    }
+}
+
+.stats-circle {
+    animation: float 6s ease-in-out infinite, rotate360 30s linear infinite;
+}
+
+@keyframes rotate360 {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.scroll-indicator {
+    animation: bounceArrow 2s ease-in-out infinite;
+}
+
+@keyframes bounceArrow {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateX(-50%) translateY(0);
+    }
+    40% {
+        transform: translateX(-50%) translateY(-15px);
+    }
+    60% {
+        transform: translateX(-50%) translateY(-8px);
+    }
+}
+
+.nav-link {
+    position: relative;
+}
+
+.nav-link::after {
+    transition: width 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.filter-btn {
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.filter-btn:hover {
+    transform: translateY(-3px);
+}
+
+.filter-btn.active {
+    animation: buttonPop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes buttonPop {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.spinner {
+    animation: spin 1s linear infinite, colorShift 3s ease-in-out infinite;
+}
+
+@keyframes colorShift {
+    0%, 100% {
+        border-top-color: var(--primary-color);
+    }
+    33% {
+        border-top-color: var(--secondary-color);
+    }
+    66% {
+        border-top-color: var(--accent-color);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+        transform: translateX(400px);
+    }
+}
+
+.impact-item {
+    opacity: 0;
+    transform: translateX(-30px);
+}
+
+.impact-item.animate-in {
+    animation: slideInLeft 0.6s ease forwards;
+}
+
+.impact-item:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.impact-item:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.impact-item:nth-child(3) {
+    animation-delay: 0.5s;
+}
+
+@keyframes slideInLeft {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.social-links a {
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.social-links a:hover {
+    transform: translateY(-5px) rotate(360deg);
+}
+
+.loading-overlay {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes gentleFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+}
+
+.feature-step {
+    animation: gentleFloat 3s ease-in-out infinite;
+}
+
+.no-listings {
+    animation: fadeInUp 0.6s ease;
+}
+
+.no-listings i {
+    animation: gentleFloat 3s ease-in-out infinite;
+}
+
+.hero-buttons .btn-primary {
+    animation: megaPulse 2s ease-in-out infinite;
+}
+
+@keyframes megaPulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.7);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 20px rgba(255, 107, 53, 0);
+    }
+}
+
+.add-listing-btn {
+    animation: shakeAttention 3s ease-in-out infinite;
+}
+
+@keyframes shakeAttention {
+    0%, 90%, 100% { transform: translateX(0); }
+    92%, 96% { transform: translateX(-3px); }
+    94%, 98% { transform: translateX(3px); }
+}
+
+.food-card {
+    position: relative;
+    background: white;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.food-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 15px 50px rgba(76, 175, 80, 0.4),
+                0 8px 25px rgba(76, 175, 80, 0.3),
+                0 0 0 1px rgba(76, 175, 80, 0.1);
+}
+
+/* Add different colors for different categories */
+.food-card[data-category="restaurant"]:hover {
+    box-shadow: 0 15px 50px rgba(76, 175, 80, 0.4),
+                0 8px 25px rgba(76, 175, 80, 0.3);
+}
+
+.food-card[data-category="bakery"]:hover {
+    box-shadow: 0 15px 50px rgba(255, 193, 7, 0.4),
+                0 8px 25px rgba(255, 193, 7, 0.3);
+}
+
+.food-card[data-category="household"]:hover {
+    box-shadow: 0 15px 50px rgba(33, 150, 243, 0.4),
+                0 8px 25px rgba(33, 150, 243, 0.3);
+}
+
+.food-card[data-category="event"]:hover {
+    box-shadow: 0 15px 50px rgba(255, 107, 53, 0.4),
+                0 8px 25px rgba(255, 107, 53, 0.3);
+}
+
+.stat-number {
+    display: inline-block;
+    animation: bounceNumbers 2s ease-in-out infinite;
+}
+
+.stat:nth-child(1) .stat-number {
+    animation-delay: 0s;
+}
+
+.stat:nth-child(2) .stat-number {
+    animation-delay: 0.3s;
+}
+
+.stat:nth-child(3) .stat-number {
+    animation-delay: 0.6s;
+}
+
+@keyframes bounceNumbers {
+    0%, 80%, 100% { transform: translateY(0) scale(1); }
+    40% { transform: translateY(-10px) scale(1.1); }
+}
+
+.feature-icon {
+    animation: iconGlow 2s ease-in-out infinite;
+}
+
+@keyframes iconGlow {
+    0%, 100% {
+        box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(76, 175, 80, 1),
+                    0 0 50px rgba(76, 175, 80, 0.5);
+    }
+}
+
+.scroll-indicator {
+    animation: wiggle 1s ease-in-out infinite;
+}
+
+@keyframes wiggle {
+    0%, 100% { transform: translateX(-50%) rotate(0deg); }
+    25% { transform: translateX(-50%) rotate(-10deg); }
+    75% { transform: translateX(-50%) rotate(10deg); }
+}
+
+.plate {
+    animation: float 6s ease-in-out infinite;
+}
+
+.food-item {
+    animation: gentleMove 4s ease-in-out infinite;
+}
+
+.item-1 {
+    animation: gentleMove 4s ease-in-out infinite;
+}
+
+.item-2 {
+    animation: gentleMove 4.5s ease-in-out infinite 0.5s;
+}
+
+.item-3 {
+    animation: gentleMove 5s ease-in-out infinite 1s;
+}
+
+@keyframes gentleMove {
+    0%, 100% { 
+        transform: translate(0, 0) scale(1); 
+    }
+    25% { 
+        transform: translate(15px, -15px) scale(1.1); 
+    }
+    50% { 
+        transform: translate(-10px, -25px) scale(1.05); 
+    }
+    75% { 
+        transform: translate(10px, -15px) scale(1.08); 
+    }
+}
+
+.claim-btn {
+    animation: claimPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes claimPulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 5px 25px rgba(76, 175, 80, 0.3);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 5px 35px rgba(76, 175, 80, 0.6);
+    }
+}
+
+.stats-circle {
+    animation: float 6s ease-in-out infinite;
+}
+
+.section-title {
+    animation: slideFromLeft 1s ease-out;
+}
+
+@keyframes slideFromLeft {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+.filter-btn {
+    animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.filter-btn:nth-child(1) { animation-delay: 0.1s; }
+.filter-btn:nth-child(2) { animation-delay: 0.2s; }
+.filter-btn:nth-child(3) { animation-delay: 0.3s; }
+.filter-btn:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.social-links a {
+    animation: socialDance 3s ease-in-out infinite;
+}
+
+.social-links a:nth-child(1) { animation-delay: 0s; }
+.social-links a:nth-child(2) { animation-delay: 0.2s; }
+.social-links a:nth-child(3) { animation-delay: 0.4s; }
+.social-links a:nth-child(4) { animation-delay: 0.6s; }
+
+@keyframes socialDance {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
 }
