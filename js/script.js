@@ -627,31 +627,37 @@ class ShareBite {
     });
   }
 
+  // Claim food method
+  // Claim food method
   handleClaimFood(listingId) {
     const listing = this.foodListings.find(l => l.id === listingId);
     if (!listing) return;
 
-    // Show confirmation dialog
-    const confirmed = confirm(`Claim "${listing.foodType}" from ${listing.donor}?\n\n${listing.location}\n${this.formatTime(listing.pickupTime)}\n\n${listing.contact}`);
-    
+    const confirmed = confirm(
+      `Claim "${listing.foodType}" from ${listing.donor}?\n\n` +
+      `${listing.location}\nPickup at ${this.formatTime(listing.pickupTime)}\n\n` +
+      `Contact: ${listing.contact}`
+    );
     if (confirmed) {
-      // Remove listing from available items
       this.foodListings = this.foodListings.filter(l => l.id !== listingId);
       this.filterListings();
       this.renderFoodListings();
-
-      // Show success message
-      this.showToast(`Successfully claimed ${listing.foodType}! Check your email for pickup details.`, 'success');
-
-      // Animate removal
-      const card = document.querySelector(`[data-id="${listingId}"]`);
-      if (card) {
-        card.style.animation = 'fadeOut 0.3s ease forwards';
-        setTimeout(() => {
-          this.renderFoodListings();
-        }, 300);
-      }
+      this.showToast(`Successfully claimed ${listing.foodType}!`, 'success');
     }
+  }
+
+  // Role switch method
+  setupRoleSwitch() {
+    const roleSwitch = document.getElementById('roleSwitch');
+    const currentRoleSpan = document.getElementById('currentRole');
+    if (!roleSwitch || !currentRoleSpan) return;
+
+    roleSwitch.addEventListener('click', () => {
+      this.currentRole = this.currentRole === 'donor' ? 'collector' : 'donor';
+      currentRoleSpan.textContent =
+        this.currentRole.charAt(0).toUpperCase() + this.currentRole.slice(1);
+      this.updateUIForRole();
+    });
   }
 
   handleContactDonor(contact) {
