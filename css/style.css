@@ -200,7 +200,7 @@ body {
     align-items: center;
     position: relative;
     overflow: hidden;
-    padding-top: 80px;
+    padding-top: 20px;
 }
 
 .hero::before {
@@ -1417,6 +1417,10 @@ body {
     .hamburger {
         display: flex;
     }
+
+    .hero-content {
+        padding-top: 4rem;
+    }
     
     .hero-buttons {
         flex-direction: column;
@@ -1455,6 +1459,10 @@ body {
 
     .footer-logo, .social-links {
         justify-content: center;
+    }
+
+    .footer-section ul {
+        padding: 0;
     }
     
     .floating-card {
@@ -2291,4 +2299,21 @@ html, body, .feature-card, .food-card, .navbar, .modal-content, .footer, .stats-
 @keyframes socialDance {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-5px); }
+}
+
+/* Responsive Design for Larger Screens */
+@media (min-width: 1440px) {
+    .container,
+    .nav-container,
+    .hero-container {
+        max-width: 1280px;
+    }
+}
+
+@media (min-width: 1600px) {
+    .container,
+    .nav-container,
+    .hero-container {
+        max-width: 1400px;
+    }
 }
