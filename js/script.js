@@ -505,13 +505,7 @@ handleFileSelect(file) {
         });
     }
 
-    setupSmoothScrolling() {
-        const scrollIndicator = document.querySelector('.scroll-indicator');
-        
-        scrollIndicator.addEventListener('click', () => {
-            document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
-        });
-    }
+    
 
     setupResponsiveNav() {
         const hamburger = document.querySelector('.hamburger');
@@ -1061,3 +1055,14 @@ window.clearShareBiteCaches = async function() {
         console.log('[ShareBite] Sent SKIP_WAITING to service worker');
     }
 };
+
+document.addEventListener('DOMContentLoaded', () => {
+    const scrollIndicator = document.querySelector('.scroll-indicator');
+    if (scrollIndicator) {
+      scrollIndicator.addEventListener('click', () => {
+        document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+      });
+    }
+  });
+  
+  
