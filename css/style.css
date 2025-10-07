@@ -138,99 +138,6 @@ body {
     gap: 1rem;
 }
 
-/* CORRECTED: Styles for the notification dropdown panel */
-.notification-bell {
-    position: relative;
-    cursor: pointer;
-    color: var(--dark-gray);
-    font-size: 1.2rem;
-    padding: 0.5rem;
-}
-
-.notification-badge {
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    background-color: var(--secondary-color);
-    color: white;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid var(--white);
-    transform: translate(25%, -25%);
-}
-
-.notification-panel {
-    display: none;
-    position: absolute;
-    top: calc(100% + 15px); /* Position it below the bell */
-    right: -10px;
-    width: 320px;
-    background-color: var(--white);
-    border-radius: var(--card-radius);
-    box-shadow: var(--shadow-heavy);
-    z-index: 1100; /* Ensure it's above other content */
-    overflow: hidden;
-    animation: slideInUp 0.3s ease;
-    border: 1px solid var(--light-gray);
-}
-
-
-.notification-panel.show {
-    display: block;
-}
-
-.notification-header {
-    padding: 1rem;
-    font-weight: 600;
-    border-bottom: 1px solid var(--light-gray);
-}
-
-#notificationList {
-    max-height: 300px;
-    overflow-y: auto;
-}
-
-.notification-item {
-    padding: 1rem;
-    border-bottom: 1px solid var(--light-gray);
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.notification-item:last-child {
-    border-bottom: none;
-}
-
-.notification-item i {
-    color: var(--primary-color);
-}
-
-.notification-item.unread {
-    background-color: #f0f8ff; /* A light blue to indicate unread */
-}
-
-.no-notifications {
-    padding: 2rem 1rem;
-    text-align: center;
-    color: var(--medium-gray);
-}
-
-:root.dark .notification-bell { color: var(--medium-gray); }
-:root.dark .notification-badge { border-color: #1E1E1E; }
-:root.dark .notification-panel { background-color: #2a2a2a; border-color: #333; }
-:root.dark .notification-header { border-bottom-color: #333; }
-:root.dark .notification-item { border-bottom-color: #333; color: var(--dark-gray); } /* Dark mode text color fix */
-:root.dark .notification-item.unread { background-color: #1c2a38; }
-
-
 .role-switch {
     background: var(--primary-gradient);
     color: #fff;
@@ -735,11 +642,6 @@ body {
     box-shadow: var(--shadow-heavy);
 }
 
-.food-card.collected {
-    opacity: 0.6;
-    transition: opacity 0.5s ease;
-}
-
 .food-image {
     width: 100%;
     height: 200px;
@@ -836,31 +738,6 @@ body {
     transform: translateY(-2px);
     box-shadow: var(--shadow-medium);
 }
-
-/* CORRECTED: Specificity ensures this rule overrides the default .btn style */
-.food-actions .claim-btn.pending {
-    background: var(--secondary-gradient);
-    cursor: not-allowed;
-    animation: none;
-}
-
-.claim-btn.pending:hover {
-    transform: none;
-    box-shadow: var(--shadow-light);
-}
-
-.confirm-collection-btn {
-    background: var(--primary-gradient);
-    flex: 1;
-}
-
-.collected-btn {
-    background: var(--medium-gray);
-    color: white;
-    cursor: not-allowed;
-    flex: 1;
-}
-
 
 .contact-btn {
     background: var(--light-gray);
@@ -1330,20 +1207,21 @@ body {
 .label {
     font-size: 1rem;
     font-weight: 500;
-}
-
-/* Footer */
+}/* Footer */
 .footer {
     background: var(--black);
     color: white;
     padding: 3rem 0 1rem;
 }
 
+/* Main Footer Layout */
 .footer-content {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr;
     gap: 2rem;
     margin-bottom: 2rem;
+    justify-content: center;
+    align-items: start;
 }
 
 .footer-section h4 {
@@ -1362,14 +1240,24 @@ body {
     color: var(--primary-light);
 }
 
+.footer-credit {
+    color: var(--primary-light);
+    margin-top: 0.8rem;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* Section text styling */
 .footer-section p {
     color: var(--medium-gray);
     line-height: 1.6;
     margin-bottom: 1.5rem;
 }
 
+/* Links styling */
 .footer-section ul {
     list-style: none;
+    padding: 0;
 }
 
 .footer-section ul li {
@@ -1386,6 +1274,7 @@ body {
     color: var(--primary-light);
 }
 
+/* Social links */
 .social-links {
     display: flex;
     gap: 1rem;
@@ -1409,11 +1298,51 @@ body {
     transform: translateY(-2px);
 }
 
+/* Footer bottom section */
 .footer-bottom {
     border-top: 1px solid var(--dark-gray);
     padding-top: 2rem;
     text-align: center;
     color: var(--medium-gray);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0 auto;
+}
+
+.footer-bottom p {
+    margin: 0;
+}
+
+.footer-bottom a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.footer-bottom a:hover {
+    color: var(--secondary-color);
+    text-decoration: underline;
+}
+
+/* Ensure the "Made with ❤️ by Angela Bera" is bold and green */
+.footer-bottom .footer-credit,
+.footer-bottom .footer-credit a {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .footer-content {
+        grid-template-columns: 1fr 1fr;
+        text-align: center;
+    }
+    .footer-bottom {
+        text-align: center;
+    }
 }
 
 /* Loading Overlay */
@@ -2225,7 +2154,7 @@ html, body, .feature-card, .food-card, .navbar, .modal-content, .footer, .stats-
 
 .food-card {
     position: relative;
-    background: rgb(249, 247, 247);
+    background: white;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -2345,7 +2274,7 @@ html, body, .feature-card, .food-card, .navbar, .modal-content, .footer, .stats-
 @keyframes claimPulse {
     0%, 100% {
         transform: scale(1);
-        box-shadow: 0 5px 25px rgba(6, 233, 52, 0.3);
+        box-shadow: 0 5px 25px rgba(76, 175, 80, 0.3);
     }
     50% {
         transform: scale(1.05);
@@ -2407,4 +2336,3 @@ html, body, .feature-card, .food-card, .navbar, .modal-content, .footer, .stats-
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-5px); }
 }
-
