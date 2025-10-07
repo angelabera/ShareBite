@@ -1241,20 +1241,21 @@ body {
 .label {
     font-size: 1rem;
     font-weight: 500;
-}
-
-/* Footer */
+}/* Footer */
 .footer {
     background: var(--black);
     color: white;
     padding: 3rem 0 1rem;
 }
 
+/* Main Footer Layout */
 .footer-content {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr;
     gap: 2rem;
     margin-bottom: 2rem;
+    justify-content: center;
+    align-items: start;
 }
 
 .footer-section h4 {
@@ -1273,14 +1274,24 @@ body {
     color: var(--primary-light);
 }
 
+.footer-credit {
+    color: var(--primary-light);
+    margin-top: 0.8rem;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* Section text styling */
 .footer-section p {
     color: var(--medium-gray);
     line-height: 1.6;
     margin-bottom: 1.5rem;
 }
 
+/* Links styling */
 .footer-section ul {
     list-style: none;
+    padding: 0;
 }
 
 .footer-section ul li {
@@ -1297,6 +1308,7 @@ body {
     color: var(--primary-light);
 }
 
+/* Social links */
 .social-links {
     display: flex;
     gap: 1rem;
@@ -1320,11 +1332,51 @@ body {
     transform: translateY(-2px);
 }
 
+/* Footer bottom section */
 .footer-bottom {
     border-top: 1px solid var(--dark-gray);
     padding-top: 2rem;
     text-align: center;
     color: var(--medium-gray);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0 auto;
+}
+
+.footer-bottom p {
+    margin: 0;
+}
+
+.footer-bottom a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.footer-bottom a:hover {
+    color: var(--secondary-color);
+    text-decoration: underline;
+}
+
+/* Ensure the "Made with ❤️ by Angela Bera" is bold and green */
+.footer-bottom .footer-credit,
+.footer-bottom .footer-credit a {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .footer-content {
+        grid-template-columns: 1fr 1fr;
+        text-align: center;
+    }
+    .footer-bottom {
+        text-align: center;
+    }
 }
 
 /* Loading Overlay */
@@ -1520,6 +1572,15 @@ body {
     .listing-form {
         padding: 1rem;
     }
+    
+    .filter-group {
+        flex-direction: column;
+    }
+
+    .food-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+
 }
 
 /* Dark Mode Styles */
