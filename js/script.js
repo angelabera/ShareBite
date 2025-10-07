@@ -7,6 +7,10 @@ class ShareBite {
         this.filteredListings = [];
         this.currentFilter = 'all';
         
+        // Initialize notifications array and counter
+        this.notifications = [];
+        this.unreadNotifications = 0;
+
         this.init();
         this.initTheme(); // add theme initialization after base init
     }
@@ -80,7 +84,32 @@ class ShareBite {
         
         // Scroll effects
         this.setupScrollEffects();
+
+        // Set up the notification bell listener
+        this.setupNotifications();
     }
+
+    setupNotifications() {
+        const bell = document.getElementById('notificationBell');
+        const panel = document.getElementById('notificationPanel');
+
+        bell.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent the click from bubbling up to the document
+            panel.classList.toggle('show');
+            if (panel.classList.contains('show')) {
+                // When panel is opened, mark notifications as read
+                this.markNotificationsAsRead();
+            }
+        });
+
+        // Close the panel if user clicks anywhere outside of the bell OR the panel
+        document.addEventListener('click', (e) => {
+            if (!bell.contains(e.target) && !panel.contains(e.target) && panel.classList.contains('show')) {
+                panel.classList.remove('show');
+            }
+        });
+    }
+
 
     setupNavigation() {
         const navLinks = document.querySelectorAll('.nav-link');
@@ -104,8 +133,13 @@ class ShareBite {
             this.currentRole = this.currentRole === 'donor' ? 'collector' : 'donor';
             currentRoleSpan.textContent = this.currentRole.charAt(0).toUpperCase() + this.currentRole.slice(1);
             
-            // Update UI based on role
             this.updateUIForRole();
+            
+            // This is the code block that was in conflict. It provides a small animation.
+            roleSwitch.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                roleSwitch.style.transform = 'scale(1)';
+            }, 150);
         });
     }
 
@@ -113,17 +147,22 @@ class ShareBite {
         const donateBtn = document.getElementById('donateFood');
         const findBtn = document.getElementById('findFood');
         const addListingBtn = document.getElementById('addListingBtn');
-        
+        const notificationBell = document.getElementById('notificationBell');
+
         if (this.currentRole === 'collector') {
             donateBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
             findBtn.innerHTML = '<i class="fas fa-heart"></i> Help Others';
             addListingBtn.style.display = 'none';
-        } else {
+            notificationBell.style.display = 'none'; // Hide bell for collectors
+        } else { // Donor
             donateBtn.innerHTML = '<i class="fas fa-heart"></i> Donate Food';
             findBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
             addListingBtn.style.display = 'flex';
+            notificationBell.style.display = 'block'; // Show bell for donors
         }
+        this.renderFoodListings(); // Re-render to show/hide claim buttons correctly
     }
+
 
    setupModal() {
     const modal = document.getElementById('addListingModal');
@@ -134,11 +173,14 @@ class ShareBite {
     this.currentStep = 1;
     this.totalSteps = 3;
 
-    addListingBtn.addEventListener('click', () => {
-        modal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-        this.resetFormSteps();
-    });
+    if (addListingBtn) {
+        addListingBtn.addEventListener('click', () => {
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            this.resetFormSteps();
+        });
+    }
+
 
     const closeModal = () => {
         modal.style.display = 'none';
@@ -246,7 +288,6 @@ resetFormSteps() {
 setupFileUpload() {
     const fileInput = document.getElementById('photo');
     const uploadArea = document.getElementById('photoUpload');
-    const imagePreview = document.getElementById('imagePreview');
 
     uploadArea.addEventListener('click', () => {
         fileInput.click();
@@ -318,16 +359,6 @@ handleFileSelect(file) {
     reader.readAsDataURL(file);
 }
 
-    handleFileSelect(file) {
-        const uploadArea = document.getElementById('photoUpload');
-        if (file.type.startsWith('image/')) {
-            uploadArea.innerHTML = `
-                <i class="fas fa-check-circle" style="color: var(--primary-color);"></i>
-                <span style="color: var(--primary-color);">${file.name}</span>
-            `;
-        }
-    }
-
     setupFormHandling() {
         const form = document.getElementById('listingForm');
         
@@ -365,7 +396,8 @@ handleFileSelect(file) {
             contact: document.getElementById('contact').value,
             photo: document.getElementById('photo').files[0],
             createdAt: new Date(),
-            donor: 'Current User'
+            donor: 'Current User',
+            status: 'available'
         };
     }
 
@@ -410,7 +442,6 @@ handleFileSelect(file) {
             <span>${message}</span>
         `;
         
-        // Add toast styles
         toast.style.cssText = `
             position: fixed;
             top: 100px;
@@ -449,7 +480,6 @@ handleFileSelect(file) {
             <span>Click to upload or drag and drop</span>
         `;
         
-        // Reset minimum date
         const freshUntilInput = document.getElementById('freshUntil');
         const now = new Date();
         now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
@@ -462,15 +492,11 @@ handleFileSelect(file) {
         
         filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                // Remove active class from all buttons
                 filterBtns.forEach(b => b.classList.remove('active'));
-                // Add active class to clicked button
                 btn.classList.add('active');
                 
-                // Set current filter
                 this.currentFilter = btn.getAttribute('data-filter');
                 
-                // Filter and render listings
                 this.filterListings();
                 this.renderFoodListings();
             });
@@ -502,19 +528,23 @@ handleFileSelect(file) {
     setupSmoothScrolling() {
         const scrollIndicator = document.querySelector('.scroll-indicator');
         
-        scrollIndicator.addEventListener('click', () => {
-            document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
-        });
+        if(scrollIndicator) {
+            scrollIndicator.addEventListener('click', () => {
+                document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+            });
+        }
     }
 
     setupResponsiveNav() {
         const hamburger = document.querySelector('.hamburger');
         const navMenu = document.querySelector('.nav-menu');
         
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
-            navMenu.classList.toggle('active');
-        });
+        if (hamburger) {
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                navMenu.classList.toggle('active');
+            });
+        }
     }
 
     setupHeroButtons() {
@@ -564,7 +594,6 @@ handleFileSelect(file) {
             animated = true;
         };
         
-        // Trigger animation when hero section is in view
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -580,7 +609,6 @@ handleFileSelect(file) {
     }
 
     setupScrollEffects() {
-        // Navbar background on scroll
         window.addEventListener('scroll', () => {
             const navbar = document.querySelector('.navbar');
             if (window.scrollY > 50) {
@@ -592,7 +620,6 @@ handleFileSelect(file) {
             }
         });
         
-        // Animate elements on scroll
         this.setupScrollAnimations();
     }
 
@@ -610,93 +637,20 @@ handleFileSelect(file) {
             });
         }, observerOptions);
         
-        // Observe elements to animate
         const elementsToAnimate = document.querySelectorAll('.feature-card, .food-card, .impact-item');
         elementsToAnimate.forEach(el => {
             observer.observe(el);
         });
     }
-
+    
     generateSampleListings() {
         const sampleListings = [
-            {
-                id: 1,
-                foodType: "Fresh Pizza Margherita",
-                quantity: "8 slices",
-                category: "restaurant",
-                description: "Freshly made pizza with mozzarella, tomato sauce, and basil. Perfect condition, just from lunch service.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "18:00",
-                location: "Mario's Pizzeria, 123 Main Street",
-                contact: "+1 234-567-8900",
-                createdAt: new Date(Date.now() - 3600000),
-                donor: "Mario's Pizzeria"
-            },
-            {
-                id: 2,
-                foodType: "Assorted Sandwiches",
-                quantity: "15 sandwiches",
-                category: "event",
-                description: "Various sandwiches including turkey, ham, and vegetarian options from corporate catering event.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "16:30",
-                location: "Downtown Conference Center",
-                contact: "events@conference.com",
-                createdAt: new Date(Date.now() - 7200000),
-                donor: "Conference Center"
-            },
-            {
-                id: 3,
-                foodType: "Fresh Bread & Pastries",
-                quantity: "20+ items",
-                category: "bakery",
-                description: "End-of-day fresh bread, croissants, and pastries. All baked today and still perfectly fresh.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "20:00",
-                location: "Sunrise Bakery, Oak Avenue",
-                contact: "+1 234-567-8901",
-                createdAt: new Date(Date.now() - 1800000),
-                donor: "Sunrise Bakery"
-            },
-            {
-                id: 4,
-                foodType: "Home-cooked Curry",
-                quantity: "4-6 portions",
-                category: "household",
-                description: "Vegetarian curry with rice, made too much for family dinner. Spice level: medium.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "19:00",
-                location: "Residential Area, Pine Street",
-                contact: "+1 234-567-8902",
-                createdAt: new Date(Date.now() - 900000),
-                donor: "Local Family"
-            },
-            {
-                id: 5,
-                foodType: "Fruit & Vegetable Box",
-                quantity: "1 large box",
-                category: "restaurant",
-                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "17:00",
-                location: "Green Garden Restaurant",
-                contact: "+1 234-567-8903",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant"
-            },
-            {
-                id: 6,
-                foodType: "Grilled Chicken Meals",
-                quantity: "12 complete meals",
-                category: "restaurant",
-                description: "Grilled chicken with rice and vegetables. Prepared for cancelled catering order.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "18:30",
-                location: "Healthy Eats Cafe, Market Square",
-                contact: "+1 234-567-8904",
-                createdAt: new Date(Date.now() - 2700000),
-                donor: "Healthy Eats Cafe"
-            }
+            { id: 1, foodType: "Fresh Pizza Margherita", quantity: "8 slices", category: "restaurant", description: "Freshly made pizza with mozzarella, tomato sauce, and basil.", freshUntil: this.getRandomFutureDate(), pickupTime: "18:00", location: "Mario's Pizzeria, 123 Main Street", contact: "+1 234-567-8900", createdAt: new Date(Date.now() - 3600000), donor: "Mario's Pizzeria", status: 'available' },
+            { id: 2, foodType: "Assorted Sandwiches", quantity: "15 sandwiches", category: "event", description: "Various sandwiches including turkey, ham, and vegetarian options.", freshUntil: this.getRandomFutureDate(), pickupTime: "16:30", location: "Downtown Conference Center", contact: "events@conference.com", createdAt: new Date(Date.now() - 7200000), donor: "Conference Center", status: 'collected' },
+            { id: 3, foodType: "Fresh Bread & Pastries", quantity: "20+ items", category: "bakery", description: "End-of-day fresh bread, croissants, and pastries.", freshUntil: this.getRandomFutureDate(), pickupTime: "20:00", location: "Sunrise Bakery, Oak Avenue", contact: "+1 234-567-8901", createdAt: new Date(Date.now() - 1800000), donor: "Sunrise Bakery", status: 'available' },
+            { id: 4, foodType: "Home-cooked Curry", quantity: "4-6 portions", category: "household", description: "Vegetarian curry with rice, made too much for family dinner.", freshUntil: this.getRandomFutureDate(), pickupTime: "19:00", location: "Residential Area, Pine Street", contact: "+1 234-567-8902", createdAt: new Date(Date.now() - 900000), donor: "Local Family", status: 'pending' },
+            { id: 5, foodType: "Fruit & Vegetable Box", quantity: "1 large box", category: "restaurant", description: "Fresh produce includes apples, oranges, carrots, and lettuce.", freshUntil: this.getRandomFutureDate(), pickupTime: "17:00", location: "Green Garden Restaurant", contact: "+1 234-567-8903", createdAt: new Date(Date.now() - 5400000), donor: "Green Garden Restaurant", status: 'available' },
+            { id: 6, foodType: "Grilled Chicken Meals", quantity: "12 complete meals", category: "restaurant", description: "Grilled chicken with rice and vegetables. Cancelled catering order.", freshUntil: this.getRandomFutureDate(), pickupTime: "18:30", location: "Healthy Eats Cafe, Market Square", contact: "+1 234-567-8904", createdAt: new Date(Date.now() - 2700000), donor: "Healthy Eats Cafe", status: 'available' }
         ];
         
         this.foodListings = sampleListings;
@@ -705,7 +659,7 @@ handleFileSelect(file) {
 
     getRandomFutureDate() {
         const now = new Date();
-        const hours = Math.floor(Math.random() * 48) + 2; // 2 to 50 hours from now
+        const hours = Math.floor(Math.random() * 48) + 2;
         const futureDate = new Date(now.getTime() + hours * 60 * 60 * 1000);
         return futureDate.toISOString().slice(0, 16);
     }
@@ -714,29 +668,45 @@ handleFileSelect(file) {
         const foodGrid = document.getElementById('foodGrid');
         
         if (this.filteredListings.length === 0) {
-            foodGrid.innerHTML = `
-                <div class="no-listings">
-                    <i class="fas fa-search" style="font-size: 3rem; color: var(--medium-gray); margin-bottom: 1rem;"></i>
-                    <h3>No listings found</h3>
-                    <p>Try adjusting your filters or search terms.</p>
-                </div>
-            `;
+            foodGrid.innerHTML = `<div class="no-listings"><i class="fas fa-search"></i><h3>No listings found</h3><p>Try adjusting your filters or search terms.</p></div>`;
             return;
         }
         
         foodGrid.innerHTML = this.filteredListings.map(listing => this.createFoodCard(listing)).join('');
-        
-        // Add event listeners to food cards
         this.setupFoodCardInteractions();
     }
-
+    
     createFoodCard(listing) {
         const timeAgo = this.getTimeAgo(listing.createdAt);
         const freshUntil = this.formatDateTime(listing.freshUntil);
-        const pickupTime = this.formatTime(listing.pickupTime);
+        
+        const actionButtonHtml = (() => {
+            // Logic for DONOR's view
+            if (this.currentRole === 'donor') {
+                switch(listing.status) {
+                    case 'pending':
+                        return `<button class="btn confirm-collection-btn" data-id="${listing.id}"><i class="fas fa-check-double"></i> Confirm Collection</button>`;
+                    case 'collected':
+                        return `<button class="btn collected-btn" disabled><i class="fas fa-check-circle"></i> Collected</button>`;
+                    default: // available
+                        return `<button class="btn claim-btn" disabled><i class="fas fa-check-circle"></i> Available</button>`;
+                }
+            } 
+            // Logic for COLLECTOR's view
+            else { 
+                switch(listing.status) {
+                    case 'pending':
+                        return `<button class="btn claim-btn pending" disabled><i class="fas fa-hourglass-half"></i> Waiting</button>`;
+                    case 'collected':
+                        return `<button class="btn collected-btn" disabled><i class="fas fa-check-circle"></i> Collected</button>`;
+                    default: // available
+                        return `<button class="btn claim-btn" data-id="${listing.id}"><i class="fas fa-hand-paper"></i> Claim Food</button>`;
+                }
+            }
+        })();
         
         return `
-            <div class="food-card" data-id="${listing.id}">
+            <div class="food-card ${listing.status === 'collected' ? 'collected' : ''}" data-id="${listing.id}">
                 <div class="food-image">
                     ${listing.photo ? `<img src="${URL.createObjectURL(listing.photo)}" alt="${listing.foodType}">` : `<i class="fas fa-${this.getFoodIcon(listing.category)}"></i>`}
                     <div class="food-category">${this.capitalizeFirst(listing.category)}</div>
@@ -748,25 +718,14 @@ handleFileSelect(file) {
                         <span class="quantity"><i class="fas fa-utensils"></i> ${listing.quantity}</span>
                         <span class="freshness"><i class="fas fa-clock"></i> ${freshUntil}</span>
                     </div>
-                    <div class="food-location">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span>${listing.location}</span>
-                    </div>
+                    <div class="food-location"><i class="fas fa-map-marker-alt"></i><span>${listing.location}</span></div>
                     <div class="food-meta" style="margin-bottom: 1rem;">
-                        <span style="color: var(--medium-gray); font-size: 0.9rem;">
-                            <i class="fas fa-user"></i> ${listing.donor}
-                        </span>
-                        <span style="color: var(--medium-gray); font-size: 0.9rem;">
-                            <i class="fas fa-clock"></i> ${timeAgo}
-                        </span>
+                        <span style="color: var(--medium-gray); font-size: 0.9rem;"><i class="fas fa-user"></i> ${listing.donor}</span>
+                        <span style="color: var(--medium-gray); font-size: 0.9rem;"><i class="fas fa-clock"></i> ${timeAgo}</span>
                     </div>
                     <div class="food-actions">
-                        <button class="claim-btn" data-id="${listing.id}">
-                            <i class="fas fa-hand-paper"></i> Claim Food
-                        </button>
-                        <button class="contact-btn" data-contact="${listing.contact}">
-                            <i class="fas fa-phone"></i>
-                        </button>
+                        ${actionButtonHtml}
+                        <button class="contact-btn" data-contact="${listing.contact}"><i class="fas fa-phone"></i></button>
                     </div>
                 </div>
             </div>
@@ -774,58 +733,54 @@ handleFileSelect(file) {
     }
 
     setupFoodCardInteractions() {
-        // Claim buttons
-        const claimBtns = document.querySelectorAll('.claim-btn');
-        claimBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const listingId = parseInt(btn.getAttribute('data-id'));
+        document.getElementById('foodGrid').addEventListener('click', (e) => {
+            const targetButton = e.target.closest('button');
+            if (!targetButton) return;
+
+            const card = targetButton.closest('.food-card');
+            if (!card) return;
+            
+            const listingId = parseInt(card.dataset.id);
+
+            if (targetButton.classList.contains('claim-btn')) {
                 this.handleClaimFood(listingId);
-            });
-        });
-        
-        // Contact buttons
-        const contactBtns = document.querySelectorAll('.contact-btn');
-        contactBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const contact = btn.getAttribute('data-contact');
+            } else if (targetButton.classList.contains('confirm-collection-btn')) {
+                this.handleConfirmCollection(listingId);
+            } else if (targetButton.classList.contains('contact-btn')) {
+                const contact = targetButton.dataset.contact;
                 this.handleContactDonor(contact);
-            });
+            }
         });
     }
 
     handleClaimFood(listingId) {
         const listing = this.foodListings.find(l => l.id === listingId);
-        if (!listing) return;
-        
-        // Show confirmation dialog
-        const confirmed = confirm(`Claim "${listing.foodType}" from ${listing.donor}?\n\nPickup: ${listing.location}\nTime: ${this.formatTime(listing.pickupTime)}\nContact: ${listing.contact}`);
-        
-        if (confirmed) {
-            // Remove listing from available items
-            this.foodListings = this.foodListings.filter(l => l.id !== listingId);
-            this.filterListings();
+        if (listing && listing.status === 'available') {
+            listing.status = 'pending';
+            
+            this.addNotification(`A collector is waiting to pick up your '${listing.foodType}'.`);
+            
             this.renderFoodListings();
+            this.showToast(`Your claim for "${listing.foodType}" is waiting for approval.`, 'success');
+        }
+    }
+
+    handleConfirmCollection(listingId) {
+        const listing = this.foodListings.find(l => l.id === listingId);
+        if (listing && listing.status === 'pending') {
+            listing.status = 'collected';
             
-            // Show success message
-            this.showToast(`Successfully claimed "${listing.foodType}"! Check your email for pickup details.`, 'success');
+            this.addNotification(`Your donation of '${listing.foodType}' has been successfully collected!`);
             
-            // Animate removal
-            const card = document.querySelector(`[data-id="${listingId}"]`);
-            if (card) {
-                card.style.animation = 'fadeOut 0.3s ease forwards';
-                setTimeout(() => {
-                    this.renderFoodListings();
-                }, 300);
-            }
+            this.renderFoodListings();
+            this.showToast(`'${listing.foodType}' marked as collected!`, 'success');
         }
     }
 
     handleContactDonor(contact) {
-        // Copy contact to clipboard
         navigator.clipboard.writeText(contact).then(() => {
             this.showToast('Contact information copied to clipboard!', 'success');
         }).catch(() => {
-            // Fallback for older browsers
             const textArea = document.createElement('textarea');
             textArea.value = contact;
             document.body.appendChild(textArea);
@@ -836,13 +791,49 @@ handleFileSelect(file) {
         });
     }
 
-    getFoodIcon(category) {
-        const icons = {
-            restaurant: 'store',
-            household: 'home',
-            bakery: 'bread-slice',
-            event: 'calendar-alt'
+    addNotification(message) {
+        const newNotification = {
+            id: Date.now(),
+            message: message,
+            read: false
         };
+        this.notifications.unshift(newNotification);
+        this.updateNotificationUI();
+    }
+
+    updateNotificationUI() {
+        const badge = document.getElementById('notificationBadge');
+        const list = document.getElementById('notificationList');
+
+        this.unreadNotifications = this.notifications.filter(n => !n.read).length;
+
+        if (this.unreadNotifications > 0) {
+            badge.textContent = this.unreadNotifications;
+            badge.style.display = 'flex';
+        } else {
+            badge.style.display = 'none';
+        }
+
+        if (this.notifications.length === 0) {
+            list.innerHTML = '<div class="no-notifications">No new notifications</div>';
+        } else {
+            list.innerHTML = this.notifications.map(n => `
+                <div class="notification-item ${n.read ? '' : 'unread'}">
+                    <i class="fas fa-hand-paper"></i>
+                    <span>${n.message}</span>
+                </div>
+            `).join('');
+        }
+    }
+
+    markNotificationsAsRead() {
+        this.notifications.forEach(n => n.read = true);
+        this.updateNotificationUI();
+    }
+
+
+    getFoodIcon(category) {
+        const icons = { restaurant: 'store', household: 'home', bakery: 'bread-slice', event: 'calendar-alt' };
         return icons[category] || 'utensils';
     }
 
@@ -851,36 +842,25 @@ handleFileSelect(file) {
     }
 
     getTimeAgo(date) {
-        const now = new Date();
-        const diff = now - date;
+        const diff = new Date() - date;
         const minutes = Math.floor(diff / 60000);
+        if (minutes < 60) return `${minutes}m ago`;
         const hours = Math.floor(minutes / 60);
-        
-        if (minutes < 60) {
-            return `${minutes}m ago`;
-        } else if (hours < 24) {
-            return `${hours}h ago`;
-        } else {
-            const days = Math.floor(hours / 24);
-            return `${days}d ago`;
-        }
+        if (hours < 24) return `${hours}h ago`;
+        const days = Math.floor(hours / 24);
+        return `${days}d ago`;
     }
 
     formatDateTime(dateTimeString) {
-        const date = new Date(dateTimeString);
-        const now = new Date();
-        const diff = date - now;
+        const diff = new Date(dateTimeString) - new Date();
         const hours = Math.floor(diff / (1000 * 60 * 60));
-        
-        if (hours < 24) {
-            return `${hours}h left`;
-        } else {
-            const days = Math.floor(hours / 24);
-            return `${days}d left`;
-        }
+        if (hours < 24) return `${hours}h left`;
+        const days = Math.floor(hours / 24);
+        return `${days}d left`;
     }
 
     formatTime(timeString) {
+        if (!timeString) return '';
         const [hours, minutes] = timeString.split(':');
         const date = new Date();
         date.setHours(hours, minutes);
@@ -888,16 +868,12 @@ handleFileSelect(file) {
     }
 
     startAnimations() {
-        // Add stagger animation to feature cards
         const featureCards = document.querySelectorAll('.feature-card');
         featureCards.forEach((card, index) => {
             card.style.animationDelay = `${index * 0.2}s`;
         });
         
-        // Add floating animation to hero elements
         this.startFloatingAnimations();
-        
-        // Add periodic pulse to CTA buttons
         this.startButtonPulse();
     }
 
@@ -914,136 +890,48 @@ handleFileSelect(file) {
             ctaButtons.forEach((btn, index) => {
                 setTimeout(() => {
                     btn.style.animation = 'pulse 0.6s ease';
-                    setTimeout(() => {
-                        btn.style.animation = '';
-                    }, 600);
+                    setTimeout(() => { btn.style.animation = ''; }, 600);
                 }, index * 200);
             });
-        }, 10000); // Pulse every 10 seconds
+        }, 10000);
     }
 
     hideLoadingOverlay() {
         const loadingOverlay = document.getElementById('loadingOverlay');
         setTimeout(() => {
             loadingOverlay.style.opacity = '0';
-            setTimeout(() => {
-                loadingOverlay.style.display = 'none';
-            }, 500);
-        }, 1500); // Show loading for 1.5 seconds
+            setTimeout(() => { loadingOverlay.style.display = 'none'; }, 500);
+        }, 1500);
     }
 }
 
-// Additional CSS animations via JavaScript
 function addDynamicStyles() {
     const style = document.createElement('style');
     style.textContent = `
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-        
-        @keyframes fadeOut {
-            from {
-                opacity: 1;
-                transform: scale(1);
-            }
-            to {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-        }
-        
-        .animate-in {
-            animation: slideInUp 0.6s ease forwards;
-        }
-        
-        .no-listings {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 4rem 2rem;
-            color: var(--medium-gray);
-        }
-        
-        .no-listings h3 {
-            margin-bottom: 0.5rem;
-            color: var(--dark-gray);
-        }
-        
-        /* Hamburger menu animation */
-        .hamburger.active span:nth-child(1) {
-            transform: rotate(-45deg) translate(-5px, 6px);
-        }
-        
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
-        }
-        
-        .hamburger.active span:nth-child(3) {
-            transform: rotate(45deg) translate(-5px, -6px);
-        }
-        
-        /* Mobile menu styles */
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.8); } }
+        .animate-in { animation: slideInUp 0.6s ease forwards; }
+        .no-listings { grid-column: 1 / -1; text-align: center; padding: 4rem 2rem; color: var(--medium-gray); }
+        .no-listings h3 { margin-bottom: 0.5rem; color: var(--dark-gray); }
+        .hamburger.active span:nth-child(1) { transform: rotate(-45deg) translate(-5px, 6px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
         @media (max-width: 768px) {
-            .nav-menu.active {
-                display: flex;
-                position: fixed;
-                top: 70px;
-                left: 0;
-                width: 100%;
-                height: calc(100vh - 70px);
-                background: rgba(255, 255, 255, 0.98);
-                flex-direction: column;
-                justify-content: flex-start;
-                align-items: center;
-                padding-top: 2rem;
-                backdrop-filter: blur(10px);
-                animation: slideInUp 0.3s ease;
-            }
-            
-            .nav-menu.active .nav-link {
-                margin: 1rem 0;
-                font-size: 1.2rem;
-            }
+            .nav-menu.active { display: flex; position: fixed; top: 70px; left: 0; width: 100%; height: calc(100vh - 70px); background: rgba(255, 255, 255, 0.98); flex-direction: column; justify-content: flex-start; align-items: center; padding-top: 2rem; backdrop-filter: blur(10px); animation: slideInUp 0.3s ease; }
+            .nav-menu.active .nav-link { margin: 1rem 0; font-size: 1.2rem; }
         }
     `;
     document.head.appendChild(style);
 }
 
-// Initialize the application
 document.addEventListener('DOMContentLoaded', () => {
     addDynamicStyles();
     new ShareBite();
 });
 
-// Service Worker registration for PWA capabilities (optional)
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-            .then(registration => {
-                console.log('SW registered: ', registration);
-            })
-            .catch(registrationError => {
-                console.log('SW registration failed: ', registrationError);
-            });
-    });
-}
-
-// Export for potential testing or external use
-window.ShareBite = ShareBite;
-
-// Clear caches and trigger SW skipWaiting for debugging updates
+// This is the function that was causing a merge conflict.
+// It is used for debugging and can be kept.
 window.clearShareBiteCaches = async function() {
     if ('caches' in window) {
         const keys = await caches.keys();
@@ -1055,3 +943,12 @@ window.clearShareBiteCaches = async function() {
         console.log('[ShareBite] Sent SKIP_WAITING to service worker');
     }
 };
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').then(reg => console.log('SW registered.')).catch(err => console.log('SW registration failed:', err));
+    });
+}
+
+window.ShareBite = ShareBite;
+

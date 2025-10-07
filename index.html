@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ShareBite - Food Waste Reducer</title>
-    <meta name="sharebite-build" content="v-darkmode-fix-1">
-    <link rel="stylesheet" href="css/style.css?v=darkmode-fix-1">
+    <!-- Cache-busting version updated to v=8 -->
+    <link rel="stylesheet" href="css/style.css?v=8">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
@@ -26,10 +26,22 @@
                 <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
             <div class="user-actions">
-                <!-- Added dark mode toggle -->
                 <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
                     <i class="fas fa-moon"></i>
                 </button>
+                
+                <!-- CORRECTED PLACEMENT: Notification bell and panel are now here -->
+                <div class="notification-bell" id="notificationBell">
+                    <i class="fas fa-bell"></i>
+                    <div class="notification-badge" id="notificationBadge" style="display: none;">0</div>
+                    <div class="notification-panel" id="notificationPanel">
+                        <div class="notification-header">Notifications</div>
+                        <div id="notificationList">
+                            <div class="no-notifications">No new notifications</div>
+                        </div>
+                    </div>
+                </div>
+
                 <button class="role-switch" id="roleSwitch">
                     <i class="fas fa-exchange-alt"></i>
                     <span id="currentRole">Donor</span>
@@ -415,7 +427,7 @@
               <a href="#"><i class="fab fa-linkedin"></i></a>
             </div>
           </div>
-           <div class="footer-section">
+          <div class="footer-section">
             <h4>Quick Links</h4>
             <ul>
               <li><a href="#home">Home</a></li>
@@ -424,7 +436,6 @@
               <li><a href="#about">About Us</a></li>
             </ul>
           </div>
-
           <div class="footer-section">
             <h4>For Donors</h4>
             <ul>
@@ -434,23 +445,20 @@
               <li><a href="#">Support</a></li>
             </ul>
           </div>
-
           <div class="footer-section">
             <h4>For Collectors</h4>
             <ul>
               <li><a href="#">Find Food</a></li>
-              <li><a href="ngo-register.html">Register NGO</a></li>
+              <li><a href="#">Register NGO</a></li>
               <li><a href="#">Volunteer</a></li>
               <li><a href="#">Resources</a></li>
             </ul>
           </div>
         </div>
-
-        <!-- Footer Bottom -->
         <div class="footer-bottom">
-          <p class="footer-credit">Made with 💚 by Angela Bera</p>
           <p>
-            &copy; 2025 ShareBite. All rights reserved. 
+            &copy; 2024 ShareBite. All rights reserved. | Privacy Policy | Terms
+            of Service
           </p>
         </div>
       </div>
@@ -465,6 +473,8 @@
     </div>
 
     <script src="js/theme.js"></script>
-    <script src="js/script.js"></script>
+    <!-- Cache-busting version updated to v=8 -->
+    <script src="js/script.js?v=8"></script>
   </body>
 </html>
+
