@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ShareBite - Food Waste Reducer</title>
     <meta name="sharebite-build" content="v-darkmode-fix-1">
     <link rel="stylesheet" href="css/style.css?v=darkmode-fix-1">
@@ -34,7 +34,7 @@
                     <i class="fas fa-exchange-alt"></i>
                     <span id="currentRole">Donor</span>
                 </button>
-                <a href="login.html" class="login-btn">Login</a>
+                <button class="login-btn" onclick="window.location.href='login.html'">Login</button>
             </div>
             <div class="hamburger">
                 <span></span>
@@ -42,313 +42,432 @@
                 <span></span>
             </div>
         </div>
+       
+        <div class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
     </nav>
 
     <!-- Hero Section -->
     <section id="home" class="hero">
-        <div class="hero-container">
-            <div class="hero-content">
-                <h1 class="hero-title">
-                    Reduce Food Waste,<br>
-                    <span class="gradient-text">Feed Communities</span>
-                </h1>
-                <p class="hero-description">
-                    Connect restaurants and households with NGOs and volunteers to redistribute fresh leftover food and fight hunger while reducing waste.
-                </p>
-                <div class="hero-buttons">
-                    <button class="btn btn-primary" id="donateFood">
-                        <i class="fas fa-heart"></i>
-                        Donate Food
-                    </button>
-                    <button class="btn btn-secondary" id="findFood">
-                        <i class="fas fa-search"></i>
-                        Find Food
-                    </button>
-                </div>
-                <div class="hero-stats">
-                    <div class="stat">
-                        <span class="stat-number" data-count="1500">0</span>
-                        <span class="stat-label">Meals Saved</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number" data-count="250">0</span>
-                        <span class="stat-label">Active Donors</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number" data-count="85">0</span>
-                        <span class="stat-label">NGO Partners</span>
-                    </div>
-                </div>
+      <div class="hero-container">
+        <div class="hero-content">
+          <h1 class="hero-title">
+            Reduce Food Waste,<br />
+            <span class="gradient-text">Feed Communities</span>
+          </h1>
+          <p class="hero-description">
+            Connect restaurants and households with NGOs and volunteers to
+            redistribute fresh leftover food and fight hunger while reducing
+            waste.
+          </p>
+          <div class="hero-buttons">
+            <button class="btn btn-primary" id="donateFood">
+              <i class="fas fa-heart"></i>
+              Donate Food
+            </button>
+            <button class="btn btn-secondary" id="findFood">
+              <i class="fas fa-search"></i>
+              Find Food
+            </button>
+          </div>
+          <div class="hero-stats">
+            <div class="stat">
+              <span class="stat-number" data-count="1500">0</span>
+              <span class="stat-label">Meals Saved</span>
             </div>
-            <div class="hero-visual">
-                <div class="floating-card food-card-1">
-                    <i class="fas fa-pizza-slice"></i>
-                    <span>Fresh Pizza</span>
-                </div>
-                <div class="floating-card food-card-2">
-                    <i class="fas fa-bread-slice"></i>
-                    <span>Bakery Items</span>
-                </div>
-                <div class="floating-card food-card-3">
-                    <i class="fas fa-apple-alt"></i>
-                    <span>Fresh Fruits</span>
-                </div>
-                <div class="hero-illustration">
-                    <div class="plate">
-                        <div class="food-items">
-                            <div class="food-item item-1"></div>
-                            <div class="food-item item-2"></div>
-                            <div class="food-item item-3"></div>
-                        </div>
-                    </div>
-                </div>
+            <div class="stat">
+              <span class="stat-number" data-count="250">0</span>
+              <span class="stat-label">Active Donors</span>
             </div>
+            <div class="stat">
+              <span class="stat-number" data-count="85">0</span>
+              <span class="stat-label">NGO Partners</span>
+            </div>
+          </div>
         </div>
-        <div class="scroll-indicator">
-            <i class="fas fa-chevron-down"></i>
+        <div class="hero-visual">
+          <div class="floating-card food-card-1">
+            <i class="fas fa-pizza-slice"></i>
+            <span>Fresh Pizza</span>
+          </div>
+          <div class="floating-card food-card-2">
+            <i class="fas fa-bread-slice"></i>
+            <span>Bakery Items</span>
+          </div>
+          <div class="floating-card food-card-3">
+            <i class="fas fa-apple-alt"></i>
+            <span>Fresh Fruits</span>
+          </div>
+          <div class="hero-illustration">
+            <div class="plate">
+              <div class="food-items">
+                <div class="food-item item-1"></div>
+                <div class="food-item item-2"></div>
+                <div class="food-item item-3"></div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+      <div class="scroll-indicator">
+        <i class="fas fa-chevron-down"></i>
+      </div>
     </section>
 
     <!-- Features Section -->
     <section id="features" class="features">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">How ShareBite Works</h2>
-                <p class="section-subtitle">Simple steps to make a difference</p>
-            </div>
-            <div class="features-grid">
-                <div class="feature-card" data-aos="fade-up">
-                    <div class="feature-icon donor-icon">
-                        <i class="fas fa-store"></i>
-                    </div>
-                    <h3>List Your Food</h3>
-                    <p>Restaurants and households can easily list fresh leftover food with details about quantity, type, and pickup location.</p>
-                    <div class="feature-step">Step 1</div>
-                </div>
-                <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
-                    <div class="feature-icon connector-icon">
-                        <i class="fas fa-handshake"></i>
-                    </div>
-                    <h3>Connect & Coordinate</h3>
-                    <p>Our platform connects donors with NGOs, shelters, and volunteers for seamless pickup coordination.</p>
-                    <div class="feature-step">Step 2</div>
-                </div>
-                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
-                    <div class="feature-icon collector-icon">
-                        <i class="fas fa-heart"></i>
-                    </div>
-                    <h3>Feed Communities</h3>
-                    <p>Collected food reaches those who need it most, reducing waste while fighting hunger in local communities.</p>
-                    <div class="feature-step">Step 3</div>
-                </div>
-            </div>
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">How ShareBite Works</h2>
+          <p class="section-subtitle">Simple steps to make a difference</p>
         </div>
+        <div class="features-grid">
+          <div class="feature-card" data-aos="fade-up">
+            <div class="feature-icon donor-icon">
+              <i class="fas fa-store"></i>
+            </div>
+            <h3>List Your Food</h3>
+            <p>
+              Restaurants and households can easily list fresh leftover food
+              with details about quantity, type, and pickup location.
+            </p>
+            <div class="feature-step">Step 1</div>
+          </div>
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="feature-icon connector-icon">
+              <i class="fas fa-handshake"></i>
+            </div>
+            <h3>Connect & Coordinate</h3>
+            <p>
+              Our platform connects donors with NGOs, shelters, and volunteers
+              for seamless pickup coordination.
+            </p>
+            <div class="feature-step">Step 2</div>
+          </div>
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+            <div class="feature-icon collector-icon">
+              <i class="fas fa-heart"></i>
+            </div>
+            <h3>Feed Communities</h3>
+            <p>
+              Collected food reaches those who need it most, reducing waste
+              while fighting hunger in local communities.
+            </p>
+            <div class="feature-step">Step 3</div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Food Listings Section -->
     <section id="listings" class="listings">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Food Listings</h2>
-                <p class="section-subtitle">Available food waiting to be collected</p>
-            </div>
-            
-            <!-- Filter Bar -->
-            <div class="filter-bar">
-                <div class="filter-group">
-                    <button class="filter-btn active" data-filter="all">All</button>
-                    <button class="filter-btn" data-filter="restaurant">Restaurant</button>
-                    <button class="filter-btn" data-filter="household">Household</button>
-                    <button class="filter-btn" data-filter="bakery">Bakery</button>
-                </div>
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search by location or food type...">
-                </div>
-                <button class="add-listing-btn" id="addListingBtn">
-                    <i class="fas fa-plus"></i>
-                    Add Listing
-                </button>
-            </div>
-
-            <!-- Food Cards Grid -->
-            <div class="food-grid" id="foodGrid">
-                <!-- Sample listings will be generated by JavaScript -->
-            </div>
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Food Listings</h2>
+          <p class="section-subtitle">Available food waiting to be collected</p>
         </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+          <div class="filter-group">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="restaurant">
+              Restaurant
+            </button>
+            <button class="filter-btn" data-filter="household">
+              Household
+            </button>
+            <button class="filter-btn" data-filter="bakery">Bakery</button>
+          </div>
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input
+              type="text"
+              placeholder="Search by location or food type..."
+            />
+          </div>
+          <button class="add-listing-btn" id="addListingBtn">
+            <i class="fas fa-plus"></i>
+            Add Listing
+          </button>
+        </div>
+
+        <!-- Food Cards Grid -->
+        <div class="food-grid" id="foodGrid">
+          <!-- Sample listings will be generated by JavaScript -->
+        </div>
+      </div>
     </section>
 
     <!-- Add Listing Modal -->
     <div class="modal" id="addListingModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Add Food Listing</h3>
-                <button class="close-modal">&times;</button>
-            </div>
-            <form class="listing-form" id="listingForm">
-                <div class="form-group">
-                    <label for="foodType">Food Type</label>
-                    <input type="text" id="foodType" required placeholder="e.g., Pizza, Sandwiches, Fruits">
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="quantity">Quantity</label>
-                        <input type="text" id="quantity" required placeholder="e.g., 10 portions">
-                    </div>
-                    <div class="form-group">
-                        <label for="category">Category</label>
-                        <select id="category" required>
-                            <option value="">Select Category</option>
-                            <option value="restaurant">Restaurant</option>
-                            <option value="household">Household</option>
-                            <option value="bakery">Bakery</option>
-                            <option value="event">Event</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="description">Description</label>
-                    <textarea id="description" rows="3" placeholder="Additional details about the food..."></textarea>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="freshUntil">Fresh Until</label>
-                        <input type="datetime-local" id="freshUntil" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="pickupTime">Preferred Pickup Time</label>
-                        <input type="time" id="pickupTime" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="location">Pickup Location</label>
-                    <input type="text" id="location" required placeholder="Address or landmark">
-                </div>
-                <div class="form-group">
-                    <label for="contact">Contact Information</label>
-                    <input type="text" id="contact" required placeholder="Phone number or email">
-                </div>
-                <div class="form-group">
-                    <label for="photo">Food Photo (Optional)</label>
-                    <input type="file" id="photo" accept="image/*">
-                    <div class="file-upload-area" id="photoUpload">
-                        <i class="fas fa-cloud-upload-alt"></i>
-                        <span>Click to upload or drag and drop</span>
-                    </div>
-                </div>
-                <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" id="cancelForm">Cancel</button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-plus"></i>
-                        Add Listing
-                    </button>
-                </div>
-            </form>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Add Food Listing</h3>
+          <button class="close-modal">&times;</button>
         </div>
+
+        <!-- Progress Bar -->
+        <div class="form-progress">
+          <div class="progress-step active" data-step="1">
+            <div class="step-circle">1</div>
+            <span class="step-label">Food Details</span>
+          </div>
+          <div class="progress-line"></div>
+          <div class="progress-step" data-step="2">
+            <div class="step-circle">2</div>
+            <span class="step-label">Pickup Info</span>
+          </div>
+          <div class="progress-line"></div>
+          <div class="progress-step" data-step="3">
+            <div class="step-circle">3</div>
+            <span class="step-label">Photo & Review</span>
+          </div>
+        </div>
+
+        <form class="listing-form" id="listingForm">
+          <!-- Step 1: Food Details -->
+          <div class="form-step active" data-step="1">
+            <h4 class="step-title">Tell us about the food</h4>
+            <div class="form-group">
+              <label for="foodType">Food Type *</label>
+              <input
+                type="text"
+                id="foodType"
+                required
+                placeholder="e.g., Pizza, Sandwiches, Fruits"
+              />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="quantity">Quantity *</label>
+                <input
+                  type="text"
+                  id="quantity"
+                  required
+                  placeholder="e.g., 10 portions"
+                />
+              </div>
+              <div class="form-group">
+                <label for="category">Category *</label>
+                <select id="category" required>
+                  <option value="">Select Category</option>
+                  <option value="restaurant">Restaurant</option>
+                  <option value="household">Household</option>
+                  <option value="bakery">Bakery</option>
+                  <option value="event">Event</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="description">Description</label>
+              <textarea
+                id="description"
+                rows="3"
+                placeholder="Additional details about the food..."
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- Step 2: Pickup Info -->
+          <div class="form-step" data-step="2">
+            <h4 class="step-title">When and where to pick up?</h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="freshUntil">Fresh Until *</label>
+                <input type="datetime-local" id="freshUntil" required />
+              </div>
+              <div class="form-group">
+                <label for="pickupTime">Preferred Pickup Time *</label>
+                <input type="time" id="pickupTime" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="location">Pickup Location *</label>
+              <input
+                type="text"
+                id="location"
+                required
+                placeholder="Address or landmark"
+              />
+            </div>
+            <div class="form-group">
+              <label for="contact">Contact Information *</label>
+              <input
+                type="text"
+                id="contact"
+                required
+                placeholder="Phone number or email"
+              />
+            </div>
+          </div>
+
+          <!-- Step 3: Photo & Review -->
+          <div class="form-step" data-step="3">
+            <h4 class="step-title">Add a photo (optional)</h4>
+            <div class="form-group">
+              <label for="photo">Food Photo</label>
+              <input
+                type="file"
+                id="photo"
+                accept="image/*"
+                style="display: none"
+              />
+              <div class="file-upload-area" id="photoUpload">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <span>Drag & drop your image here or click to browse</span>
+                <small>Supports: JPG, PNG, GIF (Max 5MB)</small>
+              </div>
+              <div id="imagePreview" class="image-preview"></div>
+            </div>
+          </div>
+
+          <div class="form-navigation">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              id="prevStep"
+              style="display: none"
+            >
+              <i class="fas fa-arrow-left"></i> Previous
+            </button>
+            <button type="button" class="btn btn-secondary" id="cancelForm">
+              Cancel
+            </button>
+            <button type="button" class="btn btn-primary" id="nextStep">
+              Next <i class="fas fa-arrow-right"></i>
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              id="submitForm"
+              style="display: none"
+            >
+              <i class="fas fa-check"></i> Add Listing
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
 
     <!-- About Section -->
     <section id="about" class="about">
-        <div class="container">
-            <div class="about-content">
-                <div class="about-text">
-                    <h2>About ShareBite</h2>
-                    <p>ShareBite is a revolutionary platform designed to tackle food waste while addressing hunger in communities. We believe that fresh, good food should never go to waste when there are people who need it.</p>
-                    <div class="impact-stats">
-                        <div class="impact-item">
-                            <i class="fas fa-leaf"></i>
-                            <div>
-                                <strong>Environmental Impact</strong>
-                                <span>Reducing carbon footprint through waste reduction</span>
-                            </div>
-                        </div>
-                        <div class="impact-item">
-                            <i class="fas fa-users"></i>
-                            <div>
-                                <strong>Community Support</strong>
-                                <span>Connecting businesses with local communities</span>
-                            </div>
-                        </div>
-                        <div class="impact-item">
-                            <i class="fas fa-chart-line"></i>
-                            <div>
-                                <strong>Sustainable Growth</strong>
-                                <span>Building a sustainable food ecosystem</span>
-                            </div>
-                        </div>
-                    </div>
+      <div class="container">
+        <div class="about-content">
+          <div class="about-text">
+            <h2>About ShareBite</h2>
+            <p>
+              ShareBite is a revolutionary platform designed to tackle food
+              waste while addressing hunger in communities. We believe that
+              fresh, good food should never go to waste when there are people
+              who need it.
+            </p>
+            <div class="impact-stats">
+              <div class="impact-item">
+                <i class="fas fa-leaf"></i>
+                <div>
+                  <strong>Environmental Impact</strong>
+                  <span>Reducing carbon footprint through waste reduction</span>
                 </div>
-                <div class="about-visual">
-                    <div class="stats-circle">
-                        <div class="circle-stat">
-                            <span class="percentage">40%</span>
-                            <span class="label">Food Waste Reduced</span>
-                        </div>
-                    </div>
+              </div>
+              <div class="impact-item">
+                <i class="fas fa-users"></i>
+                <div>
+                  <strong>Community Support</strong>
+                  <span>Connecting businesses with local communities</span>
                 </div>
+              </div>
+              <div class="impact-item">
+                <i class="fas fa-chart-line"></i>
+                <div>
+                  <strong>Sustainable Growth</strong>
+                  <span>Building a sustainable food ecosystem</span>
+                </div>
+              </div>
             </div>
+          </div>
+          <div class="about-visual">
+            <div class="stats-circle">
+              <div class="circle-stat">
+                <span class="percentage">40%</span>
+                <span class="label">Food Waste Reduced</span>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </section>
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <div class="footer-logo">
-                        <i class="fas fa-utensils"></i>
-                        <span>ShareBite</span>
-                    </div>
-                    <p>Making a difference, one meal at a time. Join us in the fight against food waste and hunger.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                    </div>
-                </div>
-                <div class="footer-section">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#features">How It Works</a></li>
-                        <li><a href="#listings">Food Listings</a></li>
-                        <li><a href="#about">About Us</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>For Donors</h4>
-                    <ul>
-                        <li><a href="#">List Food</a></li>
-                        <li><a href="#">Donor Guidelines</a></li>
-                        <li><a href="#">Track Impact</a></li>
-                        <li><a href="#">Support</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>For Collectors</h4>
-                    <ul>
-                        <li><a href="#">Find Food</a></li>
-                        <li><a href="#">Register NGO</a></li>
-                        <li><a href="#">Volunteer</a></li>
-                        <li><a href="#">Resources</a></li>
-                    </ul>
-                </div>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <div class="footer-logo">
+              <i class="fas fa-utensils"></i>
+              <span>ShareBite</span>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 ShareBite. All rights reserved. | Privacy Policy | Terms of Service</p>
+            <p>
+              Making a difference, one meal at a time. Join us in the fight
+              against food waste and hunger.
+            </p>
+            <div class="social-links">
+              <a href="#"><i class="fab fa-facebook"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+              <a href="#"><i class="fab fa-linkedin"></i></a>
             </div>
+          </div>
+          <div class="footer-section">
+            <h4>Quick Links</h4>
+            <ul>
+              <li><a href="#home">Home</a></li>
+              <li><a href="#features">How It Works</a></li>
+              <li><a href="#listings">Food Listings</a></li>
+              <li><a href="#about">About Us</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h4>For Donors</h4>
+            <ul>
+              <li><a href="#">List Food</a></li>
+              <li><a href="#">Donor Guidelines</a></li>
+              <li><a href="#">Track Impact</a></li>
+              <li><a href="#">Support</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h4>For Collectors</h4>
+            <ul>
+              <li><a href="#">Find Food</a></li>
+              <li><a href="ngo-register.html">Register NGO</a></li>
+              <li><a href="#">Volunteer</a></li>
+              <li><a href="#">Resources</a></li>
+            </ul>
+          </div>
         </div>
+        <div class="footer-bottom">
+          <p>
+            &copy; 2024 ShareBite. All rights reserved. | Privacy Policy | Terms
+            of Service
+          </p>
+        </div>
+      </div>
     </footer>
 
     <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-spinner">
-            <div class="spinner"></div>
-            <p>Loading ShareBite...</p>
-        </div>
+      <div class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Loading ShareBite...</p>
+      </div>
     </div>
 
+    <script src="js/theme.js"></script>
     <script src="js/script.js"></script>
-</body>
+  </body>
 </html>

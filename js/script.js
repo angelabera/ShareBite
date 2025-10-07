@@ -106,12 +106,6 @@ class ShareBite {
             
             // Update UI based on role
             this.updateUIForRole();
-            
-            // Add animation effect
-            roleSwitch.style.transform = 'scale(0.9)';
-            setTimeout(() => {
-                roleSwitch.style.transform = 'scale(1)';
-            }, 150);
         });
     }
 
@@ -131,74 +125,198 @@ class ShareBite {
         }
     }
 
-    setupModal() {
-        const modal = document.getElementById('addListingModal');
-        const addListingBtn = document.getElementById('addListingBtn');
-        const closeModalBtn = document.querySelector('.close-modal');
-        const cancelBtn = document.getElementById('cancelForm');
+   setupModal() {
+    const modal = document.getElementById('addListingModal');
+    const addListingBtn = document.getElementById('addListingBtn');
+    const closeModalBtn = document.querySelector('.close-modal');
+    const cancelBtn = document.getElementById('cancelForm');
 
-        addListingBtn.addEventListener('click', () => {
-            modal.style.display = 'block';
-            document.body.style.overflow = 'hidden';
-        });
+    this.currentStep = 1;
+    this.totalSteps = 3;
 
-        const closeModal = () => {
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-            this.resetForm();
-        };
+    addListingBtn.addEventListener('click', () => {
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        this.resetFormSteps();
+    });
 
-        closeModalBtn.addEventListener('click', closeModal);
-        cancelBtn.addEventListener('click', closeModal);
+    const closeModal = () => {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        this.resetForm();
+        this.resetFormSteps();
+    };
+
+    closeModalBtn.addEventListener('click', closeModal);
+    cancelBtn.addEventListener('click', closeModal);
+    
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    this.setupFileUpload();
+    this.setupFormNavigation();
+}
+
+setupFormNavigation() {
+    const nextBtn = document.getElementById('nextStep');
+    const prevBtn = document.getElementById('prevStep');
+    const submitBtn = document.getElementById('submitForm');
+
+    nextBtn.addEventListener('click', () => {
+        if (this.validateCurrentStep()) {
+            this.goToStep(this.currentStep + 1);
+        }
+    });
+
+    prevBtn.addEventListener('click', () => {
+        this.goToStep(this.currentStep - 1);
+    });
+}
+
+goToStep(stepNumber) {
+    if (stepNumber < 1 || stepNumber > this.totalSteps) return;
+
+    document.querySelectorAll('.form-step').forEach(step => {
+        step.classList.remove('active');
+    });
+
+    const newStep = document.querySelector(`.form-step[data-step="${stepNumber}"]`);
+    if (newStep) {
+        newStep.classList.add('active');
+    }
+
+    this.updateProgress(stepNumber);
+
+    this.updateNavigationButtons(stepNumber);
+
+    this.currentStep = stepNumber;
+}
+
+updateProgress(stepNumber) {
+    const steps = document.querySelectorAll('.progress-step');
+    
+    steps.forEach((step, index) => {
+        const stepNum = index + 1;
         
-        // Close modal when clicking outside
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeModal();
-            }
-        });
+        if (stepNum < stepNumber) {
+            step.classList.add('completed');
+            step.classList.remove('active');
+        } else if (stepNum === stepNumber) {
+            step.classList.add('active');
+            step.classList.remove('completed');
+        } else {
+            step.classList.remove('active', 'completed');
+        }
+    });
+}
 
-        // File upload functionality
-        this.setupFileUpload();
+updateNavigationButtons(stepNumber) {
+    const nextBtn = document.getElementById('nextStep');
+    const prevBtn = document.getElementById('prevStep');
+    const submitBtn = document.getElementById('submitForm');
+
+    prevBtn.style.display = stepNumber === 1 ? 'none' : 'flex';
+    nextBtn.style.display = stepNumber === this.totalSteps ? 'none' : 'flex';
+    submitBtn.style.display = stepNumber === this.totalSteps ? 'flex' : 'none';
+}
+
+validateCurrentStep() {
+    const currentStepEl = document.querySelector(`.form-step[data-step="${this.currentStep}"]`);
+    const requiredInputs = currentStepEl.querySelectorAll('[required]');
+    
+    for (let input of requiredInputs) {
+        if (!input.value.trim()) {
+            input.focus();
+            this.showToast(`Please fill in the required field: ${input.previousElementSibling.textContent}`, 'error');
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+resetFormSteps() {
+    this.currentStep = 1;
+    this.goToStep(1);
+}
+
+setupFileUpload() {
+    const fileInput = document.getElementById('photo');
+    const uploadArea = document.getElementById('photoUpload');
+    const imagePreview = document.getElementById('imagePreview');
+
+    uploadArea.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('drag-over');
+    });
+
+    uploadArea.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('drag-over');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('drag-over');
+        const files = e.dataTransfer.files;
+        if (files.length > 0 && files[0].type.startsWith('image/')) {
+            fileInput.files = files;
+            this.handleFileSelect(files[0]);
+        } else {
+            this.showToast('Please upload a valid image file', 'error');
+        }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            this.handleFileSelect(e.target.files[0]);
+        }
+    });
+}
+
+handleFileSelect(file) {
+    const imagePreview = document.getElementById('imagePreview');
+    const uploadArea = document.getElementById('photoUpload');
+    
+    if (!file.type.startsWith('image/')) {
+        this.showToast('Please select an image file', 'error');
+        return;
     }
 
-    setupFileUpload() {
-        const fileInput = document.getElementById('photo');
-        const uploadArea = document.getElementById('photoUpload');
-
-        uploadArea.addEventListener('click', () => {
-            fileInput.click();
-        });
-
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.style.background = 'rgba(76, 175, 80, 0.1)';
-            uploadArea.style.borderColor = 'var(--primary-color)';
-        });
-
-        uploadArea.addEventListener('dragleave', (e) => {
-            e.preventDefault();
-            uploadArea.style.background = '';
-            uploadArea.style.borderColor = '';
-        });
-
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                fileInput.files = files;
-                this.handleFileSelect(files[0]);
-            }
-            uploadArea.style.background = '';
-            uploadArea.style.borderColor = '';
-        });
-
-        fileInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                this.handleFileSelect(e.target.files[0]);
-            }
-        });
+    if (file.size > 5 * 1024 * 1024) {
+        this.showToast('Image size should be less than 5MB', 'error');
+        return;
     }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        imagePreview.innerHTML = `
+            <img src="${e.target.result}" alt="Food preview">
+            <button type="button" class="remove-image">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+        imagePreview.classList.add('active');
+        uploadArea.style.display = 'none';
+
+        // Add remove functionality
+        const removeBtn = imagePreview.querySelector('.remove-image');
+        removeBtn.addEventListener('click', () => {
+            imagePreview.innerHTML = '';
+            imagePreview.classList.remove('active');
+            uploadArea.style.display = 'block';
+            document.getElementById('photo').value = '';
+        });
+    };
+    reader.readAsDataURL(file);
+}
 
     handleFileSelect(file) {
         const uploadArea = document.getElementById('photoUpload');
@@ -217,8 +335,7 @@ class ShareBite {
             e.preventDefault();
             this.handleFormSubmission();
         });
-        
-        // Set minimum date/time for freshness
+
         const freshUntilInput = document.getElementById('freshUntil');
         const now = new Date();
         now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
@@ -559,7 +676,7 @@ class ShareBite {
                 foodType: "Fruit & Vegetable Box",
                 quantity: "1 large box",
                 category: "restaurant",
-                description: "Fresh produce that won't be used before expiry. Includes apples, oranges, carrots, and lettuce.",
+                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
                 freshUntil: this.getRandomFutureDate(),
                 pickupTime: "17:00",
                 location: "Green Garden Restaurant",
