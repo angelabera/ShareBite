@@ -28,26 +28,6 @@ A beautiful, responsive web platform connecting restaurants and households with 
 - **Local Storage Ready**: Architecture supports data persistence
 - **PWA Ready**: Service worker registration included
 
-## 🎨 Design Highlights
-
-### Color Palette
-- **Primary Green**: #4CAF50 (sustainability theme)
-- **Secondary Orange**: #FF6B35 (warmth and community)
-- **Accent Yellow**: #FFC107 (energy and optimism)
-- **Gradients**: Beautiful gradients throughout the interface
-
-### Typography
-- **Font**: Poppins (modern, friendly, readable)
-- **Hierarchy**: Clear typographic scale for excellent readability
-- **Responsive**: Adaptive font sizes across devices
-
-### Animations
-- **Hero Section**: Floating food cards and rotating food items
-- **Scroll Animations**: Elements animate in as they enter viewport
-- **Hover Effects**: Interactive buttons and cards with smooth transitions
-- **Loading States**: Engaging loading spinner and fade-in effects
-- **Statistics Counter**: Numbers count up when section comes into view
-
 ## 🚀 Getting Started
 
 1. **Clone/Download** the project to your local machine
