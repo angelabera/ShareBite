@@ -240,26 +240,34 @@
     </div>
 
     <script src="js/theme.js"></script>
-    <script>
-        // --- Form Submission ---
-        const registerForm = document.getElementById('registerForm');
+<script>
+    // --- Form Submission ---
+    const registerForm = document.getElementById('registerForm');
 
-        registerForm.addEventListener('submit', (e) => {
-            e.preventDefault();
+    registerForm.addEventListener('submit', (e) => {
+        e.preventDefault();
 
-            // Get form values
-            const fullName = registerForm.name.value;
-            const email = registerForm.email.value;
-            const password = registerForm.password.value;
-            const role = registerForm.role.value;
+        // Get form values
+        const fullName = registerForm.name.value.trim();
+        const email = registerForm.email.value.trim();
+        const password = registerForm.password.value.trim();
+        const role = registerForm.role.value;
 
-            console.log('Registering user:', { fullName, email, role });
+        if (!fullName || !email || !password || !role) {
+            alert("Please fill in all fields before registering.");
+            return;
+        }
 
-            // TODO: Connect to auth.js for Firebase or backend registration
-            
-            alert('Registration form submitted! (See console for details)');
-        });
-    </script>
+        // Show success message
+        alert("Registered successfully!");
+
+        // Redirect to index.html after short delay (so alert can be seen)
+        setTimeout(() => {
+            window.location.href = "index.html";
+        }, 500); // 0.5 second delay
+    });
+</script>
+
 
 </body>
 </html>

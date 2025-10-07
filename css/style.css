@@ -1486,6 +1486,15 @@ body {
     .listing-form {
         padding: 1rem;
     }
+    
+    .filter-group {
+        flex-direction: column;
+    }
+
+    .food-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+
 }
 
 /* Dark Mode Styles */
