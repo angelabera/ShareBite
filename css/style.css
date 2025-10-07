@@ -1517,8 +1517,10 @@ body {
         --h3-size: 1.2rem;
     }
     
+    /* Reduce horizontal padding so navbar content fits comfortably */
     .nav-container {
-        padding: 1rem;
+        padding: 0.6rem 0.9rem;
+        gap: 0.4rem;
     }
     
     .hero {
@@ -1545,6 +1547,318 @@ body {
 
     .food-grid {
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+
+}
+
+/* Small-screen navbar/button fixes (480px and below) */
+@media (max-width: 480px) {
+    .nav-logo {
+        font-size: 1.15rem;
+        gap: 0.35rem;
+    }
+
+    .nav-logo i {
+        font-size: 1.25rem;
+    }
+
+    /* Make logo take available space but allow truncation */
+    .nav-logo {
+        flex: 1 1 auto;
+        min-width: 0; /* allow children to shrink */
+        white-space: nowrap;
+    }
+
+    .nav-logo span {
+        display: inline-block;
+        max-width: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: middle;
+    }
+
+    .user-actions {
+        /* allow actions to wrap and align to the right */
+        display: flex;
+        gap: 0.35rem;
+        align-items: center;
+        margin-left: auto;
+        flex: 0 0 auto;
+    }
+
+    /* ensure action buttons can shrink instead of overflowing */
+    .user-actions > * {
+        min-width: 0;
+        max-width: 160px;
+    }
+
+    /* Reduce button sizes to fit smaller screens */
+    .role-switch {
+        padding: 0.45rem 0.7rem;
+        font-size: 0.85rem;
+        border-radius: 999px;
+    }
+
+    .login-btn {
+        padding: 0.5rem 0.9rem;
+        font-size: 0.5rem;
+        border-radius: 10px;
+    }
+
+    /* ensure navbar has a consistent height on small devices */
+    .navbar {
+        height: 56px;
+    }
+
+    .nav-container {
+        align-items: center;
+    }
+
+    /* hide the full nav menu on very small screens for safety */
+    .nav-menu {
+        display: none !important;
+    }
+
+    /* Make navbar action buttons icon-only on very small screens */
+    .user-actions .btn-text {
+        display: flex;
+    }
+
+    .user-actions .role-switch i,
+    .user-actions .login-btn i {
+        font-size: 1.05rem;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    /* Hide text labels and keep icons visible */
+    @media (max-width: 420px) {
+        .user-actions .btn-text {
+            display: none;
+        }
+
+        .role-switch,
+        .login-btn,
+        .theme-toggle {
+            padding: 0.45rem;
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+        }
+
+        .role-switch i,
+        .login-btn i,
+        .theme-toggle i {
+            margin: 0;
+        }
+    }
+
+    /* If space is still tight, stack actions vertically when navbar width is narrow */
+    .nav-container.compact .user-actions {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.4rem;
+    }
+
+    /* Ensure hamburger is visible and nav-menu hidden (already hidden at 768px) */
+    .hamburger {
+        display: flex;
+    }
+
+    /* Make hamburger touch area larger */
+    .hamburger span {
+        width: 28px;
+        height: 3.5px;
+    }
+
+    /* Reduce nav-menu spacing if it becomes visible in some states */
+    .nav-menu {
+        gap: 1rem;
+    }
+
+    /* Accessibility: increase hit area for theme toggle */
+    .theme-toggle {
+        padding: 0.5rem;
+        min-width: 40px;
+    }
+
+}
+@media (max-width: 480px) {
+    :root {
+        --h1-size: 2rem;
+        --h2-size: 1.8rem;
+        --h3-size: 1.2rem;
+    }
+    
+    /* Reduce horizontal padding so navbar content fits comfortably */
+    .nav-container {
+        padding: 0.6rem 0.9rem;
+        gap: 0.4rem;
+    }
+    
+    .hero {
+        padding-top: 60px;
+    }
+    
+    .hero-container {
+        padding: 2rem 1rem;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 1rem;
+    }
+    
+    .modal-header,
+    .listing-form {
+        padding: 1rem;
+    }
+    
+    .filter-group {
+        flex-direction: column;
+    }
+
+    .food-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+
+}
+
+/* Small-screen navbar/button fixes (480px and below) */
+@media (max-width: 375px) {
+    .nav-logo {
+        font-size: 1rem;
+        gap: 0.25rem;
+    }
+
+    .nav-logo i {
+        font-size: 1.15rem;
+    }
+
+    /* Make logo take available space but allow truncation */
+    .nav-logo {
+        flex: 1 1 auto;
+        min-width: 0; /* allow children to shrink */
+        white-space: nowrap;
+    }
+
+    .nav-logo span {
+        display: inline-block;
+        max-width: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: middle;
+    }
+
+    .user-actions {
+        /* allow actions to wrap and align to the right */
+        display: flex;
+        gap: 0.25rem;
+        align-items: center;
+        margin-left: auto;
+        flex: 0 0 auto;
+    }
+
+    /* ensure action buttons can shrink instead of overflowing */
+    .user-actions > * {
+        min-width: 0;
+        max-width: 140px;
+    }
+
+    /* Reduce button sizes to fit smaller screens */
+    .role-switch {
+        padding: 0.35rem 0.6rem;
+        font-size: 0.50rem;
+        border-radius: 999px;
+    }
+
+    .login-btn {
+        padding: 0.5rem 0.9rem;
+        font-size: 0.5rem;
+        border-radius: 10px;
+    }
+
+    /* ensure navbar has a consistent height on small devices */
+    .navbar {
+        height: 56px;
+    }
+
+    .nav-container {
+        align-items: center;
+    }
+
+    /* hide the full nav menu on very small screens for safety */
+    .nav-menu {
+        display: none !important;
+    }
+
+    /* Make navbar action buttons icon-only on very small screens */
+    .user-actions .btn-text {
+        display: flex;
+    }
+
+    .user-actions .role-switch i,
+    .user-actions .login-btn i {
+        font-size: 1.05rem;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    /* Hide text labels and keep icons visible */
+    @media (max-width: 375px) {
+        .user-actions .btn-text {
+            display: inline;
+        }
+
+        .role-switch,
+        .login-btn,
+        .theme-toggle {
+            padding: 0.45rem;
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+        }
+
+        .role-switch i,
+        .login-btn i,
+        .theme-toggle i {
+            margin: 0;
+        }
+    }
+
+    /* If space is still tight, stack actions vertically when navbar width is narrow */
+    .nav-container.compact .user-actions {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.4rem;
+    }
+
+    /* Ensure hamburger is visible and nav-menu hidden (already hidden at 768px) */
+    .hamburger {
+        display: flex;
+    }
+
+    /* Make hamburger touch area larger */
+    .hamburger span {
+        width: 28px;
+        height: 3.5px;
+    }
+
+    /* Reduce nav-menu spacing if it becomes visible in some states */
+    .nav-menu {
+        gap: 1rem;
+    }
+
+    /* Accessibility: increase hit area for theme toggle */
+    .theme-toggle {
+        padding: 0.5rem;
+        min-width: 40px;
     }
 
 }
