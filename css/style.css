@@ -14,6 +14,9 @@
     --secondary-dark: #E65100;
     --accent-color: #FFC107;
     --accent-dark: #FF8F00;
+    --danger-color: #f44336;
+    --light-red-bg: #ffcdd2;
+    --light-red-text: #c62828;
     
     /* Neutral Colors */
     --white: #FFFFFF;
@@ -25,6 +28,7 @@
     /* Gradients */
     --primary-gradient: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
     --secondary-gradient: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+    --danger-gradient: linear-gradient(135deg, #e57373 0%, var(--danger-color) 100%);
     --hero-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     
     /* Typography */
@@ -137,6 +141,98 @@ body {
     align-items: center;
     gap: 1rem;
 }
+
+.notification-bell {
+    position: relative;
+    cursor: pointer;
+    color: var(--dark-gray);
+    font-size: 1.2rem;
+    padding: 0.5rem;
+}
+
+.notification-badge {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    background-color: var(--secondary-color);
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--white);
+    transform: translate(25%, -25%);
+}
+
+.notification-panel {
+    display: none;
+    position: absolute;
+    top: calc(100% + 15px);
+    right: -10px;
+    width: 320px;
+    background-color: var(--white);
+    border-radius: var(--card-radius);
+    box-shadow: var(--shadow-heavy);
+    z-index: 1100;
+    overflow: hidden;
+    animation: slideInUp 0.3s ease;
+    border: 1px solid var(--light-gray);
+}
+
+
+.notification-panel.show {
+    display: block;
+}
+
+.notification-header {
+    padding: 1rem;
+    font-weight: 600;
+    border-bottom: 1px solid var(--light-gray);
+}
+
+#notificationList {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    padding: 1rem;
+    border-bottom: 1px solid var(--light-gray);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-item i {
+    color: var(--primary-color);
+}
+
+.notification-item.unread {
+    background-color: #f0f8ff;
+}
+
+.no-notifications {
+    padding: 2rem 1rem;
+    text-align: center;
+    color: var(--medium-gray);
+}
+
+:root.dark .notification-bell { color: var(--medium-gray); }
+:root.dark .notification-badge { border-color: #1E1E1E; }
+:root.dark .notification-panel { background-color: #2a2a2a; border-color: #333; }
+:root.dark .notification-header { border-bottom-color: #333; }
+:root.dark .notification-item { border-bottom-color: #333; color: var(--dark-gray); }
+:root.dark .notification-item.unread { background-color: #1c2a38; }
+
 
 .role-switch {
     background: var(--primary-gradient);
@@ -268,6 +364,7 @@ body {
     transition: var(--transition-medium);
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
     text-decoration: none;
     font-size: 1rem;
@@ -642,6 +739,11 @@ body {
     box-shadow: var(--shadow-heavy);
 }
 
+.food-card.collected {
+    opacity: 0.6;
+    transition: opacity 0.5s ease;
+}
+
 .food-image {
     width: 100%;
     height: 200px;
@@ -722,24 +824,48 @@ body {
     gap: 0.5rem;
 }
 
-.claim-btn {
+.food-actions .btn {
     flex: 1;
-    background: var(--primary-gradient);
-    color: white;
-    border: none;
     padding: 0.75rem;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    font-weight: 600;
-    transition: var(--transition-medium);
 }
 
-.claim-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-medium);
+/* Green "Claim Food" button */
+.food-actions .claim-btn:not([disabled]) {
+    background: var(--primary-gradient);
+    animation: none; /* No blinking */
 }
+
+/* Orange "Waiting" button */
+.food-actions .btn.pending {
+    background: var(--secondary-gradient);
+    cursor: not-allowed;
+    animation: none;
+}
+
+/* Green, blinking "Confirm Collection" button */
+.confirm-collection-btn {
+    background: var(--primary-gradient);
+    animation: blink-more 1.2s ease-in-out infinite;
+}
+
+/* Grey "Collected" button */
+.collected-btn {
+    background: var(--medium-gray);
+    color: white;
+    cursor: not-allowed;
+}
+
+/* Light Red "Not Collected" button for donor view */
+.not-collected-btn {
+    background: var(--light-red-bg);
+    color: var(--light-red-text);
+    cursor: not-allowed;
+    border: 1px solid #ef9a9a;
+}
+
 
 .contact-btn {
+    flex: 0 0 44px;
     background: var(--light-gray);
     border: none;
     padding: 0.75rem;
@@ -1428,6 +1554,24 @@ body {
     to { transform: rotate(360deg); }
 }
 
+@keyframes blink {
+    50% {
+        opacity: 0.6;
+    }
+}
+
+@keyframes blink-more {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(1.05);
+    }
+}
+
+
 /* Responsive Design */
 @media (max-width: 1024px) {
     :root {
@@ -1560,6 +1704,8 @@ body {
     --shadow-medium: 0 5px 25px rgba(0,0,0,0.7);
     --shadow-heavy: 0 10px 40px rgba(0,0,0,0.8);
     --hero-gradient: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+    --light-red-bg: #4a2b2b;
+    --light-red-text: #ff8a80;
 }
 
 :root.dark body {
@@ -1841,11 +1987,6 @@ html, body, .feature-card, .food-card, .navbar, .modal-content, .footer, .stats-
 
 .btn:active {
     transform: scale(0.95);
-}
-
-.claim-btn {
-    position: relative;
-    overflow: hidden;
 }
 
 .claim-btn::after {
@@ -2154,7 +2295,7 @@ html, body, .feature-card, .food-card, .navbar, .modal-content, .footer, .stats-
 
 .food-card {
     position: relative;
-    background: white;
+    background: rgb(249, 247, 247);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -2267,21 +2408,6 @@ html, body, .feature-card, .food-card, .navbar, .modal-content, .footer, .stats-
     }
 }
 
-.claim-btn {
-    animation: claimPulse 1.5s ease-in-out infinite;
-}
-
-@keyframes claimPulse {
-    0%, 100% {
-        transform: scale(1);
-        box-shadow: 0 5px 25px rgba(76, 175, 80, 0.3);
-    }
-    50% {
-        transform: scale(1.05);
-        box-shadow: 0 5px 35px rgba(76, 175, 80, 0.6);
-    }
-}
-
 .stats-circle {
     animation: float 6s ease-in-out infinite;
 }
@@ -2336,3 +2462,4 @@ html, body, .feature-card, .food-card, .navbar, .modal-content, .footer, .stats-
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-5px); }
 }
+

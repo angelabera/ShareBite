@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ShareBite - Food Waste Reducer</title>
-    <meta name="sharebite-build" content="v-darkmode-fix-1">
-    <link rel="stylesheet" href="css/style.css?v=darkmode-fix-1">
+    <!-- Cache-busting version updated to v=12 -->
+    <link rel="stylesheet" href="css/style.css?v=12">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
@@ -26,10 +26,21 @@
                 <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
             <div class="user-actions">
-                <!-- Added dark mode toggle -->
                 <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
                     <i class="fas fa-moon"></i>
                 </button>
+                
+                <div class="notification-bell" id="notificationBell">
+                    <i class="fas fa-bell"></i>
+                    <div class="notification-badge" id="notificationBadge" style="display: none;">0</div>
+                    <div class="notification-panel" id="notificationPanel">
+                        <div class="notification-header">Notifications</div>
+                        <div id="notificationList">
+                            <div class="no-notifications">No new notifications</div>
+                        </div>
+                    </div>
+                </div>
+
                 <button class="role-switch" id="roleSwitch">
                     <i class="fas fa-exchange-alt"></i>
                     <span id="currentRole">Donor</span>
@@ -465,6 +476,7 @@
     </div>
 
     <script src="js/theme.js"></script>
-    <script src="js/script.js"></script>
+    <script src="js/script.js?v=12"></script>
   </body>
 </html>
+
