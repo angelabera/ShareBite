@@ -1,6 +1,6 @@
 // ShareBite JavaScript - Interactive Food Waste Reduction Platform
 
-class ShareBite {
+class ShareBiteFoodListing {
     constructor() {
         this.currentRole = 'donor';
         this.foodListings = [];
@@ -66,14 +66,8 @@ class ShareBite {
         // Filtering and search
         this.setupFilteringAndSearch();
         
-        // Smooth scrolling
-        this.setupSmoothScrolling();
-        
         // Responsive navigation
         this.setupResponsiveNav();
-        
-        // Hero button interactions
-        this.setupHeroButtons();
         
         // Statistics counter animation
         this.setupStatsAnimation();
@@ -87,13 +81,19 @@ class ShareBite {
         navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 const href = link.getAttribute('href');
-                // Ignore .html links
-                if (href && href.endsWith('.html')) return;
-                e.preventDefault();
-                const targetId = href.substring(1);
-                const targetElement = document.getElementById(targetId);
-                if (targetElement) {
-                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                // If it's an anchor for current page, scroll smoothly
+                if (href && href.startsWith('#')) {
+                    e.preventDefault();
+                    const targetId = href.substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                    }
+                } else if (href && href.includes('.html#')) {
+                    // If it's index.html#features or similar, navigate normally
+                    // (let browser handle navigation)
+                } else if (href && href.endsWith('.html')) {
+                    // If it's a plain .html link, let browser handle navigation
                 }
             });
         });
@@ -502,8 +502,6 @@ handleFileSelect(file) {
         });
     }
 
-    
-
     setupResponsiveNav() {
         const hamburger = document.querySelector('.hamburger');
         const navMenu = document.querySelector('.nav-menu');
@@ -511,24 +509,6 @@ handleFileSelect(file) {
         hamburger.addEventListener('click', () => {
             hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
-        });
-    }
-
-    setupHeroButtons() {
-        const donateBtn = document.getElementById('donateFood');
-        const findBtn = document.getElementById('findFood');
-        
-        donateBtn.addEventListener('click', () => {
-            if (this.currentRole === 'donor') {
-                document.getElementById('addListingModal').style.display = 'block';
-                document.body.style.overflow = 'hidden';
-            } else {
-                document.getElementById('listings').scrollIntoView({ behavior: 'smooth' });
-            }
-        });
-        
-        findBtn.addEventListener('click', () => {
-            document.getElementById('listings').scrollIntoView({ behavior: 'smooth' });
         });
     }
 
@@ -747,10 +727,9 @@ handleFileSelect(file) {
     }
 
     renderFoodListings() {
-        const foodGrid = document.getElementById('foodGrid');
-        const listingsToShow = this.filteredListings.slice(0, 6);
-
-        if (listingsToShow.length === 0) {
+        const foodGrid = document.getElementById('fullfoodGrid');
+        
+        if (this.filteredListings.length === 0) {
             foodGrid.innerHTML = `
                 <div class="no-listings">
                     <i class="fas fa-search" style="font-size: 3rem; color: var(--medium-gray); margin-bottom: 1rem;"></i>
@@ -760,9 +739,9 @@ handleFileSelect(file) {
             `;
             return;
         }
-
-        foodGrid.innerHTML = listingsToShow.map(listing => this.createFoodCard(listing)).join('');
-
+        
+        foodGrid.innerHTML = this.filteredListings.map(listing => this.createFoodCard(listing)).join('');
+        
         // Add event listeners to food cards
         this.setupFoodCardInteractions();
     }
@@ -1061,13 +1040,13 @@ function addDynamicStyles() {
 // Initialize the application
 document.addEventListener('DOMContentLoaded', () => {
     addDynamicStyles();
-    new ShareBite();
+    new ShareBiteFoodListing();
 });
 
 // Service Worker registration for PWA capabilities (optional)
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
+        navigator.serviceWorker.register('../sw.js')
             .then(registration => {
                 console.log('SW registered: ', registration);
             })
@@ -1078,7 +1057,7 @@ if ('serviceWorker' in navigator) {
 }
 
 // Export for potential testing or external use
-window.ShareBite = ShareBite;
+window.ShareBiteFoodListing = ShareBiteFoodListing;
 
 // Clear caches and trigger SW skipWaiting for debugging updates
 window.clearShareBiteCaches = async function() {
@@ -1092,14 +1071,3 @@ window.clearShareBiteCaches = async function() {
         console.log('[ShareBite] Sent SKIP_WAITING to service worker');
     }
 };
-
-document.addEventListener('DOMContentLoaded', () => {
-    const scrollIndicator = document.querySelector('.scroll-indicator');
-    if (scrollIndicator) {
-      scrollIndicator.addEventListener('click', () => {
-        document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
-      });
-    }
-  });
-  
-  
