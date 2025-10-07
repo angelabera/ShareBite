@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/logo/logo-192.png">
     <meta name="theme-color" content="#4CAF50">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -364,6 +365,15 @@
     <!-- Font Awesome for icons -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
     
+    <!-- Service Worker registration (redundant-safe) -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js', { scope: '/' })
+          .then(() => console.log('ShareBite: SW registered from login page'))
+          .catch(() => console.warn('ShareBite: SW registration failed on login page'));
+      }
+    </script>
+
     <!-- Theme Toggle Script -->
     <script>
         // Theme toggle functionality
