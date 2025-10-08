@@ -6,6 +6,8 @@ class ShareBite {
         this.foodListings = [];
         this.filteredListings = [];
         this.currentFilter = 'all';
+        this.claimedItems = this.loadClaimedItems();
+        this.notifications = this.loadNotifications();
         
         // Initialize notifications array and counter
         this.notifications = [];
@@ -19,6 +21,8 @@ class ShareBite {
         this.setupEventListeners();
         this.generateSampleListings();
         this.renderFoodListings();
+        this.setupNotificationSystem();
+        this.updateNotificationDisplay();
         this.startAnimations();
         this.hideLoadingOverlay();
     }
@@ -1039,6 +1043,198 @@ handleFileSelect(file) {
             loadingOverlay.style.opacity = '0';
             setTimeout(() => { loadingOverlay.style.display = 'none'; }, 500);
         }, 1500);
+    }
+
+    // Notification System Methods
+    setupNotificationSystem() {
+        const notificationBell = document.getElementById('notificationBell');
+        const notificationPanel = document.getElementById('notificationPanel');
+        
+        if (!notificationBell) return;
+        
+        // Show notification bell when in collector mode or when there are notifications
+        if (this.currentRole === 'collector' || this.notifications.length > 0) {
+            notificationBell.style.display = 'block';
+        }
+        
+        // Toggle notification panel
+        notificationBell.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isActive = notificationPanel.classList.contains('active');
+            
+            if (isActive) {
+                notificationPanel.classList.remove('active');
+                notificationBell.classList.remove('active');
+            } else {
+                notificationPanel.classList.add('active');
+                notificationBell.classList.add('active');
+            }
+        });
+        
+        // Close panel when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!notificationBell.contains(e.target)) {
+                notificationPanel.classList.remove('active');
+                notificationBell.classList.remove('active');
+            }
+        });
+        
+        // Prevent panel from closing when clicking inside
+        notificationPanel.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    }
+    
+    loadClaimedItems() {
+        const stored = localStorage.getItem('sharebite-claimed-items');
+        return stored ? JSON.parse(stored) : [];
+    }
+    
+    saveClaimedItems() {
+        localStorage.setItem('sharebite-claimed-items', JSON.stringify(this.claimedItems));
+    }
+    
+    loadNotifications() {
+        const stored = localStorage.getItem('sharebite-notifications');
+        return stored ? JSON.parse(stored) : [];
+    }
+    
+    saveNotifications() {
+        localStorage.setItem('sharebite-notifications', JSON.stringify(this.notifications));
+    }
+    
+    addNotification(notification) {
+        this.notifications.unshift(notification);
+        this.saveNotifications();
+        this.updateNotificationDisplay();
+        this.renderNotifications();
+    }
+    
+    updateNotificationDisplay() {
+        const notificationBell = document.getElementById('notificationBell');
+        const notificationBadge = document.getElementById('notificationBadge');
+        
+        if (!notificationBell || !notificationBadge) return;
+        
+        const unreadCount = this.notifications.length;
+        
+        if (unreadCount > 0) {
+            notificationBell.style.display = 'block';
+            notificationBadge.style.display = 'flex';
+            notificationBadge.textContent = unreadCount > 99 ? '99+' : unreadCount.toString();
+        } else {
+            notificationBadge.style.display = 'none';
+            // Keep bell visible if in collector mode
+            if (this.currentRole !== 'collector') {
+                notificationBell.style.display = 'none';
+            }
+        }
+        
+        this.renderNotifications();
+    }
+    
+    renderNotifications() {
+        const notificationList = document.getElementById('notificationList');
+        if (!notificationList) return;
+        
+        if (this.notifications.length === 0) {
+            notificationList.innerHTML = `
+                <div class="no-notifications">
+                    <i class="fas fa-bell-slash"></i>
+                    <h4>No claimed items yet</h4>
+                    <p>Start claiming food items to see them here</p>
+                </div>
+            `;
+            return;
+        }
+        
+        notificationList.innerHTML = `
+            <div class="notification-content">
+                ${this.notifications.map(notification => this.createNotificationItem(notification)).join('')}
+            </div>
+        `;
+        
+        // Add event listeners for notification actions
+        this.setupNotificationActions();
+    }
+    
+    createNotificationItem(notification) {
+        const timeAgo = this.getTimeAgo(notification.claimedAt);
+        
+        return `
+            <div class="notification-item" data-id="${notification.id}">
+                <div class="notification-item-header">
+                    <div class="notification-item-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <div class="notification-item-content">
+                        <h4>${notification.foodType}</h4>
+                        <div class="notification-detail">
+                            <i class="fas fa-store"></i>
+                            <span>${notification.donor}</span>
+                        </div>
+                        <div class="notification-detail">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>${notification.location}</span>
+                        </div>
+                        <div class="notification-detail">
+                            <i class="fas fa-clock"></i>
+                            <span>Pickup: ${this.formatTime(notification.pickupTime)}</span>
+                        </div>
+                        <div class="notification-detail">
+                            <i class="fas fa-phone"></i>
+                            <span>${notification.contact}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="notification-meta">
+                    <span class="notification-time">Claimed ${timeAgo}</span>
+                    <span class="notification-status">${this.capitalizeFirst(notification.status)}</span>
+                </div>
+            </div>
+        `;
+    }
+    
+    setupNotificationActions() {
+        const notificationItems = document.querySelectorAll('.notification-item');
+        
+        notificationItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                const notificationId = parseInt(item.getAttribute('data-id'));
+                this.viewNotificationDetails(notificationId);
+            });
+        });
+    }
+    
+    viewNotificationDetails(notificationId) {
+        const notification = this.notifications.find(n => n.id === notificationId);
+        if (!notification) return;
+        
+        const details = `
+Food: ${notification.foodType}
+Donor: ${notification.donor}
+Location: ${notification.location}
+Pickup Time: ${this.formatTime(notification.pickupTime)}
+Contact: ${notification.contact}
+Claimed: ${new Date(notification.claimedAt).toLocaleString()}
+
+Contact information has been copied to clipboard.
+        `;
+        
+        // Copy contact to clipboard
+        navigator.clipboard.writeText(notification.contact).then(() => {
+            alert(details);
+        }).catch(() => {
+            alert(details);
+        });
+    }
+    
+    clearAllNotifications() {
+        this.notifications = [];
+        this.claimedItems = [];
+        this.saveNotifications();
+        this.saveClaimedItems();
+        this.updateNotificationDisplay();
     }
 }
 
