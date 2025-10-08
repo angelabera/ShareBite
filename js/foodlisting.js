@@ -662,45 +662,6 @@ handleFileSelect(file) {
                 donor: "Green Garden Restaurant"
             },
             {
-                id: 5,
-                foodType: "Fruit & Vegetable Box",
-                quantity: "1 large box",
-                category: "restaurant",
-                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "17:00",
-                location: "Green Garden Restaurant",
-                contact: "+1 234-567-8903",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant"
-            },
-            {
-                id: 7,
-                foodType: "Fruit & Vegetable Box",
-                quantity: "1 large box",
-                category: "restaurant",
-                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "17:00",
-                location: "Green Garden Restaurant",
-                contact: "+1 234-567-8903",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant"
-            },
-            {
-                id: 8,
-                foodType: "Fruit & Vegetable Box",
-                quantity: "1 large box",
-                category: "restaurant",
-                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "17:00",
-                location: "Green Garden Restaurant",
-                contact: "+1 234-567-8903",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant"
-            },
-            {
                 id: 6,
                 foodType: "Grilled Chicken Meals",
                 quantity: "12 complete meals",
@@ -712,6 +673,32 @@ handleFileSelect(file) {
                 contact: "+1 234-567-8904",
                 createdAt: new Date(Date.now() - 2700000),
                 donor: "Healthy Eats Cafe"
+            },
+            {
+                id: 7,
+                foodType: "Vegan Soup Bundle",
+                quantity: "8 portions",
+                category: "household",
+                description: "Homemade vegan soup with fresh vegetables. Perfect for cold days.",
+                freshUntil: this.getRandomFutureDate(),
+                pickupTime: "17:30",
+                location: "Green Valley Apartments",
+                contact: "+1 234-567-8905",
+                createdAt: new Date(Date.now() - 3600000),
+                donor: "Community Kitchen"
+            },
+            {
+                id: 8,
+                foodType: "Assorted Muffins",
+                quantity: "24 muffins",
+                category: "bakery",
+                description: "Freshly baked muffins with various flavors - blueberry, chocolate chip, and bran.",
+                freshUntil: this.getRandomFutureDate(),
+                pickupTime: "19:00",
+                location: "Sunrise Bakery, Oak Avenue",
+                contact: "+1 234-567-8901",
+                createdAt: new Date(Date.now() - 1800000),
+                donor: "Sunrise Bakery"
             }
         ];
         
@@ -814,7 +801,11 @@ handleFileSelect(file) {
         if (!listing) return;
         
         // Show confirmation dialog
-        const confirmed = confirm(`Claim "${listing.foodType}" from ${listing.donor}?\n\nPickup: ${listing.location}\nTime: ${this.formatTime(listing.pickupTime)}\nContact: ${listing.contact}`);
+        const confirmed = confirm(`Claim "${listing.foodType}" from ${listing.donor}?
+
+Pickup: ${listing.location}
+Time: ${this.formatTime(listing.pickupTime)}
+Contact: ${listing.contact}`);
         
         if (confirmed) {
             // Remove listing from available items
