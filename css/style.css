@@ -755,6 +755,11 @@ body {
     text-decoration: none;
 }
 
+.learn-more-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-medium);
+}
+
 .claim-btn {
     flex: 1;
     background: var(--primary-gradient);
