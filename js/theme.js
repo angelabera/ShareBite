@@ -49,3 +49,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // Apply the saved theme as soon as the page loads.
     applyTheme();
 });
+

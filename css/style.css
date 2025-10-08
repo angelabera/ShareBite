@@ -856,6 +856,11 @@ body {
     gap: 0.5rem;
     text-decoration: none;
 }
+.learn-more-btn:hover {
+  background: var(--primary-gradient);
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
 
 /* ALL main action buttons will now have equal width */
 .food-actions .btn {

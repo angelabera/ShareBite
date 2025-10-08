@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,7 +34,11 @@
             --input-border-dark: #444;
         }
 
-        * { margin:0; padding:0; box-sizing:border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: 'Poppins', sans-serif;
@@ -75,13 +80,15 @@
             color: var(--text-color-dark);
         }
 
-        .theme-toggle:hover { transform: scale(1.1) rotate(15deg); }
+        .theme-toggle:hover {
+            transform: scale(1.1) rotate(15deg);
+        }
 
         .auth-container {
             background-color: var(--card-bg-light);
             padding: 3rem;
             border-radius: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             width: 100%;
             max-width: 480px;
             text-align: center;
@@ -92,104 +99,191 @@
 
         body.dark-mode .auth-container {
             background-color: var(--card-bg-dark);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
 
-        @keyframes fadeIn { to { opacity:1; transform:translateY(0); } }
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-        .auth-container h1 { margin-bottom:0.75rem; font-weight:600; font-size:1.8rem; }
-        .auth-container p.subtitle { color:var(--subtext-color-light); margin-bottom:2rem; }
-        body.dark-mode .auth-container p.subtitle { color:var(--subtext-color-dark); }
+        .auth-container h1 {
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            font-size: 1.8rem;
+        }
 
-        .form-group { margin-bottom:1.5rem; text-align:left; }
-        .form-group label { display:block; margin-bottom:0.5rem; font-weight:500; }
+        .auth-container p.subtitle {
+            color: var(--subtext-color-light);
+            margin-bottom: 2rem;
+        }
+
+        body.dark-mode .auth-container p.subtitle {
+            color: var(--subtext-color-dark);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
         .form-group input {
-            width:100%;
-            padding:0.85rem 1rem;
-            border:1px solid var(--input-border-light);
-            background-color:var(--input-bg-light);
-            color:var(--text-color-light);
-            border-radius:8px;
-            font-family:'Poppins',sans-serif;
-            font-size:1rem;
+            width: 100%;
+            padding: 0.85rem 1rem;
+            border: 1px solid var(--input-border-light);
+            background-color: var(--input-bg-light);
+            color: var(--text-color-light);
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
             transition: all 0.3s;
         }
+
         body.dark-mode .form-group input {
             border-color: var(--input-border-dark);
             background-color: var(--input-bg-dark);
             color: var(--text-color-dark);
         }
+
         .form-group input:focus {
-            outline:none;
+            outline: none;
             border-color: var(--primary-green);
-            box-shadow: 0 0 0 4px rgba(76,175,80,0.2);
+            box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2);
         }
 
-        .form-options { display:flex; justify-content:flex-end; margin-bottom:1.5rem; font-size:0.9rem; }
-        .forgot-password-link { color: var(--secondary-orange); text-decoration:none; }
-        .forgot-password-link:hover { text-decoration:underline; }
+        .form-options {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
 
-        .btn { width:100%; padding:0.9rem; border:none; border-radius:8px; font-family:'Poppins',sans-serif; font-size:1.1rem; font-weight:600; cursor:pointer; transition: all 0.3s; }
-        .btn-primary { background-color:var(--primary-green); color:#fff; }
-        .btn-primary:hover { background-color:#45a049; transform:translateY(-3px); box-shadow:0 4px 15px rgba(76,175,80,0.3); }
+        .forgot-password-link {
+            color: var(--secondary-orange);
+            text-decoration: none;
+        }
 
-        .register-link { margin-top:1.5rem; display:block; color:var(--secondary-orange); text-decoration:none; font-weight:500; }
-        .register-link:hover { text-decoration:underline; }
+        .forgot-password-link:hover {
+            text-decoration: underline;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.9rem;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-green);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background-color: #45a049;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .register-link {
+            margin-top: 1.5rem;
+            display: block;
+            color: var(--secondary-orange);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .register-link:hover {
+            text-decoration: underline;
+        }
 
         @media (max-width:520px) {
-            .auth-container { padding:2rem; }
-            .auth-container h1 { font-size:1.5rem; }
+            .auth-container {
+                padding: 2rem;
+            }
+
+            .auth-container h1 {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
+
 <body>
 
-<button id="theme-toggle" class="theme-toggle" title="Toggle dark mode">🌙</button>
+    <button id="theme-toggle" class="theme-toggle" title="Toggle dark mode">🌙</button>
 
-<div class="auth-container">
-    <h1>Welcome Back, NGO Partner!</h1>
-    <p class="subtitle">Log in to access your NGO dashboard and manage contributions.</p>
-    <form id="ngoLoginForm">
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="Enter your NGO email" required>
-        </div>
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="Enter your password" required>
-        </div>
-        <div class="form-options">
-            <a href="#" class="forgot-password-link">Forgot Password?</a>
-        </div>
-        <button type="submit" class="btn btn-primary">Login</button>
-    </form>
-    <a href="ngo-register.html" class="register-link">Don't have a registered NGO? Register</a>
-</div>
+    <div class="auth-container">
+        <h1>Welcome Back, NGO Partner!</h1>
+        <p class="subtitle">Log in to access your NGO dashboard and manage contributions.</p>
+        <form id="ngoLoginForm">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter your NGO email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                <div style="display: flex; flex-direction: row; gap: 1rem; justify-self: flex-end;">
+                    <input type="checkbox" name="" id="show-pwd" style="width: fit-content;">Show Password
+                </div>
+            </div>
+            <div class="form-options">
+                <a href="forgotpassword.html" class="forgot-password-link">Forgot Password?</a>
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+        <a href="ngo-register.html" class="register-link">Don't have a registered NGO? Register</a>
+    </div>
 
-<script src="js/theme.js"></script>
-<script>
-    // --- Form Submission ---
-    const loginForm = document.getElementById('ngoLoginForm');
+    <script src="js/theme.js"></script>
+    <script>
+        // --- Form Submission ---
+        const loginForm = document.getElementById('ngoLoginForm');
 
-    loginForm.addEventListener('submit', (e) => {
-        e.preventDefault();
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
 
-        const email = loginForm.email.value.trim();
-        const password = loginForm.password.value.trim();
+            const email = loginForm.email.value.trim();
+            const password = loginForm.password.value.trim();
 
-        if (!email || !password) {
-            alert("Please fill in all fields before logging in.");
-            return;
+            if (!email || !password) {
+                alert("Please fill in all fields before logging in.");
+                return;
+            }
+
+            alert("NGO logged in successfully!");
+
+            // Redirect after short delay
+            setTimeout(() => {
+                window.location.href = "index.html"; // Further we can redirect to NGO dashboard with "ngo-dashboard.html"
+            }, 500);
+        });
+        const password = document.getElementById("password");
+        const show_pwd = document.getElementById("show-pwd");
+        function passwordToggle() {
+            if (show_pwd.checked) {
+                password.type = "text";
+            } else {
+                password.type = "password";
+            }
         }
-
-        alert("NGO logged in successfully!");
-
-        // Redirect after short delay
-        setTimeout(() => {
-            window.location.href = "index.html"; // Further we can redirect to NGO dashboard with "ngo-dashboard.html"
-        }, 500);
-    });
-</script>
+        show_pwd.addEventListener("change", passwordToggle);
+    </script>
 
 </body>
+
 </html>
