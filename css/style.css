@@ -57,7 +57,7 @@
 
 @media (max-width: 768px) {
     :root {
-        --navbar-height: 140px; /* mobile height */
+        --navbar-height: 100px; /* mobile height */
     }
 }
 
@@ -1589,9 +1589,8 @@ body {
     .nav-container {
         padding: 1rem;
     }
-    
     .hero {
-        padding-top: 60px;
+        /* padding-top: 60px; */
     }
     
     .hero-container {
