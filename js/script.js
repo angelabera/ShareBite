@@ -6,6 +6,8 @@ class ShareBite {
         this.foodListings = [];
         this.filteredListings = [];
         this.currentFilter = 'all';
+        this.currentSort = 'newest';
+        this.userLocation = null;
         this.claimedItems = this.loadClaimedItems();
         this.notifications = this.loadNotifications();
         
@@ -69,6 +71,8 @@ class ShareBite {
         
         // Filtering and search
         this.setupFilteringAndSearch();
+        this.setupSortingUI();
+        this.setupNetworkStatus();
         
         // Smooth scrolling
         this.setupSmoothScrolling();
@@ -480,6 +484,7 @@ handleFileSelect(file) {
     setupFilteringAndSearch() {
         const filterBtns = document.querySelectorAll('.filter-btn');
         const searchInput = document.querySelector('.search-box input');
+        const searchBox = document.querySelector('.search-box');
         
         filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
@@ -506,6 +511,30 @@ handleFileSelect(file) {
                 this.renderFoodListings();
             }, 300);
         });
+
+        // Add clear button for search
+        if (searchBox && !searchBox.querySelector('.clear-search')) {
+            const clearBtn = document.createElement('button');
+            clearBtn.className = 'clear-search';
+            clearBtn.setAttribute('aria-label', 'Clear search');
+            clearBtn.innerHTML = '<i class="fas fa-times"></i>';
+            clearBtn.style.cssText = 'display:none; border:none; background:transparent; cursor:pointer; color:var(--medium-gray);';
+            searchBox.appendChild(clearBtn);
+            searchInput.addEventListener('input', () => {
+                clearBtn.style.display = searchInput.value ? 'inline-flex' : 'none';
+            });
+            clearBtn.addEventListener('click', () => {
+                searchInput.value = '';
+                clearBtn.style.display = 'none';
+                this.searchQuery = '';
+                this.filterListings();
+                this.renderFoodListings();
+                searchInput.focus();
+            });
+        }
+
+        // Initial counts
+        this.updateFilterCounts();
     }
 
     filterListings() {
@@ -517,6 +546,112 @@ handleFileSelect(file) {
                 listing.description.toLowerCase().includes(this.searchQuery);
             
             return matchesFilter && matchesSearch;
+        });
+
+        this.sortListings();
+        this.updateFilterCounts();
+    }
+
+    setupSortingUI() {
+        const filterBar = document.querySelector('.filter-bar');
+        if (!filterBar || filterBar.querySelector('.sort-select')) return;
+
+        const sortContainer = document.createElement('div');
+        sortContainer.className = 'sort-container';
+        sortContainer.style.cssText = 'display:flex; align-items:center; gap:0.5rem;';
+        sortContainer.innerHTML = `
+            <label for="sortSelect" style="font-size:0.9rem; color:var(--medium-gray);">Sort:</label>
+            <select id="sortSelect" class="sort-select" style="padding:0.5rem 0.75rem; border-radius:8px; border:1px solid var(--light-gray);">
+                <option value="newest">Newest</option>
+                <option value="expiring">Expiring Soon</option>
+                <option value="quantity">Quantity</option>
+                <option value="distance">Distance</option>
+            </select>
+        `;
+
+        const addBtn = document.getElementById('addListingBtn');
+        if (addBtn) {
+            filterBar.insertBefore(sortContainer, addBtn);
+        } else {
+            filterBar.appendChild(sortContainer);
+        }
+
+        const sortSelect = sortContainer.querySelector('#sortSelect');
+        sortSelect.value = this.currentSort;
+        sortSelect.addEventListener('change', async () => {
+            this.currentSort = sortSelect.value;
+            if (this.currentSort === 'distance' && !this.userLocation) {
+                await this.requestUserLocation();
+            }
+            this.filterListings();
+            this.renderFoodListings();
+        });
+    }
+
+    async requestUserLocation() {
+        if (!('geolocation' in navigator)) {
+            this.showToast('Geolocation not supported. Distance sort unavailable.', 'error');
+            return;
+        }
+        return new Promise((resolve) => {
+            navigator.geolocation.getCurrentPosition((pos) => {
+                this.userLocation = { latitude: pos.coords.latitude, longitude: pos.coords.longitude };
+                resolve();
+            }, () => {
+                this.showToast('Location denied. Using default sorting.', 'error');
+                resolve();
+            }, { enableHighAccuracy: false, timeout: 5000, maximumAge: 60000 });
+        });
+    }
+
+    sortListings() {
+        const sortByQuantity = (q) => {
+            const match = (q || '').toString().match(/\d+/);
+            return match ? parseInt(match[0], 10) : 0;
+        };
+
+        const distanceOf = (listing) => {
+            if (!this.userLocation || !listing.latitude) return Number.POSITIVE_INFINITY;
+            const toRad = (d) => d * Math.PI / 180;
+            const R = 6371;
+            const dLat = toRad(listing.latitude - this.userLocation.latitude);
+            const dLon = toRad(listing.longitude - this.userLocation.longitude);
+            const a = Math.sin(dLat/2)**2 + Math.cos(toRad(this.userLocation.latitude)) * Math.cos(toRad(listing.latitude)) * Math.sin(dLon/2)**2;
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        };
+
+        const sortKey = this.currentSort;
+        this.filteredListings.sort((a, b) => {
+            if (sortKey === 'newest') {
+                return b.createdAt - a.createdAt;
+            }
+            if (sortKey === 'expiring') {
+                return new Date(a.freshUntil) - new Date(b.freshUntil);
+            }
+            if (sortKey === 'quantity') {
+                return sortByQuantity(b.quantity) - sortByQuantity(a.quantity);
+            }
+            if (sortKey === 'distance') {
+                const da = distanceOf(a);
+                const db = distanceOf(b);
+                return da - db;
+            }
+            return 0;
+        });
+    }
+
+    updateFilterCounts() {
+        const counts = this.foodListings.reduce((acc, l) => {
+            acc.all += 1;
+            acc[l.category] = (acc[l.category] || 0) + 1;
+            return acc;
+        }, { all: 0 });
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            const key = btn.getAttribute('data-filter');
+            const count = counts[key] || 0;
+            const base = btn.textContent.split('(')[0].trim();
+            btn.textContent = `${base} (${count})`;
         });
     }
 
@@ -821,12 +956,14 @@ handleFileSelect(file) {
         const freshUntil = this.formatDateTime(listing.freshUntil);
         const pickupTime = this.formatTime(listing.pickupTime);
         const isClaimed = this.claimedItems.includes(listing.id);
+        const urgency = this.getUrgency(listing.freshUntil);
         
         return `
             <div class="food-card ${isClaimed ? 'claimed' : ''}" data-id="${listing.id}">
                 <div class="food-image">
                     ${listing.photo ? `<img src="${URL.createObjectURL(listing.photo)}" alt="${listing.foodType}">` : `<i class="fas fa-${this.getFoodIcon(listing.category)}"></i>`}
                     <div class="food-category">${this.capitalizeFirst(listing.category)}</div>
+                    ${urgency ? `<span class="urgency-badge ${urgency.level}" title="Expiring ${freshUntil}" style="position:absolute; top:8px; left:8px; padding:4px 8px; border-radius:12px; font-size:0.75rem; color:#fff; background:${urgency.color};">${urgency.label}</span>` : ''}
                 </div>
                 <div class="food-details">
                     <h3 class="food-title">${listing.foodType}</h3>
@@ -856,6 +993,33 @@ handleFileSelect(file) {
                 </div>
             </div>
         `;
+    }
+
+    getUrgency(freshUntilStr) {
+        if (!freshUntilStr) return null;
+        const diffMs = new Date(freshUntilStr) - new Date();
+        const hours = Math.floor(diffMs / (1000 * 60 * 60));
+        if (hours <= 0) return { level: 'expired', label: 'Expired', color: '#6b7280' };
+        if (hours <= 3) return { level: 'urgent', label: 'Urgent', color: '#ef4444' };
+        if (hours <= 12) return { level: 'soon', label: 'Expiring Soon', color: '#f59e0b' };
+        return null;
+    }
+
+    setupNetworkStatus() {
+        const banner = document.createElement('div');
+        banner.id = 'networkStatusBanner';
+        banner.style.cssText = 'position:fixed; top:0; left:50%; transform:translateX(-50%); z-index:4000; padding:6px 12px; border-radius:0 0 8px 8px; color:#fff; font-size:0.9rem; display:none;';
+        document.body.appendChild(banner);
+
+        const show = (text, bg) => {
+            banner.textContent = text;
+            banner.style.background = bg;
+            banner.style.display = 'block';
+            setTimeout(() => { banner.style.display = 'none'; }, 2500);
+        };
+
+        window.addEventListener('offline', () => show('You are offline', '#ef4444'), { passive: true });
+        window.addEventListener('online', () => show('Back online', '#10b981'), { passive: true });
     }
 
     setupFoodCardInteractions() {
