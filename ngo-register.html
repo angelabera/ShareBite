@@ -10,6 +10,30 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
     <style>
+        /* Toast styles */
+        .custom-toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) scale(0.95);
+            background: var(--primary-green);
+            color: #fff;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+            font-size: 1rem;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 9999;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .custom-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+            pointer-events: auto;
+        }
+
         /* Same styles as register.html */
         :root {
             --primary-green: #4CAF50;
@@ -278,26 +302,41 @@
             const description = ngoRegisterForm.description.value.trim();
 
             if (!ngoName || !email || !contactPerson || !phone || !address) {
-                alert("Please fill in all required fields.");
+                showToast("Please fill in all required fields.");
                 return;
             }
 
-            alert("NGO Registered successfully! (Frontend only)");
+            showToast("NGO Registered successfully! (Frontend only)");
 
             setTimeout(() => {
                 window.location.href = "index.html";
-            }, 500);
-        });
-        const password = document.getElementById("password");
-        const show_pwd = document.getElementById("show-pwd");
-        function passwordToggle() {
-            if (show_pwd.checked) {
-                password.type = "text";
-            } else {
-                password.type = "password";
+            }, 1200); // 1.2 second delay
+            // Toast notification implementation
+            function showToast(message) {
+                let toast = document.createElement('div');
+                toast.className = 'custom-toast';
+                toast.innerText = message;
+                document.body.appendChild(toast);
+                setTimeout(() => {
+                    toast.classList.add('show');
+                }, 100);
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => document.body.removeChild(toast), 500);
+                }, 2500);
             }
-        }
-        show_pwd.addEventListener("change", passwordToggle);
+
+            const password = document.getElementById("password");
+            const show_pwd = document.getElementById("show-pwd");
+            function passwordToggle() {
+                if (show_pwd.checked) {
+                    password.type = "text";
+                } else {
+                    password.type = "password";
+                }
+            }
+            show_pwd.addEventListener("change", passwordToggle);
+        }); // Close event listener callback
     </script>
 
 </body>

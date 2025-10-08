@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,13 +8,37 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/svg+xml" href="logo/logo.svg"> 
+    <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
     <style>
+        /* Toast styles */
+        .custom-toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) scale(0.95);
+            background: var(--primary-green);
+            color: #fff;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+            font-size: 1rem;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 9999;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .custom-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+            pointer-events: auto;
+        }
+
         :root {
             --primary-green: #4CAF50;
             --secondary-orange: #FF6B35;
             --accent-yellow: #FFC107;
-            
+
             /* Light Mode */
             --bg-gradient-start-light: #E9E3FF;
             --bg-gradient-end-light: #F7F5FF;
@@ -118,7 +143,7 @@
             color: var(--subtext-color-light);
             margin-bottom: 2rem;
         }
-        
+
         body.dark-mode .auth-container p.subtitle {
             color: var(--subtext-color-dark);
         }
@@ -146,7 +171,7 @@
             font-size: 1rem;
             transition: all 0.3s;
         }
-        
+
         body.dark-mode .form-group input,
         body.dark-mode .form-group select {
             border-color: var(--input-border-dark);
@@ -201,12 +226,14 @@
             .auth-container {
                 padding: 2rem;
             }
+
             .auth-container h1 {
                 font-size: 1.5rem;
             }
         }
     </style>
 </head>
+
 <body>
 
     <button id="theme-toggle" class="theme-toggle" title="Toggle dark mode">🌙</button>
@@ -225,10 +252,11 @@
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Minimum 6 characters" required minlength="6">
+                <input type="password" id="password" name="password" placeholder="Minimum 6 characters" required
+                    minlength="6">
                 <div style="display: flex; flex-direction: row; gap: 1rem; justify-self: flex-end;">
                     <input type="checkbox" name="" id="show-pwd" style="width: fit-content;">Show Password
-                    </div>
+                </div>
             </div>
             <div class="form-group">
                 <label for="role">Role</label>
@@ -244,44 +272,61 @@
     </div>
 
     <script src="js/theme.js"></script>
-<script>
-    // --- Form Submission ---
-    const registerForm = document.getElementById('registerForm');
+    <script>
+        // --- Form Submission ---
+        const registerForm = document.getElementById('registerForm');
 
-    registerForm.addEventListener('submit', (e) => {
-        e.preventDefault();
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
 
-        // Get form values
-        const fullName = registerForm.name.value.trim();
-        const email = registerForm.email.value.trim();
-        const password = registerForm.password.value.trim();
-        const role = registerForm.role.value;
+            // Get form values
+            const fullName = registerForm.name.value.trim();
+            const email = registerForm.email.value.trim();
+            const password = registerForm.password.value.trim();
+            const role = registerForm.role.value;
 
-        if (!fullName || !email || !password || !role) {
-            alert("Please fill in all fields before registering.");
-            return;
+            if (!fullName || !email || !password || !role) {
+                showToast("Please fill in all fields before registering.");
+                return;
+            }
+
+            // Show success message
+            showToast("Registered successfully!");
+
+            // Redirect to index.html after short delay (so toast can be seen)
+            setTimeout(() => {
+                window.location.href = "index.html";
+            }, 1200); // 1.2 second delay
+
+        });
+
+        // Toast notification implementation
+        function showToast(message) {
+            let toast = document.createElement('div');
+            toast.className = 'custom-toast';
+            toast.innerText = message;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 100);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => document.body.removeChild(toast), 500);
+            }, 2500);
         }
-
-        // Show success message
-        alert("Registered successfully!");
-
-        // Redirect to index.html after short delay (so alert can be seen)
-        setTimeout(() => {
-            window.location.href = "index.html";
-        }, 500); // 0.5 second delay
-    });
-    const password = document.getElementById("password");
-    const show_pwd = document.getElementById("show-pwd");
-    function passwordToggle(){
-        if (show_pwd.checked){
-            password.type = "text";
-        }else{
-            password.type = "password";
+        const password = document.getElementById("password");
+        const show_pwd = document.getElementById("show-pwd");
+        function passwordToggle() {
+            if (show_pwd.checked) {
+                password.type = "text";
+            } else {
+                password.type = "password";
+            }
         }
-    }
-    show_pwd.addEventListener("change",passwordToggle);
-</script>
+        show_pwd.addEventListener("change", passwordToggle);
+    </script>
 
 
 </body>
+
 </html>
