@@ -499,6 +499,8 @@ handleFileSelect(file) {
                 // Filter and render listings
                 this.filterListings();
                 this.renderFoodListings();
+                // Update counts after filter click
+                this.updateFilterCounts();
             });
         });
 
@@ -509,6 +511,7 @@ handleFileSelect(file) {
                 this.searchQuery = e.target.value.toLowerCase();
                 this.filterListings();
                 this.renderFoodListings();
+                this.updateFilterCounts();
             }, 300);
         });
 
@@ -530,8 +533,12 @@ handleFileSelect(file) {
                 this.filterListings();
                 this.renderFoodListings();
                 searchInput.focus();
+                this.updateFilterCounts();
             });
         }
+
+        // Initial counts
+        this.updateFilterCounts();
     }
 
     filterListings() {
@@ -546,6 +553,21 @@ handleFileSelect(file) {
         });
 
         this.sortListings();
+        this.updateFilterCounts();
+    }
+
+    updateFilterCounts() {
+        const counts = this.foodListings.reduce((acc, l) => {
+            acc.all += 1;
+            acc[l.category] = (acc[l.category] || 0) + 1;
+            return acc;
+        }, { all: 0 });
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            const key = btn.getAttribute('data-filter');
+            const count = counts[key] || 0;
+            const base = btn.textContent.split('(')[0].trim();
+            btn.textContent = `${base} (${count})`;
+        });
     }
 
     setupSortingUI() {
