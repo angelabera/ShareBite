@@ -2618,6 +2618,10 @@ body.dark-mode .divider-icon {
     box-shadow: 0 4px 20px rgba(255, 107, 53, 0.3);
 }
 
+body.dark-mode .nav-menu a{
+    color: var(--white);
+}
+
 /* --- Responsive --- */
 @media (max-width: 900px) {
   .contact-container {
