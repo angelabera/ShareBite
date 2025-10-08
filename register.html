@@ -226,6 +226,9 @@
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" placeholder="Minimum 6 characters" required minlength="6">
+                <div style="display: flex; flex-direction: row; gap: 1rem; justify-self: flex-end;">
+                    <input type="checkbox" name="" id="show-pwd" style="width: fit-content;">Show Password
+                    </div>
             </div>
             <div class="form-group">
                 <label for="role">Role</label>
@@ -267,6 +270,16 @@
             window.location.href = "index.html";
         }, 500); // 0.5 second delay
     });
+    const password = document.getElementById("password");
+    const show_pwd = document.getElementById("show-pwd");
+    function passwordToggle(){
+        if (show_pwd.checked){
+            password.type = "text";
+        }else{
+            password.type = "password";
+        }
+    }
+    show_pwd.addEventListener("change",passwordToggle);
 </script>
 
 
