@@ -2695,6 +2695,58 @@ html, body, .feature-card, .food-card, .navbar, .modal-content, .footer, .stats-
   transform: translateY(-3px);
 }
 
+/* Section Divider */
+.section-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 0;
+    margin: 2rem 0;
+}
+
+.divider-line {
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, var(--primary-color) 50%, transparent 100%);
+    max-width: 300px;
+}
+
+.divider-icon {
+    margin: 0 2rem;
+    width: 60px;
+    height: 60px;
+    background: var(--primary-gradient);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3);
+    }
+    50% {
+        transform: scale(1.1);
+        box-shadow: 0 6px 25px rgba(76, 175, 80, 0.5);
+    }
+}
+
+/* Dark mode support for divider */
+body.dark-mode .divider-line {
+    background: linear-gradient(90deg, transparent 0%, var(--accent-color) 50%, transparent 100%);
+}
+
+body.dark-mode .divider-icon {
+    background: var(--secondary-gradient);
+    box-shadow: 0 4px 20px rgba(255, 107, 53, 0.3);
+}
+
 /* --- Responsive --- */
 @media (max-width: 900px) {
   .contact-container {
