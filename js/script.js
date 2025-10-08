@@ -964,6 +964,7 @@ Contact: ${listing.contact}`);
                 loadingOverlay.style.display = 'none';
             }, 500);
         }, 1500); // Show loading for 1.5 seconds
+    }
 }
 
 // Additional CSS animations via JavaScript
