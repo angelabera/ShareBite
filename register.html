@@ -242,7 +242,7 @@
         </form>
         <a href="login.html" class="login-link">Already have a User account? Login</a>
     </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/theme.js"></script>
 <script>
     // --- Form Submission ---
@@ -258,17 +258,30 @@
         const role = registerForm.role.value;
 
         if (!fullName || !email || !password || !role) {
-            alert("Please fill in all fields before registering.");
-            return;
+            Swal.fire({
+            title: "Missing Information ⚠️",
+            text: "Please fill in all fields before logging in.",
+            icon: "warning",
+            confirmButtonColor: "#FF6B35",
+            background: "#fff8f0",
+            color: "#333",
+          });
+          return;
         }
 
         // Show success message
-        alert("Registered successfully!");
-
-        // Redirect to index.html after short delay (so alert can be seen)
-        setTimeout(() => {
-            window.location.href = "index.html";
-        }, 500); // 0.5 second delay
+        Swal.fire({
+          title: "Registered Successfully 🎉",
+          text: "Welcome to ShareBite!",
+          icon: "success",
+          confirmButtonColor: "#4CAF50",
+          background: "#fdfdfd",
+          color: "#333",
+          timer: 2000,
+          showConfirmButton: false,
+        }).then(() => {
+          window.location.href = "index.html";
+        });
     });
     const password = document.getElementById("password");
     const show_pwd = document.getElementById("show-pwd");
@@ -281,7 +294,5 @@
     }
     show_pwd.addEventListener("change",passwordToggle);
 </script>
-
-
 </body>
 </html>
