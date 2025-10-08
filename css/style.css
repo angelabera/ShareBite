@@ -1,3 +1,25 @@
+/* Toast styles */
+.custom-toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) scale(0.95);
+    background: var(--primary-gradient);
+    color: var(--white);
+    padding: 1rem 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-medium);
+    font-size: 1rem;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transition: opacity 0.3s, transform 0.3s;
+}
+.custom-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+    pointer-events: auto;
+}
 /* Reset and Base Styles */
 * {
     margin: 0;

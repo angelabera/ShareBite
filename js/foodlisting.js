@@ -1191,9 +1191,9 @@ Contact information has been copied to clipboard.
         
         // Copy contact to clipboard
         navigator.clipboard.writeText(notification.contact).then(() => {
-            alert(details);
+            showToast(details);
         }).catch(() => {
-            alert(details);
+            showToast(details);
         });
     }
     
