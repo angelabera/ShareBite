@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Support - ShareBite</title>
+    <meta name="sharebite-build" content="v-darkmode-fix-1">
+    <link rel="stylesheet" href="css/style.css?v=darkmode-fix-1">
+    <link rel="stylesheet" href="css/support.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+              <a href="index.html" class="nav-logo-link">
+              <i class="fas fa-utensils"></i>
+              <span>ShareBite</span>
+              </a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html#home" class="nav-link">Home</a></li>
+                <li><a href="index.html#features" class="nav-link">Features</a></li>
+                <li><a href="foodlisting.html" class="nav-link">Listings</a></li>
+                <li><a href="index.html#about" class="nav-link">About</a></li>
+                <li><a href="index.html#contact" class="nav-link">Contact</a>
+                <ul>
+                  <li><a href="support.html" class="nav-link">Support</a></li>
+                </ul>
+                </li>
+            </ul>
+            <div class="user-actions">
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="role-switch" id="roleSwitch">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span id="currentRole">Donor</span>
+                </button>
+                <button class="login-btn" onclick="window.location.href='login.html'">Login as User</button>
+                <button class="login-btn" onclick="window.location.href='login_ngo.html'">Login as NGO</button>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Support Hero Section -->
+    <section class="support-hero">
+      <div class="container">
+        <div class="support-hero-content">
+          <h1 class="hero-title">
+            Need help?<br />
+            <span class="gradient-text">We're here for you!</span>
+          </h1>
+          <p class="hero-description">
+            Get answers to your questions,<br />
+            find helpful resources,<br />
+            or reach out to our support team.
+          </p>
+
+          <!-- Contact Cards in Hero -->
+          <div class="hero-contact-grid">
+            <div class="hero-contact-card">
+              <div class="contact-icon">
+                <i class="fas fa-envelope"></i>
+              </div>
+              <h3>Email Support</h3>
+              <p>Get help via email</p>
+              <a href="mailto:support@sharebite.com" class="contact-link">support@sharebite.com</a>
+            </div>
+
+            <div class="hero-contact-card">
+              <div class="contact-icon">
+                <i class="fas fa-phone"></i>
+              </div>
+              <h3>Phone Support</h3>
+              <p>Call us during business hours</p>
+              <a href="tel:+1234567890" class="contact-link">+1 (234) 567-890</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick Help Section -->
+    <section class="quick-help">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Quick Help</h2>
+          <p class="section-subtitle">Find answers to common questions</p>
+        </div>
+
+        <div class="help-grid">
+          <div class="help-card">
+            <div class="help-icon">
+              <i class="fas fa-book"></i>
+            </div>
+            <h3>Getting Started</h3>
+            <p>Learn how to create your first food listing or claim available donations.</p>
+            <a href="#getting-started" class="help-link">Learn More <i class="fas fa-arrow-right"></i></a>
+          </div>
+
+          <div class="help-card">
+            <div class="help-icon">
+              <i class="fas fa-user-circle"></i>
+            </div>
+            <h3>Account & Profile</h3>
+            <p>Manage your account settings, profile information, and preferences.</p>
+            <a href="#account" class="help-link">Learn More <i class="fas fa-arrow-right"></i></a>
+          </div>
+
+          <div class="help-card">
+            <div class="help-icon">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3>Safety & Guidelines</h3>
+            <p>Review our food safety standards and community guidelines.</p>
+            <a href="#safety" class="help-link">Learn More <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="faq-section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Frequently Asked Questions</h2>
+          <p class="section-subtitle">Everything you need to know</p>
+        </div>
+
+        <div class="faq-container">
+          <div class="faq-category">
+            <h3 class="faq-category-title">For Donors</h3>
+
+            <div class="faq-item">
+              <div class="faq-question">
+                <h4>How do I list food for donation?</h4>
+                <i class="fas fa-chevron-down"></i>
+              </div>
+              <div class="faq-answer">
+                <p>Click the "Add Listing" button on the main page, fill in details about the food type, quantity, pickup location, and preferred pickup time. You can also add photos to help recipients see what's available.</p>
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <div class="faq-question">
+                <h4>What types of food can I donate?</h4>
+                <i class="fas fa-chevron-down"></i>
+              </div>
+              <div class="faq-answer">
+                <p>You can donate fresh, properly stored leftover food including prepared meals, baked goods, packaged foods, and fresh produce. All food must be safe for consumption and meet our food safety guidelines.</p>
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <div class="faq-question">
+                <h4>How long does food stay listed?</h4>
+                <i class="fas fa-chevron-down"></i>
+              </div>
+              <div class="faq-answer">
+                <p>Food listings remain active until the "Fresh Until" time you specify, or until someone claims it. You can also manually remove listings at any time.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-category">
+            <h3 class="faq-category-title">For Recipients</h3>
+
+            <div class="faq-item">
+              <div class="faq-question">
+                <h4>How do I claim food donations?</h4>
+                <i class="fas fa-chevron-down"></i>
+              </div>
+              <div class="faq-answer">
+                <p>Browse available listings, click "Claim" on any item you'd like to collect, and contact the donor to coordinate pickup. Make sure to arrive during the specified pickup time window.</p>
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <div class="faq-question">
+                <h4>Do I need to register as an NGO?</h4>
+                <i class="fas fa-chevron-down"></i>
+              </div>
+              <div class="faq-answer">
+                <p>NGOs and charitable organizations should register through our NGO portal for verified status. Individual volunteers can use the regular user registration.</p>
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <div class="faq-question">
+                <h4>Is there a limit to how much I can claim?</h4>
+                <i class="fas fa-chevron-down"></i>
+              </div>
+              <div class="faq-answer">
+                <p>There's no limit, but we encourage responsible claiming. Only claim what you can reasonably collect and distribute to avoid waste.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Support Section -->
+    <section class="contact-support">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Still Need Help?</h2>
+          <p class="section-subtitle">Send us a message</p>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="support-form-container">
+          <h3>Send Us a Message</h3>
+          <form class="support-form" id="supportForm">
+            <!-- Honeypot field - hidden from real users -->
+            <div class="honeypot-field" aria-hidden="true">
+              <label for="f8d2n">Website</label>
+              <input type="text" id="f8d2n" name="f8d2n" tabindex="-1" autocomplete="off">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="x7k9m">Name *</label>
+                <input type="text" id="x7k9m" name="x7k9m" required placeholder="Your name" autocomplete="off">
+              </div>
+              <div class="form-group">
+                <label for="p3q8r">Email *</label>
+                <input type="email" id="p3q8r" name="p3q8r" required placeholder="your@email.com" autocomplete="off">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="w5n2j">Subject *</label>
+              <input type="text" id="w5n2j" name="w5n2j" required placeholder="How can we help?" autocomplete="off">
+            </div>
+
+            <div class="form-group">
+              <label for="h4t6y">Category</label>
+              <select id="h4t6y" name="h4t6y" autocomplete="off">
+                <option value="">Select a category</option>
+                <option value="account">Account Issues</option>
+                <option value="technical">Technical Support</option>
+                <option value="donation">Donation Questions</option>
+                <option value="safety">Safety Concerns</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="z9v4b">Message *</label>
+              <textarea id="z9v4b" name="z9v4b" rows="6" required placeholder="Describe your issue or question..." autocomplete="off"></textarea>
+            </div>
+
+            <!-- Hidden timestamp field for bot detection -->
+            <input type="hidden" id="q2m7k" name="q2m7k" value="">
+
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-paper-plane"></i>
+              Send Message
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <div class="footer-logo">
+              <i class="fas fa-utensils"></i>
+              <span>ShareBite</span>
+            </div>
+            <p>
+              Making a difference, one meal at a time. Join us in the fight
+              against food waste and hunger.
+            </p>
+            <div class="social-links">
+              <a href="#"><i class="fab fa-facebook"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+              <a href="#"><i class="fab fa-linkedin"></i></a>
+            </div>
+          </div>
+           <div class="footer-section">
+            <h4>Quick Links</h4>
+            <ul>
+              <li><a href="index.html#home">Home</a></li>
+              <li><a href="index.html#features">How It Works</a></li>
+              <li><a href="foodlisting.html">Food Listings</a></li>
+              <li><a href="index.html#about">About Us</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-section">
+            <h4>For Donors</h4>
+            <ul>
+              <li><a href="#">List Food</a></li>
+              <li><a href="#">Donor Guidelines</a></li>
+              <li><a href="#">Track Impact</a></li>
+              <li><a href="support.html">Support</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-section">
+            <h4>For Collectors</h4>
+            <ul>
+              <li><a href="#">Find Food</a></li>
+              <li><a href="ngo-register.html">Register NGO</a></li>
+              <li><a href="#">Volunteer</a></li>
+              <li><a href="#">Resources</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+          <p class="footer-credit">Made with 💚 by Angela Bera</p>
+          <p>
+            &copy; 2025 ShareBite. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="js/theme.js"></script>
+    <script src="js/support.js"></script>
+  </body>
+</html>

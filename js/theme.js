@@ -1,21 +1,21 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     const themeToggle = document.getElementById('themeToggle') || document.getElementById('theme-toggle');
-    const body = document.body;
+    const root = document.documentElement;
 
-  
+
     const applyTheme = () => {
-        // Default to 'light-mode' if no theme is saved.
-        const savedTheme = localStorage.getItem('theme') || 'light-mode';
+        // Default to 'light' if no theme is saved.
+        const savedTheme = localStorage.getItem('theme') || 'light';
 
-        // Apply the theme class to the body.
-        body.classList.remove('light-mode', 'dark-mode');
-        body.classList.add(savedTheme);
+        // Apply the theme class to the root element.
+        root.classList.remove('light', 'dark');
+        root.classList.add(savedTheme);
 
         // Update the toggle button icon/text to reflect the current theme.
         if (themeToggle) {
             const icon = themeToggle.querySelector('i');
-            if (savedTheme === 'dark-mode') {
+            if (savedTheme === 'dark') {
                 if (icon) { // For index.html with Font Awesome icon
                     icon.classList.remove('fa-moon');
                     icon.classList.add('fa-sun');
@@ -34,9 +34,9 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const toggleTheme = () => {
-        const currentTheme = localStorage.getItem('theme') || 'light-mode';
-        const newTheme = currentTheme === 'dark-mode' ? 'light-mode' : 'dark-mode';
-        
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
         localStorage.setItem('theme', newTheme);
         applyTheme();
     };
