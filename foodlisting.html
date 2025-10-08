@@ -1,44 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ShareBite - Food Listing</title>
-    <meta name="sharebite-build" content="v-darkmode-fix-1">
-    <link rel="stylesheet" href="css/style.css?v=darkmode-fix-1">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+    <title>ShareBite - Food Waste Reducer</title>
+    <!-- Cache-busting version updated to v=12 -->
+    <link rel="stylesheet" id="main-style">
+    <script>
+    // Automatically add a cache-busting version (timestamp)
+    const link = document.getElementById("main-style");
+    link.rel = "stylesheet";
+    link.href = "css/style.css?v=" + new Date().getTime();
+    </script>
+
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
-</head>
-
-<body>
-
+  </head>
+  <body>
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
-                <i class="fas fa-utensils"></i>
-                <span>ShareBite</span>
+              <a href = "#home" class = "nav-logo-link">
+              <i class="fas fa-utensils"></i>
+              <span>ShareBite</span>
+              </a>
             </div>
             <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="index.html#features" class="nav-link">Features</a></li>
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#features" class="nav-link">Features</a></li>
                 <li><a href="foodlisting.html" class="nav-link">Listings</a></li>
-                <li><a href="index.html#about" class="nav-link">About</a></li>
-                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
             <div class="user-actions">
-                <!-- Added dark mode toggle -->
                 <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
                     <i class="fas fa-moon"></i>
                 </button>
+                
+                <div class="notification-bell" id="notificationBell">
+                    <i class="fas fa-bell"></i>
+                    <div class="notification-badge" id="notificationBadge" style="display: none;">0</div>
+                    <div class="notification-panel" id="notificationPanel">
+                        <div class="notification-header">Notifications</div>
+                        <div id="notificationList">
+                            <div class="no-notifications">No new notifications</div>
+                        </div>
+                    </div>
+                </div>
+
                 <button class="role-switch" id="roleSwitch">
                     <i class="fas fa-exchange-alt"></i>
                     <span id="currentRole">Donor</span>
                 </button>
-                <button class="login-btn" onclick="window.location.href='login.html'">Login</button>
+                <button class="login-btn" onclick="window.location.href='login.html'">Login as User</button>
+                 <button class="login-btn" onclick="window.location.href='login_ngo.html'">Login as NGO</button>
             </div>
             <div class="hamburger">
                 <span></span>
@@ -48,41 +66,112 @@
         </div>
     </nav>
 
+    <!-- Offscreen Hero Section (keeps JS functional) -->
+<section id="home" class="hero" style="position:absolute; top:-9999px; left:-9999px; width:1px; height:1px; overflow:hidden;">
+  <div class="hero-container">
+    <div class="hero-content">
+      <h1 class="hero-title">
+        Reduce Food Waste,<br />
+        <span class="gradient-text">Feed Communities</span>
+      </h1>
+      <p class="hero-description"></p>
+      <div class="hero-buttons">
+        <button class="btn btn-primary" id="donateFood">
+          <i class="fas fa-heart"></i> Donate Food
+        </button>
+        <button class="btn btn-secondary" id="findFood">
+          <i class="fas fa-search"></i> Find Food
+        </button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-number" data-count="1500">0</span>
+          <span class="stat-label">Meals Saved</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number" data-count="250">0</span>
+          <span class="stat-label">Active Donors</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number" data-count="85">0</span>
+          <span class="stat-label">NGO Partners</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="floating-card food-card-1">
+        <i class="fas fa-pizza-slice"></i>
+        <span>Fresh Pizza</span>
+      </div>
+      <div class="floating-card food-card-2">
+        <i class="fas fa-bread-slice"></i>
+        <span>Bakery Items</span>
+      </div>
+      <div class="floating-card food-card-3">
+        <i class="fas fa-apple-alt"></i>
+        <span>Fresh Fruits</span>
+      </div>
+      <div class="hero-illustration">
+        <div class="plate">
+          <div class="food-items">
+            <div class="food-item item-1"></div>
+            <div class="food-item item-2"></div>
+            <div class="food-item item-3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <i class="fas fa-chevron-down"></i>
+  </div>
+</section>
+
+
+
     <!-- Food Listings Section -->
     <section id="listings" class="listings">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Food Listings</h2>
-                <p class="section-subtitle">Available food waiting to be collected</p>
-            </div>
-
-            <!-- Filter Bar -->
-            <div class="filter-bar">
-                <div class="filter-group">
-                    <button class="filter-btn active" data-filter="all">All</button>
-                    <button class="filter-btn" data-filter="restaurant">
-                        Restaurant
-                    </button>
-                    <button class="filter-btn" data-filter="household">
-                        Household
-                    </button>
-                    <button class="filter-btn" data-filter="bakery">Bakery</button>
-                </div>
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search by location or food type..." />
-                </div>
-                <button class="add-listing-btn" id="addListingBtn">
-                    <i class="fas fa-plus"></i>
-                    Add Listing
-                </button>
-            </div>
-
-            <!-- Food Cards Grid -->
-            <div class="food-grid" id="fullfoodGrid">
-                <!-- Sample listings will be generated by JavaScript -->
-            </div>
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Food Listings</h2>
+          <p class="section-subtitle">Available food waiting to be collected</p>
         </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+          <div class="filter-group">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="restaurant">
+              Restaurant
+            </button>
+            <button class="filter-btn" data-filter="household">
+              Household
+            </button>
+            <button class="filter-btn" data-filter="bakery">Bakery</button>
+          </div>
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input
+              type="text"
+              placeholder="Search by location or food type..."
+            />
+          </div>
+          <button class="add-listing-btn" id="addListingBtn">
+            <i class="fas fa-plus"></i>
+            Add Listing
+          </button>
+        </div>
+
+        <!-- Food Cards Grid -->
+        <div class="food-grid" id="foodGrid">
+          <!-- Sample listings will be generated by JavaScript -->
+        </div>
+        <div class="learn-more-container">
+          <a class="learn-more-btn" id="learnMoreBtn" href="foodlisting.html">
+            Explore More
+          </a>
+        </div>
+      </div>
     </section>
 
     <!-- Add Listing Modal -->
@@ -236,6 +325,7 @@
       </div>
     </div>
 
+   
     <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
       <div class="loading-spinner">
@@ -245,7 +335,7 @@
     </div>
 
     <script src="js/theme.js"></script>
-    <script src="js/foodlisting.js"></script>
-</body>
-
+    <script src="js/script.js?v=12"></script>
+  </body>
 </html>
+
