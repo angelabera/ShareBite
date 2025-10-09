@@ -1,265 +1,422 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Register - ShareBite</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/svg+xml" href="logo/logo.svg"> 
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/svg+xml" href="logo/logo.svg" />
     <style>
-        :root {
-            --primary-green: #4CAF50;
-            --secondary-orange: #FF6B35;
-            --accent-yellow: #FFC107;
-            
-            /* Light Mode */
-            --bg-gradient-start-light: #E9E3FF;
-            --bg-gradient-end-light: #F7F5FF;
-            --card-bg-light: #ffffff;
-            --text-color-light: #333;
-            --subtext-color-light: #555;
-            --input-bg-light: #fdfdfd;
-            --input-border-light: #ddd;
+      :root {
+        --primary-green: #4caf50;
+        --secondary-orange: #ff6b35;
+        --accent-yellow: #ffc107;
 
-            /* Dark Mode */
-            --bg-gradient-start-dark: #1C1C1C;
-            --bg-gradient-end-dark: #2C2C2C;
-            --card-bg-dark: #2E2E2E;
-            --text-color-dark: #f1f1f1;
-            --subtext-color-dark: #aaa;
-            --input-bg-dark: #3a3a3a;
-            --input-border-dark: #444;
+        /* Light Mode */
+        --bg-gradient-start-light: #e9e3ff;
+        --bg-gradient-end-light: #f7f5ff;
+        --card-bg-light: #ffffff;
+        --text-color-light: #333;
+        --subtext-color-light: #555;
+        --input-bg-light: #fdfdfd;
+        --input-border-light: #ddd;
+
+        /* Dark Mode */
+        --bg-gradient-start-dark: #1c1c1c;
+        --bg-gradient-end-dark: #2c2c2c;
+        --card-bg-dark: #2e2e2e;
+        --text-color-dark: #f1f1f1;
+        --subtext-color-dark: #aaa;
+        --input-bg-dark: #3a3a3a;
+        --input-border-dark: #444;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 1rem;
+        background: linear-gradient(
+          135deg,
+          var(--bg-gradient-start-light),
+          var(--bg-gradient-end-light)
+        );
+        color: var(--text-color-light);
+        transition: background 0.4s, color 0.4s;
+      }
+
+      body.dark-mode {
+        background: linear-gradient(
+          135deg,
+          var(--bg-gradient-start-dark),
+          var(--bg-gradient-end-dark)
+        );
+        color: var(--text-color-dark);
+      }
+
+      .theme-toggle {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: none;
+        border: 1px solid var(--input-border-light);
+        color: var(--text-color-light);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1.2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.3s;
+      }
+
+      body.dark-mode .theme-toggle {
+        border-color: var(--input-border-dark);
+        color: var(--text-color-dark);
+      }
+
+      .theme-toggle:hover {
+        transform: scale(1.1) rotate(15deg);
+      }
+
+      .auth-container {
+        background-color: var(--card-bg-light);
+        padding: 3rem;
+        border-radius: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        width: 100%;
+        max-width: 480px;
+        text-align: center;
+        animation: fadeIn 0.8s ease-out forwards;
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      body.dark-mode .auth-container {
+        background-color: var(--card-bg-dark);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
+      }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      .auth-container h1 {
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+        font-size: 1.8rem;
+      }
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 1rem;
-            background: linear-gradient(135deg, var(--bg-gradient-start-light), var(--bg-gradient-end-light));
-            color: var(--text-color-light);
-            transition: background 0.4s, color 0.4s;
-        }
+      .auth-container p.subtitle {
+        color: var(--subtext-color-light);
+        margin-bottom: 2rem;
+      }
 
-        body.dark-mode {
-            background: linear-gradient(135deg, var(--bg-gradient-start-dark), var(--bg-gradient-end-dark));
-            color: var(--text-color-dark);
-        }
+      body.dark-mode .auth-container p.subtitle {
+        color: var(--subtext-color-dark);
+      }
 
-        .theme-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: 1px solid var(--input-border-light);
-            color: var(--text-color-light);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.2rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.3s;
-        }
+      .form-group {
+        margin-bottom: 1.5rem;
+        text-align: left;
+        position: relative;
+      }
 
-        body.dark-mode .theme-toggle {
-            border-color: var(--input-border-dark);
-            color: var(--text-color-dark);
-        }
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+      }
 
-        .theme-toggle:hover {
-            transform: scale(1.1) rotate(15deg);
-        }
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 0.85rem 1rem;
+        border: 1px solid var(--input-border-light);
+        background-color: var(--input-bg-light);
+        color: var(--text-color-light);
+        border-radius: 8px;
+        font-family: "Poppins", sans-serif;
+        font-size: 1rem;
+        transition: all 0.3s;
+      }
 
+      .toggle-password {
+        position: absolute;
+        top: 72%;
+        right: 1rem;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.1rem;
+        color: var(--subtext-color-light);
+        line-height: 1;
+        padding: 0;
+      }
+
+      body.dark-mode .toggle-password {
+        color: var(--subtext-color-dark);
+      }
+
+      .toggle-password:hover {
+        color: var(--primary-green);
+      }
+
+      .form-group input[type="password"],
+      .form-group input[type="text"] {
+        padding-right: 3rem;
+      }
+
+      body.dark-mode .form-group input,
+      body.dark-mode .form-group select {
+        border-color: var(--input-border-dark);
+        background-color: var(--input-bg-dark);
+        color: var(--text-color-dark);
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: var(--primary-green);
+        box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2);
+      }
+
+      .btn {
+        width: 100%;
+        padding: 0.9rem;
+        border: none;
+        border-radius: 8px;
+        font-family: "Poppins", sans-serif;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .btn-primary {
+        background-color: var(--primary-green);
+        color: #fff;
+      }
+
+      .btn-primary:hover {
+        background-color: #45a049;
+        transform: translateY(-3px);
+        box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+      }
+
+      .login-link {
+        margin-top: 1.5rem;
+        display: block;
+        color: var(--secondary-orange);
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .login-link:hover {
+        text-decoration: underline;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 520px) {
         .auth-container {
-            background-color: var(--card-bg-light);
-            padding: 3rem;
-            border-radius: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            width: 100%;
-            max-width: 480px;
-            text-align: center;
-            animation: fadeIn 0.8s ease-out forwards;
-            opacity: 0;
-            transform: translateY(20px);
+          padding: 2rem;
         }
-
-        body.dark-mode .auth-container {
-            background-color: var(--card-bg-dark);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
         .auth-container h1 {
-            margin-bottom: 0.75rem;
-            font-weight: 600;
-            font-size: 1.8rem;
+          font-size: 1.5rem;
         }
-
-        .auth-container p.subtitle {
-            color: var(--subtext-color-light);
-            margin-bottom: 2rem;
-        }
-        
-        body.dark-mode .auth-container p.subtitle {
-            color: var(--subtext-color-dark);
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-            text-align: left;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 0.85rem 1rem;
-            border: 1px solid var(--input-border-light);
-            background-color: var(--input-bg-light);
-            color: var(--text-color-light);
-            border-radius: 8px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-        
-        body.dark-mode .form-group input,
-        body.dark-mode .form-group select {
-            border-color: var(--input-border-dark);
-            background-color: var(--input-bg-dark);
-            color: var(--text-color-dark);
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: var(--primary-green);
-            box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2);
-        }
-
-        .btn {
-            width: 100%;
-            padding: 0.9rem;
-            border: none;
-            border-radius: 8px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-green);
-            color: #fff;
-        }
-
-        .btn-primary:hover {
-            background-color: #45a049;
-            transform: translateY(-3px);
-            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
-        }
-
-        .login-link {
-            margin-top: 1.5rem;
-            display: block;
-            color: var(--secondary-orange);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .login-link:hover {
-            text-decoration: underline;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 520px) {
-            .auth-container {
-                padding: 2rem;
-            }
-            .auth-container h1 {
-                font-size: 1.5rem;
-            }
-        }
+      }
     </style>
-</head>
-<body>
-
-    <button id="theme-toggle" class="theme-toggle" title="Toggle dark mode">🌙</button>
+  </head>
+  <body>
+    <button id="theme-toggle" class="theme-toggle" title="Toggle dark mode">
+      🌙
+    </button>
 
     <div class="auth-container">
-        <h1>Create Your ShareBite Account</h1>
-        <p class="subtitle">Join our mission to reduce food waste and feed communities.</p>
-        <form id="registerForm">
-            <div class="form-group">
-                <label for="name">Full Name</label>
-                <input type="text" id="name" name="name" placeholder="Enter your full name" required>
-            </div>
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="Enter your email" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Minimum 6 characters" required minlength="6">
-                <div style="display: flex; flex-direction: row; gap: 1rem; justify-self: flex-end;">
-                    <input type="checkbox" name="" id="show-pwd" style="width: fit-content;">Show Password
-                    </div>
-            </div>
-            <div class="form-group">
-                <label for="role">Role</label>
-                <select id="role" name="role" required>
-                    <option value="" disabled selected>Select your role</option>
-                    <option value="donor">Donor</option>
-                    <option value="collector">Collector</option>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Register</button>
-        </form>
-        <a href="login.html" class="login-link">Already have a User account? Login</a>
+      <h1>Create Your ShareBite Account</h1>
+      <p class="subtitle">
+        Join our mission to reduce food waste and feed communities.
+      </p>
+      <form id="registerForm">
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Enter your full name"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Enter your email"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Minimum 6 characters"
+            required
+            minlength="6"
+          />
+          <button
+            type="button"
+            id="togglePassword"
+            class="toggle-password"
+            title="Show Password"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            placeholder="Re-enter your password"
+            required
+          />
+          <button
+            type="button"
+            id="toggleConfirmPassword"
+            class="toggle-password"
+            title="Show Password"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+        </div>
+
+        <div class="form-group">
+          <label for="role">Role</label>
+          <select id="role" name="role" required>
+            <option value="" disabled selected>Select your role</option>
+            <option value="donor">Donor</option>
+            <option value="collector">Collector</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Register</button>
+      </form>
+      <a href="login.html" class="login-link"
+        >Already have a User account? Login</a
+      >
     </div>
 
     <script src="js/theme.js"></script>
-<script>
-    // --- Form Submission ---
-    const registerForm = document.getElementById('registerForm');
+    <script>
+      // --- Password Visibility Toggle ---
+      const togglePassword = document.getElementById("togglePassword");
+      const passwordInput = document.getElementById("password");
+      const toggleConfirmPassword = document.getElementById(
+        "toggleConfirmPassword"
+      );
+      const confirmPasswordInput = document.getElementById("confirmPassword");
 
-    registerForm.addEventListener('submit', (e) => {
+      const eyeIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+      const eyeOffIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
+
+      let passwordVisible = false;
+
+      togglePassword.addEventListener("click", () => {
+        passwordVisible = !passwordVisible;
+        passwordInput.type = passwordVisible ? "text" : "password";
+        togglePassword.innerHTML = passwordVisible ? eyeOffIcon : eyeIcon;
+        togglePassword.title = passwordVisible
+          ? "Hide Password"
+          : "Show Password";
+      });
+
+      let confirmPasswordVisible = false;
+
+      toggleConfirmPassword.addEventListener("click", () => {
+        confirmPasswordVisible = !confirmPasswordVisible;
+        confirmPasswordInput.type = confirmPasswordVisible
+          ? "text"
+          : "password";
+        toggleConfirmPassword.innerHTML = confirmPasswordVisible
+          ? eyeOffIcon
+          : eyeIcon;
+        toggleConfirmPassword.title = confirmPasswordVisible
+          ? "Hide Password"
+          : "Show Password";
+      });
+
+      // --- Form Submission ---
+      const registerForm = document.getElementById("registerForm");
+
+      registerForm.addEventListener("submit", (e) => {
         e.preventDefault();
 
         // Get form values
         const fullName = registerForm.name.value.trim();
         const email = registerForm.email.value.trim();
         const password = registerForm.password.value.trim();
+        const confirmPassword = registerForm.confirmPassword.value.trim();
         const role = registerForm.role.value;
 
         if (!fullName || !email || !password || !role) {
-            alert("Please fill in all fields before registering.");
-            return;
+          alert("Please fill in all fields before registering.");
+          return;
+        }
+
+        // Password match validation
+        if (password !== confirmPassword) {
+          alert("Passwords do not match. Please re-enter.");
+          return;
         }
 
         // Show success message
@@ -267,21 +424,19 @@
 
         // Redirect to index.html after short delay (so alert can be seen)
         setTimeout(() => {
-            window.location.href = "index.html";
+          window.location.href = "index.html";
         }, 500); // 0.5 second delay
-    });
-    const password = document.getElementById("password");
-    const show_pwd = document.getElementById("show-pwd");
-    function passwordToggle(){
-        if (show_pwd.checked){
-            password.type = "text";
-        }else{
-            password.type = "password";
+      });
+      const password = document.getElementById("password");
+      const show_pwd = document.getElementById("show-pwd");
+      function passwordToggle() {
+        if (show_pwd.checked) {
+          password.type = "text";
+        } else {
+          password.type = "password";
         }
-    }
-    show_pwd.addEventListener("change",passwordToggle);
-</script>
-
-
-</body>
+      }
+      show_pwd.addEventListener("change", passwordToggle);
+    </script>
+  </body>
 </html>
