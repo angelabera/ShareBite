@@ -576,16 +576,17 @@ handleFileSelect(file) {
 
     setupScrollEffects() {
         // Navbar background on scroll
-        window.addEventListener('scroll', () => {
+        const handleScroll = () => {
             const navbar = document.querySelector('.navbar');
+            if (!navbar) return;
             if (window.scrollY > 50) {
-                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
-                navbar.style.boxShadow = 'var(--shadow-light)';
+                navbar.classList.add('scrolled');
             } else {
-                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-                navbar.style.boxShadow = 'none';
+                navbar.classList.remove('scrolled');
             }
-        });
+        };
+        window.addEventListener('scroll', handleScroll);
+        handleScroll();
         
         // Animate elements on scroll
         this.setupScrollAnimations();

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support | ShareBite</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f9f9f9;
+    }
+
+    header {
+      background: #ff6347;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .faq {
+      margin: 20px 0;
+    }
+
+    .faq h3 {
+      cursor: pointer;
+      padding: 10px;
+      background: #f1f1f1;
+      border-radius: 5px;
+    }
+
+    .faq p {
+      display: none;
+      padding: 10px;
+      border-left: 3px solid #ff6347;
+      margin: 0;
+      background: #fafafa;
+    }
+
+    form {
+      margin-top: 30px;
+    }
+
+    form input, form textarea, form button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    form button {
+      background: #ff6347;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    form button:hover {
+      background: #e5533d;
+    }
+
+    footer {
+      margin-top: 30px;
+      text-align: center;
+      padding: 15px;
+      background: #333;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Support Center</h1>
+    <p>How can we help you today?</p>
+  </header>
+
+  <div class="container">
+    <section>
+      <h2>Frequently Asked Questions</h2>
+
+      <div class="faq">
+        <h3>How can I donate surplus food?</h3>
+        <p>You can register your restaurant/household and schedule a pickup. Our partnered NGOs and volunteers will collect and distribute the food.</p>
+      </div>
+
+      <div class="faq">
+        <h3>How do NGOs join the platform?</h3>
+        <p>NGOs can sign up through our registration form and get verified before they can start receiving donations.</p>
+      </div>
+
+      <div class="faq">
+        <h3>Can volunteers join individually?</h3>
+        <p>Yes! Volunteers can sign up, and we’ll connect them with nearby NGOs for food distribution.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Contact Us</h2>
+      <form>
+        <input type="text" placeholder="Your Name" required>
+        <input type="email" placeholder="Your Email" required>
+        <textarea rows="5" placeholder="Write your message here..." required></textarea>
+        <button type="submit">Submit</button>
+      </form>
+    </section>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 ShareBite | Fighting Hunger, Reducing Waste</p>
+  </footer>
+
+  <script>
+    // FAQ toggle functionality
+    document.querySelectorAll(".faq h3").forEach(item => {
+      item.addEventListener("click", () => {
+        let content = item.nextElementSibling;
+        content.style.display = content.style.display === "block" ? "none" : "block";
+      });
+    });
+  </script>
+</body>
+</html>

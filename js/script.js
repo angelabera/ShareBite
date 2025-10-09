@@ -616,16 +616,19 @@ handleFileSelect(file) {
     }
 
     setupScrollEffects() {
-        window.addEventListener('scroll', () => {
+        // Navbar background on scroll
+        const handleScroll = () => {
             const navbar = document.querySelector('.navbar');
+            if (!navbar) return;
             if (window.scrollY > 50) {
-                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
-                navbar.style.boxShadow = 'var(--shadow-light)';
+                navbar.classList.add('scrolled');
             } else {
-                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-                navbar.style.boxShadow = 'none';
+                navbar.classList.remove('scrolled');
             }
-        });
+        };
+        window.addEventListener('scroll', handleScroll);
+        // Apply initial state in case page loads scrolled (anchor/hash navigation)
+        handleScroll();
         
         this.setupScrollAnimations();
     }
