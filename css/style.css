@@ -161,6 +161,8 @@ body {
     font-weight: 600;
     letter-spacing: .25px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    width: 120px;
+    justify-content: center;
 }
 
 .role-switch i { opacity: .9; }
