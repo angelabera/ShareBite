@@ -208,6 +208,11 @@ body {
     transition: var(--transition-medium);
 }
 
+/* Hide mobile actions on desktop */
+.nav-mobile-actions {
+    display: none;
+}
+
 /* Hero Section */
 .hero {
     min-height: 100vh;
@@ -1542,6 +1547,11 @@ body {
         display: flex;
     }
     
+    /* Hide desktop user actions on mobile */
+    .user-actions {
+        display: none !important;
+    }
+    
     .hero-buttons {
         flex-direction: column;
         align-items: center;
@@ -1691,6 +1701,49 @@ body {
         color: var(--black);
     }
     
+    /* Show and style mobile actions in hamburger menu */
+    .nav-menu.active .nav-mobile-actions {
+        display: block;
+        margin: 0.5rem 0;
+        width: 90%;
+        max-width: 250px;
+    }
+    
+    .nav-menu.active .nav-mobile-btn {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        border: none;
+        border-radius: var(--border-radius);
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+    
+    .nav-menu.active .theme-toggle.nav-mobile-btn {
+        background: var(--light-gray);
+        color: var(--text-color);
+    }
+    
+    .nav-menu.active .role-switch.nav-mobile-btn {
+        background: var(--primary-color);
+        color: white;
+    }
+    
+    .nav-menu.active .login-btn.nav-mobile-btn {
+        background: var(--accent-color);
+        color: white;
+    }
+    
+    .nav-menu.active .nav-mobile-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
     :root.dark .nav-menu.active {
         background: rgba(18, 18, 18, 0.98);
     }
@@ -1701,6 +1754,26 @@ body {
     
     :root.dark .nav-menu.active .nav-link:hover {
         color: var(--primary-light);
+    }
+    
+    /* Dark mode styles for mobile actions */
+    :root.dark .nav-menu.active .theme-toggle.nav-mobile-btn {
+        background: var(--dark-gray);
+        color: var(--light-gray);
+    }
+    
+    :root.dark .nav-menu.active .role-switch.nav-mobile-btn {
+        background: var(--primary-color);
+        color: white;
+    }
+    
+    :root.dark .nav-menu.active .login-btn.nav-mobile-btn {
+        background: var(--accent-color);
+        color: white;
+    }
+    
+    :root.dark .nav-menu.active .nav-mobile-btn:hover {
+        box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
     }
 }
 
