@@ -6,6 +6,8 @@ class ShareBite {
         this.foodListings = [];
         this.filteredListings = [];
         this.currentFilter = 'all';
+        this.claimedItems = this.loadClaimedItems();
+        this.notifications = this.loadNotifications();
         
         this.init();
         this.initTheme(); // add theme initialization after base init
@@ -15,6 +17,8 @@ class ShareBite {
         this.setupEventListeners();
         this.generateSampleListings();
         this.renderFoodListings();
+        this.setupNotificationSystem();
+        this.updateNotificationDisplay();
         this.startAnimations();
         this.hideLoadingOverlay();
     }
@@ -116,16 +120,30 @@ class ShareBite {
         const donateBtn = document.getElementById('donateFood');
         const findBtn = document.getElementById('findFood');
         const addListingBtn = document.getElementById('addListingBtn');
+        const notificationBell = document.getElementById('notificationBell');
         
         if (this.currentRole === 'collector') {
             donateBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
             findBtn.innerHTML = '<i class="fas fa-heart"></i> Help Others';
             addListingBtn.style.display = 'none';
+            
+            // Show notification bell for collectors
+            if (notificationBell) {
+                notificationBell.style.display = 'block';
+            }
         } else {
             donateBtn.innerHTML = '<i class="fas fa-heart"></i> Donate Food';
             findBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
             addListingBtn.style.display = 'flex';
+            
+            // Hide notification bell for donors (unless they have notifications)
+            if (notificationBell && this.notifications.length === 0) {
+                notificationBell.style.display = 'none';
+            }
         }
+        
+        // Re-render food listings to update claim button states
+        this.renderFoodListings();
     }
 
    setupModal() {
@@ -584,16 +602,18 @@ handleFileSelect(file) {
 
     setupScrollEffects() {
         // Navbar background on scroll
-        window.addEventListener('scroll', () => {
+        const handleScroll = () => {
             const navbar = document.querySelector('.navbar');
+            if (!navbar) return;
             if (window.scrollY > 50) {
-                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
-                navbar.style.boxShadow = 'var(--shadow-light)';
+                navbar.classList.add('scrolled');
             } else {
-                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-                navbar.style.boxShadow = 'none';
+                navbar.classList.remove('scrolled');
             }
-        });
+        };
+        window.addEventListener('scroll', handleScroll);
+        // Apply initial state in case page loads scrolled (anchor/hash navigation)
+        handleScroll();
         
         // Animate elements on scroll
         this.setupScrollAnimations();
@@ -773,13 +793,39 @@ handleFileSelect(file) {
         this.setupFoodCardInteractions();
     }
 
+    createClaimButton(listing) {
+        const isClaimed = this.claimedItems.includes(listing.id);
+        const isCollector = this.currentRole === 'collector';
+        
+        if (isClaimed) {
+            return `
+                <button class="claim-btn claimed" disabled>
+                    <i class="fas fa-check-circle"></i> Claimed
+                </button>
+            `;
+        } else if (isCollector) {
+            return `
+                <button class="claim-btn" data-id="${listing.id}">
+                    <i class="fas fa-hand-paper"></i> Claim Food
+                </button>
+            `;
+        } else {
+            return `
+                <button class="claim-btn" style="opacity: 0.5; cursor: not-allowed;" disabled>
+                    <i class="fas fa-hand-paper"></i> Switch to Collector
+                </button>
+            `;
+        }
+    }
+
     createFoodCard(listing) {
         const timeAgo = this.getTimeAgo(listing.createdAt);
         const freshUntil = this.formatDateTime(listing.freshUntil);
         const pickupTime = this.formatTime(listing.pickupTime);
+        const isClaimed = this.claimedItems.includes(listing.id);
         
         return `
-            <div class="food-card" data-id="${listing.id}">
+            <div class="food-card ${isClaimed ? 'claimed' : ''}" data-id="${listing.id}">
                 <div class="food-image">
                     ${listing.photo ? `<img src="${URL.createObjectURL(listing.photo)}" alt="${listing.foodType}">` : `<i class="fas fa-${this.getFoodIcon(listing.category)}"></i>`}
                     <div class="food-category">${this.capitalizeFirst(listing.category)}</div>
@@ -804,9 +850,7 @@ handleFileSelect(file) {
                         </span>
                     </div>
                     <div class="food-actions">
-                        <button class="claim-btn" data-id="${listing.id}">
-                            <i class="fas fa-hand-paper"></i> Claim Food
-                        </button>
+                        ${this.createClaimButton(listing)}
                         <button class="contact-btn" data-contact="${listing.contact}">
                             <i class="fas fa-phone"></i>
                         </button>
@@ -840,26 +884,54 @@ handleFileSelect(file) {
         const listing = this.foodListings.find(l => l.id === listingId);
         if (!listing) return;
         
+        // Check if already claimed
+        if (this.claimedItems.includes(listingId)) {
+            this.showToast('This item has already been claimed!', 'error');
+            return;
+        }
+        
         // Show confirmation dialog
         const confirmed = confirm(`Claim "${listing.foodType}" from ${listing.donor}?\n\nPickup: ${listing.location}\nTime: ${this.formatTime(listing.pickupTime)}\nContact: ${listing.contact}`);
         
         if (confirmed) {
-            // Remove listing from available items
-            this.foodListings = this.foodListings.filter(l => l.id !== listingId);
-            this.filterListings();
-            this.renderFoodListings();
+            // Add to claimed items
+            this.claimedItems.push(listingId);
+            this.saveClaimedItems();
+            
+            // Create notification
+            const notification = {
+                id: Date.now(),
+                listingId: listingId,
+                foodType: listing.foodType,
+                donor: listing.donor,
+                location: listing.location,
+                pickupTime: listing.pickupTime,
+                contact: listing.contact,
+                claimedAt: new Date(),
+                status: 'claimed'
+            };
+            
+            this.addNotification(notification);
+            
+            // Update button and card appearance
+            const claimBtn = document.querySelector(`[data-id="${listingId}"]`);
+            const foodCard = document.querySelector(`.food-card[data-id="${listingId}"]`);
+            
+            if (claimBtn) {
+                claimBtn.classList.add('claimed');
+                claimBtn.innerHTML = '<i class="fas fa-check-circle"></i> Claimed';
+                claimBtn.disabled = true;
+            }
+            
+            if (foodCard) {
+                foodCard.classList.add('claimed');
+            }
             
             // Show success message
-            this.showToast(`Successfully claimed "${listing.foodType}"! Check your email for pickup details.`, 'success');
+            this.showToast(`Successfully claimed "${listing.foodType}"! Check notifications for pickup details.`, 'success');
             
-            // Animate removal
-            const card = document.querySelector(`[data-id="${listingId}"]`);
-            if (card) {
-                card.style.animation = 'fadeOut 0.3s ease forwards';
-                setTimeout(() => {
-                    this.renderFoodListings();
-                }, 300);
-            }
+            // Update notification display
+            this.updateNotificationDisplay();
         }
     }
 
@@ -973,6 +1045,198 @@ handleFileSelect(file) {
                 loadingOverlay.style.display = 'none';
             }, 500);
         }, 1500); // Show loading for 1.5 seconds
+    }
+
+    // Notification System Methods
+    setupNotificationSystem() {
+        const notificationBell = document.getElementById('notificationBell');
+        const notificationPanel = document.getElementById('notificationPanel');
+        
+        if (!notificationBell) return;
+        
+        // Show notification bell when in collector mode or when there are notifications
+        if (this.currentRole === 'collector' || this.notifications.length > 0) {
+            notificationBell.style.display = 'block';
+        }
+        
+        // Toggle notification panel
+        notificationBell.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isActive = notificationPanel.classList.contains('active');
+            
+            if (isActive) {
+                notificationPanel.classList.remove('active');
+                notificationBell.classList.remove('active');
+            } else {
+                notificationPanel.classList.add('active');
+                notificationBell.classList.add('active');
+            }
+        });
+        
+        // Close panel when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!notificationBell.contains(e.target)) {
+                notificationPanel.classList.remove('active');
+                notificationBell.classList.remove('active');
+            }
+        });
+        
+        // Prevent panel from closing when clicking inside
+        notificationPanel.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    }
+    
+    loadClaimedItems() {
+        const stored = localStorage.getItem('sharebite-claimed-items');
+        return stored ? JSON.parse(stored) : [];
+    }
+    
+    saveClaimedItems() {
+        localStorage.setItem('sharebite-claimed-items', JSON.stringify(this.claimedItems));
+    }
+    
+    loadNotifications() {
+        const stored = localStorage.getItem('sharebite-notifications');
+        return stored ? JSON.parse(stored) : [];
+    }
+    
+    saveNotifications() {
+        localStorage.setItem('sharebite-notifications', JSON.stringify(this.notifications));
+    }
+    
+    addNotification(notification) {
+        this.notifications.unshift(notification);
+        this.saveNotifications();
+        this.updateNotificationDisplay();
+        this.renderNotifications();
+    }
+    
+    updateNotificationDisplay() {
+        const notificationBell = document.getElementById('notificationBell');
+        const notificationBadge = document.getElementById('notificationBadge');
+        
+        if (!notificationBell || !notificationBadge) return;
+        
+        const unreadCount = this.notifications.length;
+        
+        if (unreadCount > 0) {
+            notificationBell.style.display = 'block';
+            notificationBadge.style.display = 'flex';
+            notificationBadge.textContent = unreadCount > 99 ? '99+' : unreadCount.toString();
+        } else {
+            notificationBadge.style.display = 'none';
+            // Keep bell visible if in collector mode
+            if (this.currentRole !== 'collector') {
+                notificationBell.style.display = 'none';
+            }
+        }
+        
+        this.renderNotifications();
+    }
+    
+    renderNotifications() {
+        const notificationList = document.getElementById('notificationList');
+        if (!notificationList) return;
+        
+        if (this.notifications.length === 0) {
+            notificationList.innerHTML = `
+                <div class="no-notifications">
+                    <i class="fas fa-bell-slash"></i>
+                    <h4>No claimed items yet</h4>
+                    <p>Start claiming food items to see them here</p>
+                </div>
+            `;
+            return;
+        }
+        
+        notificationList.innerHTML = `
+            <div class="notification-content">
+                ${this.notifications.map(notification => this.createNotificationItem(notification)).join('')}
+            </div>
+        `;
+        
+        // Add event listeners for notification actions
+        this.setupNotificationActions();
+    }
+    
+    createNotificationItem(notification) {
+        const timeAgo = this.getTimeAgo(notification.claimedAt);
+        
+        return `
+            <div class="notification-item" data-id="${notification.id}">
+                <div class="notification-item-header">
+                    <div class="notification-item-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <div class="notification-item-content">
+                        <h4>${notification.foodType}</h4>
+                        <div class="notification-detail">
+                            <i class="fas fa-store"></i>
+                            <span>${notification.donor}</span>
+                        </div>
+                        <div class="notification-detail">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>${notification.location}</span>
+                        </div>
+                        <div class="notification-detail">
+                            <i class="fas fa-clock"></i>
+                            <span>Pickup: ${this.formatTime(notification.pickupTime)}</span>
+                        </div>
+                        <div class="notification-detail">
+                            <i class="fas fa-phone"></i>
+                            <span>${notification.contact}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="notification-meta">
+                    <span class="notification-time">Claimed ${timeAgo}</span>
+                    <span class="notification-status">${this.capitalizeFirst(notification.status)}</span>
+                </div>
+            </div>
+        `;
+    }
+    
+    setupNotificationActions() {
+        const notificationItems = document.querySelectorAll('.notification-item');
+        
+        notificationItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                const notificationId = parseInt(item.getAttribute('data-id'));
+                this.viewNotificationDetails(notificationId);
+            });
+        });
+    }
+    
+    viewNotificationDetails(notificationId) {
+        const notification = this.notifications.find(n => n.id === notificationId);
+        if (!notification) return;
+        
+        const details = `
+Food: ${notification.foodType}
+Donor: ${notification.donor}
+Location: ${notification.location}
+Pickup Time: ${this.formatTime(notification.pickupTime)}
+Contact: ${notification.contact}
+Claimed: ${new Date(notification.claimedAt).toLocaleString()}
+
+Contact information has been copied to clipboard.
+        `;
+        
+        // Copy contact to clipboard
+        navigator.clipboard.writeText(notification.contact).then(() => {
+            alert(details);
+        }).catch(() => {
+            alert(details);
+        });
+    }
+    
+    clearAllNotifications() {
+        this.notifications = [];
+        this.claimedItems = [];
+        this.saveNotifications();
+        this.saveClaimedItems();
+        this.updateNotificationDisplay();
     }
 }
 
@@ -1098,3 +1362,22 @@ window.clearShareBiteCaches = async function() {
         console.log('[ShareBite] Sent SKIP_WAITING to service worker');
     }
 };
+
+// ===== Scroll to Top Button =====
+const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+window.addEventListener("scroll", () => {
+  const scrollPosition = document.documentElement.scrollTop || document.body.scrollTop;
+  if (scrollPosition > 200) {
+    scrollToTopBtn.classList.add("show");
+  } else {
+    scrollToTopBtn.classList.remove("show");
+  }
+});
+
+scrollToTopBtn.addEventListener("click", () => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+});

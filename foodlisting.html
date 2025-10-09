@@ -34,6 +34,19 @@
                 <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
                     <i class="fas fa-moon"></i>
                 </button>
+                
+                <!-- Notification Bell -->
+                <div class="notification-bell" id="notificationBell" style="display: none;">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+                    <div class="notification-panel" id="notificationPanel">
+                        <div class="notification-header">Claimed Food Items</div>
+                        <div id="notificationList">
+                             <div class="no-notifications">No claimed items yet</div>
+                        </div>
+                    </div>
+                </div>
+
                 <button class="role-switch" id="roleSwitch">
                     <i class="fas fa-exchange-alt"></i>
                     <span id="currentRole">Donor</span>

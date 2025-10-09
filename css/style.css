@@ -77,6 +77,12 @@ body {
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
+/* Navbar state when scrolled (light mode) */
+.navbar.scrolled {
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: var(--shadow-light);
+}
+
 .nav-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -754,6 +760,16 @@ body {
     gap: 0.5rem;
     text-decoration: none;
 }
+.learn-more-btn:hover {
+  background: var(--primary-gradient);
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.learn-more-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-medium);
+}
 
 .claim-btn {
     flex: 1;
@@ -1303,9 +1319,32 @@ body {
     transition: var(--transition-fast);
 }
 
-.footer-section ul li a:hover {
-    color: var(--primary-light);
+.footer-section ul li a {
+    color: inherit; /* Default text color */
+    text-decoration: none;
+    position: relative; /* Needed for the pseudo-element underline */
+    transition: color 0.3s ease; /* Smooth text color transition */
 }
+
+.footer-section ul li a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -2px; /* Distance of underline from text */
+    width: 0;
+    height: 2px; /* Thickness of underline */
+    background-color: orange; /* Underline color */
+    transition: width 0.3s ease;
+}
+
+.footer-section ul li a:hover {
+    color: orange; /* Text color on hover */
+}
+
+.footer-section ul li a:hover::after {
+    width: 100%; /* Expand underline on hover */
+}
+
 
 /* Social links */
 .social-links {
@@ -1603,6 +1642,12 @@ body {
 :root.dark .navbar {
     background: rgba(18,18,18,0.9);
     border-bottom: 1px solid #2a2a2a;
+}
+
+/* Navbar state when scrolled (dark mode) */
+:root.dark .navbar.scrolled {
+    background: rgba(18,18,18,0.95);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.6);
 }
 
 :root.dark .nav-link { color: var(--medium-gray); }
@@ -2618,12 +2663,338 @@ body.dark-mode .divider-icon {
     box-shadow: 0 4px 20px rgba(255, 107, 53, 0.3);
 }
 
+/* Notification Bell Styles */
+.notification-bell {
+    position: relative;
+    cursor: pointer;
+    padding: 0.5rem;
+    margin: 0 0.5rem;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    color: var(--dark-gray);
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+}
+
+.notification-bell:hover {
+    background: rgba(76, 175, 80, 0.1);
+    color: var(--primary-color);
+    transform: scale(1.1);
+}
+
+.notification-bell.active {
+    color: var(--primary-color);
+    background: rgba(76, 175, 80, 0.1);
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--secondary-color);
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    animation: pulse 2s infinite;
+}
+
+.notification-panel {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 350px;
+    max-height: 450px;
+    overflow: hidden;
+    z-index: 1000;
+    display: none;
+    animation: slideInDown 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.notification-panel.active {
+    display: block;
+}
+
+.notification-header {
+    padding: 1.25rem 1.5rem;
+    background: linear-gradient(135deg, var(--primary-color), #45a049);
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 12px 12px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.notification-header::after {
+    content: '';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    content: '\f0f3';
+    font-size: 1.1rem;
+    opacity: 0.8;
+}
+
+.notification-content {
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.notification-content::-webkit-scrollbar {
+    width: 4px;
+}
+
+.notification-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.notification-content::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 2px;
+}
+
+.notification-item {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #f0f0f0;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.notification-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--primary-color);
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
+}
+
+.notification-item:hover {
+    background: #f8fff9;
+    transform: translateX(4px);
+}
+
+.notification-item:hover::before {
+    transform: scaleY(1);
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+    border-radius: 0 0 12px 12px;
+}
+
+.notification-item-header {
+    display: flex;
+    align-items: start;
+    margin-bottom: 0.75rem;
+}
+
+.notification-item-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--primary-color), #45a049);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.1rem;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+}
+
+.notification-item-content {
+    flex: 1;
+}
+
+.notification-item h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #2c3e50;
+    line-height: 1.3;
+}
+
+.notification-detail {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.4rem;
+    font-size: 0.85rem;
+    color: #5a6c7d;
+}
+
+.notification-detail i {
+    width: 16px;
+    margin-right: 0.5rem;
+    color: var(--primary-color);
+    font-size: 0.8rem;
+}
+
+.notification-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #f0f0f0;
+}
+
+.notification-time {
+    font-size: 0.75rem;
+    color: #95a5a6;
+}
+
+.notification-status {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+    background: linear-gradient(135deg, var(--primary-color), #45a049);
+    color: white;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.no-notifications {
+    padding: 3rem 2rem;
+    text-align: center;
+    color: #95a5a6;
+}
+
+.no-notifications i {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #bdc3c7;
+}
+
+/* Remove the card-level claimed styling - only style the button */
+
+.claim-btn.claimed {
+    background: linear-gradient(135deg, #27ae60, #2ecc71) !important;
+    color: white !important;
+    cursor: default !important;
+    transform: none !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.claim-btn.claimed::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.claim-btn.claimed:hover {
+    background: linear-gradient(135deg, #27ae60, #2ecc71) !important;
+    transform: none !important;
+}
+
+.claim-btn.claimed:hover::before {
+    left: 100%;
+}
+
+/* Dark mode support for notifications */
+body.dark-mode .notification-panel {
+    background: var(--card-bg-dark);
+    border-color: var(--input-border-dark);
+}
+
+body.dark-mode .notification-header {
+    background: var(--input-bg-dark);
+    color: var(--text-color-dark);
+    border-color: var(--input-border-dark);
+}
+
+body.dark-mode .notification-item {
+    border-color: var(--input-border-dark);
+}
+
+body.dark-mode .notification-item:hover {
+    background: var(--input-bg-dark);
+}
+
+body.dark-mode .notification-bell {
+    color: var(--text-color-dark);
+}
+
+body.dark-mode .notification-bell:hover {
+    background: rgba(255, 107, 53, 0.1);
+    color: var(--accent-color);
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* --- Responsive --- */
 @media (max-width: 900px) {
   .contact-container {
     flex-direction: column;
   }
-  
+}
+
+
+/* ===== Scroll to Top Button ===== */
+#scrollToTopBtn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 99;
+  width: 45px;
+  height: 45px;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  outline: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+}
+
+/* Show state (added by JS) */
+#scrollToTopBtn.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Hover animation */
+#scrollToTopBtn:hover {
+  background-color: #45a049;
+  transform: scale(1.1);
+}
+
+
   .section-divider {
     padding: 2rem 0;
     margin: 1rem 0;
@@ -2639,4 +3010,4 @@ body.dark-mode .divider-icon {
     margin: 0 1rem;
     font-size: 1.2rem;
   }
-}
+

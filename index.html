@@ -32,6 +32,19 @@
                 <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
                     <i class="fas fa-moon"></i>
                 </button>
+                
+                <!-- Notification Bell -->
+                <div class="notification-bell" id="notificationBell" style="display: none;">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+                    <div class="notification-panel" id="notificationPanel">
+                        <div class="notification-header">Claimed Food Items</div>
+                        <div id="notificationList">
+                             <div class="no-notifications">No claimed items yet</div>
+                        </div>
+                    </div>
+                </div>
+
                 <button class="role-switch" id="roleSwitch">
                     <i class="fas fa-exchange-alt"></i>
                     <span id="currentRole">Donor</span>
@@ -537,7 +550,7 @@
               <li><a href="#">List Food</a></li>
               <li><a href="#">Donor Guidelines</a></li>
               <li><a href="#">Track Impact</a></li>
-              <li><a href="#">Support</a></li>
+              <li><a href="support.html">Support</a></li>
             </ul>
           </div>
 
@@ -569,6 +582,12 @@
         <p>Loading ShareBite...</p>
       </div>
     </div>
+
+    <!-- Scroll to Top Button -->
+<button id="scrollToTopBtn" title="Go to top">
+  <i class="fas fa-arrow-up"></i>
+</button>
+
 
     <script src="js/theme.js"></script>
     <script src="js/script.js"></script>
