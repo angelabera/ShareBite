@@ -526,6 +526,23 @@ handleFileSelect(file) {
         scrollIndicator.addEventListener('click', () => {
             document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
         });
+
+        // Smooth scroll for Track Impact link
+        const smoothScrollLinks = document.querySelectorAll('.smooth-scroll');
+        smoothScrollLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
     }
 
     setupResponsiveNav() {

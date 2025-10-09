@@ -405,10 +405,160 @@
             </div>
           </div>
           <div class="about-visual">
-            <div class="stats-circle">
-              <div class="circle-stat">
-                <span class="percentage">40%</span>
-                <span class="label">Food Waste Reduced</span>
+            <div class="impact-dashboard">
+              <div class="impact-metrics">
+                <div class="metric-card">
+                  <div class="metric-icon">
+                    <i class="fas fa-utensils"></i>
+                  </div>
+                  <div class="metric-content">
+                    <span class="metric-number" id="totalMealsSaved">0</span>
+                    <span class="metric-label">Meals Saved</span>
+                  </div>
+                </div>
+                <div class="metric-card">
+                  <div class="metric-icon">
+                    <i class="fas fa-users"></i>
+                  </div>
+                  <div class="metric-content">
+                    <span class="metric-number" id="totalVolunteers">0</span>
+                    <span class="metric-label">Active Volunteers</span>
+                  </div>
+                </div>
+                <div class="metric-card">
+                  <div class="metric-icon">
+                    <i class="fas fa-building"></i>
+                  </div>
+                  <div class="metric-content">
+                    <span class="metric-number" id="totalDonors">0</span>
+                    <span class="metric-label">Donor Partners</span>
+                  </div>
+                </div>
+                <div class="metric-card">
+                  <div class="metric-icon">
+                    <i class="fas fa-leaf"></i>
+                  </div>
+                  <div class="metric-content">
+                    <span class="metric-number" id="wasteReduced">0%</span>
+                    <span class="metric-label">Waste Reduced</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Track Impact Section -->
+    <section id="track-impact" class="track-impact">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Track Our Impact</h2>
+          <p class="section-subtitle">Real-time statistics showing our collective impact on food waste reduction</p>
+        </div>
+        
+        <div class="impact-grid">
+          <div class="impact-card">
+            <div class="impact-icon">
+              <i class="fas fa-utensils"></i>
+            </div>
+            <div class="impact-stats">
+              <span class="impact-number" id="impactMealsSaved">0</span>
+              <span class="impact-label">Meals Saved</span>
+              <div class="impact-trend">
+                <i class="fas fa-arrow-up"></i>
+                <span>+12% this month</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="impact-card">
+            <div class="impact-icon">
+              <i class="fas fa-weight-hanging"></i>
+            </div>
+            <div class="impact-stats">
+              <span class="impact-number" id="impactFoodWaste">0</span>
+              <span class="impact-label">kg Food Waste Prevented</span>
+              <div class="impact-trend">
+                <i class="fas fa-arrow-up"></i>
+                <span>+8% this month</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="impact-card">
+            <div class="impact-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="impact-stats">
+              <span class="impact-number" id="impactVolunteers">0</span>
+              <span class="impact-label">Active Volunteers</span>
+              <div class="impact-trend">
+                <i class="fas fa-arrow-up"></i>
+                <span>+5% this month</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="impact-card">
+            <div class="impact-icon">
+              <i class="fas fa-building"></i>
+            </div>
+            <div class="impact-stats">
+              <span class="impact-number" id="impactDonors">0</span>
+              <span class="impact-label">Partner Organizations</span>
+              <div class="impact-trend">
+                <i class="fas fa-arrow-up"></i>
+                <span>+3% this month</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="impact-card">
+            <div class="impact-icon">
+              <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <div class="impact-stats">
+              <span class="impact-number" id="impactLocations">0</span>
+              <span class="impact-label">Cities Covered</span>
+              <div class="impact-trend">
+                <i class="fas fa-arrow-up"></i>
+                <span>+2% this month</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="impact-card">
+            <div class="impact-icon">
+              <i class="fas fa-leaf"></i>
+            </div>
+            <div class="impact-stats">
+              <span class="impact-number" id="impactCO2">0</span>
+              <span class="impact-label">kg CO2 Emissions Saved</span>
+              <div class="impact-trend">
+                <i class="fas fa-arrow-up"></i>
+                <span>+15% this month</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="impact-summary">
+          <div class="summary-card">
+            <h3>This Month's Impact</h3>
+            <div class="summary-stats">
+              <div class="summary-item">
+                <span class="summary-number" id="monthlyMeals">0</span>
+                <span class="summary-label">Meals Distributed</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-number" id="monthlyWaste">0</span>
+                <span class="summary-label">kg Waste Prevented</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-number" id="monthlyPeople">0</span>
+                <span class="summary-label">People Helped</span>
               </div>
             </div>
           </div>
@@ -549,7 +699,7 @@
             <ul>
               <li><a href="foodlisting.html">List Food</a></li>
               <li><a href="#">Donor Guidelines</a></li>
-              <li><a href="#">Track Impact</a></li>
+              <li><a href="#track-impact" class="smooth-scroll">Track Impact</a></li>
               <li><a href="support.html">Support</a></li>
             </ul>
           </div>
@@ -591,6 +741,7 @@
 
     <script src="js/theme.js"></script>
     <script src="js/script.js"></script>
+    <script src="js/impact-tracker.js"></script>
    
   </body>
 </html>

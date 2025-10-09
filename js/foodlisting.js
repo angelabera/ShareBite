@@ -899,6 +899,13 @@ handleFileSelect(file) {
             
             // Update notification display
             this.updateNotificationDisplay();
+            
+            // Update impact tracker
+            if (window.ImpactTracker) {
+                const mealsSaved = this.extractQuantity(listing.quantity);
+                const wastePrevented = mealsSaved * 0.5; // Estimate 0.5kg per meal
+                window.ImpactTracker.addImpactData(mealsSaved, wastePrevented);
+            }
         }
     }
 
@@ -1204,6 +1211,13 @@ Contact information has been copied to clipboard.
         this.saveNotifications();
         this.saveClaimedItems();
         this.updateNotificationDisplay();
+    }
+    
+    extractQuantity(quantityString) {
+        if (!quantityString) return 1;
+        
+        const match = quantityString.match(/(\d+)/);
+        return match ? parseInt(match[1]) : 1;
     }
 }
 
