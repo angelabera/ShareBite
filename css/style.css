@@ -1184,12 +1184,15 @@ body {
     flex-direction: column;
     gap: 2rem;
     margin-bottom: 3rem;
+    height: 100%;
+    justify-content: center;
 }
 
 .impact-metrics {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: 1fr 1fr;
     gap: 1.5rem;
+    max-width: 500px;
 }
 
 .metric-card {
@@ -1201,6 +1204,7 @@ body {
     gap: 1rem;
     transition: var(--transition-medium);
     border: 2px solid transparent;
+    min-height: 80px;
 }
 
 .metric-card:hover {
@@ -1332,25 +1336,37 @@ body {
 
 .summary-card {
     background: white;
-    padding: 2rem;
+    padding: 3rem;
     border-radius: var(--card-radius);
     box-shadow: var(--shadow-light);
     text-align: center;
-    max-width: 600px;
+    max-width: 800px;
     width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.summary-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--primary-gradient);
 }
 
 .summary-card h3 {
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     font-weight: 600;
     color: var(--black);
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
     text-align: center;
 }
 
 .summary-stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
     margin-top: 1.5rem;
 }
@@ -1359,10 +1375,12 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 1rem;
     padding: 1.5rem;
     background: var(--light-gray);
     border-radius: var(--border-radius);
     transition: var(--transition-medium);
+    min-height: 120px;
     text-align: center;
 }
 
@@ -1390,6 +1408,31 @@ body {
 
 .summary-item:hover .summary-label {
     color: white;
+}
+
+.summary-icon {
+    width: 50px;
+    height: 50px;
+    background: var(--primary-gradient);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.summary-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.summary-item:hover .summary-icon {
+    background: white;
+    color: var(--primary-color);
 }
 
 .activity-feed {
@@ -1455,12 +1498,14 @@ body {
     grid-template-columns: 1fr 1fr;
     gap: 4rem;
     align-items: center;
+    min-height: 500px;
 }
 
 .about-text h2 {
     font-size: var(--h2-size);
     margin-bottom: 1.5rem;
     color: var(--black);
+    text-align: left;
 }
 
 .about-text p {
@@ -1468,6 +1513,7 @@ body {
     color: var(--medium-gray);
     line-height: 1.7;
     margin-bottom: 2rem;
+    text-align: left;
 }
 
 .impact-stats {
@@ -1504,6 +1550,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    padding-left: 0;
+    height: 100%;
 }
 
 .stats-circle {
@@ -1831,6 +1879,45 @@ body {
     
     .impact-metrics {
         grid-template-columns: 1fr;
+        max-width: 100%;
+    }
+    
+    .about-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        align-items: center;
+        min-height: auto;
+    }
+    
+    .about-visual {
+        padding-left: 0;
+        justify-content: center;
+        height: auto;
+    }
+    
+    .impact-dashboard {
+        height: auto;
+        justify-content: flex-start;
+    }
+    
+    .summary-stats {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .summary-item {
+        min-height: 100px;
+        padding: 1rem;
+    }
+    
+    .summary-card {
+        padding: 2rem;
+        max-width: 100%;
+    }
+    
+    .summary-card h3 {
+        font-size: 1.3rem;
+        margin-bottom: 1.5rem;
     }
     
     .nav-menu {
