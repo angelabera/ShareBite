@@ -1420,6 +1420,7 @@ body {
     margin-bottom: 3rem;
     position: relative;
     z-index: 2;
+    align-items: start;
 }
 
 /* Footer Brand Section */
@@ -1427,6 +1428,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 2rem;
+    align-items: flex-start;
 }
 
 .footer-logo {
@@ -1589,6 +1591,7 @@ body {
     font-size: 0.95rem;
     position: relative;
     padding-left: 1rem;
+    display: block;
 }
 
 .footer-nav li a::before {
@@ -1741,6 +1744,7 @@ body {
 
     .footer-nav li a {
         padding-left: 0;
+        text-align: center;
         justify-content: center;
     }
 
@@ -2813,6 +2817,7 @@ html, body, .feature-card, .food-card, .navbar, .modal-content, .footer, .stats-
   justify-content: space-between;
   align-items: stretch; /* ensures same height visually */
   gap: 3rem;
+  min-height: 100%; /* Ensure minimum height for alignment */
 }
 
 /* --- Left Box (Form) --- */
@@ -3310,59 +3315,12 @@ body.dark-mode .notification-bell:hover {
 @media (max-width: 900px) {
   .contact-container {
     flex-direction: column;
-  }
-}
-
-
-/* ===== Scroll to Top Button ===== */
-#scrollToTopBtn {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  z-index: 99;
-  width: 45px;
-  height: 45px;
-  background-color: #4CAF50;
-  color: #fff;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 18px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  outline: none;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(20px);
-  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
-}
-
-/* Show state (added by JS) */
-#scrollToTopBtn.show {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-/* Hover animation */
-#scrollToTopBtn:hover {
-  background-color: #45a049;
-  transform: scale(1.1);
-}
-
-
-  .section-divider {
-    padding: 2rem 0;
-    margin: 1rem 0;
+    gap: 2rem;
   }
   
-  .divider-line {
-    max-width: 150px;
+  .contact-left,
+  .contact-right {
+    min-height: auto;
   }
-  
-  .divider-icon {
-    width: 50px;
-    height: 50px;
-    margin: 0 1rem;
-    font-size: 1.2rem;
-  }
+}
 

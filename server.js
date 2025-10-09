@@ -1,7 +1,12 @@
-const http = require('http');
-const fs = require('fs');
-const path = require('path');
-const url = require('url');
+import http from 'http';
+import fs from 'fs';
+import path from 'path';
+import url from 'url';
+import { fileURLToPath } from 'url';
+
+// Get the directory where server.js is located
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const server = http.createServer((req, res) => {
   console.log('📨 Request received:', req.url);
@@ -13,7 +18,7 @@ const server = http.createServer((req, res) => {
     pathname = '/index.html';
   }
 
-  let filePath = '.' + pathname;
+  let filePath = path.join(__dirname, pathname);
   console.log('🔍 Looking for file:', filePath);
 
   const extname = String(path.extname(filePath)).toLowerCase();
@@ -61,6 +66,6 @@ server.listen(PORT, () => {
   console.log('🚀 ShareBite Server Started Successfully!');
   console.log('🚀 ========================================');
   console.log('🌐 Access your website at: http://localhost:' + PORT);
-  console.log('📁 Serving files from:', process.cwd());
+  console.log('📁 Serving files from:', __dirname);
   console.log('🚀 ========================================');
 });
