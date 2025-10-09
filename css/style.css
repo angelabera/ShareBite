@@ -1296,37 +1296,33 @@ body {
 .footer-section ul li {
     margin-bottom: 0.5rem;
 }
-
 .footer-section ul li a {
-    color: var(--medium-gray);
+    color: inherit;
     text-decoration: none;
-    transition: var(--transition-fast);
-}
-
-.footer-section ul li a {
-    color: inherit; /* Default text color */
-    text-decoration: none;
-    position: relative; /* Needed for the pseudo-element underline */
-    transition: color 0.3s ease; /* Smooth text color transition */
+    position: relative;
+    display: inline-block;
+    transition: color 0.3s ease;
 }
 
 .footer-section ul li a::after {
     content: '';
     position: absolute;
     left: 0;
-    bottom: -2px; /* Distance of underline from text */
-    width: 0;
-    height: 2px; /* Thickness of underline */
-    background-color: orange; /* Underline color */
-    transition: width 0.3s ease;
+    bottom: 0;
+    width: 100%;       /* Full width for animation */
+    height: 2px;
+    background-color: orange;
+    transform: scaleX(0); /* Start hidden */
+    transform-origin: left; /* Animate from left */
+    transition: transform 0.3s ease;
 }
 
 .footer-section ul li a:hover {
-    color: orange; /* Text color on hover */
+    color: orange;
 }
 
 .footer-section ul li a:hover::after {
-    width: 100%; /* Expand underline on hover */
+    transform: scaleX(1); /* Animate to full width */
 }
 
 
