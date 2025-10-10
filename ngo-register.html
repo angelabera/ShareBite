@@ -5,135 +5,90 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - ShareBite</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Use main style.css for site-wide consistency (Navbar/Footer) -->
+    <link rel="stylesheet" href="css/style.css?v=darkmode-fix-1">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
+
+    <!-- INLINE STYLES FOR REGISTRATION FORM AND TOGGLE SWITCH -->
     <style>
-        /* Same styles as register.html */
+        /* Base Variables - Using theme colors from :root in style.css */
         :root {
-            --primary-green: #4CAF50;
-            --secondary-orange: #FF6B35;
-            --accent-yellow: #FFC107;
-            /* Light Mode */
-            --bg-gradient-start-light: #E9E3FF;
-            --bg-gradient-end-light: #F7F5FF;
-            --card-bg-light: #ffffff;
-            --text-color-light: #333;
-            --subtext-color-light: #555;
-            --input-bg-light: #fdfdfd;
-            --input-border-light: #ddd;
-            /* Dark Mode */
-            --bg-gradient-start-dark: #1C1C1C;
-            --bg-gradient-end-dark: #2C2C2C;
-            --card-bg-dark: #2E2E2E;
-            --text-color-dark: #f1f1f1;
-            --subtext-color-dark: #aaa;
-            --input-bg-dark: #3a3a3a;
-            --input-border-dark: #444;
+            /* General Theme Variables used for consistency with site colors */
+            --primary-color: #4CAF50;
+            --secondary-color: #FF6B35;
+            --accent-color: #FFC107;
+            --white: #FFFFFF;
+            --light-gray: #F5F7FA;
+            --medium-gray: #9E9E9E;
+            --dark-gray: #424242;
+            --black: #212121;
+            --card-radius: 16px;
+            --border-radius: 12px;
+            --shadow-medium: 0 5px 25px rgba(0, 0, 0, 0.15);
+            --primary-gradient: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* --- Dark Mode Variables Overrides (Copied from style.css :root.dark) --- */
+        :root.dark {
+            --white: #121212;
+            --light-gray: #1E1E1E;
+            --medium-gray: #B0B0B0;
+            --dark-gray: #E0E0E0;
+            --black: #FAFAFA;
+            --shadow-medium: 0 5px 25px rgba(0, 0, 0, 0.7);
         }
 
-        body {
-            font-family: 'Poppins', sans-serif;
+        /* Main Content Wrapper - Centers the form below the navbar */
+        .register-page-content {
+            /* Adjust padding for the fixed navbar */
+            padding: 80px 0 50px; 
             display: flex;
             justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 1rem;
-            background: linear-gradient(135deg, var(--bg-gradient-start-light), var(--bg-gradient-end-light));
-            color: var(--text-color-light);
-            transition: background 0.4s, color 0.4s;
+            align-items: flex-start;
+            min-height: calc(100vh - 100px);
+            background: var(--light-gray);
+            transition: background 0.4s;
         }
 
-        body.dark-mode {
-            background: linear-gradient(135deg, var(--bg-gradient-start-dark), var(--bg-gradient-end-dark));
-            color: var(--text-color-dark);
-        }
-
-        .theme-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: 1px solid var(--input-border-light);
-            color: var(--text-color-light);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.2rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.3s;
-        }
-
-        body.dark-mode .theme-toggle {
-            border-color: var(--input-border-dark);
-            color: var(--text-color-dark);
-        }
-
-        .theme-toggle:hover {
-            transform: scale(1.1) rotate(15deg);
+        :root.dark .register-page-content {
+            background: var(--white);
         }
 
         .auth-container {
-            background-color: var(--card-bg-light);
+            background-color: var(--white);
             padding: 3rem;
-            border-radius: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border-radius: var(--card-radius);
+            box-shadow: var(--shadow-medium);
             width: 100%;
             max-width: 480px;
             text-align: center;
-            animation: fadeIn 0.8s ease-out forwards;
-            opacity: 0;
-            transform: translateY(20px);
+            margin: 2rem 0;
+            transition: all 0.4s;
         }
 
-        body.dark-mode .auth-container {
-            background-color: var(--card-bg-dark);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        :root.dark .auth-container {
+            background-color: #1E1E1E;
         }
 
         .auth-container h1 {
             margin-bottom: 0.75rem;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 1.8rem;
+            color: var(--black);
         }
 
         .auth-container p.subtitle {
-            color: var(--subtext-color-light);
+            color: var(--medium-gray);
             margin-bottom: 2rem;
         }
 
-        body.dark-mode .auth-container p.subtitle {
-            color: var(--subtext-color-dark);
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-            text-align: left;
-            position: relative;
-        }
-        
-        /* New styles for the toggle switch */
+        /* --- Toggle Switch Styles --- */
         .register-toggle {
             display: flex;
-            border: 2px solid var(--primary-green);
-            border-radius: 10px;
+            border: 2px solid var(--primary-color);
+            border-radius: var(--border-radius);
             overflow: hidden;
             margin-bottom: 2rem;
         }
@@ -144,27 +99,45 @@
             cursor: pointer;
             font-weight: 600;
             font-size: 1rem;
-            color: var(--primary-green);
+            color: var(--primary-color);
             background-color: transparent;
             transition: all 0.3s;
             border: none;
+            font-family: inherit;
         }
 
         .toggle-option.active {
-            color: var(--card-bg-light);
-            background-color: var(--primary-green);
-        }
-        
-        body.dark-mode .toggle-option.active {
-             color: var(--text-color-dark);
+            color: var(--white);
+            background-color: var(--primary-color);
         }
 
-        /* End new styles for the toggle switch */
+        :root.dark .toggle-option {
+            color: var(--primary-color);
+        }
+
+        :root.dark .toggle-option.active {
+            color: var(--white);
+            background-color: var(--primary-color);
+        }
+        /* --- End Toggle Switch Styles --- */
+
+
+        /* --- Form Field Styles --- */
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+            position: relative;
+        }
 
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
+            color: var(--dark-gray);
+        }
+
+        :root.dark .form-group label {
+            color: var(--medium-gray);
         }
 
         .form-group input,
@@ -172,42 +145,29 @@
         .form-group textarea {
             width: 100%;
             padding: 0.85rem 1rem;
-            border: 1px solid var(--input-border-light);
-            background-color: var(--input-bg-light);
-            color: var(--text-color-light);
-            border-radius: 8px;
-            font-family: 'Poppins', sans-serif;
+            border: 2px solid var(--light-gray);
+            background-color: var(--light-gray);
+            color: var(--black);
+            border-radius: var(--border-radius);
+            font-family: inherit;
             font-size: 1rem;
             transition: all 0.3s;
         }
-        
-        .toggle-password {
-            position: absolute;
-            /* Adjusted top to account for varying height fields */
-            top: 50%; 
-            transform: translateY(-50%);
-            right: 1rem;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1.1rem;
-            color: var(--subtext-color-light);
-            line-height: 1;
-            padding: 0;
-        }
 
-        /* Adjustments for password fields to align toggle */
-        #password-group .toggle-password,
-        #confirm-password-group .toggle-password {
-             top: 60%; /* Adjusted for better alignment in the specific groups */
+        :root.dark .form-group input,
+        :root.dark .form-group select,
+        :root.dark .form-group textarea {
+            border-color: #333;
+            background-color: #1c1c1c;
+            color: var(--black);
         }
         
-        body.dark-mode .toggle-password {
-            color: var(--subtext-color-dark);
-        }
-
-        .toggle-password:hover {
-            color: var(--primary-green);
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2);
         }
 
         .form-group input[type="password"],
@@ -215,37 +175,44 @@
             padding-right: 3rem;
         }
 
-        body.dark-mode .form-group input,
-        body.dark-mode .form-group select,
-        body.dark-mode .form-group textarea {
-            border-color: var(--input-border-dark);
-            background-color: var(--input-bg-dark);
-            color: var(--text-color-dark);
+        /* Password Toggle Button */
+        .toggle-password {
+            position: absolute;
+            top: 72%;
+            transform: translateY(-50%);
+            right: 1rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: var(--medium-gray);
+            line-height: 1;
+            padding: 0;
+            transition: color 0.3s;
         }
 
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary-green);
-            box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2);
+        /* Adjustments for password fields to align toggle */
+        #password-group .toggle-password,
+        #confirm-password-group .toggle-password {
+            top: 72%;
         }
 
-        .btn {
+        .toggle-password:hover {
+            color: var(--primary-color);
+        }
+        /* --- End Form Field Styles --- */
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: #fff;
             width: 100%;
             padding: 0.9rem;
             border: none;
-            border-radius: 8px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.1rem;
+            border-radius: var(--border-radius);
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-green);
-            color: #fff;
+            text-align: center;
         }
 
         .btn-primary:hover {
@@ -257,7 +224,7 @@
         .login-link {
             margin-top: 1.5rem;
             display: block;
-            color: var(--secondary-orange);
+            color: var(--secondary-color);
             text-decoration: none;
             font-weight: 500;
         }
@@ -265,137 +232,294 @@
         .login-link:hover {
             text-decoration: underline;
         }
-        
-        /* Hide volunteer specific fields by default */
+
+        /* Utility Class for form fields */
         .volunteer-field {
             display: none;
-        }
-
-        @media (max-width: 520px) {
-            .auth-container {
-                padding: 2rem;
-            }
-
-            .auth-container h1 {
-                font-size: 1.5rem;
-            }
         }
     </style>
 </head>
 
 <body>
 
-    <button id="theme-toggle" class="theme-toggle" title="Toggle dark mode">🌙</button>
+    <!-- Navigation (Copied from index (1).html) -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <li><a href="index.html#home" class="nav-logo-link">
+                    <i class="fas fa-utensils"></i>
+                    <span>ShareBite</span>
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html#home" class="nav-link">Home</a></li>
+                <li><a href="index.html#features" class="nav-link">Features</a></li>
+                <li><a href="foodlisting.html" class="nav-link">Listings</a></li>
+                <li><a href="index.html#about" class="nav-link">About</a></li>
+                <li><a href="index.html#contact-section" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="user-actions">
+                <!-- Dark mode toggle - ID must be consistent with logic below -->
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
 
-    <div class="auth-container">
-        <h1 id="registerTitle">Register Your NGO</h1>
-        <p class="subtitle" id="registerSubtitle">Join ShareBite and help us reduce food waste by registering your NGO.</p>
-        
-        <div class="register-toggle">
-            <button type="button" class="toggle-option active" id="toggleNGO">NGO</button>
-            <button type="button" class="toggle-option" id="toggleVolunteer">Volunteer</button>
+                <!-- Notification Bell (Hidden on register page typically, but kept for structure) -->
+                <div class="notification-bell" id="notificationBell" style="display: none;">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+                    <div class="notification-panel" id="notificationPanel">
+                        <div class="notification-header">Claimed Food Items</div>
+                        <div id="notificationList">
+                            <div class="no-notifications">No claimed items yet</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="role-switch" id="roleSwitch" style="display: none;">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span id="currentRole">Donor</span>
+                </button>
+                <button class="login-btn" onclick="window.location.href='login.html'">Login as User</button>
+                <button class="login-btn" onclick="window.location.href='login_ngo.html'">Login as NGO</button>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
-        <form id="registerForm">
-            <input type="hidden" id="registerType" name="registerType" value="ngo">
-            
-            <div class="form-group ngo-field" id="ngo-name-group">
-                <label for="ngoName">NGO Name</label>
-                <input type="text" id="ngoName" name="ngoName" placeholder="Enter NGO name" required>
+    </nav>
+    <!-- End Navigation -->
+
+    <!-- Main Register Content Area -->
+    <section class="register-page-content">
+
+        <div class="auth-container">
+            <h1 id="registerTitle">Register Your NGO</h1>
+            <p class="subtitle" id="registerSubtitle">Join ShareBite and help us reduce food waste by registering your NGO.</p>
+
+            <!-- NGO/Volunteer Toggle Switch -->
+            <div class="register-toggle">
+                <button type="button" class="toggle-option active" id="toggleNGO">NGO</button>
+                <button type="button" class="toggle-option" id="toggleVolunteer">Volunteer</button>
             </div>
-            
-            <div class="form-group volunteer-field" id="volunteer-name-group">
-                <label for="fullName">Full Name</label>
-                <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required disabled>
-            </div>
-            
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="Enter email address" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="contactPerson" id="contact-person-label">Contact Person</label>
-                <input type="text" id="contactPerson" name="contactPerson" placeholder="Enter contact person's name"
-                    required>
-            </div>
-            
-            <div class="form-group">
-                <label for="phone">Phone</label>
-                <input type="tel" id="phone" name="phone" placeholder="Enter phone number" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="address">Address / Location</label>
-                <input type="text" id="address" name="address" placeholder="Enter address or main area of operation" required>
-            </div>
-            
-            <div class="form-group" id="password-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password" required>
-                <button type="button" id="togglePassword" class="toggle-password" title="Show Password">
+            <!-- End Toggle Switch -->
+
+            <form id="registerForm">
+                <!-- Hidden field to track registration type -->
+                <input type="hidden" id="registerType" name="registerType" value="ngo">
+
+                <!-- NGO Fields -->
+                <div class="form-group ngo-field" id="ngo-name-group">
+                    <label for="ngoName">NGO Name</label>
+                    <input type="text" id="ngoName" name="ngoName" placeholder="Enter NGO name" required>
+                </div>
+
+                <!-- Volunteer Fields - Hidden by default -->
+                <div class="form-group volunteer-field" id="volunteer-name-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required disabled>
+                </div>
+
+                <!-- Shared Fields -->
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter email address" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="contactPerson" id="contact-person-label">Contact Person</label>
+                    <input type="text" id="contactPerson" name="contactPerson" placeholder="Enter contact person's name"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Enter phone number" required>
+                </div>
+
+                <!-- Address is critical for both -->
+                <div class="form-group">
+                    <label for="address">Address / Location</label>
+                    <input type="text" id="address" name="address" placeholder="Enter address or main area of operation" required>
+                </div>
+
+                <!-- Password Fields -->
+                <div class="form-group" id="password-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    <button type="button" id="togglePassword" class="toggle-password" title="Show Password">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                         <circle cx="12" cy="12" r="3"></circle>
                     </svg>
                 </button>
-            </div>
-            <div class="form-group" id="confirm-password-group">
-                <label for="confirmPassword">Confirm Password</label>
-                <input
-                    type="password"
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    placeholder="Re-enter your password"
-                    required
-                />
-                <button
-                    type="button"
-                    id="toggleConfirmPassword"
-                    class="toggle-password"
-                    title="Show Password"
-                >
-                    <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    >
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                    <circle cx="12" cy="12" r="3"></circle>
-                    </svg>
-                </button>
-            </div>
-            
-            <div class="form-group ngo-field" id="website-group">
-                <label for="website">Website / Social Media (Optional)</label>
-                <input type="url" id="website" name="website" placeholder="Enter website or social media link">
-            </div>
-            <div class="form-group ngo-field" id="description-group">
-                <label for="description">Description / Mission Statement</label>
-                <textarea id="description" name="description" placeholder="Describe your NGO" rows="3"></textarea>
-            </div>
-            
-            <div class="form-group volunteer-field" id="availability-group">
-                <label for="availability">Availability (Optional)</label>
-                <input type="text" id="availability" name="availability" placeholder="e.g., Weekends, Evenings" disabled>
+                </div>
+                <div class="form-group" id="confirm-password-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Re-enter your password" required />
+                    <button type="button" id="toggleConfirmPassword" class="toggle-password" title="Show Password">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- NGO/Volunteer Specific Optional Fields -->
+                <div class="form-group ngo-field" id="website-group">
+                    <label for="website">Website / Social Media (Optional)</label>
+                    <input type="url" id="website" name="website" placeholder="Enter website or social media link">
+                </div>
+                <div class="form-group ngo-field" id="description-group">
+                    <label for="description">Description / Mission Statement</label>
+                    <textarea id="description" name="description" placeholder="Describe your NGO" rows="3"></textarea>
+                </div>
+
+                <div class="form-group volunteer-field" id="availability-group">
+                    <label for="availability">Availability (Optional)</label>
+                    <input type="text" id="availability" name="availability" placeholder="e.g., Weekends, Evenings" disabled>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+
+            <a href="login_ngo.html" class="login-link">Already have an account? Login</a>
+        </div>
+    </section>
+    <!-- End Main Register Content Area -->
+
+    <!-- Footer (Copied from index (1).html) -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-utensils"></i>
+                        <span>ShareBite</span>
+                    </div>
+                    <p>
+                        Making a difference, one meal at a time. Join us in the fight
+                        against food waste and hunger.
+                    </p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html#home">Home</a></li>
+                        <li><a href="index.html#features">How It Works</a></li>
+                        <li><a href="foodlisting.html">Food Listings</a></li>
+                        <li><a href="index.html#about">About Us</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>For Donors</h4>
+                    <ul>
+                        <li><a href="#">List Food</a></li>
+                        <li><a href="#">Donor Guidelines</a></li>
+                        <li><a href="#">Track Impact</a></li>
+                        <li><a href="support.html">Support</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>For Collectors</h4>
+                    <ul>
+                        <li><a href="#">Find Food</a></li>
+                        <li><a href="ngo-register.html">Register NGO</a></li>
+                        <li><a href="ngo-register.html?type=volunteer">Volunteer</a></li>
+                        <li><a href="#">Resources</a></li>
+                    </ul>
+                </div>
             </div>
 
-            <button type="submit" class="btn btn-primary">Register</button>
-        </form>
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <p class="footer-credit">Made with 💚 by Angela Bera</p>
+                <p>
+                    &copy; 2025 ShareBite. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+    <!-- End Footer -->
 
-        <a href="login.html" class="login-link">Already have an account? Login</a>
+    <!-- Loading Overlay (Copied from index (1).html) -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Loading ShareBite...</p>
+        </div>
     </div>
 
-    <script src="js/theme.js"></script>
+    <!-- Scroll to Top Button (Copied from index (1).html) -->
+    <button id="scrollToTopBtn" title="Go to top" style="display: none;">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+    
+    <!-- Font Awesome (Copied from index (1).html) -->
+    <script src="https://kit.fontawesome.com/a2e0e9c5b2.js" crossorigin="anonymous"></script>
+
+    <!-- WORKING THEME TOGGLE LOGIC - IMPLEMENTED INLINE -->
     <script>
+        // --- Theme Toggle Logic ---
+        const themeToggle = document.getElementById('themeToggle');
+        const rootElement = document.documentElement;
         
-        // --- Password Visibility Toggle (Existing Logic) ---
+        // Function to apply the current theme based on the class 'dark' on the root element
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                rootElement.classList.add('dark');
+                // Update icon to sun (light mode icon) when dark mode is active
+                if (themeToggle) {
+                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                }
+            } else {
+                rootElement.classList.remove('dark');
+                // Update icon to moon (dark mode icon) when light mode is active
+                 if (themeToggle) {
+                    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                }
+            }
+        }
+
+        // Set initial theme on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            
+            if (savedTheme) {
+                applyTheme(savedTheme);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                // Check for OS preference if no saved theme
+                applyTheme('dark');
+            } else {
+                applyTheme('light');
+            }
+        });
+
+
+        // Toggle logic
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                let currentTheme = rootElement.classList.contains('dark') ? 'light' : 'dark';
+                localStorage.setItem('theme', currentTheme);
+                applyTheme(currentTheme);
+            });
+        }
+    </script>
+    
+    <script>
+        // --- Password Visibility Toggle ---
         const togglePassword = document.getElementById('togglePassword');
         const passwordInput = document.getElementById('password');
         const toggleConfirmPassword = document.getElementById("toggleConfirmPassword");
@@ -405,30 +529,27 @@
         const eyeOffIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
 
         let passwordVisible = false;
-
-        togglePassword.addEventListener('click', () => {
-            passwordVisible = !passwordVisible;
-            passwordInput.type = passwordVisible ? 'text' : 'password';
-            togglePassword.innerHTML = passwordVisible ? eyeOffIcon : eyeIcon;
-            togglePassword.title = passwordVisible ? 'Hide Password' : 'Show Password';
-        });
-
         let confirmPasswordVisible = false;
 
-        toggleConfirmPassword.addEventListener("click", () => {
-            confirmPasswordVisible = !confirmPasswordVisible;
-            confirmPasswordInput.type = confirmPasswordVisible
-            ? "text"
-            : "password";
-            toggleConfirmPassword.innerHTML = confirmPasswordVisible
-            ? eyeOffIcon
-            : eyeIcon;
-            toggleConfirmPassword.title = confirmPasswordVisible
-            ? "Hide Password"
-            : "Show Password";
+        function toggleVisibility(input, button, isConfirm) {
+            let visible = isConfirm ? confirmPasswordVisible : passwordVisible;
+            visible = !visible;
+            input.type = visible ? 'text' : 'password';
+            button.innerHTML = visible ? eyeOffIcon : eyeIcon;
+            button.title = visible ? 'Hide Password' : 'Show Password';
+            return visible;
+        }
+
+        togglePassword.addEventListener('click', () => {
+            passwordVisible = toggleVisibility(passwordInput, togglePassword, false);
         });
 
-        // --- NGO/Volunteer Toggle Logic (New Logic) ---
+        toggleConfirmPassword.addEventListener("click", () => {
+            confirmPasswordVisible = toggleVisibility(confirmPasswordInput, toggleConfirmPassword, true);
+        });
+
+
+        // --- NGO/Volunteer Toggle Logic ---
         const toggleNGO = document.getElementById('toggleNGO');
         const toggleVolunteer = document.getElementById('toggleVolunteer');
         const registerTypeInput = document.getElementById('registerType');
@@ -440,7 +561,8 @@
         const contactPersonInput = document.getElementById('contactPerson');
         const ngoNameInput = document.getElementById('ngoName');
         const fullNameInput = document.getElementById('fullName');
-        
+        const availabilityInput = document.getElementById('availability');
+
         // Function to switch form mode
         function switchRegistrationMode(mode) {
             if (mode === 'ngo') {
@@ -464,7 +586,9 @@
                 ngoNameInput.disabled = false;
                 fullNameInput.required = false;
                 fullNameInput.disabled = true;
-                
+                availabilityInput.disabled = true;
+                contactPersonInput.required = true;
+
             } else if (mode === 'volunteer') {
                 // Update button styles
                 toggleNGO.classList.remove('active');
@@ -473,7 +597,7 @@
                 
                 // Update text
                 registerTitle.textContent = 'Register as a Volunteer';
-                registerSubtitle.innerHTML = 'Join ShareBite and help us reduce food waste by **volunteering in your community**.';
+                registerSubtitle.innerHTML = 'Join ShareBite and help us reduce food waste by volunteering in your community.';
                 contactPersonLabel.textContent = 'Nickname (Optional)';
                 contactPersonInput.placeholder = "Enter a nickname (optional)";
                 
@@ -486,11 +610,24 @@
                 ngoNameInput.disabled = true;
                 fullNameInput.required = true;
                 fullNameInput.disabled = false;
+                availabilityInput.disabled = false;
+                contactPersonInput.required = false; 
             }
         }
 
         toggleNGO.addEventListener('click', () => switchRegistrationMode('ngo'));
         toggleVolunteer.addEventListener('click', () => switchRegistrationMode('volunteer'));
+
+        // Handle URL parameter for initial state (e.g., ngo-register.html?type=volunteer)
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const initialType = params.get('type');
+            if (initialType === 'volunteer') {
+                switchRegistrationMode('volunteer');
+            } else {
+                switchRegistrationMode('ngo'); // Default to NGO
+            }
+        });
 
 
         // --- Form Submission Logic (Modified) ---
@@ -498,54 +635,44 @@
 
         registerForm.addEventListener('submit', (e) => {
             e.preventDefault();
-
+            
             const type = registerForm.registerType.value;
-            const email = registerForm.email.value.trim();
             const password = registerForm.password.value;
             const confirmPassword = registerForm.confirmPassword.value;
-            const phone = registerForm.phone.value.trim();
-            const address = registerForm.address.value.trim();
             
-            // Basic required fields check (Email, Password, Phone, Address are always required)
-            if (!email || !password || !phone || !address) {
-                 alert("Please fill in all required fields (Email, Password, Phone, Address).");
-                 return;
-            }
-
             // Password match validation
             if (password !== confirmPassword) {
                 alert("Passwords do not match. Please re-enter.");
                 return;
             }
             
-            // Type-specific validation and data collection
+            // Type-specific validation and submission placeholder
             let successMessage = "";
+            let requiredFields = ['email', 'phone', 'address'];
+
             if (type === 'ngo') {
-                const ngoName = registerForm.ngoName.value.trim();
-                if (!ngoName) {
-                    alert("NGO Name is required for NGO registration.");
-                    return;
-                }
-                const website = registerForm.website.value.trim();
-                const description = registerForm.description.value.trim();
-                
-                // Log NGO data (replace with actual API call)
-                console.log({ type, ngoName, email, phone, address, website, description });
-                successMessage = "NGO Registered successfully! (Frontend only)";
-                
+                requiredFields.push('ngoName', 'contactPerson');
             } else if (type === 'volunteer') {
-                const fullName = registerForm.fullName.value.trim();
-                 if (!fullName) {
-                    alert("Full Name is required for Volunteer registration.");
+                requiredFields.push('fullName');
+            }
+            
+            // Check required fields
+            for (const fieldName of requiredFields) {
+                const field = registerForm.elements[fieldName];
+                if (field && field.required && !field.value.trim()) {
+                    // This uses the label text which includes the * if present
+                    const labelText = field.labels.length > 0 ? field.labels[0].textContent : field.placeholder;
+                    alert(`Please fill in the required field: ${labelText.replace('*', '').trim()}`);
                     return;
                 }
-                const availability = registerForm.availability.value.trim();
-                
-                // Log Volunteer data (replace with actual API call)
-                console.log({ type, fullName, email, phone, address, availability });
-                successMessage = "Volunteer Registered successfully! (Frontend only)";
             }
 
+
+            if (type === 'ngo') {
+                successMessage = "NGO Registered successfully! (Frontend only)";
+            } else if (type === 'volunteer') {
+                successMessage = "Volunteer Registered successfully! (Frontend only)";
+            }
 
             alert(successMessage);
 
@@ -555,10 +682,8 @@
                 window.location.href = "index.html";
             }, 500);
         });
-        
-        // Ensure initial state is correctly set (it's 'ngo' by default but good practice)
-        switchRegistrationMode('ngo');
     </script>
+    <script src="js/script.js"></script>
 
 </body>
 
