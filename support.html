@@ -1,140 +1,341 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Support | ShareBite</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background: #f9f9f9;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Support | ShareBite</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+      /* Small page-specific adjustments, leveraging CSS variables from main stylesheet */
+      .support-hero {
+        background: var(--primary-gradient);
+        color: white;
+        padding: 6rem 0 3rem;
+        text-align: center;
+      }
 
-    header {
-      background: #ff6347;
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
+      .support-card {
+        background: var(--card-bg);
+        border-radius: var(--card-radius);
+        box-shadow: var(--shadow-light);
+        padding: 2rem;
+        margin-top: -3rem;
+      }
 
-    .container {
-      max-width: 900px;
-      margin: 30px auto;
-      padding: 20px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
+      .faq-list {
+        display: grid;
+        gap: 1rem;
+      }
 
-    h2 {
-      color: #333;
-      margin-bottom: 10px;
-    }
+      .faq-item {
+        border-radius: 12px;
+        overflow: hidden;
+        background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
+        box-shadow: 0 6px 18px rgba(23,32,56,0.06);
+        border: 1px solid rgba(23,32,56,0.06);
+      }
 
-    .faq {
-      margin: 20px 0;
-    }
+      .faq-question {
+        padding: 1rem 1.2rem;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        font-weight: 600;
+        transition: background 200ms ease, color 200ms ease;
+      }
 
-    .faq h3 {
-      cursor: pointer;
-      padding: 10px;
-      background: #f1f1f1;
-      border-radius: 5px;
-    }
+      .faq-question:hover {
+        background: rgba(0,0,0,0.02);
+      }
 
-    .faq p {
-      display: none;
-      padding: 10px;
-      border-left: 3px solid #ff6347;
-      margin: 0;
-      background: #fafafa;
-    }
+      .faq-question:focus {
+        outline: 2px solid var(--primary-color, #2b6cb0);
+        outline-offset: 2px;
+      }
 
-    form {
-      margin-top: 30px;
-    }
+      .faq-answer {
+        padding: 0 1.2rem 1rem 1.2rem;
+        background: var(--light-gray);
+        display: block;
+        line-height: 1.6;
+        height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: height 260ms cubic-bezier(.2,.9,.2,1), opacity 200ms ease 60ms;
+      }
 
-    form input, form textarea, form button {
-      width: 100%;
-      margin: 10px 0;
-      padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
+      .faq-item.open .faq-answer {
+        height: auto; /* will be overridden by JS calculated height */
+        opacity: 1;
+      }
 
-    form button {
-      background: #ff6347;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-size: 16px;
-    }
+      .faq-chevron {
+        transition: transform 220ms ease;
+        display: inline-block;
+      }
 
-    form button:hover {
-      background: #e5533d;
-    }
+      .faq-item.open .faq-chevron {
+        transform: rotate(180deg);
+      }
 
-    footer {
-      margin-top: 30px;
-      text-align: center;
-      padding: 15px;
-      background: #333;
-      color: white;
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <h1>Support Center</h1>
-    <p>How can we help you today?</p>
-  </header>
+      .contact-form .form-group + .form-group { margin-top: 1rem; }
 
-  <div class="container">
-    <section>
-      <h2>Frequently Asked Questions</h2>
+      @media (min-width: 768px) {
+        .support-grid { display: grid; grid-template-columns: 1fr 380px; gap: 2rem; align-items: start; }
+      }
+    </style>
+  </head>
 
-      <div class="faq">
-        <h3>How can I donate surplus food?</h3>
-        <p>You can register your restaurant/household and schedule a pickup. Our partnered NGOs and volunteers will collect and distribute the food.</p>
+  <body>
+    <!-- Navigation (consistent with main site) -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="nav-logo">
+          <a href="index.html" class="nav-logo-link"><i class="fas fa-utensils"></i><span>ShareBite</span></a>
+        </div>
+        <ul class="nav-menu">
+          <li><a href="index.html#home" class="nav-link">Home</a></li>
+          <li><a href="index.html#features" class="nav-link">Features</a></li>
+          <li><a href="foodlisting.html" class="nav-link">Listings</a></li>
+          <li><a href="index.html#about" class="nav-link">About</a></li>
+          <li><a href="support.html" class="nav-link">Support</a></li>
+        </ul>
+        <div class="user-actions">
+          <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode"><i class="fas fa-moon"></i></button>
+          <button class="role-switch" id="roleSwitch"><i class="fas fa-exchange-alt"></i><span id="currentRole">Donor</span></button>
+          <button class="login-btn" onclick="window.location.href='login.html'">Login as User</button>
+        </div>
       </div>
+    </nav>
 
-      <div class="faq">
-        <h3>How do NGOs join the platform?</h3>
-        <p>NGOs can sign up through our registration form and get verified before they can start receiving donations.</p>
-      </div>
-
-      <div class="faq">
-        <h3>Can volunteers join individually?</h3>
-        <p>Yes! Volunteers can sign up, and we’ll connect them with nearby NGOs for food distribution.</p>
+    <!-- Hero -->
+    <section class="support-hero">
+      <div class="container">
+        <h1 class="hero-title">Support & Help Center</h1>
+        <p class="hero-description">Find answers to common questions about donating, registering, and using ShareBite.</p>
       </div>
     </section>
 
-    <section>
-      <h2>Contact Us</h2>
-      <form>
-        <input type="text" placeholder="Your Name" required>
-        <input type="email" placeholder="Your Email" required>
-        <textarea rows="5" placeholder="Write your message here..." required></textarea>
-        <button type="submit">Submit</button>
-      </form>
-    </section>
-  </div>
+    <main class="container">
+      <div class="support-card">
+        <div class="support-grid">
+          <section>
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <p class="section-subtitle">Quick answers to common questions. Click a question to expand.</p>
 
-  <footer>
-    <p>&copy; 2025 ShareBite | Fighting Hunger, Reducing Waste</p>
-  </footer>
+            <div class="faq-list" id="faqList">
+              <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">How can I donate surplus food? <i class="fas fa-chevron-down"></i></button>
+                <div class="faq-answer">Create an account, list the food with details (type, quantity, pickup time), and choose whether you'd like volunteers or partner NGOs to collect it. You can edit or cancel a listing anytime before pickup.</div>
+              </div>
 
-  <script>
-    // FAQ toggle functionality
-    document.querySelectorAll(".faq h3").forEach(item => {
-      item.addEventListener("click", () => {
-        let content = item.nextElementSibling;
-        content.style.display = content.style.display === "block" ? "none" : "block";
+              <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">How do NGOs join the platform? <i class="fas fa-chevron-down"></i></button>
+                <div class="faq-answer">NGOs can register via the <a href="ngo-register.html">NGO registration form</a>. After verification (ID and organization documents), NGOs get access to claim nearby listings and coordinate pickups.</div>
+              </div>
+
+              <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">Can volunteers sign up individually? <i class="fas fa-chevron-down"></i></button>
+                <div class="faq-answer">Yes. Volunteers can sign up as individuals and will see nearby pickup opportunities. We encourage volunteers to follow the safety guidelines and confirm pickup times with donors.</div>
+              </div>
+
+              <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">What types of food are accepted? <i class="fas fa-chevron-down"></i></button>
+                <div class="faq-answer">We accept freshly prepared, safely stored food such as cooked meals, bakery items, packaged goods, fruits & vegetables, and sealed non-perishables. Per local regulations, certain foods (e.g., raw meat) may be restricted—please check the listing guidance.</div>
+              </div>
+
+              <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">How is food safety handled? <i class="fas fa-chevron-down"></i></button>
+                <div class="faq-answer">Donors should list the time the food was prepared and provide instructions for safe transport. NGOs and volunteers are encouraged to follow basic food-safety practices: keep hot food hot, cold food cold, and avoid cross-contamination. Our platform provides safety tips when creating a listing.</div>
+              </div>
+
+              <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">How do I schedule or change a pickup? <i class="fas fa-chevron-down"></i></button>
+                <div class="faq-answer">Pickup times are set when you create a listing. Donors and pickup organizations can message each other to reschedule. If you need support, contact us using the form on this page and include your listing ID.</div>
+              </div>
+
+              <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">What about privacy and data? <i class="fas fa-chevron-down"></i></button>
+                <div class="faq-answer">We only collect the information necessary to facilitate pickups and ensure safety. Personal contact details are shared only between donors and the assigned collectors. See our <a href="#">privacy policy</a> for full details.</div>
+              </div>
+
+              <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">How can I report a problem or abuse? <i class="fas fa-chevron-down"></i></button>
+                <div class="faq-answer">If you encounter misuse, safety issues, or inaccurate listings, report the listing using the 'Report' option on the listing card or send us details through the contact form. Include dates, listing IDs, and any photos if available.</div>
+              </div>
+            </div>
+          </section>
+
+          <aside>
+            <div class="card contact-form">
+              <h3>Contact Support</h3>
+              <p>If you couldn't find an answer above, send us a message and include as much context as possible.</p>
+              <form id="supportForm">
+                <div class="form-group">
+                  <label for="name">Your name</label>
+                  <input id="name" name="name" type="text" required />
+                </div>
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input id="email" name="email" type="email" required />
+                </div>
+                <div class="form-group">
+                  <label for="message">Message</label>
+                  <textarea id="message" name="message" rows="5" required></textarea>
+                </div>
+                <div class="form-group">
+                  <button class="btn btn-primary" type="submit">Send Message</button>
+                </div>
+              </form>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer (consistent with main site) -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <div class="footer-logo"><i class="fas fa-utensils"></i><span>ShareBite</span></div>
+            <p>Making a difference, one meal at a time. Join us in the fight against food waste and hunger.</p>
+            <div class="social-links"><a href="#"><i class="fab fa-facebook"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-instagram"></i></a></div>
+          </div>
+          <div class="footer-section">
+            <h4>Quick Links</h4>
+            <ul>
+              <li><a href="index.html#home">Home</a></li>
+              <li><a href="index.html#features">How It Works</a></li>
+              <li><a href="foodlisting.html">Food Listings</a></li>
+              <li><a href="index.html#about">About Us</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h4>For Donors</h4>
+            <ul>
+              <li><a href="foodlisting.html">List Food</a></li>
+              <li><a href="#">Donor Guidelines</a></li>
+              <li><a href="#">Track Impact</a></li>
+              <li><a href="support.html">Support</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h4>For Collectors</h4>
+            <ul>
+              <li><a href="#">Find Food</a></li>
+              <li><a href="ngo-register.html">Register NGO</a></li>
+              <li><a href="#">Volunteer</a></li>
+              <li><a href="#">Resources</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p class="footer-credit">Made with 💚 by Angela Bera</p>
+          <p>&copy; 2025 ShareBite. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Animated, accessible accordion for FAQs
+      (function () {
+        const items = document.querySelectorAll('.faq-item');
+
+        items.forEach(item => {
+          const btn = item.querySelector('.faq-question');
+          const answer = item.querySelector('.faq-answer');
+          const chevron = btn.querySelector('i') || document.createElement('span');
+          if (!chevron.classList) chevron.className = 'faq-chevron';
+          else chevron.classList.add('faq-chevron');
+
+          // ensure aria attributes
+          btn.setAttribute('role', 'button');
+          btn.setAttribute('tabindex', '0');
+          btn.setAttribute('aria-expanded', 'false');
+
+          // prepare answer height
+          const setClosed = () => {
+            answer.style.height = '0px';
+            answer.style.opacity = '0';
+            item.classList.remove('open');
+            btn.setAttribute('aria-expanded', 'false');
+          };
+
+          const setOpen = () => {
+            // measure natural height
+            const prevHeight = answer.style.height;
+            answer.style.height = 'auto';
+            const natural = answer.scrollHeight + 'px';
+            answer.style.height = prevHeight;
+
+            // trigger animation
+            requestAnimationFrame(() => {
+              answer.style.height = natural;
+              answer.style.opacity = '1';
+            });
+
+            item.classList.add('open');
+            btn.setAttribute('aria-expanded', 'true');
+          };
+
+          // Start closed
+          setClosed();
+
+          const toggle = () => {
+            const isOpen = btn.getAttribute('aria-expanded') === 'true';
+            if (isOpen) {
+              // close with measured transition
+              answer.style.height = answer.scrollHeight + 'px';
+              requestAnimationFrame(() => {
+                answer.style.height = '0px';
+                answer.style.opacity = '0';
+              });
+              item.classList.remove('open');
+              btn.setAttribute('aria-expanded', 'false');
+            } else {
+              setOpen();
+            }
+          };
+
+          btn.addEventListener('click', (e) => {
+            toggle();
+          });
+
+          btn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              toggle();
+            }
+          });
+
+          // When transition ends and it's open, clear explicit height so it can resize naturally
+          answer.addEventListener('transitionend', (e) => {
+            if (btn.getAttribute('aria-expanded') === 'true') {
+              answer.style.height = 'auto';
+            }
+          });
+        });
+      })();
+
+      // Basic contact form handler (no network)
+      document.getElementById('supportForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const message = document.getElementById('message').value.trim();
+        if (!name || !email || !message) return;
+        // Show a simple in-page confirmation
+        alert('Thanks, ' + name + '! Your message has been received. We will respond to ' + email + ' shortly.');
+        e.target.reset();
       });
-    });
-  </script>
-</body>
+    </script>
+    <script src="js/theme.js"></script>
+    <script src="js/script.js"></script>
+  </body>
 </html>

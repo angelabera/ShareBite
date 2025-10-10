@@ -91,14 +91,21 @@ class ShareBite {
         navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 const href = link.getAttribute('href');
-                // Ignore .html links
-                if (href && href.endsWith('.html')) return;
-                e.preventDefault();
-                const targetId = href.substring(1);
-                const targetElement = document.getElementById(targetId);
-                if (targetElement) {
-                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                if (!href) return;
+
+                // If it's a same-page hash link (e.g., "#about"), smooth-scroll
+                if (href.startsWith('#')) {
+                    e.preventDefault();
+                    const targetId = href.substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                    }
+                    return;
                 }
+
+                // For links that point to another HTML file with a hash (e.g., "index.html#home"), allow normal navigation
+                // so the browser will load the target page and jump to the anchor.
             });
         });
     }
