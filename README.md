@@ -2,7 +2,7 @@
 
 A beautiful, responsive web platform connecting restaurants and households with NGOs and volunteers to reduce food waste while fighting hunger in communities.
 
-## 🌟 Features
+## 🌟 Features  
 
 ### Core Functionality
 - **Dual User Roles**: Switch between Donor (restaurants/households) and Collector (NGOs/volunteers)
