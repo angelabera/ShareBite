@@ -63,6 +63,11 @@
         margin-bottom: 0.75rem;
         font-weight: 600;
         font-size: 1.8rem;
+        color: var(--text-color-light);
+      }
+
+      body.dark-mode .auth-container h1 {
+        color: var(--text-color-dark);
       }
 
       .auth-container p.subtitle {
@@ -84,6 +89,11 @@
         display: block;
         margin-bottom: 0.5rem;
         font-weight: 500;
+        color: var(--text-color-light);
+      }
+
+      body.dark-mode .form-group label {
+        color: var(--text-color-dark);
       }
 
       .form-group input,
@@ -131,6 +141,13 @@
         border-color: var(--input-border-dark);
         background-color: var(--input-bg-dark);
         color: var(--text-color-dark);
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+      }
+
+      body.dark-mode .form-group input:focus,
+      body.dark-mode .form-group select:focus {
+        border-color: var(--primary-green);
+        box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2), inset 0 1px 3px rgba(0, 0, 0, 0.3);
       }
 
       .form-group input:focus,
@@ -150,6 +167,9 @@
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s;
+        text-align: center;
+        display: block;
+        margin: 0 auto;
       }
 
       .btn-primary {
@@ -169,10 +189,15 @@
         color: var(--secondary-orange);
         text-decoration: none;
         font-weight: 500;
+        text-align: center;
       }
 
       .login-link:hover {
         text-decoration: underline;
+      }
+
+      body.dark-mode .login-link {
+        color: var(--secondary-orange);
       }
 
       /* Responsive Design */

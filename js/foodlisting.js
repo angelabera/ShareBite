@@ -870,6 +870,7 @@ class ShareBiteFoodListing {
                 </div>
                 <div class="food-details">
                     <h3 class="food-title">${listing.foodType}</h3>
+                    ${tagsHTML} 
                     <p class="food-description">${listing.description}</p>
                     <div class="food-meta">
                         <span class="quantity"><i class="fas fa-utensils"></i> ${
