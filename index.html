@@ -10,6 +10,40 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
+    <style>
+      /* Track Impact Section */
+      .track-impact { padding: 4rem 0; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); }
+      .impact-dashboard { margin-top: 3rem; }
+      .impact-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 3rem; }
+      .stat-card { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 1.5rem; transition: transform 0.3s ease; }
+      .stat-card:hover { transform: translateY(-5px); }
+      .stat-icon { width: 60px; height: 60px; background: linear-gradient(135deg, #4CAF50, #45a049); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; }
+      .stat-content { flex: 1; }
+      .stat-number { font-size: 2.5rem; font-weight: 700; color: #333; margin: 0; }
+      .stat-label { color: #666; font-size: 1rem; margin: 0.5rem 0; }
+      .stat-trend { display: flex; align-items: center; gap: 0.5rem; color: #4CAF50; font-size: 0.9rem; font-weight: 600; }
+      .impact-breakdown { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem; margin-bottom: 3rem; }
+      .breakdown-card { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+      .breakdown-card h3 { color: #333; margin-bottom: 1.5rem; font-size: 1.3rem; }
+      .breakdown-stats { display: flex; flex-direction: column; gap: 1rem; }
+      .breakdown-item { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid #f0f0f0; }
+      .breakdown-label { color: #666; font-weight: 500; }
+      .breakdown-value { color: #4CAF50; font-weight: 600; }
+      .city-stats { display: flex; flex-direction: column; gap: 1rem; }
+      .city-item { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 0; }
+      .city-name { flex: 1; color: #333; font-weight: 500; }
+      .city-bar { flex: 2; height: 8px; background: #f0f0f0; border-radius: 4px; overflow: hidden; }
+      .city-progress { height: 100%; background: linear-gradient(90deg, #4CAF50, #45a049); border-radius: 4px; transition: width 0.3s ease; }
+      .city-value { color: #4CAF50; font-weight: 600; font-size: 0.9rem; }
+      .impact-cta { background: linear-gradient(135deg, #4CAF50, #45a049); color: white; padding: 3rem 2rem; border-radius: 15px; text-align: center; }
+      .impact-cta h3 { font-size: 2rem; margin-bottom: 1rem; }
+      .impact-cta p { font-size: 1.1rem; margin-bottom: 2rem; opacity: 0.9; }
+      .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+      .cta-buttons .btn { padding: 1rem 2rem; border-radius: 8px; font-weight: 600; text-decoration: none; transition: transform 0.3s ease; }
+      .cta-buttons .btn:hover { transform: translateY(-2px); }
+      .btn-primary { background: white; color: #4CAF50; }
+      .btn-secondary { background: transparent; color: white; border: 2px solid white; }
+    </style>
   </head>
   <body>
     <!-- Navigation -->
@@ -26,6 +60,9 @@
                 <li><a href="#features" class="nav-link">Features</a></li>
                 <li><a href="foodlisting.html" class="nav-link">Listings</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#testimonials" class="nav-link">Testimonials</a></li>
+                <li><a href="#gallery" class="nav-link">Gallery</a></li>
+                <li><a href="#track-impact" class="nav-link">Track Impact</a></li>
                 <li><a href="#contact-section" class="nav-link">Contact</a></li>
             </ul>
             <div class="user-actions">
@@ -423,6 +460,138 @@
       </div>
     </section>
 
+    <!-- Track Impact Section -->
+    <section id="track-impact" class="track-impact">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title" data-aos="fade-up">Track Our Impact</h2>
+          <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">Real-time statistics showing our collective impact on food waste reduction</p>
+        </div>
+        
+        <div class="impact-dashboard">
+          <div class="impact-stats-grid">
+            <div class="stat-card" data-aos="fade-up" data-aos-delay="100">
+              <div class="stat-icon">
+                <i class="fas fa-utensils"></i>
+              </div>
+              <div class="stat-content">
+                <h3 class="stat-number" data-target="15420">0</h3>
+                <p class="stat-label">Meals Saved</p>
+                <div class="stat-trend">
+                  <i class="fas fa-arrow-up"></i>
+                  <span>+12% this month</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
+              <div class="stat-icon">
+                <i class="fas fa-leaf"></i>
+              </div>
+              <div class="stat-content">
+                <h3 class="stat-number" data-target="42">0</h3>
+                <p class="stat-label">% Waste Reduced</p>
+                <div class="stat-trend">
+                  <i class="fas fa-arrow-up"></i>
+                  <span>+5% this month</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="stat-card" data-aos="fade-up" data-aos-delay="300">
+              <div class="stat-icon">
+                <i class="fas fa-users"></i>
+              </div>
+              <div class="stat-content">
+                <h3 class="stat-number" data-target="2847">0</h3>
+                <p class="stat-label">Active Volunteers</p>
+                <div class="stat-trend">
+                  <i class="fas fa-arrow-up"></i>
+                  <span>+18% this month</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="stat-card" data-aos="fade-up" data-aos-delay="400">
+              <div class="stat-icon">
+                <i class="fas fa-handshake"></i>
+              </div>
+              <div class="stat-content">
+                <h3 class="stat-number" data-target="156">0</h3>
+                <p class="stat-label">Partner Organizations</p>
+                <div class="stat-trend">
+                  <i class="fas fa-arrow-up"></i>
+                  <span>+8% this month</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="impact-breakdown">
+            <div class="breakdown-card" data-aos="fade-right" data-aos-delay="500">
+              <h3>This Week's Impact</h3>
+              <div class="breakdown-stats">
+                <div class="breakdown-item">
+                  <span class="breakdown-label">Food Donations</span>
+                  <span class="breakdown-value">1,247 items</span>
+                </div>
+                <div class="breakdown-item">
+                  <span class="breakdown-label">Families Helped</span>
+                  <span class="breakdown-value">892 families</span>
+                </div>
+                <div class="breakdown-item">
+                  <span class="breakdown-label">CO₂ Saved</span>
+                  <span class="breakdown-value">2.3 tons</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="breakdown-card" data-aos="fade-left" data-aos-delay="600">
+              <h3>Top Contributing Cities</h3>
+              <div class="city-stats">
+                <div class="city-item">
+                  <span class="city-name">New York</span>
+                  <div class="city-bar">
+                    <div class="city-progress" style="width: 85%"></div>
+                  </div>
+                  <span class="city-value">3,247 meals</span>
+                </div>
+                <div class="city-item">
+                  <span class="city-name">Los Angeles</span>
+                  <div class="city-bar">
+                    <div class="city-progress" style="width: 72%"></div>
+                  </div>
+                  <span class="city-value">2,891 meals</span>
+                </div>
+                <div class="city-item">
+                  <span class="city-name">Chicago</span>
+                  <div class="city-bar">
+                    <div class="city-progress" style="width: 68%"></div>
+                  </div>
+                  <span class="city-value">2,156 meals</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="impact-cta" data-aos="fade-up" data-aos-delay="700">
+            <h3>Join Our Mission</h3>
+            <p>Be part of the solution and help us reduce food waste while feeding communities</p>
+            <div class="cta-buttons">
+              <button class="btn btn-primary" onclick="window.location.href='foodlisting.html'">
+                <i class="fas fa-plus"></i>
+                Start Donating
+              </button>
+              <button class="btn btn-secondary" onclick="window.location.href='#contact-section'">
+                <i class="fas fa-envelope"></i>
+                Get Involved
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Section Divider -->
     <div class="section-divider">
       <div class="divider-line"></div>
@@ -569,7 +738,7 @@
             <ul>
               <li><a href="foodlisting.html">List Food</a></li>
               <li><a href="#">Donor Guidelines</a></li>
-              <li><a href="#">Track Impact</a></li>
+              <li><a href="#track-impact">Track Impact</a></li>
               <li><a href="support.html">Support</a></li>
             </ul>
           </div>
@@ -636,6 +805,41 @@
           }, { threshold: 0.5 });
           
           observer.observe(progressCircle);
+        }
+
+        // Animated counters for Track Impact section
+        const animateCounters = () => {
+          const counters = document.querySelectorAll('.stat-number');
+          counters.forEach(counter => {
+            const target = parseInt(counter.getAttribute('data-target'));
+            const duration = 2000; // 2 seconds
+            const increment = target / (duration / 16); // 60fps
+            let current = 0;
+            
+            const timer = setInterval(() => {
+              current += increment;
+              if (current >= target) {
+                current = target;
+                clearInterval(timer);
+              }
+              counter.textContent = Math.floor(current).toLocaleString();
+            }, 16);
+          });
+        };
+
+        // Trigger counter animation when Track Impact section is visible
+        const trackImpactSection = document.querySelector('.track-impact');
+        if (trackImpactSection) {
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                animateCounters();
+                observer.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.5 });
+          
+          observer.observe(trackImpactSection);
         }
       });
     </script>
