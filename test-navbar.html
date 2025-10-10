@@ -1,0 +1,38 @@
+<nav class="navbar">
+    <div class="nav-container">
+        <div class="nav-logo">
+            <a href="#home" class="nav-logo-link">
+                <i class="fas fa-utensils"></i>
+                <span>ShareBite</span>
+            </a>
+        </div>
+
+        <!-- Combined menu: links + buttons -->
+        <ul class="nav-menu">
+            <!-- Navigation links -->
+            <li><a href="#home" class="nav-link">Home</a></li>
+            <li><a href="#features" class="nav-link">Features</a></li>
+            <li><a href="foodlisting.html" class="nav-link">Listings</a></li>
+            <li><a href="#about" class="nav-link">About</a></li>
+            <li><a href="#contact" class="nav-link">Contact</a></li>
+
+            <!-- Buttons inside menu for mobile -->
+            <li><button id="themeToggle" class="nav-btn" aria-label="Toggle dark mode">
+                <i class="fas fa-moon"></i>
+            </button></li>
+            <li><button class="nav-btn" id="roleSwitch">
+                <i class="fas fa-exchange-alt"></i>
+                <span id="currentRole">Donor</span>
+            </button></li>
+            <li><button class="nav-btn" onclick="window.location.href='login.html'">Login as User</button></li>
+            <li><button class="nav-btn" onclick="window.location.href='login_ngo.html'">Login as NGO</button></li>
+        </ul>
+
+        <!-- Hamburger -->
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+</nav>
