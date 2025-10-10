@@ -1241,7 +1241,33 @@ body {
     box-shadow: var(--shadow-heavy);
 }
 
+/* Circle Progress Indicator */
+.circle-progress {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.progress-ring {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: rotate(-90deg);
+}
+
+.progress-ring-circle {
+    stroke-dasharray: 565.48;
+    stroke-dashoffset: 339.29; /* 40% of 565.48 */
+    transition: stroke-dashoffset 1.5s ease-in-out;
+    stroke-linecap: round;
+}
+
 .circle-stat {
+    position: relative;
+    z-index: 2;
     text-align: center;
     color: white;
 }

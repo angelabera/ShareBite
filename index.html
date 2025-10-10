@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/style.css?v=darkmode-fix-1">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
   </head>
   <body>
@@ -136,7 +137,7 @@
           <p class="section-subtitle">Simple steps to make a difference</p>
         </div>
         <div class="features-grid">
-          <div class="feature-card" data-aos="fade-up">
+          <div class="feature-card" data-aos="fade-right" data-aos-delay="100">
             <div class="feature-icon donor-icon">
               <i class="fas fa-store"></i>
             </div>
@@ -147,7 +148,7 @@
             </p>
             <div class="feature-step">Step 1</div>
           </div>
-          <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
             <div class="feature-icon connector-icon">
               <i class="fas fa-handshake"></i>
             </div>
@@ -158,7 +159,7 @@
             </p>
             <div class="feature-step">Step 2</div>
           </div>
-          <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+          <div class="feature-card" data-aos="fade-left" data-aos-delay="300">
             <div class="feature-icon collector-icon">
               <i class="fas fa-heart"></i>
             </div>
@@ -373,7 +374,7 @@
     <section id="about" class="about">
       <div class="container">
         <div class="about-content">
-          <div class="about-text">
+          <div class="about-text" data-aos="fade-right">
             <h2>About ShareBite</h2>
             <p>
               ShareBite is a revolutionary platform designed to tackle food
@@ -382,21 +383,21 @@
               who need it.
             </p>
             <div class="impact-stats">
-              <div class="impact-item">
+              <div class="impact-item" data-aos="fade-up" data-aos-delay="100">
                 <i class="fas fa-leaf"></i>
                 <div>
                   <strong>Environmental Impact</strong>
                   <span>Reducing carbon footprint through waste reduction</span>
                 </div>
               </div>
-              <div class="impact-item">
+              <div class="impact-item" data-aos="fade-up" data-aos-delay="200">
                 <i class="fas fa-users"></i>
                 <div>
                   <strong>Community Support</strong>
                   <span>Connecting businesses with local communities</span>
                 </div>
               </div>
-              <div class="impact-item">
+              <div class="impact-item" data-aos="fade-up" data-aos-delay="300">
                 <i class="fas fa-chart-line"></i>
                 <div>
                   <strong>Sustainable Growth</strong>
@@ -405,11 +406,16 @@
               </div>
             </div>
           </div>
-          <div class="about-visual">
+          <div class="about-visual" data-aos="fade-left">
             <div class="stats-circle">
-              <div class="circle-stat">
-                <span class="percentage">40%</span>
-                <span class="label">Food Waste Reduced</span>
+              <div class="circle-progress">
+                <svg class="progress-ring" width="200" height="200">
+                  <circle class="progress-ring-circle" stroke="#4CAF50" stroke-width="8" fill="transparent" r="90" cx="100" cy="100"/>
+                </svg>
+                <div class="circle-stat">
+                  <span class="percentage">40%</span>
+                  <span class="label">Food Waste Reduced</span>
+                </div>
               </div>
             </div>
           </div>
@@ -427,11 +433,11 @@
     </div>
 
  <section id="contact-section" class="contact">
-  <h1 class="main-title">📞 Contact Us</h1>
+  <h1 class="main-title" data-aos="fade-up">📞 Contact Us</h1>
   <div class="contact-wrapper">
     <div class="contact-container">
       <!-- Left: Form -->
-      <div class="contact-left">
+      <div class="contact-left" data-aos="fade-right">
         <h2 class="contact-title">💬 Do You Have a Question?</h2>
         <p class="contact-subtitle">Fill out the form below to get started</p>
 
@@ -450,7 +456,7 @@
       </div>
 
       <!-- Right: Info -->
-      <div class="contact-right">
+      <div class="contact-right" data-aos="fade-left">
         <h3>Get In Touch</h3>
         <p>We love to hear from you. Our team is always here to answer your questions.</p>
 
@@ -603,8 +609,36 @@
 </button>
 
 
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="js/theme.js"></script>
     <script src="js/script.js"></script>
+    <script>
+      // Initialize AOS
+      AOS.init({
+        duration: 800,
+        easing: 'ease-in-out',
+        once: true,
+        offset: 100
+      });
+
+      // Animate circular progress when it comes into view
+      document.addEventListener('DOMContentLoaded', function() {
+        const progressCircle = document.querySelector('.progress-ring-circle');
+        if (progressCircle) {
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                // Animate the progress circle
+                progressCircle.style.strokeDashoffset = '339.29'; // 40% progress
+                observer.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.5 });
+          
+          observer.observe(progressCircle);
+        }
+      });
+    </script>
    
   </body>
 </html>
