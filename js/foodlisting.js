@@ -6,7 +6,7 @@ class ShareBiteFoodListing {
         this.foodListings = [];
         this.filteredListings = [];
         this.currentFilter = 'all';
-        
+
         this.init();
         this.initTheme(); // add theme initialization after base init
     }
@@ -53,25 +53,25 @@ class ShareBiteFoodListing {
     setupEventListeners() {
         // Navigation
         this.setupNavigation();
-        
+
         // Role switching
         this.setupRoleSwitch();
-        
+
         // Modal functionality
         this.setupModal();
-        
+
         // Form handling
         this.setupFormHandling();
-        
+
         // Filtering and search
         this.setupFilteringAndSearch();
-        
+
         // Responsive navigation
         this.setupResponsiveNav();
-        
+
         // Statistics counter animation
         this.setupStatsAnimation();
-        
+
         // Scroll effects
         this.setupScrollEffects();
     }
@@ -102,11 +102,11 @@ class ShareBiteFoodListing {
     setupRoleSwitch() {
         const roleSwitch = document.getElementById('roleSwitch');
         const currentRoleSpan = document.getElementById('currentRole');
-        
+
         roleSwitch.addEventListener('click', () => {
             this.currentRole = this.currentRole === 'donor' ? 'collector' : 'donor';
             currentRoleSpan.textContent = this.currentRole.charAt(0).toUpperCase() + this.currentRole.slice(1);
-            
+
             // Update UI based on role
             this.updateUIForRole();
         });
@@ -116,7 +116,7 @@ class ShareBiteFoodListing {
         const donateBtn = document.getElementById('donateFood');
         const findBtn = document.getElementById('findFood');
         const addListingBtn = document.getElementById('addListingBtn');
-        
+
         if (this.currentRole === 'collector') {
             donateBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
             findBtn.innerHTML = '<i class="fas fa-heart"></i> Help Others';
@@ -128,198 +128,198 @@ class ShareBiteFoodListing {
         }
     }
 
-   setupModal() {
-    const modal = document.getElementById('addListingModal');
-    const addListingBtn = document.getElementById('addListingBtn');
-    const closeModalBtn = document.querySelector('.close-modal');
-    const cancelBtn = document.getElementById('cancelForm');
+    setupModal() {
+        const modal = document.getElementById('addListingModal');
+        const addListingBtn = document.getElementById('addListingBtn');
+        const closeModalBtn = document.querySelector('.close-modal');
+        const cancelBtn = document.getElementById('cancelForm');
 
-    this.currentStep = 1;
-    this.totalSteps = 3;
+        this.currentStep = 1;
+        this.totalSteps = 3;
 
-    addListingBtn.addEventListener('click', () => {
-        modal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-        this.resetFormSteps();
-    });
+        addListingBtn.addEventListener('click', () => {
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            this.resetFormSteps();
+        });
 
-    const closeModal = () => {
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-        this.resetForm();
-        this.resetFormSteps();
-    };
+        const closeModal = () => {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            this.resetForm();
+            this.resetFormSteps();
+        };
 
-    closeModalBtn.addEventListener('click', closeModal);
-    cancelBtn.addEventListener('click', closeModal);
-    
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeModal();
-        }
-    });
+        closeModalBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
 
-    this.setupFileUpload();
-    this.setupFormNavigation();
-}
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
 
-setupFormNavigation() {
-    const nextBtn = document.getElementById('nextStep');
-    const prevBtn = document.getElementById('prevStep');
-    const submitBtn = document.getElementById('submitForm');
-
-    nextBtn.addEventListener('click', () => {
-        if (this.validateCurrentStep()) {
-            this.goToStep(this.currentStep + 1);
-        }
-    });
-
-    prevBtn.addEventListener('click', () => {
-        this.goToStep(this.currentStep - 1);
-    });
-}
-
-goToStep(stepNumber) {
-    if (stepNumber < 1 || stepNumber > this.totalSteps) return;
-
-    document.querySelectorAll('.form-step').forEach(step => {
-        step.classList.remove('active');
-    });
-
-    const newStep = document.querySelector(`.form-step[data-step="${stepNumber}"]`);
-    if (newStep) {
-        newStep.classList.add('active');
+        this.setupFileUpload();
+        this.setupFormNavigation();
     }
 
-    this.updateProgress(stepNumber);
+    setupFormNavigation() {
+        const nextBtn = document.getElementById('nextStep');
+        const prevBtn = document.getElementById('prevStep');
+        const submitBtn = document.getElementById('submitForm');
 
-    this.updateNavigationButtons(stepNumber);
+        nextBtn.addEventListener('click', () => {
+            if (this.validateCurrentStep()) {
+                this.goToStep(this.currentStep + 1);
+            }
+        });
 
-    this.currentStep = stepNumber;
-}
+        prevBtn.addEventListener('click', () => {
+            this.goToStep(this.currentStep - 1);
+        });
+    }
 
-updateProgress(stepNumber) {
-    const steps = document.querySelectorAll('.progress-step');
-    
-    steps.forEach((step, index) => {
-        const stepNum = index + 1;
-        
-        if (stepNum < stepNumber) {
-            step.classList.add('completed');
+    goToStep(stepNumber) {
+        if (stepNumber < 1 || stepNumber > this.totalSteps) return;
+
+        document.querySelectorAll('.form-step').forEach(step => {
             step.classList.remove('active');
-        } else if (stepNum === stepNumber) {
-            step.classList.add('active');
-            step.classList.remove('completed');
-        } else {
-            step.classList.remove('active', 'completed');
+        });
+
+        const newStep = document.querySelector(`.form-step[data-step="${stepNumber}"]`);
+        if (newStep) {
+            newStep.classList.add('active');
         }
-    });
-}
 
-updateNavigationButtons(stepNumber) {
-    const nextBtn = document.getElementById('nextStep');
-    const prevBtn = document.getElementById('prevStep');
-    const submitBtn = document.getElementById('submitForm');
+        this.updateProgress(stepNumber);
 
-    prevBtn.style.display = stepNumber === 1 ? 'none' : 'flex';
-    nextBtn.style.display = stepNumber === this.totalSteps ? 'none' : 'flex';
-    submitBtn.style.display = stepNumber === this.totalSteps ? 'flex' : 'none';
-}
+        this.updateNavigationButtons(stepNumber);
 
-validateCurrentStep() {
-    const currentStepEl = document.querySelector(`.form-step[data-step="${this.currentStep}"]`);
-    const requiredInputs = currentStepEl.querySelectorAll('[required]');
-    
-    for (let input of requiredInputs) {
-        if (!input.value.trim()) {
-            input.focus();
-            this.showToast(`Please fill in the required field: ${input.previousElementSibling.textContent}`, 'error');
-            return false;
-        }
-    }
-    
-    return true;
-}
-
-resetFormSteps() {
-    this.currentStep = 1;
-    this.goToStep(1);
-}
-
-setupFileUpload() {
-    const fileInput = document.getElementById('photo');
-    const uploadArea = document.getElementById('photoUpload');
-    const imagePreview = document.getElementById('imagePreview');
-
-    uploadArea.addEventListener('click', () => {
-        fileInput.click();
-    });
-
-    uploadArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadArea.classList.add('drag-over');
-    });
-
-    uploadArea.addEventListener('dragleave', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('drag-over');
-    });
-
-    uploadArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('drag-over');
-        const files = e.dataTransfer.files;
-        if (files.length > 0 && files[0].type.startsWith('image/')) {
-            fileInput.files = files;
-            this.handleFileSelect(files[0]);
-        } else {
-            this.showToast('Please upload a valid image file', 'error');
-        }
-    });
-
-    fileInput.addEventListener('change', (e) => {
-        if (e.target.files.length > 0) {
-            this.handleFileSelect(e.target.files[0]);
-        }
-    });
-}
-
-handleFileSelect(file) {
-    const imagePreview = document.getElementById('imagePreview');
-    const uploadArea = document.getElementById('photoUpload');
-    
-    if (!file.type.startsWith('image/')) {
-        this.showToast('Please select an image file', 'error');
-        return;
+        this.currentStep = stepNumber;
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-        this.showToast('Image size should be less than 5MB', 'error');
-        return;
+    updateProgress(stepNumber) {
+        const steps = document.querySelectorAll('.progress-step');
+
+        steps.forEach((step, index) => {
+            const stepNum = index + 1;
+
+            if (stepNum < stepNumber) {
+                step.classList.add('completed');
+                step.classList.remove('active');
+            } else if (stepNum === stepNumber) {
+                step.classList.add('active');
+                step.classList.remove('completed');
+            } else {
+                step.classList.remove('active', 'completed');
+            }
+        });
     }
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        imagePreview.innerHTML = `
+    updateNavigationButtons(stepNumber) {
+        const nextBtn = document.getElementById('nextStep');
+        const prevBtn = document.getElementById('prevStep');
+        const submitBtn = document.getElementById('submitForm');
+
+        prevBtn.style.display = stepNumber === 1 ? 'none' : 'flex';
+        nextBtn.style.display = stepNumber === this.totalSteps ? 'none' : 'flex';
+        submitBtn.style.display = stepNumber === this.totalSteps ? 'flex' : 'none';
+    }
+
+    validateCurrentStep() {
+        const currentStepEl = document.querySelector(`.form-step[data-step="${this.currentStep}"]`);
+        const requiredInputs = currentStepEl.querySelectorAll('[required]');
+
+        for (let input of requiredInputs) {
+            if (!input.value.trim()) {
+                input.focus();
+                this.showToast(`Please fill in the required field: ${input.previousElementSibling.textContent}`, 'error');
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    resetFormSteps() {
+        this.currentStep = 1;
+        this.goToStep(1);
+    }
+
+    setupFileUpload() {
+        const fileInput = document.getElementById('photo');
+        const uploadArea = document.getElementById('photoUpload');
+        const imagePreview = document.getElementById('imagePreview');
+
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('drag-over');
+        });
+
+        uploadArea.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('drag-over');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('drag-over');
+            const files = e.dataTransfer.files;
+            if (files.length > 0 && files[0].type.startsWith('image/')) {
+                fileInput.files = files;
+                this.handleFileSelect(files[0]);
+            } else {
+                this.showToast('Please upload a valid image file', 'error');
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                this.handleFileSelect(e.target.files[0]);
+            }
+        });
+    }
+
+    handleFileSelect(file) {
+        const imagePreview = document.getElementById('imagePreview');
+        const uploadArea = document.getElementById('photoUpload');
+
+        if (!file.type.startsWith('image/')) {
+            this.showToast('Please select an image file', 'error');
+            return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+            this.showToast('Image size should be less than 5MB', 'error');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            imagePreview.innerHTML = `
             <img src="${e.target.result}" alt="Food preview">
             <button type="button" class="remove-image">
                 <i class="fas fa-times"></i>
             </button>
         `;
-        imagePreview.classList.add('active');
-        uploadArea.style.display = 'none';
+            imagePreview.classList.add('active');
+            uploadArea.style.display = 'none';
 
-        // Add remove functionality
-        const removeBtn = imagePreview.querySelector('.remove-image');
-        removeBtn.addEventListener('click', () => {
-            imagePreview.innerHTML = '';
-            imagePreview.classList.remove('active');
-            uploadArea.style.display = 'block';
-            document.getElementById('photo').value = '';
-        });
-    };
-    reader.readAsDataURL(file);
-}
+            // Add remove functionality
+            const removeBtn = imagePreview.querySelector('.remove-image');
+            removeBtn.addEventListener('click', () => {
+                imagePreview.innerHTML = '';
+                imagePreview.classList.remove('active');
+                uploadArea.style.display = 'block';
+                document.getElementById('photo').value = '';
+            });
+        };
+        reader.readAsDataURL(file);
+    }
 
     handleFileSelect(file) {
         const uploadArea = document.getElementById('photoUpload');
@@ -333,7 +333,7 @@ handleFileSelect(file) {
 
     setupFormHandling() {
         const form = document.getElementById('listingForm');
-        
+
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             this.handleFormSubmission();
@@ -347,7 +347,7 @@ handleFileSelect(file) {
 
     handleFormSubmission() {
         const formData = this.getFormData();
-        
+
         if (this.validateFormData(formData)) {
             this.addNewListing(formData);
             this.showSuccessMessage();
@@ -374,20 +374,20 @@ handleFileSelect(file) {
 
     validateFormData(data) {
         const requiredFields = ['foodType', 'quantity', 'category', 'freshUntil', 'pickupTime', 'location', 'contact'];
-        
+
         for (let field of requiredFields) {
             if (!data[field] || data[field].trim() === '') {
                 this.showErrorMessage(`Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}.`);
                 return false;
             }
         }
-        
+
         const freshDate = new Date(data.freshUntil);
         if (freshDate <= new Date()) {
             this.showErrorMessage('Fresh until date must be in the future.');
             return false;
         }
-        
+
         return true;
     }
 
@@ -412,7 +412,7 @@ handleFileSelect(file) {
             <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
             <span>${message}</span>
         `;
-        
+
         // Add toast styles
         toast.style.cssText = `
             position: fixed;
@@ -429,9 +429,9 @@ handleFileSelect(file) {
             animation: slideInRight 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
             box-shadow: var(--shadow-heavy);
         `;
-        
+
         document.body.appendChild(toast);
-        
+
         setTimeout(() => {
             if (toast.parentNode) {
                 toast.parentNode.removeChild(toast);
@@ -451,7 +451,7 @@ handleFileSelect(file) {
             <i class="fas fa-cloud-upload-alt"></i>
             <span>Click to upload or drag and drop</span>
         `;
-        
+
         // Reset minimum date
         const freshUntilInput = document.getElementById('freshUntil');
         const now = new Date();
@@ -462,17 +462,17 @@ handleFileSelect(file) {
     setupFilteringAndSearch() {
         const filterBtns = document.querySelectorAll('.filter-btn');
         const searchInput = document.querySelector('.search-box input');
-        
+
         filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 // Remove active class from all buttons
                 filterBtns.forEach(b => b.classList.remove('active'));
                 // Add active class to clicked button
                 btn.classList.add('active');
-                
+
                 // Set current filter
                 this.currentFilter = btn.getAttribute('data-filter');
-                
+
                 // Filter and render listings
                 this.filterListings();
                 this.renderFoodListings();
@@ -493,11 +493,11 @@ handleFileSelect(file) {
     filterListings() {
         this.filteredListings = this.foodListings.filter(listing => {
             const matchesFilter = this.currentFilter === 'all' || listing.category === this.currentFilter;
-            const matchesSearch = !this.searchQuery || 
+            const matchesSearch = !this.searchQuery ||
                 listing.foodType.toLowerCase().includes(this.searchQuery) ||
                 listing.location.toLowerCase().includes(this.searchQuery) ||
                 listing.description.toLowerCase().includes(this.searchQuery);
-            
+
             return matchesFilter && matchesSearch;
         });
     }
@@ -505,7 +505,7 @@ handleFileSelect(file) {
     setupResponsiveNav() {
         const hamburger = document.querySelector('.hamburger');
         const navMenu = document.querySelector('.nav-menu');
-        
+
         hamburger.addEventListener('click', () => {
             hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
@@ -515,16 +515,16 @@ handleFileSelect(file) {
     setupStatsAnimation() {
         const stats = document.querySelectorAll('.stat-number');
         let animated = false;
-        
+
         const animateStats = () => {
             if (animated) return;
-            
+
             stats.forEach(stat => {
                 const target = parseInt(stat.getAttribute('data-count'));
                 const duration = 2000;
                 const increment = target / (duration / 16);
                 let current = 0;
-                
+
                 const updateStat = () => {
                     current += increment;
                     if (current < target) {
@@ -534,13 +534,13 @@ handleFileSelect(file) {
                         stat.textContent = target;
                     }
                 };
-                
+
                 updateStat();
             });
-            
+
             animated = true;
         };
-        
+
         // Trigger animation when hero section is in view
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -549,7 +549,7 @@ handleFileSelect(file) {
                 }
             });
         });
-        
+
         const heroStats = document.querySelector('.hero-stats');
         if (heroStats) {
             observer.observe(heroStats);
@@ -568,7 +568,7 @@ handleFileSelect(file) {
                 navbar.style.boxShadow = 'none';
             }
         });
-        
+
         // Animate elements on scroll
         this.setupScrollAnimations();
     }
@@ -578,7 +578,7 @@ handleFileSelect(file) {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
         };
-        
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -586,7 +586,7 @@ handleFileSelect(file) {
                 }
             });
         }, observerOptions);
-        
+
         // Observe elements to animate
         const elementsToAnimate = document.querySelectorAll('.feature-card, .food-card, .impact-item');
         elementsToAnimate.forEach(el => {
@@ -689,16 +689,29 @@ handleFileSelect(file) {
             },
             {
                 id: 8,
-                foodType: "Assorted Muffins",
-                quantity: "24 muffins",
-                category: "bakery",
-                description: "Freshly baked muffins with various flavors - blueberry, chocolate chip, and bran.",
+                foodType: "Fresh Fruit Salad",
+                quantity: "6 large portions",
+                category: "household",
+                description: "Assorted seasonal fruits prepared fresh. Includes apples, berries, grapes, and melon.",
                 freshUntil: this.getRandomFutureDate(),
-                pickupTime: "19:00",
-                location: "Sunrise Bakery, Oak Avenue",
-                contact: "+1 234-567-8901",
-                createdAt: new Date(Date.now() - 1800000),
-                donor: "Sunrise Bakery"
+                pickupTime: "18:00",
+                location: "Harvest Lane Residence",
+                contact: "+1 234-567-8906",
+                createdAt: new Date(Date.now() - 1200000),
+                donor: "Local Family"
+            },
+            {
+                id: 9,
+                foodType: "Vegetable Stir Fry",
+                quantity: "5 portions",
+                category: "household",
+                description: "Fresh vegetable stir fry with tofu and soy sauce. Perfect for a healthy meal.",
+                freshUntil: this.getRandomFutureDate(),
+                pickupTime: "19:30",
+                location: "Maple Street Apartment",
+                contact: "+1 234-567-8907",
+                createdAt: new Date(Date.now() - 600000),
+                donor: "Community Member"
             }
         ];
         
@@ -715,7 +728,7 @@ handleFileSelect(file) {
 
     renderFoodListings() {
         const foodGrid = document.getElementById('fullfoodGrid');
-        
+
         if (this.filteredListings.length === 0) {
             foodGrid.innerHTML = `
                 <div class="no-listings">
@@ -726,9 +739,9 @@ handleFileSelect(file) {
             `;
             return;
         }
-        
+
         foodGrid.innerHTML = this.filteredListings.map(listing => this.createFoodCard(listing)).join('');
-        
+
         // Add event listeners to food cards
         this.setupFoodCardInteractions();
     }
@@ -737,7 +750,7 @@ handleFileSelect(file) {
         const timeAgo = this.getTimeAgo(listing.createdAt);
         const freshUntil = this.formatDateTime(listing.freshUntil);
         const pickupTime = this.formatTime(listing.pickupTime);
-        
+
         return `
             <div class="food-card" data-id="${listing.id}">
                 <div class="food-image">
@@ -785,7 +798,7 @@ handleFileSelect(file) {
                 this.handleClaimFood(listingId);
             });
         });
-        
+
         // Contact buttons
         const contactBtns = document.querySelectorAll('.contact-btn');
         contactBtns.forEach(btn => {
@@ -799,23 +812,23 @@ handleFileSelect(file) {
     handleClaimFood(listingId) {
         const listing = this.foodListings.find(l => l.id === listingId);
         if (!listing) return;
-        
+
         // Show confirmation dialog
         const confirmed = confirm(`Claim "${listing.foodType}" from ${listing.donor}?
 
 Pickup: ${listing.location}
 Time: ${this.formatTime(listing.pickupTime)}
 Contact: ${listing.contact}`);
-        
+
         if (confirmed) {
             // Remove listing from available items
             this.foodListings = this.foodListings.filter(l => l.id !== listingId);
             this.filterListings();
             this.renderFoodListings();
-            
+
             // Show success message
             this.showToast(`Successfully claimed "${listing.foodType}"! Check your email for pickup details.`, 'success');
-            
+
             // Animate removal
             const card = document.querySelector(`[data-id="${listingId}"]`);
             if (card) {
@@ -862,7 +875,7 @@ Contact: ${listing.contact}`);
         const diff = now - date;
         const minutes = Math.floor(diff / 60000);
         const hours = Math.floor(minutes / 60);
-        
+
         if (minutes < 60) {
             return `${minutes}m ago`;
         } else if (hours < 24) {
@@ -878,7 +891,7 @@ Contact: ${listing.contact}`);
         const now = new Date();
         const diff = date - now;
         const hours = Math.floor(diff / (1000 * 60 * 60));
-        
+
         if (hours < 24) {
             return `${hours}h left`;
         } else {
@@ -900,10 +913,10 @@ Contact: ${listing.contact}`);
         featureCards.forEach((card, index) => {
             card.style.animationDelay = `${index * 0.2}s`;
         });
-        
+
         // Add floating animation to hero elements
         this.startFloatingAnimations();
-        
+
         // Add periodic pulse to CTA buttons
         this.startButtonPulse();
     }
@@ -1051,7 +1064,7 @@ if ('serviceWorker' in navigator) {
 window.ShareBiteFoodListing = ShareBiteFoodListing;
 
 // Clear caches and trigger SW skipWaiting for debugging updates
-window.clearShareBiteCaches = async function() {
+window.clearShareBiteCaches = async function () {
     if ('caches' in window) {
         const keys = await caches.keys();
         await Promise.all(keys.map(k => caches.delete(k)));
