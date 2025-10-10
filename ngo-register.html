@@ -10,37 +10,35 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
-
-    <!-- INLINE STYLES FOR REGISTRATION FORM AND TOGGLE SWITCH -->
     <style>
-        /* Base Variables - Using theme colors from :root in style.css */
-        :root {
-            /* General Theme Variables used for consistency with site colors */
-            --primary-color: #4CAF50;
-            --secondary-color: #FF6B35;
-            --accent-color: #FFC107;
-            --white: #FFFFFF;
-            --light-gray: #F5F7FA;
-            --medium-gray: #9E9E9E;
-            --dark-gray: #424242;
-            --black: #212121;
-            --card-radius: 16px;
-            --border-radius: 12px;
-            --shadow-medium: 0 5px 25px rgba(0, 0, 0, 0.15);
-            --primary-gradient: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
-        }
-
         /* --- Dark Mode Variables Overrides (Copied from style.css :root.dark) --- */
-        :root.dark {
-            --white: #121212;
-            --light-gray: #1E1E1E;
-            --medium-gray: #B0B0B0;
-            --dark-gray: #E0E0E0;
-            --black: #FAFAFA;
-            --shadow-medium: 0 5px 25px rgba(0, 0, 0, 0.7);
+        :root {
+            --primary-green: #4CAF50;
+            --secondary-orange: #FF6B35;
+            --accent-yellow: #FFC107;
+            /* Light Mode */
+            --bg-gradient-start-light: #E9E3FF;
+            --bg-gradient-end-light: #F7F5FF;
+            --card-bg-light: #ffffff;
+            --text-color-light: #333;
+            --subtext-color-light: #555;
+            --input-bg-light: #fdfdfd;
+            --input-border-light: #ddd;
+            /* Dark Mode */
+            --bg-gradient-start-dark: #1C1C1C;
+            --bg-gradient-end-dark: #2C2C2C;
+            --card-bg-dark: #2E2E2E;
+            --text-color-dark: #f1f1f1;
+            --subtext-color-dark: #aaa;
+            --input-bg-dark: #3a3a3a;
+            --input-border-dark: #444;
         }
 
-        /* Main Content Wrapper - Centers the form below the navbar */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         .register-page-content {
             /* Adjust padding for the fixed navbar */
             padding: 80px 0 50px; 
@@ -191,11 +189,23 @@
             transition: color 0.3s;
         }
 
-        /* Adjustments for password fields to align toggle */
         #password-group .toggle-password,
         #confirm-password-group .toggle-password {
             top: 72%;
         }
+
+        .btn {
+            width: 100%;
+            padding: 0.9rem;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;   
+            text-align: center;
+        } 
 
         .toggle-password:hover {
             color: var(--primary-color);
@@ -219,6 +229,7 @@
             background-color: #45a049;
             transform: translateY(-3px);
             box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            text-align: center;
         }
 
         .login-link {
@@ -233,7 +244,6 @@
             text-decoration: underline;
         }
 
-        /* Utility Class for form fields */
         .volunteer-field {
             display: none;
         }
@@ -242,7 +252,7 @@
 
 <body>
 
-    <!-- Navigation (Copied from index (1).html) -->
+    <!-- Navigation (Copied from index.html) -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
@@ -259,7 +269,6 @@
                 <li><a href="index.html#contact-section" class="nav-link">Contact</a></li>
             </ul>
             <div class="user-actions">
-                <!-- Dark mode toggle - ID must be consistent with logic below -->
                 <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
                     <i class="fas fa-moon"></i>
                 </button>
@@ -307,7 +316,6 @@
             <!-- End Toggle Switch -->
 
             <form id="registerForm">
-                <!-- Hidden field to track registration type -->
                 <input type="hidden" id="registerType" name="registerType" value="ngo">
 
                 <!-- NGO Fields -->
@@ -339,7 +347,6 @@
                     <input type="tel" id="phone" name="phone" placeholder="Enter phone number" required>
                 </div>
 
-                <!-- Address is critical for both -->
                 <div class="form-group">
                     <label for="address">Address / Location</label>
                     <input type="text" id="address" name="address" placeholder="Enter address or main area of operation" required>
@@ -392,7 +399,7 @@
     </section>
     <!-- End Main Register Content Area -->
 
-    <!-- Footer (Copied from index (1).html) -->
+    <!-- Footer (Copied from index.html) -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
@@ -425,7 +432,7 @@
                 <div class="footer-section">
                     <h4>For Donors</h4>
                     <ul>
-                        <li><a href="#">List Food</a></li>
+                        <li><a href="foodlisting.html">List Food</a></li>
                         <li><a href="#">Donor Guidelines</a></li>
                         <li><a href="#">Track Impact</a></li>
                         <li><a href="support.html">Support</a></li>
@@ -454,7 +461,7 @@
     </footer>
     <!-- End Footer -->
 
-    <!-- Loading Overlay (Copied from index (1).html) -->
+    <!-- Loading Overlay Copied from index.html -->
     <div class="loading-overlay" id="loadingOverlay" style="display: none;">
         <div class="loading-spinner">
             <div class="spinner"></div>
@@ -462,12 +469,12 @@
         </div>
     </div>
 
-    <!-- Scroll to Top Button (Copied from index (1).html) -->
+    <!-- Scroll to Top Button (Copied from index.html) -->
     <button id="scrollToTopBtn" title="Go to top" style="display: none;">
         <i class="fas fa-arrow-up"></i>
     </button>
     
-    <!-- Font Awesome (Copied from index (1).html) -->
+    <!-- Font Awesome (Copied from index.html) -->
     <script src="https://kit.fontawesome.com/a2e0e9c5b2.js" crossorigin="anonymous"></script>
 
     <!-- WORKING THEME TOGGLE LOGIC - IMPLEMENTED INLINE -->
@@ -476,31 +483,26 @@
         const themeToggle = document.getElementById('themeToggle');
         const rootElement = document.documentElement;
         
-        // Function to apply the current theme based on the class 'dark' on the root element
         function applyTheme(theme) {
             if (theme === 'dark') {
                 rootElement.classList.add('dark');
-                // Update icon to sun (light mode icon) when dark mode is active
                 if (themeToggle) {
                     themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
                 }
             } else {
                 rootElement.classList.remove('dark');
-                // Update icon to moon (dark mode icon) when light mode is active
                  if (themeToggle) {
                     themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
                 }
             }
         }
 
-        // Set initial theme on load
         document.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('theme');
             
             if (savedTheme) {
                 applyTheme(savedTheme);
             } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                // Check for OS preference if no saved theme
                 applyTheme('dark');
             } else {
                 applyTheme('light');
