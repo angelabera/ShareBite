@@ -1287,43 +1287,6 @@ function addDynamicStyles() {
             margin-bottom: 0.5rem;
             color: var(--dark-gray);
         }
-        
-        /* Hamburger menu animation */
-        .hamburger.active span:nth-child(1) {
-            transform: rotate(-45deg) translate(-5px, 6px);
-        }
-        
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
-        }
-        
-        .hamburger.active span:nth-child(3) {
-            transform: rotate(45deg) translate(-5px, -6px);
-        }
-        
-        /* Mobile menu styles */
-        @media (max-width: 768px) {
-            .nav-menu.active {
-                display: flex;
-                position: fixed;
-                top: 70px;
-                left: 0;
-                width: 100%;
-                height: calc(100vh - 70px);
-                background: rgba(255, 255, 255, 0.98);
-                flex-direction: column;
-                justify-content: flex-start;
-                align-items: center;
-                padding-top: 2rem;
-                backdrop-filter: blur(10px);
-                animation: slideInUp 0.3s ease;
-            }
-            
-            .nav-menu.active .nav-link {
-                margin: 1rem 0;
-                font-size: 1.2rem;
-            }
-        }
     `;
     document.head.appendChild(style);
 }
