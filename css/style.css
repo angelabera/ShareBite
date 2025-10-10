@@ -3072,32 +3072,35 @@ body.dark-mode .divider-icon {
     left: 100%;
 }
 
-/* Dark mode support for notifications */
+/* Dark mode support for notifications: use stronger, near-opaque backgrounds for readability */
 body.dark-mode .notification-panel {
-    background: var(--card-bg-dark);
-    border-color: var(--input-border-dark);
+    background: rgba(18, 18, 18, 0.96); /* nearly opaque dark panel */
+    border: 1px solid rgba(255,255,255,0.04);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 4px 12px rgba(0,0,0,0.5);
 }
 
 body.dark-mode .notification-header {
-    background: var(--input-bg-dark);
-    color: var(--text-color-dark);
-    border-color: var(--input-border-dark);
+    background: linear-gradient(135deg, rgba(34,139,34,0.95), rgba(37,150,42,0.95));
+    color: #ffffff;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
 }
 
 body.dark-mode .notification-item {
-    border-color: var(--input-border-dark);
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    background: transparent; /* panel provides the base color */
 }
 
 body.dark-mode .notification-item:hover {
-    background: var(--input-bg-dark);
+    background: rgba(255,255,255,0.02); /* subtle visible hover */
+    transform: translateX(4px);
 }
 
 body.dark-mode .notification-bell {
-    color: var(--text-color-dark);
+    color: #e6e6e6;
 }
 
 body.dark-mode .notification-bell:hover {
-    background: rgba(255, 107, 53, 0.1);
+    background: rgba(255, 107, 53, 0.12);
     color: var(--accent-color);
 }
 
