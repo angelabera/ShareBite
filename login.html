@@ -292,7 +292,7 @@
     <div class="auth-container">
         <h1>Welcome Back to ShareBite</h1>
         <p class="subtitle">Log in to continue your journey with us.</p>
-        <form id="loginForm">
+        <form id="loginForm" action="/login" method="POST">>
             <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" placeholder="Enter your email" required>
@@ -334,7 +334,7 @@
         // --- Form Submission ---
         const loginForm = document.getElementById('loginForm');
 
-        loginForm.addEventListener('submit', (e) => {
+        loginForm.addEventListener('submit', async(e) => {
             e.preventDefault();
 
             // Get form values
@@ -346,16 +346,48 @@
                 return;
             }
 
-            // Show success message
-            alert("login successfully!");
+            
 
-            // Redirect to index.html after short delay (so alert can be seen)
-            setTimeout(() => {
-                window.location.href = "index.html";
-            }, 500); // 0.5 second delay
+            try {
+        const res = await fetch("http://localhost:3000/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: 'include',
+            body: JSON.stringify({ email, password }),
         });
+
+        if (!res.ok) {
+            const data = await res.json();
+            alert("Login failed: " + (data.message || "Unknown error"));
+            return;
+        }
+
+        const data = await res.json();
+
+        alert("Login successful!");
+        window.location.href = "http://localhost:3000/";
+
+    } catch (err) {
+        console.error("Error:", err);
+        alert("Error connecting to server. Make sure the server is running on port 3000.");
+    }
+});
+
+
+
+    const password = document.getElementById("password");
+    const show_pwd = document.getElementById("show-pwd");
+    function passwordToggle(){
+        if (show_pwd.checked){
+            password.type = "text";
+        }else{
+            password.type = "password";
+        }
+    }
+    show_pwd.addEventListener("change",passwordToggle);
+
         
-        // ## THIS BROKEN SECTION HAS BEEN REMOVED ##
+        
 
     </script>
 

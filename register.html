@@ -393,90 +393,87 @@
     <script>
       // --- Password Visibility Toggle ---
       const togglePassword = document.getElementById("togglePassword");
-      const passwordInput = document.getElementById("password");
-      const toggleConfirmPassword = document.getElementById(
-        "toggleConfirmPassword"
-      );
-      const confirmPasswordInput = document.getElementById("confirmPassword");
+  const passwordInput = document.getElementById("password");
+  const toggleConfirmPassword = document.getElementById("toggleConfirmPassword");
+  const confirmPasswordInput = document.getElementById("confirmPassword");
 
-      const eyeIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
-      const eyeOffIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
+  const eyeIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+  const eyeOffIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
 
-      let passwordVisible = false;
+  let passwordVisible = false;
+  togglePassword.addEventListener("click", () => {
+    passwordVisible = !passwordVisible;
+    passwordInput.type = passwordVisible ? "text" : "password";
+    togglePassword.innerHTML = passwordVisible ? eyeOffIcon : eyeIcon;
+    togglePassword.title = passwordVisible ? "Hide Password" : "Show Password";
+  });
 
-      togglePassword.addEventListener("click", () => {
-        passwordVisible = !passwordVisible;
-        passwordInput.type = passwordVisible ? "text" : "password";
-        togglePassword.innerHTML = passwordVisible ? eyeOffIcon : eyeIcon;
-        togglePassword.title = passwordVisible
-          ? "Hide Password"
-          : "Show Password";
+  let confirmPasswordVisible = false;
+  toggleConfirmPassword.addEventListener("click", () => {
+    confirmPasswordVisible = !confirmPasswordVisible;
+    confirmPasswordInput.type = confirmPasswordVisible ? "text" : "password";
+    toggleConfirmPassword.innerHTML = confirmPasswordVisible ? eyeOffIcon : eyeIcon;
+    toggleConfirmPassword.title = confirmPasswordVisible ? "Hide Password" : "Show Password";
+  });
+
+  // --- Form Submission ---
+  const registerForm = document.getElementById("registerForm");
+
+  registerForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    // Get form values
+    const name = registerForm.name.value.trim();
+    const email = registerForm.email.value.trim();
+    const password = registerForm.password.value.trim();
+    const confirmPassword = registerForm.confirmPassword.value.trim();
+    const role = registerForm.role.value;
+
+    // Check if all fields are filled
+    if (!name || !email || !password || !role) {
+      alert("Please fill in all fields before registering.");
+      return;
+    }
+
+    // Password match validation
+    if (password !== confirmPassword) {
+      alert("Passwords do not match. Please re-enter.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:3000/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password, role }),
       });
 
-      let confirmPasswordVisible = false;
 
-      toggleConfirmPassword.addEventListener("click", () => {
-        confirmPasswordVisible = !confirmPasswordVisible;
-        confirmPasswordInput.type = confirmPasswordVisible
-          ? "text"
-          : "password";
-        toggleConfirmPassword.innerHTML = confirmPasswordVisible
-          ? eyeOffIcon
-          : eyeIcon;
-        toggleConfirmPassword.title = confirmPasswordVisible
-          ? "Hide Password"
-          : "Show Password";
-      });
-
-      // --- Form Submission ---
-      const registerForm = document.getElementById("registerForm");
-
-      registerForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        // Get form values
-        const fullName = registerForm.name.value.trim();
-        const email = registerForm.email.value.trim();
-        const password = registerForm.password.value.trim();
-        const confirmPassword = registerForm.confirmPassword.value.trim();
-        const role = registerForm.role.value;
-
-        if (!fullName || !email || !password || !role) {
-          alert("Please fill in all fields before registering.");
-          return;
-        }
-
-        // Password match validation
-        if (password !== confirmPassword) {
-          alert("Passwords do not match. Please re-enter.");
-          return;
-        }
-
-        // Store user data
-        localStorage.setItem('user', JSON.stringify({
-            name: fullName,
-            email: email,
-            role: role
-        }));
+      if (response.ok) {
+        // Store user data locally (optional)
+        localStorage.setItem(
+          "user",
+          JSON.stringify({ name, email, role })
+        );
 
         // Show success message
         alert("Registered successfully!");
 
-        // Redirect to index.html after short delay (so alert can be seen)
-        setTimeout(() => {
-          window.location.href = "index.html";
-        }, 500); // 0.5 second delay
-      });
-      const password = document.getElementById("password");
-      const show_pwd = document.getElementById("show-pwd");
-      function passwordToggle() {
-        if (show_pwd.checked) {
-          password.type = "text";
-        } else {
-          password.type = "password";
-        }
+        
+      
+      
+
+      window.location.href = "index.html";
+      } else {
+        const errorData = await response.json();
+        alert("Registration failed: " + (errorData.message || "Unknown error"));
       }
-      show_pwd.addEventListener("change", passwordToggle);
+
+      } catch (error) {
+      console.error(error);
+      alert("Error connecting to server");
+    }
+  });
     </script>
   </body>
 </html>

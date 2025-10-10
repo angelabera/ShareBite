@@ -45,29 +45,33 @@
             </ul>
             <div class="user-actions">
                 <!-- Added dark mode toggle -->
-                <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
-                    <i class="fas fa-moon"></i>
-                </button>
-                
-                <!-- Notification Bell -->
-                <div class="notification-bell" id="notificationBell" style="display: none;">
-                    <i class="fas fa-bell"></i>
-                    <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
-                    <div class="notification-panel" id="notificationPanel">
-                        <div class="notification-header">Claimed Food Items</div>
-                        <div id="notificationList">
-                             <div class="no-notifications">No claimed items yet</div>
-                        </div>
-                    </div>
-                </div>
+                 <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+        <i class="fas fa-moon"></i>
+    </button>
 
-                <button class="role-switch" id="roleSwitch">
-                    <i class="fas fa-exchange-alt"></i>
-                    <span id="currentRole">Donor</span>
-                </button>
-                <button class="login-btn" onclick="window.location.href='login.html'">Login as User</button>
-                 <button class="login-btn" onclick="window.location.href='login_ngo.html'">Login as NGO</button>
+    <div class="notification-bell" id="notificationBell" style="display: none;">
+        <i class="fas fa-bell"></i>
+        <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+        <div class="notification-panel" id="notificationPanel">
+            <div class="notification-header">Claimed Food Items</div>
+            <div id="notificationList">
+                 <div class="no-notifications">No claimed items yet</div>
             </div>
+        </div>
+    </div>
+
+    <button class="role-switch" id="roleSwitch">
+        <i class="fas fa-exchange-alt"></i>
+        <span id="currentRole">Donor</span>
+    </button>
+
+    <button class="login-btn" onclick="window.location.href='login.html'">
+        <i class="fas fa-user"></i> Login as User
+    </button>
+    <button class="login-btn" onclick="window.location.href='login_ngo.html'">
+        <i class="fas fa-building"></i> Login as NGO
+    </button>
+</div>
             <div id="toast" class="toast"></div>
             <div class="hamburger">
                 <span></span>
@@ -999,7 +1003,7 @@
   <i class="fas fa-arrow-up"></i>
 </button>
 
-
+    <script src="js/auth.js"></script>
     <script src="js/theme.js"></script>
     <script src="js/script.js"></script>
    
