@@ -125,27 +125,35 @@ body {
     text-decoration: none;
     color: var(--black);
     font-weight: 500;
-    transition: var(--transition-fast);
     position: relative;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-block;
 }
 
 .nav-link:hover {
-    color: var(--primary-color);
+    color: white;
+    background: var(--primary-gradient);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
 }
 
 .nav-link::after {
     content: '';
     position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 0;
+    bottom: 0.25rem;
+    left: 1rem;
+    right: 1rem;
     height: 2px;
-    background: var(--primary-gradient);
-    transition: var(--transition-medium);
+    background: var(--accent-color);
+    transform: scaleX(0);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 1px;
 }
 
 .nav-link:hover::after {
-    width: 100%;
+    transform: scaleX(1);
 }
 
 .user-actions {
@@ -1342,33 +1350,53 @@ body {
 .footer-section ul li a {
     color: var(--medium-gray);
     text-decoration: none;
-    transition: var(--transition-fast);
+    position: relative;
+    display: inline-block;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 500;
 }
 
-.footer-section ul li a {
-    color: inherit; /* Default text color */
-    text-decoration: none;
-    position: relative; /* Needed for the pseudo-element underline */
-    transition: color 0.3s ease; /* Smooth text color transition */
+.footer-section ul li a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    border-radius: 6px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
 }
 
 .footer-section ul li a::after {
     content: '';
     position: absolute;
-    left: 0;
-    bottom: -2px; /* Distance of underline from text */
-    width: 0;
-    height: 2px; /* Thickness of underline */
-    background-color: orange; /* Underline color */
-    transition: width 0.3s ease;
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0.25rem;
+    height: 2px;
+    background: var(--primary-color);
+    transform: scaleX(0);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 1px;
 }
 
 .footer-section ul li a:hover {
-    color: orange; /* Text color on hover */
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.footer-section ul li a:hover::before {
+    opacity: 1;
 }
 
 .footer-section ul li a:hover::after {
-    width: 100%; /* Expand underline on hover */
+    transform: scaleX(1);
 }
 
 
