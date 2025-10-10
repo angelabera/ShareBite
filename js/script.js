@@ -11,14 +11,13 @@ class ShareBite {
         
         this.init();
         this.initTheme(); // add theme initialization after base init
-    }
-
-    init() {
+    }    init() {
         this.setupEventListeners();
         this.generateSampleListings();
         this.renderFoodListings();
         this.setupNotificationSystem();
         this.updateNotificationDisplay();
+        this.checkLoginStatus();
         this.startAnimations();
         this.hideLoadingOverlay();
     }
@@ -570,15 +569,67 @@ handleFileSelect(file) {
         scrollIndicator.addEventListener('click', () => {
             document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
         });
-    }
-
-    setupResponsiveNav() {
+    }    setupResponsiveNav() {
         const hamburger = document.querySelector('.hamburger');
         const navMenu = document.querySelector('.nav-menu');
+        const mobileMenuOverlay = document.querySelector('.mobile-menu-overlay');
+        const userActions = document.querySelector('.user-actions');
         
-        hamburger.addEventListener('click', () => {
+        if (!hamburger || !navMenu) return;
+        
+        const toggleMobileMenu = () => {
+            const isActive = hamburger.classList.contains('active');
+            
             hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
+            
+            if (mobileMenuOverlay) {
+                mobileMenuOverlay.classList.toggle('active');
+            }
+            
+            // Show/hide user actions in mobile
+            if (userActions) {
+                if (navMenu.classList.contains('active')) {
+                    userActions.classList.add('mobile-visible');
+                } else {
+                    userActions.classList.remove('mobile-visible');
+                }
+            }
+            
+            // Prevent body scroll when menu is open
+            document.body.style.overflow = isActive ? 'auto' : 'hidden';
+        };
+        
+        hamburger.addEventListener('click', toggleMobileMenu);
+        
+        // Close menu when clicking overlay
+        if (mobileMenuOverlay) {
+            mobileMenuOverlay.addEventListener('click', toggleMobileMenu);
+        }
+        
+        // Close menu when clicking nav links
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (navMenu.classList.contains('active')) {
+                    toggleMobileMenu();
+                }
+            });
+        });
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768 && navMenu.classList.contains('active')) {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+                if (mobileMenuOverlay) {
+                    mobileMenuOverlay.classList.remove('active');
+                }
+                if (userActions) {
+                    userActions.classList.remove('mobile-visible');
+                }
+                document.body.style.overflow = 'auto';
+            }
         });
     }
 
@@ -1297,13 +1348,79 @@ Contact information has been copied to clipboard.
             alert(details);
         });
     }
-    
-    clearAllNotifications() {
+      clearAllNotifications() {
         this.notifications = [];
         this.claimedItems = [];
         this.saveNotifications();
         this.saveClaimedItems();
         this.updateNotificationDisplay();
+    }
+
+    // Authentication methods
+    checkLoginStatus() {
+        const user = this.getLoggedInUser();
+        const loginButtons = document.querySelectorAll('.login-btn');
+        
+        if (user) {
+            // User is logged in, hide login buttons
+            loginButtons.forEach(btn => {
+                btn.style.display = 'none';
+            });
+            
+            // Show welcome message or user name in navigation
+            this.showUserInfo(user);
+        } else {
+            // User is not logged in, show login buttons
+            loginButtons.forEach(btn => {
+                btn.style.display = 'block';
+            });
+        }
+    }
+
+    getLoggedInUser() {
+        const userString = localStorage.getItem('user');
+        return userString ? JSON.parse(userString) : null;
+    }
+
+    showUserInfo(user) {
+        // Create a user info element to replace login buttons
+        const userActions = document.querySelector('.user-actions');
+        let userInfo = document.querySelector('.user-info');
+        
+        if (!userInfo) {
+            userInfo = document.createElement('div');
+            userInfo.className = 'user-info';
+            userInfo.innerHTML = `
+                <span class="welcome-text">Welcome, ${user.name}!</span>                <button class="logout-btn" onclick="window.shareBite.handleLogout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            `;
+            
+            // Insert after the role switch button
+            const roleSwitch = document.getElementById('roleSwitch');
+            if (roleSwitch) {
+                roleSwitch.parentNode.insertBefore(userInfo, roleSwitch.nextSibling);
+            } else {
+                userActions.appendChild(userInfo);
+            }
+        }
+    }
+
+    handleLogout() {
+        // Remove user data from localStorage
+        localStorage.removeItem('user');
+        
+        // Remove user info element
+        const userInfo = document.querySelector('.user-info');
+        if (userInfo) {
+            userInfo.remove();
+        }
+        
+        // Show login buttons again
+        this.checkLoginStatus();
+        
+        // Show logout message
+        this.showToast('Logged out successfully!', 'success');
     }
 }
 
@@ -1398,7 +1515,7 @@ function addDynamicStyles() {
 // Initialize the application
 document.addEventListener('DOMContentLoaded', () => {
     addDynamicStyles();
-    new ShareBite();
+    window.shareBite = new ShareBite();
 });
 
 // Service Worker registration for PWA capabilities (optional)

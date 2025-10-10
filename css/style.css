@@ -88,9 +88,27 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
+    min-height: 60px;
+    gap: 1rem;
+    position: relative;
+}
+
+.nav-left {
+    justify-self: start;
+}
+
+.nav-center {
+    justify-self: center;
+}
+
+.nav-right {
+    justify-self: end;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
 .nav-logo {
@@ -100,6 +118,8 @@ body {
     font-weight: 700;
     color: var(--primary-color);
     gap: 0.5rem;
+    flex-shrink: 0;
+    min-width: 120px;
 }
 
 .nav-logo-link{
@@ -120,6 +140,13 @@ body {
     display: flex;
     list-style: none;
     gap: 2rem;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-link.active {
+    color: var(--primary-color);
+    font-weight: 600;
 }
 
 .nav-link {
@@ -153,6 +180,8 @@ body {
     display: flex;
     align-items: center;
     gap: 1rem;
+    flex-shrink: 0;
+    min-width: 0;
 }
 
 .role-switch {
@@ -195,11 +224,61 @@ body {
     box-shadow: var(--shadow-medium);
 }
 
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 1;
+    min-width: 0;
+}
+
+.welcome-text {
+    color: var(--black);
+    font-weight: 600;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+}
+
+:root.dark .welcome-text {
+    color: #FFFFFF;
+}
+
+:root.dark .user-info {
+    border-left: 2px solid var(--primary-color);
+    padding-left: 1rem;
+}
+
+.logout-btn {
+    background: var(--secondary-gradient);
+    color: white;
+    border: none;
+    padding: 0.6rem 1rem;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: var(--transition-medium);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logout-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+}
+
 .hamburger {
     display: none;
     flex-direction: column;
     cursor: pointer;
     gap: 4px;
+    flex-shrink: 0;
+    z-index: 1002;
+    padding: 0.5rem;
 }
 
 .hamburger span {
@@ -207,6 +286,35 @@ body {
     height: 3px;
     background: var(--black);
     transition: var(--transition-medium);
+}
+
+.hamburger.active span:nth-child(1) {
+    transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: rotate(45deg) translate(-5px, -6px);
+}
+
+/* Mobile Menu Overlay */
+.mobile-menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    backdrop-filter: blur(2px);
+}
+
+.mobile-menu-overlay.active {
+    display: block;
 }
 
 /* Hero Section */
@@ -1656,12 +1764,47 @@ body {
     to { transform: rotate(360deg); }
 }
 
+@keyframes slideInFromLeft {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
     :root {
         --h1-size: 3rem;
         --h2-size: 2.2rem;
         --h3-size: 1.6rem;
+    }
+    
+    /* Navbar adjustments for tablet */
+    .nav-container {
+        padding: 1rem 1.5rem;
+        gap: 0.5rem;
+    }
+    
+    .nav-menu {
+        gap: 1.5rem;
+    }
+    
+    .user-actions {
+        gap: 0.8rem;
+    }
+    
+    .role-switch {
+        padding: 0.5rem 0.9rem;
+        font-size: 0.9rem;
+    }
+    
+    .login-btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
     }
     
     .hero-container {
@@ -1681,6 +1824,100 @@ body {
     }
 }
 
+/* Breakpoint for cramped navbar with multiple buttons */
+/* ========== RESPONSIVE NAVBAR BREAKPOINTS ========== */
+
+/* Large tablets and small laptops */
+@media (max-width: 1200px) {
+    .nav-container {
+        padding: 1rem 1.5rem;
+        gap: 0.8rem;
+    }
+    
+    .nav-menu {
+        gap: 1.5rem;
+    }
+    
+    .user-actions {
+        gap: 0.8rem;
+    }
+    
+    .login-btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+        white-space: nowrap;
+    }
+}
+
+/* Tablets */
+@media (max-width: 1024px) {
+    .nav-menu {
+        gap: 1.2rem;
+    }
+    
+    .nav-link {
+        font-size: 0.95rem;
+    }
+    
+    .user-actions {
+        gap: 0.7rem;
+    }
+    
+    .role-switch {
+        padding: 0.55rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .login-btn {
+        padding: 0.55rem 1rem;
+        font-size: 0.85rem;
+    }
+    
+    .theme-toggle {
+        width: 38px;
+        height: 38px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Small tablets */
+@media (max-width: 900px) {
+    .nav-container {
+        padding: 0.8rem 1rem;
+    }
+    
+    .nav-menu {
+        gap: 1rem;
+    }
+    
+    .nav-link {
+        font-size: 0.9rem;
+    }
+    
+    /* Shorten login button text */
+    .login-btn {
+        font-size: 0;
+        padding: 0.6rem 0.8rem;
+        min-width: 55px;
+    }
+    
+    .login-btn:nth-of-type(1)::before {
+        content: "User";
+        font-size: 0.85rem;
+    }
+    
+    .login-btn:nth-of-type(2)::before {
+        content: "NGO";
+        font-size: 0.85rem;
+    }
+    
+    .role-switch {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.85rem;
+    }
+}
+
+/* Switch to mobile menu */
 @media (max-width: 768px) {
     :root {
         --h1-size: 2.5rem;
@@ -1690,12 +1927,156 @@ body {
         --container-padding: 0 1rem;
     }
     
-    .nav-menu {
+    /* Mobile navbar layout - Switch to hamburger menu */
+    .nav-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.8rem 1rem;
+        gap: 1rem;
+    }
+    
+    .nav-left {
+        z-index: 1002;
+    }
+    
+    .nav-center {
         display: none;
     }
     
+    .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+    }
+    
+    /* Hide desktop user actions in navbar */
+    .nav-right .user-actions {
+        display: none !important;
+    }
+    
+    /* Show hamburger menu */
     .hamburger {
         display: flex;
+        order: 2;
+        z-index: 1002;
+    }
+    
+    /* Mobile Menu Slide-in */
+    .nav-menu {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: var(--white);
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 100px 2rem 2rem;
+        z-index: 1001;
+        box-shadow: var(--shadow-heavy);
+        overflow-y: auto;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        animation: slideInFromLeft 0.3s ease;
+    }
+    
+    .nav-menu.active {
+        display: flex;
+        transform: translateX(0);
+    }
+    
+    .nav-menu li {
+        margin: 0.8rem 0;
+        width: 100%;
+        text-align: center;
+        list-style: none;
+    }
+    
+    .nav-link {
+        display: block;
+        padding: 1rem;
+        font-size: 1.1rem;
+        font-weight: 500;
+        border-radius: var(--border-radius);
+        transition: var(--transition-medium);
+    }
+    
+    .nav-link:hover,
+    .nav-link.active {
+        background: var(--primary-color);
+        color: white;
+    }
+    
+    /* Mobile user actions - Show in menu */
+    .user-actions {
+        position: fixed;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--white);
+        padding: 1rem 1.5rem;
+        border-radius: 50px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        z-index: 1002;
+        display: none;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: 90vw;
+        align-items: center;
+    }
+    
+    .user-actions.mobile-visible {
+        display: flex !important;
+    }
+    
+    .user-info {
+        flex-direction: row;
+        gap: 0.8rem;
+        max-width: none;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .welcome-text {
+        font-size: 0.85rem;
+        text-align: center;
+        max-width: none;
+        white-space: nowrap;
+    }
+    
+    .logout-btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
+    }
+    
+    .login-btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
+    }
+    
+    .role-switch {
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
+    }
+      .theme-toggle {
+        width: 40px;
+        height: 40px;
+    }
+    
+    /* Keep notification bell visible in navbar on mobile */
+    .notification-bell {
+        display: block !important;
+        font-size: 1.1rem;
+    }
+    
+    .notification-panel {
+        right: -1rem;
+        width: calc(100vw - 2rem);
+        max-width: 350px;
     }
     
     .hero-buttons {
@@ -1746,7 +2127,50 @@ body {
     }
     
     .nav-container {
-        padding: 1rem;
+        padding: 0.8rem;
+    }
+    
+    .nav-logo {
+        font-size: 1.3rem;
+        min-width: auto;
+    }
+    
+    .nav-logo i {
+        font-size: 1.5rem;
+    }
+    
+    .hamburger {
+        padding: 0.3rem;
+    }
+    
+    .hamburger span {
+        width: 22px;
+    }
+    
+    .theme-toggle {
+        width: 36px;
+        height: 36px;
+        font-size: 0.9rem;
+    }
+    
+    .notification-bell {
+        font-size: 1rem;
+        padding: 0.4rem;
+    }
+    
+    .user-actions {
+        padding: 0.8rem 1rem;
+        gap: 0.6rem;
+        bottom: 1rem;
+    }
+    
+    .user-actions button {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.8rem;
+    }
+    
+    .welcome-text {
+        font-size: 0.8rem;
     }
     
     .hero {
@@ -1774,7 +2198,6 @@ body {
     .food-grid {
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     }
-
 }
 
 /* Dark Mode Styles */
@@ -4157,4 +4580,32 @@ body.dark-mode .notification-bell:hover {
 :root.dark .checkmark-icon-time:hover {
     background: var(--primary-dark);
     box-shadow: 0 4px 12px rgba(76, 175, 80, 0.5);
+}
+
+/* Dark mode for mobile menu */
+:root.dark .nav-menu {
+    background: #1a1a1a;
+}
+
+:root.dark .user-actions {
+    background: #1a1a1a;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+:root.dark .mobile-menu-overlay {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+:root.dark .hamburger span {
+    background: var(--white);
+}
+
+:root.dark .nav-link {
+    color: var(--white);
+}
+
+:root.dark .nav-link:hover,
+:root.dark .nav-link.active {
+    background: var(--primary-color);
+    color: white;
 }

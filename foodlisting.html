@@ -14,52 +14,71 @@
     <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
 </head>
 
-<body>
-
-    <!-- Navigation -->
+<body>    <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <div class="nav-logo">
-                <i class="fas fa-utensils"></i>
-                <span>ShareBite</span>
+            <!-- Left Section: Logo -->
+            <div class="nav-left">
+                <div class="nav-logo">
+                    <a href="index.html" class="nav-logo-link">
+                        <i class="fas fa-utensils"></i>
+                        <span>ShareBite</span>
+                    </a>
+                </div>
             </div>
-            <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="index.html#features" class="nav-link">Features</a></li>
-                <li><a href="foodlisting.html" class="nav-link">Listings</a></li>
-                <li><a href="index.html#about" class="nav-link">About</a></li>
-                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
-            </ul>
-            <div class="user-actions">
-                <!-- Added dark mode toggle -->
-                <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
-                    <i class="fas fa-moon"></i>
-                </button>
-                
-                <!-- Notification Bell -->
-                <div class="notification-bell" id="notificationBell" style="display: none;">
-                    <i class="fas fa-bell"></i>
-                    <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
-                    <div class="notification-panel" id="notificationPanel">
-                        <div class="notification-header">Claimed Food Items</div>
-                        <div id="notificationList">
-                             <div class="no-notifications">No claimed items yet</div>
+
+            <!-- Center Section: Navigation Links -->
+            <div class="nav-center">
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="index.html#features" class="nav-link">Features</a></li>
+                    <li><a href="foodlisting.html" class="nav-link active">Listings</a></li>
+                    <li><a href="index.html#about" class="nav-link">About</a></li>
+                    <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                </ul>
+            </div>
+
+            <!-- Right Section: User Actions -->
+            <div class="nav-right">
+                <div class="user-actions">
+                    <!-- Theme Toggle -->
+                    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    
+                    <!-- Notification Bell -->
+                    <div class="notification-bell" id="notificationBell" style="display: none;">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+                        <div class="notification-panel" id="notificationPanel">
+                            <div class="notification-header">Claimed Food Items</div>
+                            <div id="notificationList">
+                                 <div class="no-notifications">No claimed items yet</div>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Role Switch -->
+                    <button class="role-switch" id="roleSwitch">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span id="currentRole">Donor</span>
+                    </button>
+                    
+                    <!-- Login Button -->
+                    <button class="login-btn" onclick="window.location.href='login.html'">Login</button>
                 </div>
 
-                <button class="role-switch" id="roleSwitch">
-                    <i class="fas fa-exchange-alt"></i>
-                    <span id="currentRole">Donor</span>
-                </button>
-                <button class="login-btn" onclick="window.location.href='login.html'">Login</button>
-            </div>
-            <div class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
+                <!-- Mobile Hamburger -->
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
             </div>
         </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
     </nav>
 
     <!-- Food Listings Section -->

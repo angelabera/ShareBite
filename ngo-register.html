@@ -382,14 +382,22 @@
             alert("Passwords do not match. Please re-enter.");
             return;
             }
-            
-            if (!ngoName || !email || !contactPerson || !phone || !address) {
+              if (!ngoName || !email || !contactPerson || !phone || !address) {
                 alert("Please fill in all required fields.");
                 return;
             }
 
-            alert("NGO Registered successfully! (Frontend only)");
+            // Store NGO user data
+            localStorage.setItem('user', JSON.stringify({
+                name: ngoName,
+                email: email,
+                role: 'ngo',
+                contactPerson: contactPerson,
+                phone: phone,
+                address: address
+            }));
 
+            alert("NGO Registered successfully! (Frontend only)");
 
             setTimeout(() => {
                 window.location.href = "index.html";

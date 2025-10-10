@@ -296,9 +296,7 @@
         });
 
         // --- Form Submission ---
-        const loginForm = document.getElementById('loginForm');
-
-        loginForm.addEventListener('submit', (e) => {
+        const loginForm = document.getElementById('loginForm');        loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
 
             // Get form values
@@ -309,6 +307,13 @@
                 alert("Please fill in all fields before logging.");
                 return;
             }
+
+            // Store user data (in a real app, this would be validated against a backend)
+            localStorage.setItem('user', JSON.stringify({
+                name: email.split('@')[0], // Use part before @ as name
+                email: email,
+                role: 'user'
+            }));
 
             // Show success message
             alert("login successfully!");
