@@ -5,11 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ShareBite - Food Waste Reducer</title>
     <meta name="sharebite-build" content="v-darkmode-fix-1">
-    <link rel="stylesheet" href="css/style.css?v=darkmode-fix-1">
+    <link rel="stylesheet" href="css/style.css?v=testimonials-gallery-1">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
+    <style>
+      .testimonials { padding: 4rem 0; background: white; }
+      .gallery { padding: 4rem 0; background: #f8f9fa; }
+      .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; margin-top: 3rem; }
+      .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem; }
+      .testimonial-card { background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-left: 4px solid #4CAF50; }
+      .gallery-item { background: linear-gradient(135deg, #4CAF50, #45a049); color: white; padding: 3rem 2rem; border-radius: 10px; text-align: center; height: 250px; display: flex; flex-direction: column; justify-content: center; }
+      .gallery-item i { font-size: 3rem; margin-bottom: 1rem; }
+      .gallery-item h4 { font-size: 1.3rem; margin-bottom: 0.5rem; }
+      .gallery-item p { font-size: 1rem; opacity: 0.9; }
+    </style>
   </head>
   <body>
     <!-- Navigation -->
@@ -26,6 +37,8 @@
                 <li><a href="#features" class="nav-link">Features</a></li>
                 <li><a href="foodlisting.html" class="nav-link">Listings</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#testimonials" class="nav-link">Testimonials</a></li>
+                <li><a href="#gallery" class="nav-link">Gallery</a></li>
                 <li><a href="#contact-section" class="nav-link">Contact</a></li>
             </ul>
             <div class="user-actions">
@@ -423,6 +436,183 @@
       </div>
     </section>
 
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonials" style="display: block !important; visibility: visible !important; opacity: 1 !important;">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title" data-aos="fade-up">What Our Community Says</h2>
+          <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">Real stories from donors, NGOs, and volunteers making a difference</p>
+        </div>
+        
+        <div class="testimonials-grid">
+          <div class="testimonial-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="testimonial-content">
+              <div class="quote-icon">
+                <i class="fas fa-quote-left"></i>
+              </div>
+              <p>"ShareBite has transformed how we handle surplus food. We've reduced waste by 60% and helped feed over 200 families in our community. It's amazing to see the impact we can make together."</p>
+            </div>
+            <div class="testimonial-author">
+              <div class="author-avatar">
+                <i class="fas fa-store"></i>
+              </div>
+              <div class="author-info">
+                <h4>Sarah Johnson</h4>
+                <span>Restaurant Owner, Green Bistro</span>
+                <div class="author-rating">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card" data-aos="fade-up" data-aos-delay="200">
+            <div class="testimonial-content">
+              <div class="quote-icon">
+                <i class="fas fa-quote-left"></i>
+              </div>
+              <p>"As an NGO, ShareBite has been a game-changer. We can now efficiently coordinate food pickups and reach more people in need. The platform makes it so easy to connect with donors."</p>
+            </div>
+            <div class="testimonial-author">
+              <div class="author-avatar">
+                <i class="fas fa-hands-helping"></i>
+              </div>
+              <div class="author-info">
+                <h4>Michael Chen</h4>
+                <span>Director, Hope Foundation</span>
+                <div class="author-rating">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card" data-aos="fade-up" data-aos-delay="300">
+            <div class="testimonial-content">
+              <div class="quote-icon">
+                <i class="fas fa-quote-left"></i>
+              </div>
+              <p>"Volunteering through ShareBite has been incredibly rewarding. I love knowing that my time directly helps reduce food waste and feed families. It's a win-win for everyone involved."</p>
+            </div>
+            <div class="testimonial-author">
+              <div class="author-avatar">
+                <i class="fas fa-heart"></i>
+              </div>
+              <div class="author-info">
+                <h4>Emily Rodriguez</h4>
+                <span>Volunteer, Community Helper</span>
+                <div class="author-rating">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="gallery" style="display: block !important; visibility: visible !important; opacity: 1 !important;">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title" data-aos="fade-up">Our Impact in Action</h2>
+          <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">See how ShareBite is making a difference in communities worldwide</p>
+        </div>
+        
+        <div class="gallery-grid">
+          <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100">
+            <div class="gallery-image">
+              <i class="fas fa-utensils"></i>
+            </div>
+            <div class="gallery-overlay">
+              <h4>Fresh Food Donations</h4>
+              <p>Restaurants donating surplus meals to those in need</p>
+              <div class="gallery-stats">
+                <span><i class="fas fa-utensils"></i> 1,500+ Meals</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="gallery-item" data-aos="zoom-in" data-aos-delay="200">
+            <div class="gallery-image">
+              <i class="fas fa-truck"></i>
+            </div>
+            <div class="gallery-overlay">
+              <h4>Efficient Distribution</h4>
+              <p>Quick pickup and delivery system connecting communities</p>
+              <div class="gallery-stats">
+                <span><i class="fas fa-clock"></i> 30min Avg</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="gallery-item" data-aos="zoom-in" data-aos-delay="300">
+            <div class="gallery-image">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="gallery-overlay">
+              <h4>Community Support</h4>
+              <p>Volunteers and NGOs working together to help families</p>
+              <div class="gallery-stats">
+                <span><i class="fas fa-users"></i> 250+ Volunteers</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="gallery-item" data-aos="zoom-in" data-aos-delay="400">
+            <div class="gallery-image">
+              <i class="fas fa-leaf"></i>
+            </div>
+            <div class="gallery-overlay">
+              <h4>Environmental Impact</h4>
+              <p>Reducing food waste and protecting our planet</p>
+              <div class="gallery-stats">
+                <span><i class="fas fa-leaf"></i> 40% Less Waste</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="gallery-item" data-aos="zoom-in" data-aos-delay="500">
+            <div class="gallery-image">
+              <i class="fas fa-heart"></i>
+            </div>
+            <div class="gallery-overlay">
+              <h4>Making a Difference</h4>
+              <p>Every meal matters, every action counts</p>
+              <div class="gallery-stats">
+                <span><i class="fas fa-heart"></i> 100% Impact</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="gallery-item" data-aos="zoom-in" data-aos-delay="600">
+            <div class="gallery-image">
+              <i class="fas fa-handshake"></i>
+            </div>
+            <div class="gallery-overlay">
+              <h4>Community Partnership</h4>
+              <p>Building stronger, more connected communities</p>
+              <div class="gallery-stats">
+                <span><i class="fas fa-handshake"></i> 85+ Partners</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Section Divider -->
     <div class="section-divider">
       <div class="divider-line"></div>
@@ -636,6 +826,53 @@
           }, { threshold: 0.5 });
           
           observer.observe(progressCircle);
+        }
+      });
+
+      // Protect CSS visibility from JavaScript interference
+      document.addEventListener('DOMContentLoaded', function() {
+        // Ensure testimonials and gallery sections remain visible
+        const protectSections = () => {
+          const testimonials = document.querySelector('.testimonials');
+          const gallery = document.querySelector('.gallery');
+          const testimonialCards = document.querySelectorAll('.testimonial-card');
+          const galleryItems = document.querySelectorAll('.gallery-item');
+          
+          if (testimonials) {
+            testimonials.style.visibility = 'visible';
+            testimonials.style.opacity = '1';
+            testimonials.style.display = 'block';
+          }
+          
+          if (gallery) {
+            gallery.style.visibility = 'visible';
+            gallery.style.opacity = '1';
+            gallery.style.display = 'block';
+          }
+          
+          testimonialCards.forEach(card => {
+            card.style.visibility = 'visible';
+            card.style.opacity = '1';
+            card.style.display = 'block';
+          });
+          
+          galleryItems.forEach(item => {
+            item.style.visibility = 'visible';
+            item.style.opacity = '1';
+            item.style.display = 'block';
+          });
+        };
+        
+        // Run protection immediately and on any click
+        protectSections();
+        document.addEventListener('click', protectSections);
+        
+        // Also protect on theme changes
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+          themeToggle.addEventListener('click', () => {
+            setTimeout(protectSections, 100);
+          });
         }
       });
     </script>

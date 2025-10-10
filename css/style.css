@@ -5,6 +5,24 @@
     box-sizing: border-box;
 }
 
+/* Ensure CSS visibility is maintained */
+.testimonials,
+.gallery,
+.testimonial-card,
+.gallery-item,
+.testimonial-content,
+.gallery-overlay {
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: block !important;
+}
+
+.testimonials-grid,
+.gallery-grid {
+    display: grid !important;
+    visibility: visible !important;
+}
+
 :root {
     /* Color Palette */
     --primary-color: #4CAF50;
@@ -1173,6 +1191,211 @@ body {
     background: var(--light-gray);
 }
 
+/* Testimonials Section */
+.testimonials {
+    padding: var(--section-padding);
+    background: white;
+}
+
+.testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.testimonial-card {
+    background: white;
+    padding: 2.5rem 2rem;
+    border-radius: var(--card-radius);
+    box-shadow: var(--shadow-light);
+    transition: var(--transition-medium);
+    border-left: 4px solid var(--primary-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.testimonial-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--primary-gradient);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-heavy);
+}
+
+.testimonial-card:hover::before {
+    transform: scaleX(1);
+}
+
+.testimonial-content {
+    margin-bottom: 2rem;
+}
+
+.quote-icon {
+    color: var(--primary-color);
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    opacity: 0.7;
+}
+
+.testimonial-content p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--dark-gray);
+    font-style: italic;
+    margin: 0;
+    position: relative;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--light-gray);
+}
+
+.author-avatar {
+    width: 60px;
+    height: 60px;
+    background: var(--primary-gradient);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    box-shadow: var(--shadow-light);
+    flex-shrink: 0;
+}
+
+.author-info {
+    flex: 1;
+}
+
+.author-info h4 {
+    margin: 0 0 0.25rem 0;
+    color: var(--black);
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.author-info span {
+    color: var(--medium-gray);
+    font-size: 0.9rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.author-rating {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.author-rating i {
+    color: var(--accent-color);
+    font-size: 0.9rem;
+}
+
+/* Gallery Section */
+.gallery {
+    padding: var(--section-padding);
+    background: var(--light-gray);
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.gallery-item {
+    position: relative;
+    height: 280px;
+    border-radius: var(--card-radius);
+    overflow: hidden;
+    cursor: pointer;
+    transition: var(--transition-medium);
+    background: var(--primary-gradient);
+    box-shadow: var(--shadow-light);
+}
+
+.gallery-item:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: var(--shadow-heavy);
+}
+
+.gallery-image {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    color: white;
+    background: var(--primary-gradient);
+    position: relative;
+    transition: var(--transition-medium);
+}
+
+.gallery-item:hover .gallery-image {
+    transform: scale(1.1);
+}
+
+.gallery-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.9));
+    color: white;
+    padding: 2rem 1.5rem 1.5rem;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gallery-item:hover .gallery-overlay {
+    transform: translateY(0);
+}
+
+.gallery-overlay h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: white;
+}
+
+.gallery-overlay p {
+    margin: 0 0 1rem 0;
+    font-size: 0.95rem;
+    opacity: 0.9;
+    line-height: 1.5;
+}
+
+.gallery-stats {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--accent-color);
+}
+
+.gallery-stats i {
+    font-size: 0.8rem;
+}
+
+
 .about-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1605,6 +1828,40 @@ body {
     
     .floating-card {
         display: none;
+    }
+    
+    /* Testimonials responsive */
+    .testimonials-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .testimonial-card {
+        padding: 2rem 1.5rem;
+    }
+    
+    .author-avatar {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+    
+    /* Gallery responsive */
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .gallery-item {
+        height: 250px;
+    }
+    
+    .gallery-image {
+        font-size: 3.5rem;
+    }
+    
+    .gallery-overlay {
+        padding: 1.5rem 1rem 1rem;
     }
 }
 
