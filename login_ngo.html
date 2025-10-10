@@ -333,9 +333,7 @@
         });
 
         // --- Form Submission ---
-        const loginForm = document.getElementById('ngoLoginForm');
-
-        loginForm.addEventListener('submit', (e) => {
+        const loginForm = document.getElementById('ngoLoginForm');        loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
 
             const email = loginForm.email.value.trim();
@@ -345,6 +343,13 @@
                 alert("Please fill in all fields before logging in.");
                 return;
             }
+
+            // Store NGO user data
+            localStorage.setItem('user', JSON.stringify({
+                name: email.split('@')[0] + ' NGO', // Use part before @ as name with NGO suffix
+                email: email,
+                role: 'ngo'
+            }));
 
             alert("NGO logged in successfully!");
 
