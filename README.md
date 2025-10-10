@@ -48,13 +48,27 @@ A beautiful, responsive web platform connecting restaurants and households with 
 ## 🔧 File Structure
 
 ```
-ShareBite/
-├── index.html              # Main HTML file
-├── css/
-│   └── style.css          # Complete CSS with animations and responsive design
-├── js/
-│   └── script.js          # Interactive JavaScript functionality
-└── images/                # Placeholder for food images
+📂 ShareBite/
+├─ 🎨 css/
+│  └─ 📄 style.css
+├─ ⚙ js/
+│  ├─ 🍔 foodlisting.js
+│  ├─ 🧠 script.js
+│  └─ 🌗 theme.js
+├─ 🖼 logo/
+│  └─ 🪪 logo.svg
+├─ 📜 CODE_OF_CONDUCT.md
+├─ 🧩 CONTRIBUTING.md
+├─ 🍱 foodlisting.html
+├─ 🔑 forgotpassword.html
+├─ 🏠 index.html
+├─ ⚖ License.md
+├─ ❤ login_ngo.html
+├─ 🔐 login.html
+├─ 🏢 ngo-register.html
+├─ 📘 README.md
+├─ 📝 register.html
+└─ 🔄 sw.js
 ```
 
 ## 🎯 Key Components

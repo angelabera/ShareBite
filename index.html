@@ -28,16 +28,18 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
-                <i class="fas fa-utensils"></i>
-                <span>ShareBite</span>
+              <a href = "#home" class = "nav-logo-link">
+              <i class="fas fa-utensils"></i>
+              <span>ShareBite</span>
+              </a>
             </div>
             
             <ul class="nav-menu">
                 <li><a href="#home" class="nav-link">Home</a></li>
                 <li><a href="#features" class="nav-link">Features</a></li>
-                <li><a href="#listings" class="nav-link">Listings</a></li>
+                <li><a href="foodlisting.html" class="nav-link">Listings</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
-                <li><a href="#contact" class="nav-link">Contact</a></li>
+                <li><a href="#contact-section" class="nav-link">Contact</a></li>
             </ul>
             
             <div class="user-actions">
@@ -398,6 +400,117 @@
         </div>
     </section>
 
+    <!-- Section Divider -->
+    <div class="section-divider">
+      <div class="divider-line"></div>
+      <div class="divider-icon">
+        <i class="fas fa-utensils"></i>
+      </div>
+      <div class="divider-line"></div>
+    </div>
+
+ <section id="contact-section" class="contact">
+  <h1 class="main-title">📞 Contact Us</h1>
+  <div class="contact-wrapper">
+    <div class="contact-container">
+      <!-- Left: Form -->
+      <div class="contact-left">
+        <h2 class="contact-title">💬 Do You Have a Question?</h2>
+        <p class="contact-subtitle">Fill out the form below to get started</p>
+
+        <form id="contact-form">
+          <label for="contact-name">Full Name:</label>
+          <input type="text" id="contact-name" placeholder="Enter your full name" />
+
+          <label for="contact-email">Email:</label>
+          <input type="email" id="contact-email" placeholder="Enter your email" />
+
+          <label for="contact-msg">Message:</label>
+          <textarea id="contact-msg" placeholder="Type in your Message"></textarea>
+
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+
+      <!-- Right: Info -->
+      <div class="contact-right">
+        <h3>Get In Touch</h3>
+        <p>We love to hear from you. Our team is always here to answer your questions.</p>
+
+        <div class="contact-info">
+          <div class="info-item">
+            <i class="fa-solid fa-house"></i>
+            <div>
+              <strong>Address:</strong>
+              <p>ShareBite Building, Noida, India </p>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <i class="fa-solid fa-phone"></i>
+            <div>
+              <strong>Phone No.:</strong>
+              <p>+91 8888889999</p>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <i class="fa-solid fa-envelope"></i>
+            <div>
+              <strong>Email:</strong>
+              <p>sharebite@support.com.ng</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="social-links">
+          <a href="#"><i class="fa-brands fa-github"></i></a>
+          <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+          <a href="tel:+234812387000000"><i class="fa-solid fa-phone"></i></a>
+          <a href="mailto:amrng@support.com.ng"><i class="fa-solid fa-envelope"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Font Awesome -->
+<script src="https://kit.fontawesome.com/a2e0e9c5b2.js" crossorigin="anonymous"></script>
+
+<!-- ✅ Alert Script (keep this) -->
+<script>
+  const form = document.getElementById("contact-form");
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const name = document.getElementById("contact-name").value.trim();
+    const email = document.getElementById("contact-email").value.trim();
+    const msg = document.getElementById("contact-msg").value.trim();
+
+    if (!name || !email || !msg) {
+      alert("⚠️ Please fill out all fields before submitting.");
+      return;
+    }
+
+    alert(`✅ Thank you, ${name}! Your message has been sent.`);
+    form.reset();
+  });
+  const username = JSON.parse(localStorage.getItem('user')).name;
+  const toast = document.getElementById('toast');
+
+  if (username) {
+    // Show toast message
+    toast.textContent = `Welcome, ${username}! 🎉`;
+    toast.classList.add('show');
+
+    // Hide toast after 3 seconds
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 3000);
+  }
+</script>
+
+
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -458,7 +571,7 @@
             <ul>
               <li><a href="#home">Home</a></li>
               <li><a href="#features">How It Works</a></li>
-              <li><a href="#listings">Food Listings</a></li>
+              <li><a href="foodlisting.html">Food Listings</a></li>
               <li><a href="#about">About Us</a></li>
             </ul>
           </div>
@@ -466,10 +579,10 @@
           <div class="footer-section">
             <h4>For Donors</h4>
             <ul>
-              <li><a href="#">List Food</a></li>
+              <li><a href="foodlisting.html">List Food</a></li>
               <li><a href="#">Donor Guidelines</a></li>
               <li><a href="#">Track Impact</a></li>
-              <li><a href="#">Support</a></li>
+              <li><a href="support.html">Support</a></li>
             </ul>
           </div>
 
