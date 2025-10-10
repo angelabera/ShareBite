@@ -137,7 +137,7 @@ class ShareBite {
         this.updateUIForRole();
         
     } else {
-        console.log('User not authenticated - showing Login button');
+        console.log('User not authenticated - showing Login buttons');
         
         if (roleDisplay) {
             roleDisplay.textContent = 'Donor';
@@ -153,33 +153,54 @@ class ShareBite {
         const existingLoginButtons = document.querySelectorAll('.login-btn');
         existingLoginButtons.forEach(btn => btn.remove());
         
-        // Create single login button
-        const loginBtn = document.createElement('button');
-        loginBtn.className = 'login-btn';
-        loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
+        // Create User Login button
+        const loginUserBtn = document.createElement('button');
+        loginUserBtn.className = 'login-btn';
+        loginUserBtn.innerHTML = '<i class="fas fa-user"></i> Login as User';
         
         // CRITICAL: Force the button to be clickable
-        loginBtn.style.cssText = `
+        loginUserBtn.style.cssText = `
+            position: relative !important;
+            z-index: 99999 !important;
+            pointer-events: auto !important;
+            cursor: pointer !important;
+            margin-right: 10px !important;
+        `;
+        
+        loginUserBtn.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('User Login button clicked');
+            window.location.href = 'login.html';
+        };
+        
+        // Create NGO Login button
+        const loginNGOBtn = document.createElement('button');
+        loginNGOBtn.className = 'login-btn';
+        loginNGOBtn.innerHTML = '<i class="fas fa-building"></i> Login as NGO';
+        
+        // CRITICAL: Force the button to be clickable
+        loginNGOBtn.style.cssText = `
             position: relative !important;
             z-index: 99999 !important;
             pointer-events: auto !important;
             cursor: pointer !important;
         `;
         
-        // Use onclick
-        loginBtn.onclick = (e) => {
+        loginNGOBtn.onclick = (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log('Login button clicked - redirecting to login.html');
-            window.location.href = 'login.html';
+            console.log('NGO Login button clicked');
+            window.location.href = 'login_ngo.html';
         };
         
-        // Add login button to user actions
+        // Add both login buttons to user actions
         if (userActions) {
-            userActions.appendChild(loginBtn);
+            userActions.appendChild(loginUserBtn);
+            userActions.appendChild(loginNGOBtn);
         }
         
-        console.log('✓ Login button created and click handler attached');
+        console.log('✓ Login buttons created and click handlers attached');
         
         // Re-enable role switch
         if (roleSwitch) {
