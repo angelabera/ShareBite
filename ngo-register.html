@@ -25,13 +25,13 @@
             --input-bg-light: #fdfdfd;
             --input-border-light: #ddd;
             /* Dark Mode */
-            --bg-gradient-start-dark: #1C1C1C;
-            --bg-gradient-end-dark: #2C2C2C;
+            --bg-gradient-start-dark: #121212;
+            --bg-gradient-end-dark: #1a1a1a;
             --card-bg-dark: #2E2E2E;
             --text-color-dark: #f1f1f1;
-            --subtext-color-dark: #aaa;
+            --subtext-color-dark: #B0B0B0;
             --input-bg-dark: #3a3a3a;
-            --input-border-dark: #444;
+            --input-border-dark: #555;
         }
 
         * {
@@ -50,8 +50,43 @@
             transition: background 0.4s;
         }
 
-        :root.dark .register-page-content {
-            background: var(--white);
+        body.dark-mode {
+            background: linear-gradient(135deg, var(--bg-gradient-start-dark), var(--bg-gradient-end-dark));
+            color: var(--text-color-dark);
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: 1px solid var(--input-border-light);
+            color: var(--text-color-light);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        body.dark-mode .theme-toggle {
+            border-color: var(--input-border-dark);
+            color: var(--text-color-dark);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1) rotate(15deg);
+            border-color: var(--primary-green);
+            color: var(--primary-green);
+        }
+
+        body.dark-mode .theme-toggle:hover {
+            border-color: var(--secondary-orange);
+            color: var(--secondary-orange);
         }
 
         .auth-container {
@@ -62,8 +97,15 @@
             width: 100%;
             max-width: 480px;
             text-align: center;
-            margin: 2rem 0;
-            transition: all 0.4s;
+            animation: fadeIn 0.8s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        body.dark-mode .auth-container {
+            background-color: var(--card-bg-dark);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid #404040;
         }
 
         :root.dark .auth-container {
@@ -74,7 +116,11 @@
             margin-bottom: 0.75rem;
             font-weight: 700;
             font-size: 1.8rem;
-            color: var(--black);
+            color: var(--text-color-light);
+        }
+
+        body.dark-mode .auth-container h1 {
+            color: var(--text-color-dark);
         }
 
         .auth-container p.subtitle {
@@ -131,11 +177,11 @@
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
-            color: var(--dark-gray);
+            color: var(--text-color-light);
         }
 
-        :root.dark .form-group label {
-            color: var(--medium-gray);
+        body.dark-mode .form-group label {
+            color: var(--text-color-dark);
         }
 
         .form-group input,
@@ -238,6 +284,7 @@
             color: var(--secondary-color);
             text-decoration: none;
             font-weight: 500;
+            text-align: center;
         }
 
         .login-link:hover {

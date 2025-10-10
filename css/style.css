@@ -315,14 +315,10 @@ body {
 .hero-stats {
     display: flex;
     gap: 2rem;
-    transform: none !important;
-    animation: none !important;
 }
 
 .stat {
     text-align: center;
-    transform: none !important;
-    animation: none !important;
 }
 
 .stat-number {
@@ -330,9 +326,6 @@ body {
     font-size: 2rem;
     font-weight: 700;
     color: var(--accent-color);
-    transform: none !important;
-    animation: none !important;
-    transition: none !important;
 }
 
 .stat-label {
@@ -2433,25 +2426,26 @@ html, body, .feature-card, .food-card, .navbar, .modal-content, .footer, .stats-
 }
 
 .stat-number {
-    display: block;
-    animation: none !important;
-    transform: none !important;
-    transition: none !important;
+    display: inline-block;
+    animation: bounceNumbers 2s ease-in-out infinite;
 }
 
 .stat:nth-child(1) .stat-number {
-    animation: none !important;
+    animation-delay: 0s;
 }
 
 .stat:nth-child(2) .stat-number {
-    animation: none !important;
+    animation-delay: 0.3s;
 }
 
 .stat:nth-child(3) .stat-number {
-    animation: none !important;
+    animation-delay: 0.6s;
 }
 
-/* Removed bounceNumbers keyframe to prevent any bouncing */
+@keyframes bounceNumbers {
+    0%, 80%, 100% { transform: translateY(0) scale(1); }
+    40% { transform: translateY(-10px) scale(1.1); }
+}
 
 .feature-icon {
     animation: iconGlow 2s ease-in-out infinite;
@@ -2582,33 +2576,6 @@ html, body, .feature-card, .food-card, .navbar, .modal-content, .footer, .stats-
     50% { transform: translateY(-5px); }
 }
 
-/* NUCLEAR OVERRIDE - ABSOLUTELY NO BOUNCING FOR STATS */
-.hero-stats,
-.hero-stats *,
-.hero-stats .stat,
-.hero-stats .stat-number,
-.stat-number,
-.hero-stats .stat .stat-number {
-    animation: none !important;
-    transform: none !important;
-    transition: none !important;
-    -webkit-animation: none !important;
-    -webkit-transform: none !important;
-    -webkit-transition: none !important;
-    position: static !important;
-    will-change: auto !important;
-    backface-visibility: visible !important;
-}
-
-.hero-stats .stat-number,
-.stat-number {
-    display: block !important;
-    font-size: 2rem !important;
-    font-weight: 700 !important;
-    color: var(--accent-color) !important;
-    animation: none !important;
-    transform: translateZ(0) !important; /* Force GPU layer but no movement */
-}
 
 
 
@@ -4190,23 +4157,4 @@ body.dark-mode .notification-bell:hover {
 :root.dark .checkmark-icon-time:hover {
     background: var(--primary-dark);
     box-shadow: 0 4px 12px rgba(76, 175, 80, 0.5);
-}
-
-
-.login-btn, .logout-btn {
-    position: relative !important;
-    z-index: 99999 !important;
-    pointer-events: auto !important;
-    cursor: pointer !important;
-}
-
-.user-actions {
-    position: relative;
-    z-index: 9999;
-}
-
-/* Make sure nothing overlays the navbar */
-.navbar {
-    position: relative;
-    z-index: 10000;
 }

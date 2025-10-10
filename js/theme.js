@@ -10,10 +10,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const applyTheme = (theme) => {
         if (theme === 'dark') {
             root.classList.add('dark');
-            body.classList.add('dark'); // Add to body as well
+            body.classList.add('dark-mode'); // Add dark-mode to body for auth pages
         } else {
             root.classList.remove('dark');
-            body.classList.remove('dark'); // Remove from body as well
+            body.classList.remove('dark-mode'); // Remove dark-mode from body
         }
         updateIcon(theme);
     };
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // This function handles the click event
     const toggleTheme = () => {
-        const isDark = root.classList.contains('dark');
+        const isDark = root.classList.contains('dark') || body.classList.contains('dark-mode');
         const newTheme = isDark ? 'light' : 'dark';
         localStorage.setItem('sharebite-theme', newTheme);
         applyTheme(newTheme);
