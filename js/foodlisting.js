@@ -67,6 +67,12 @@ class ShareBiteFoodListing {
         // Form handling
         this.setupFormHandling();
         
+        // Date input confirmation functionality
+        this.setupDateInputConfirmation();
+        
+        // Time input confirmation functionality
+        this.setupTimeInputConfirmation();
+        
         // Filtering and search
         this.setupFilteringAndSearch();
         
@@ -254,9 +260,42 @@ validateCurrentStep() {
             this.showToast(`Please fill in the required field: ${input.previousElementSibling.textContent}`, 'error');
             return false;
         }
+        
+        // Special validation for contact information
+        if (input.id === 'contact') {
+            if (!this.validateContactInfo(input.value.trim())) {
+                input.focus();
+                this.showToast('Please enter a valid email address or phone number', 'error');
+                return false;
+            }
+        }
     }
     
     return true;
+}
+
+// Validate contact information (email or phone number)
+validateContactInfo(contact) {
+    // Email regex pattern
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    
+    // Phone number regex pattern (supports various formats)
+    const phonePattern = /^[\+]?[1-9]?[\d\s\-\(\)]{7,15}$/;
+    
+    // Remove spaces and common characters for phone validation
+    const cleanedContact = contact.replace(/[\s\-\(\)]/g, '');
+    
+    // Check if it's a valid email
+    if (emailPattern.test(contact)) {
+        return true;
+    }
+    
+    // Check if it's a valid phone number
+    if (phonePattern.test(contact) && cleanedContact.length >= 7 && cleanedContact.length <= 15) {
+        return true;
+    }
+    
+    return false;
 }
 
 resetFormSteps() {
@@ -403,6 +442,12 @@ handleFileSelect(file) {
         const freshDate = new Date(data.freshUntil);
         if (freshDate <= new Date()) {
             this.showErrorMessage('Fresh until date must be in the future.');
+            return false;
+        }
+        
+        // Validate contact information
+        if (!this.validateContactInfo(data.contact)) {
+            this.showErrorMessage('Please enter a valid email address or phone number for contact information.');
             return false;
         }
         
@@ -1218,6 +1263,199 @@ Contact information has been copied to clipboard.
         
         const match = quantityString.match(/(\d+)/);
         return match ? parseInt(match[1]) : 1;
+
+    // Date Input Confirmation functionality
+    setupDateInputConfirmation() {
+        const freshUntilInput = document.getElementById('freshUntil');
+        if (!freshUntilInput) return;
+
+        const container = freshUntilInput.parentNode;
+        const checkmarkIcon = container.querySelector('.checkmark-icon');
+
+        if (!checkmarkIcon) return;
+
+        let isDateConfirmed = false;
+        let previousValue = freshUntilInput.value;
+
+        // Helper function to show checkmark only after date selection
+        const handleDateChange = () => {
+            const currentValue = freshUntilInput.value;
+            
+            // If value has changed from previous, reset confirmation status
+            if (currentValue !== previousValue) {
+                isDateConfirmed = false;
+            }
+            
+            // Only show checkmark if:
+            // 1. There's a new value
+            // 2. The value has changed from previous
+            // 3. Date hasn't been confirmed yet
+            if (currentValue && currentValue !== previousValue && !isDateConfirmed) {
+                checkmarkIcon.classList.remove('hidden');
+            }
+            
+            // If value is cleared, reset everything
+            if (!currentValue) {
+                checkmarkIcon.classList.add('hidden');
+                isDateConfirmed = false;
+            }
+            
+            previousValue = currentValue;
+        };
+
+        // Helper function to confirm date and hide checkmark
+        const confirmDate = () => {
+            if (freshUntilInput.value && !isDateConfirmed) {
+                // Mark as confirmed
+                isDateConfirmed = true;
+                
+                // Hide the checkmark
+                checkmarkIcon.classList.add('hidden');
+                
+                // Show success toast
+                this.showToast('Date confirmed successfully!', 'success');
+                
+                // Move focus to next input field if available
+                const nextInput = freshUntilInput.closest('.form-group').parentElement.nextElementSibling?.querySelector('input');
+                if (nextInput) {
+                    setTimeout(() => nextInput.focus(), 200);
+                } else {
+                    freshUntilInput.blur(); // Remove focus from current input
+                }
+            }
+        };
+
+        // Initially hide checkmark
+        checkmarkIcon.classList.add('hidden');
+
+        // Listen for date selection changes
+        freshUntilInput.addEventListener('change', handleDateChange);
+        freshUntilInput.addEventListener('input', handleDateChange);
+
+        // Checkmark click handler - confirm the date and hide checkmark
+        checkmarkIcon.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event bubbling
+            confirmDate();
+        });
+
+        // Click outside handler - hide checkmark when clicking outside
+        document.addEventListener('click', (e) => {
+            // Check if checkmark is currently visible
+            if (!checkmarkIcon.classList.contains('hidden')) {
+                // Check if click is outside the input container and not on the checkmark
+                if (!container.contains(e.target)) {
+                    // User clicked outside - confirm the date and hide checkmark
+                    confirmDate();
+                }
+            }
+        });
+
+        // Also hide checkmark when input loses focus (blur event)
+        freshUntilInput.addEventListener('blur', (e) => {
+            // Small delay to allow checkmark click to register first
+            setTimeout(() => {
+                if (!checkmarkIcon.classList.contains('hidden') && freshUntilInput.value) {
+                    confirmDate();
+                }
+            }, 100);
+        });
+    }
+
+    // Time Input Confirmation functionality
+    setupTimeInputConfirmation() {
+        const pickupTimeInput = document.getElementById('pickupTime');
+        if (!pickupTimeInput) return;
+
+        const container = pickupTimeInput.parentNode;
+        const checkmarkIcon = container.querySelector('.checkmark-icon-time');
+
+        if (!checkmarkIcon) return;
+
+        let isTimeConfirmed = false;
+        let previousValue = pickupTimeInput.value;
+
+        // Helper function to show checkmark only after time selection
+        const handleTimeChange = () => {
+            const currentValue = pickupTimeInput.value;
+            
+            // If value has changed from previous, reset confirmation status
+            if (currentValue !== previousValue) {
+                isTimeConfirmed = false;
+            }
+            
+            // Only show checkmark if:
+            // 1. There's a new value
+            // 2. The value has changed from previous
+            // 3. Time hasn't been confirmed yet
+            if (currentValue && currentValue !== previousValue && !isTimeConfirmed) {
+                checkmarkIcon.classList.remove('hidden');
+            }
+            
+            // If value is cleared, reset everything
+            if (!currentValue) {
+                checkmarkIcon.classList.add('hidden');
+                isTimeConfirmed = false;
+            }
+            
+            previousValue = currentValue;
+        };
+
+        // Helper function to confirm time and hide checkmark
+        const confirmTime = () => {
+            if (pickupTimeInput.value && !isTimeConfirmed) {
+                // Mark as confirmed
+                isTimeConfirmed = true;
+                
+                // Hide the checkmark
+                checkmarkIcon.classList.add('hidden');
+                
+                // Show success toast
+                this.showToast('Time confirmed successfully!', 'success');
+                
+                // Move focus to next input field if available
+                const nextInput = pickupTimeInput.closest('.form-group').parentElement.nextElementSibling?.querySelector('input');
+                if (nextInput) {
+                    setTimeout(() => nextInput.focus(), 200);
+                } else {
+                    pickupTimeInput.blur(); // Remove focus from current input
+                }
+            }
+        };
+
+        // Initially hide checkmark
+        checkmarkIcon.classList.add('hidden');
+
+        // Listen for time selection changes
+        pickupTimeInput.addEventListener('change', handleTimeChange);
+        pickupTimeInput.addEventListener('input', handleTimeChange);
+
+        // Checkmark click handler - confirm the time and hide checkmark
+        checkmarkIcon.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event bubbling
+            confirmTime();
+        });
+
+        // Click outside handler - hide checkmark when clicking outside
+        document.addEventListener('click', (e) => {
+            // Check if checkmark is currently visible
+            if (!checkmarkIcon.classList.contains('hidden')) {
+                // Check if click is outside the input container and not on the checkmark
+                if (!container.contains(e.target)) {
+                    // User clicked outside - confirm the time and hide checkmark
+                    confirmTime();
+                }
+            }
+        });
+
+        // Also hide checkmark when input loses focus (blur event)
+        pickupTimeInput.addEventListener('blur', (e) => {
+            // Small delay to allow checkmark click to register first
+            setTimeout(() => {
+                if (!checkmarkIcon.classList.contains('hidden') && pickupTimeInput.value) {
+                    confirmTime();
+                }
+            }, 100);
+        });
     }
 }
 

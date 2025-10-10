@@ -3442,4 +3442,144 @@ body.dark-mode .notification-bell:hover {
     margin: 0 1rem;
     font-size: 1.2rem;
   }
+<<<<<<< Updated upstream
 
+=======
+}
+
+
+.toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #4CAF50;
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    font-weight: 500;
+    z-index: 1000;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+>>>>>>> Stashed changes
+
+/* Date Input Confirmation - Simple approach using native browser controls */
+.input-container-relative {
+    position: relative;
+    display: block;
+    width: 100%;
+}
+
+.datetime-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid var(--light-gray);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: var(--transition-medium);
+    font-family: var(--font-family);
+}
+
+.datetime-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+/* Input container needs relative positioning for absolute checkmark */
+.input-container-relative {
+    position: relative;
+    display: block;
+    width: 100%;
+}
+
+/* Checkmark icon - positioned absolutely over the calendar icon */
+.checkmark-icon {
+    position: absolute;
+    right: 12px; /* Position it over the calendar icon inside the input */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-medium);
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+    z-index: 1001; /* Higher z-index to appear over calendar popups */
+    pointer-events: auto; /* Ensure it's clickable */
+}
+
+/* Checkmark icon for time picker - positioned absolutely over the clock icon */
+.checkmark-icon-time {
+    position: absolute;
+    right: 12px; /* Position it over the clock icon inside the input */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    background: var(--primary-color); /* Same green color as date checkmark */
+    color: white;
+    border-radius: 50%;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-medium);
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+    z-index: 1001; /* Higher z-index to appear over time picker popups */
+    pointer-events: auto; /* Ensure it's clickable */
+}
+
+.checkmark-icon:hover {
+    background: var(--primary-dark);
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+.checkmark-icon-time:hover {
+    background: var(--primary-dark);
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+/* Hidden class to control visibility */
+.hidden {
+    display: none !important;
+}
+
+/* Dark mode support */
+:root.dark .checkmark-icon {
+    background: var(--primary-color);
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.4);
+}
+
+:root.dark .checkmark-icon:hover {
+    background: var(--primary-dark);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.5);
+}
+
+:root.dark .checkmark-icon-time {
+    background: var(--primary-color);
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.4);
+}
+
+:root.dark .checkmark-icon-time:hover {
+    background: var(--primary-dark);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.5);
+}

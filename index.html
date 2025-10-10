@@ -52,6 +52,7 @@
                 <button class="login-btn" onclick="window.location.href='login.html'">Login as User</button>
                  <button class="login-btn" onclick="window.location.href='login_ngo.html'">Login as NGO</button>
             </div>
+            <div id="toast" class="toast"></div>
             <div class="hamburger">
                 <span></span>
                 <span></span>
@@ -675,6 +676,19 @@
     alert(`✅ Thank you, ${name}! Your message has been sent.`);
     form.reset();
   });
+  const username = JSON.parse(localStorage.getItem('user')).name;
+  const toast = document.getElementById('toast');
+
+  if (username) {
+    // Show toast message
+    toast.textContent = `Welcome, ${username}! 🎉`;
+    toast.classList.add('show');
+
+    // Hide toast after 3 seconds
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 3000);
+  }
 </script>
 
 
