@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Donor Guidelines | ShareBite</title>
+<link rel="stylesheet" href="css/style.css?v=darkmode-fix-2">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="icon" type="image/svg+xml" href="logo/logo.svg">
+<style>
+/* --- Base Setup --- */
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  scroll-behavior: smooth;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* --- Navbar --- */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #4CAF50;
+  color: white;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
+.nav-container {
+  width: 90%;
+  max-width: 1200px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-logo-link { 
+  color: white; 
+  text-decoration: none; 
+  font-weight: 600; 
+  font-size: 1.2rem;
+}
+
+.nav-menu { display: flex; list-style: none; margin: 0; padding: 0; }
+.nav-menu li { margin-left: 1.5rem; }
+.nav-menu a { color: white; text-decoration: none; }
+.user-actions { display: flex; align-items: center; }
+.user-actions button { margin-left: 0.5rem; cursor: pointer; }
+
+/* --- Dark Mode --- */
+body.dark-mode {
+  background: #121212;
+  color: #f1f1f1;
+}
+
+body.dark-mode a { color: #4CAF50; }
+body.dark-mode .navbar { background: #1f1f1f; }
+
+/* --- Main Content --- */
+main {
+  flex: 1 0 auto;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 140px 2rem 2rem 2rem; /* top padding = navbar height + extra */
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: background 0.3s, color 0.3s;
+}
+
+body.dark-mode main {
+  background: #1e1e1e;
+  color: #f1f1f1;
+}
+
+h1 { text-align: center; margin-bottom: 1.5rem; scroll-margin-top: 140px; }
+ul { margin-left: 1.5rem; }
+li { margin: 0.6rem 0; }
+a { color: #4CAF50; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* --- Footer --- */
+footer {
+  flex-shrink: 0;
+  background: #222;
+  color: white;
+  text-align: center;
+  padding: 1rem 0;
+  margin-top: auto;
+}
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <div class="nav-container">
+    <div class="nav-logo">
+      <a href="index.html" class="nav-logo-link"><i class="fas fa-utensils"></i> ShareBite</a>
+    </div>
+    <ul class="nav-menu">
+      <li><a href="index.html#home">Home</a></li>
+      <li><a href="index.html#features">Features</a></li>
+      <li><a href="foodlisting.html">Listings</a></li>
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="index.html#contact-section">Contact</a></li>
+    </ul>
+    <div class="user-actions">
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode"><i class="fas fa-moon"></i></button>
+      <button class="login-btn" onclick="window.location.href='login.html'">Login as User</button>
+      <button class="login-btn" onclick="window.location.href='login_ngo.html'">Login as NGO</button>
+    </div>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<main>
+  <h1>Donor Guidelines</h1>
+  <p>Thank you for choosing to support the community by donating surplus food. Please follow these guidelines to ensure safety and quality:</p>
+  <ul>
+    <li>✔ Donate only fresh, hygienically prepared, and properly stored food.</li>
+    <li>✔ Ensure food is packed securely to avoid leakage or contamination.</li>
+    <li>✔ Label items clearly with preparation date and type (veg/non-veg).</li>
+    <li>✔ Do not donate expired, spoiled, or opened packaged food.</li>
+    <li>✔ Maintain cleanliness during food handling and transportation.</li>
+    <li>✔ Coordinate with volunteers/NGOs for smooth pickup and delivery.</li>
+  </ul>
+  <p>If you have any questions, please <a href="support.html">contact our support team</a>.</p>
+</main>
+
+<!-- Footer -->
+<footer>
+  <p>&copy; 2025 ShareBite. All rights reserved.</p>
+</footer>
+
+<!-- Dark Mode Script -->
+<script>
+const toggleBtn = document.getElementById("themeToggle");
+toggleBtn.addEventListener("click", () => {
+  document.body.classList.toggle("dark-mode");
+  const icon = toggleBtn.querySelector("i");
+  icon.classList.toggle("fa-moon");
+  icon.classList.toggle("fa-sun");
+});
+</script>
+</body>
+</html>
