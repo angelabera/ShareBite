@@ -420,6 +420,13 @@
           return;
         }
 
+        // Store user data
+        localStorage.setItem('user', JSON.stringify({
+            name: fullName,
+            email: email,
+            role: role
+        }));
+
         // Show success message
         Swal.fire({
           title: "Registered Successfully 🎉",
