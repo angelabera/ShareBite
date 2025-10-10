@@ -2952,6 +2952,9 @@ html, body, .feature-card, .food-card, .navbar, .modal-content, .footer, .stats-
   display: flex;
   gap: 1rem;
   margin-top: 2rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .social-links a {
@@ -2965,10 +2968,30 @@ html, body, .feature-card, .food-card, .navbar, .modal-content, .footer, .stats-
   border-radius: 50%;
   font-size: 1.2rem;
   transition: 0.3s ease;
+  flex-shrink: 0;
 }
 
 .social-links a:hover {
   transform: translateY(-3px);
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+}
+
+/* Responsive Social Links */
+@media (max-width: 768px) {
+  .social-links {
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+  
+  .social-links a {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+  }
+  
+  .social-links h5 {
+    font-size: 1.1rem;
+  }
 }
 
 /* Section Divider */
