@@ -1,0 +1,48 @@
+{
+  "id": "/index.html",
+  "name": "ShareBite - Food Waste Reducer",
+  "short_name": "ShareBite",
+  "description": "Connect restaurants and households with NGOs to reduce food waste while fighting hunger in communities.",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4CAF50",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/logo/logo-512.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/logo/logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/logo/logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Donate Food",
+      "short_name": "Donate",
+      "url": "/index.html#listings",
+      "icons": [{ "src": "/logo/logo-512.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Find Food",
+      "short_name": "Find",
+      "url": "/index.html#features",
+      "icons": [{ "src": "/logo/logo-512.png", "sizes": "192x192" }]
+    }
+  ]
+}
