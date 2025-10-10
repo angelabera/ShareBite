@@ -741,7 +741,7 @@ handleFileSelect(file) {
                 contact: "+1 234-567-8901",
                 createdAt: new Date(Date.now() - 1800000),
                 donor: "Sunrise Bakery",
-                dietaryTags: ["diary-free"]
+                dietaryTags: ["dairy-free"]
             },
             {
                 id: 4,
@@ -825,7 +825,7 @@ handleFileSelect(file) {
                 contact: "+1 234-567-8904",
                 createdAt: new Date(Date.now() - 2700000),
                 donor: "Healthy Eats Cafe",
-                dietaryTags: ["non-vegetarian", "diary-free"]
+                dietaryTags: ["non-vegetarian", "dairy-free"]
             }
         ];
         

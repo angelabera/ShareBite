@@ -470,7 +470,7 @@
 
     <!-- Gallery Section -->
     <section id="gallery" class="gallery-showcase">
-      <div class="container-fluid" style="margin: 0 20px;">
+      <div class="container-fluid" style="margin: 0px 20px; margin-top: 40px;">
         <div class="section-header">
           <h2 class="section-title">Our Impact Gallery</h2>
           <p class="section-subtitle">Moments of making a difference, one meal at a time</p>
@@ -825,15 +825,7 @@
       </div>
     </section>
 
-    <!-- Section Divider -->
-    <div class="section-divider">
-      <div class="divider-line"></div>
-      <div class="divider-icon">
-        <i class="fas fa-utensils"></i>
-      </div>
-      <div class="divider-line"></div>
-    </div>
-
+    
  <section id="contact-section" class="contact">
   <h1 class="main-title">📞 Contact Us</h1>
   <div class="contact-wrapper">
@@ -919,24 +911,19 @@
     alert(`✅ Thank you, ${name}! Your message has been sent.`);
     form.reset();
   });
-  // const username = JSON.parse(localStorage.getItem('user')).name;
-  // const toast = document.getElementById('toast');
+  const username = JSON.parse(localStorage.getItem('user')).name;
+  const toast = document.getElementById('toast');
 
-  // if (username) {
-  //   // Show toast message
-  //   toast.textContent = `Welcome, ${username}! 🎉`;
-  //   toast.classList.add('show');
+  if (username) {
+    // Show toast message
+    toast.textContent = `Welcome, ${username}! 🎉`;
+    toast.classList.add('show');
 
-  //   // Hide toast after 3 seconds
-  //   setTimeout(() => {
-  //     toast.classList.remove('show');
-  //   }, 3000);
-  // }
-
-  // Check if user just logged in (one-time message)
-// Add this new method to your class
-
-
+    // Hide toast after 3 seconds
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 3000);
+  }
 </script>
 
 
@@ -1009,14 +996,13 @@
         <p>Loading ShareBite...</p>
       </div>
     </div>
-    
 
     <!-- Scroll to Top Button -->
 <button id="scrollToTopBtn" title="Go to top">
   <i class="fas fa-arrow-up"></i>
 </button>
 
-    <script src="js/auth.js"></script>
+
     <script src="js/theme.js"></script>
     <script src="js/script.js"></script>
    

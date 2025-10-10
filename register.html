@@ -27,13 +27,13 @@
         --input-border-light: #ddd;
 
         /* Dark Mode */
-        --bg-gradient-start-dark: #1c1c1c;
-        --bg-gradient-end-dark: #2c2c2c;
-        --card-bg-dark: #2e2e2e;
+        --bg-gradient-start-dark: #121212;
+        --bg-gradient-end-dark: #1a1a1a;
+        --card-bg-dark: #2E2E2E;
         --text-color-dark: #f1f1f1;
-        --subtext-color-dark: #aaa;
+        --subtext-color-dark: #B0B0B0;
         --input-bg-dark: #3a3a3a;
-        --input-border-dark: #444;
+        --input-border-dark: #555;
       }
 
       * {
@@ -92,6 +92,13 @@
 
       .theme-toggle:hover {
         transform: scale(1.1) rotate(15deg);
+        border-color: var(--primary-green);
+        color: var(--primary-green);
+      }
+
+      body.dark-mode .theme-toggle:hover {
+        border-color: var(--secondary-orange);
+        color: var(--secondary-orange);
       }
 
       .auth-container {
@@ -109,7 +116,8 @@
 
       body.dark-mode .auth-container {
         background-color: var(--card-bg-dark);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), 0 5px 15px rgba(0, 0, 0, 0.3);
+        border: 1px solid #404040;
       }
 
       @keyframes fadeIn {
@@ -123,6 +131,11 @@
         margin-bottom: 0.75rem;
         font-weight: 600;
         font-size: 1.8rem;
+        color: var(--text-color-light);
+      }
+
+      body.dark-mode .auth-container h1 {
+        color: var(--text-color-dark);
       }
 
       .auth-container p.subtitle {
@@ -144,6 +157,11 @@
         display: block;
         margin-bottom: 0.5rem;
         font-weight: 500;
+        color: var(--text-color-light);
+      }
+
+      body.dark-mode .form-group label {
+        color: var(--text-color-dark);
       }
 
       .form-group input,
@@ -191,6 +209,13 @@
         border-color: var(--input-border-dark);
         background-color: var(--input-bg-dark);
         color: var(--text-color-dark);
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+      }
+
+      body.dark-mode .form-group input:focus,
+      body.dark-mode .form-group select:focus {
+        border-color: var(--primary-green);
+        box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2), inset 0 1px 3px rgba(0, 0, 0, 0.3);
       }
 
       .form-group input:focus,
@@ -210,6 +235,9 @@
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s;
+        text-align: center;
+        display: block;
+        margin: 0 auto;
       }
 
       .btn-primary {
@@ -229,10 +257,15 @@
         color: var(--secondary-orange);
         text-decoration: none;
         font-weight: 500;
+        text-align: center;
       }
 
       .login-link:hover {
         text-decoration: underline;
+      }
+
+      body.dark-mode .login-link {
+        color: var(--secondary-orange);
       }
 
       /* Responsive Design */
@@ -357,84 +390,93 @@
     </div>
 
     <script src="js/theme.js"></script>
+    <script>
+      // --- Password Visibility Toggle ---
+      const togglePassword = document.getElementById("togglePassword");
+      const passwordInput = document.getElementById("password");
+      const toggleConfirmPassword = document.getElementById(
+        "toggleConfirmPassword"
+      );
+      const confirmPasswordInput = document.getElementById("confirmPassword");
 
-<script>
-  // --- Password Visibility Toggle ---
-  const togglePassword = document.getElementById("togglePassword");
-  const passwordInput = document.getElementById("password");
-  const toggleConfirmPassword = document.getElementById("toggleConfirmPassword");
-  const confirmPasswordInput = document.getElementById("confirmPassword");
+      const eyeIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+      const eyeOffIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
 
-  const eyeIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
-  const eyeOffIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
+      let passwordVisible = false;
 
-  let passwordVisible = false;
-  togglePassword.addEventListener("click", () => {
-    passwordVisible = !passwordVisible;
-    passwordInput.type = passwordVisible ? "text" : "password";
-    togglePassword.innerHTML = passwordVisible ? eyeOffIcon : eyeIcon;
-    togglePassword.title = passwordVisible ? "Hide Password" : "Show Password";
-  });
-
-  let confirmPasswordVisible = false;
-  toggleConfirmPassword.addEventListener("click", () => {
-    confirmPasswordVisible = !confirmPasswordVisible;
-    confirmPasswordInput.type = confirmPasswordVisible ? "text" : "password";
-    toggleConfirmPassword.innerHTML = confirmPasswordVisible ? eyeOffIcon : eyeIcon;
-    toggleConfirmPassword.title = confirmPasswordVisible ? "Hide Password" : "Show Password";
-  });
-
-  // --- Form Submission ---
-  const registerForm = document.getElementById("registerForm");
-
-  registerForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    // Get form values
-    const name = registerForm.name.value.trim();
-    const email = registerForm.email.value.trim();
-    const password = registerForm.password.value.trim();
-    const confirmPassword = registerForm.confirmPassword.value.trim();
-    const role = registerForm.role.value;
-
-    // Check if all fields are filled
-    if (!name || !email || !password || !role) {
-      alert("Please fill in all fields before registering.");
-      return;
-    }
-
-    // Password match validation
-    if (password !== confirmPassword) {
-      alert("Passwords do not match. Please re-enter.");
-      return;
-    }
-
-    try {
-      const response = await fetch("http://localhost:3000/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password, role }),
+      togglePassword.addEventListener("click", () => {
+        passwordVisible = !passwordVisible;
+        passwordInput.type = passwordVisible ? "text" : "password";
+        togglePassword.innerHTML = passwordVisible ? eyeOffIcon : eyeIcon;
+        togglePassword.title = passwordVisible
+          ? "Hide Password"
+          : "Show Password";
       });
 
-      if (response.ok) {
-        // Store user data locally (optional)
-        localStorage.setItem(
-          "user",
-          JSON.stringify({ name, email, role })
-        );
+      let confirmPasswordVisible = false;
 
+      toggleConfirmPassword.addEventListener("click", () => {
+        confirmPasswordVisible = !confirmPasswordVisible;
+        confirmPasswordInput.type = confirmPasswordVisible
+          ? "text"
+          : "password";
+        toggleConfirmPassword.innerHTML = confirmPasswordVisible
+          ? eyeOffIcon
+          : eyeIcon;
+        toggleConfirmPassword.title = confirmPasswordVisible
+          ? "Hide Password"
+          : "Show Password";
+      });
+
+      // --- Form Submission ---
+      const registerForm = document.getElementById("registerForm");
+
+      registerForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        // Get form values
+        const fullName = registerForm.name.value.trim();
+        const email = registerForm.email.value.trim();
+        const password = registerForm.password.value.trim();
+        const confirmPassword = registerForm.confirmPassword.value.trim();
+        const role = registerForm.role.value;
+
+        if (!fullName || !email || !password || !role) {
+          alert("Please fill in all fields before registering.");
+          return;
+        }
+
+        // Password match validation
+        if (password !== confirmPassword) {
+          alert("Passwords do not match. Please re-enter.");
+          return;
+        }
+
+        // Store user data
+        localStorage.setItem('user', JSON.stringify({
+            name: fullName,
+            email: email,
+            role: role
+        }));
+
+        // Show success message
         alert("Registered successfully!");
-        window.location.href = "index.html";
-      } else {
-        const errorData = await response.json();
-        alert("Registration failed: " + (errorData.message || "Unknown error"));
-      }
-    } catch (error) {
-      console.error(error);
-      alert("Error connecting to server");
-    }
-  });
-</script>
 
+        // Redirect to index.html after short delay (so alert can be seen)
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 500); // 0.5 second delay
+      });
+      const password = document.getElementById("password");
+      const show_pwd = document.getElementById("show-pwd");
+      function passwordToggle() {
+        if (show_pwd.checked) {
+          password.type = "text";
+        } else {
+          password.type = "password";
+        }
+      }
+      show_pwd.addEventListener("change", passwordToggle);
+    </script>
   </body>
 </html>
