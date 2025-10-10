@@ -419,6 +419,13 @@
           return;
         }
 
+        // Store user data
+        localStorage.setItem('user', JSON.stringify({
+            name: fullName,
+            email: email,
+            role: role
+        }));
+
         // Show success message
         alert("Registered successfully!");
 

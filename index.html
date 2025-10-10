@@ -52,6 +52,7 @@
                 <button class="login-btn" onclick="window.location.href='login.html'">Login as User</button>
                  <button class="login-btn" onclick="window.location.href='login_ngo.html'">Login as NGO</button>
             </div>
+            <div id="toast" class="toast"></div>
             <div class="hamburger">
                 <span></span>
                 <span></span>
@@ -78,7 +79,7 @@
               <i class="fas fa-heart"></i>
               Donate Food
             </button>
-            <button class="btn btn-secondary" id="findFood">
+            <button class="btn btn-secondary" id="findFood" onclick="window.location.href='foodlisting.html'">
               <i class="fas fa-search"></i>
               Find Food
             </button>
@@ -510,6 +511,19 @@
     alert(`✅ Thank you, ${name}! Your message has been sent.`);
     form.reset();
   });
+  const username = JSON.parse(localStorage.getItem('user')).name;
+  const toast = document.getElementById('toast');
+
+  if (username) {
+    // Show toast message
+    toast.textContent = `Welcome, ${username}! 🎉`;
+    toast.classList.add('show');
+
+    // Hide toast after 3 seconds
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 3000);
+  }
 </script>
 
 
@@ -539,7 +553,7 @@
             <ul>
               <li><a href="#home">Home</a></li>
               <li><a href="#features">How It Works</a></li>
-              <li><a href="#listings">Food Listings</a></li>
+              <li><a href="foodlisting.html">Food Listings</a></li>
               <li><a href="#about">About Us</a></li>
             </ul>
           </div>
@@ -547,8 +561,9 @@
           <div class="footer-section">
             <h4>For Donors</h4>
             <ul>
-              <li><a href="#">List Food</a></li>
+                                  
               <li><a href="donor-guidelines.html">Donor Guidelines</a></li>
+              <li><a href="foodlisting.html">List Food</a></li>              
               <li><a href="#">Track Impact</a></li>
               <li><a href="support.html">Support</a></li>
             </ul>
