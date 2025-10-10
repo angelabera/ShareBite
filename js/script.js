@@ -6,12 +6,224 @@ class ShareBite {
         this.foodListings = [];
         this.filteredListings = [];
         this.currentFilter = 'all';
+        this.isAuthenticated = false;
+        this.userData = null;
         this.claimedItems = this.loadClaimedItems();
         this.notifications = this.loadNotifications();
         
-        this.init();
-        this.initTheme(); // add theme initialization after base init
+        this.initAuth();
     }
+
+    async initAuth() {
+        await this.checkAuthentication();
+        this.updateUIForAuthentication(); 
+        this.showWelcomeMessage(); 
+        this.init();
+        this.initTheme();
+    }
+
+    showWelcomeMessage() {
+    if (sessionStorage.getItem('justLoggedIn') === 'true') {
+        const toast = document.getElementById('toast');
+        
+        if (this.userData && this.userData.name) {
+            toast.textContent = `Welcome back, ${this.userData.name}! 🎉`;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Remove the flag so it doesn't show again on refresh
+        sessionStorage.removeItem('justLoggedIn');
+    }
+}
+
+
+    async checkAuthentication() {
+    try {
+        console.log('=== Checking authentication ===');
+        const res = await fetch('http://localhost:3000/api/current-user', {
+            credentials: 'include'
+        });
+        
+        console.log('Response status:', res.status);
+        
+        if (res.ok) {
+            this.userData = await res.json();
+            this.isAuthenticated = true;
+            this.currentRole = this.userData.role;
+            console.log('✓ User authenticated:', this.userData);
+        } else {
+            this.isAuthenticated = false;
+            this.userData = null;
+            this.currentRole = 'donor';
+            console.log('✗ User not authenticated');
+        }
+    } catch (err) {
+        console.error('Auth check error:', err);
+        this.isAuthenticated = false;
+        this.userData = null;
+        this.currentRole = 'donor';
+    }
+}
+    updateUIForAuthentication() {
+    const roleDisplay = document.getElementById('currentRole');
+    const roleSwitch = document.getElementById('roleSwitch');
+    const userActions = document.querySelector('.user-actions');
+    
+    console.log('Updating UI. Authenticated:', this.isAuthenticated, 'User:', this.userData);
+    
+    if (this.isAuthenticated && this.userData) {
+        // Update role display
+        if (roleDisplay) {
+            roleDisplay.textContent = this.capitalizeFirst(this.userData.role);
+        }
+        
+        // Disable role switch
+        if (roleSwitch) {
+            roleSwitch.style.cursor = 'not-allowed';
+            roleSwitch.style.opacity = '0.7';
+            roleSwitch.title = 'Role is set based on your account';
+            roleSwitch.classList.add('disabled');
+        }
+        
+        // Remove ALL existing login buttons
+        const loginButtons = document.querySelectorAll('.login-btn');
+        loginButtons.forEach(btn => btn.remove());
+        
+        // Create logout button
+        const logoutBtn = document.createElement('button');
+        logoutBtn.className = 'login-btn logout-btn';
+        logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
+        
+        // CRITICAL: Force the button to be clickable
+        logoutBtn.style.cssText = `
+            position: relative !important;
+            z-index: 99999 !important;
+            pointer-events: auto !important;
+            cursor: pointer !important;
+        `;
+        
+        // Add click event with multiple handlers
+        logoutBtn.onclick = async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Logout button clicked via onclick');
+            await this.handleLogout();
+        };
+        
+        logoutBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Logout button clicked via addEventListener');
+            await this.handleLogout();
+        }, true); // Use capture phase
+        
+        // Add logout button to user actions
+        if (userActions) {
+            userActions.appendChild(logoutBtn);
+        }
+        
+        console.log('✓ Logout button created:', logoutBtn);
+        
+        // Test if button is actually clickable
+        setTimeout(() => {
+            const btn = document.querySelector('.logout-btn');
+            console.log('Button in DOM:', btn);
+            console.log('Button styles:', window.getComputedStyle(btn));
+        }, 100);
+        
+        this.updateUIForRole();
+        
+    } else {
+        console.log('User not authenticated - showing Login button');
+        
+        if (roleDisplay) {
+            roleDisplay.textContent = 'Donor';
+        }
+        
+        // Remove logout button if exists
+        const logoutBtn = document.querySelector('.logout-btn');
+        if (logoutBtn) {
+            logoutBtn.remove();
+        }
+        
+        // Remove any existing login buttons first
+        const existingLoginButtons = document.querySelectorAll('.login-btn');
+        existingLoginButtons.forEach(btn => btn.remove());
+        
+        // Create single login button
+        const loginBtn = document.createElement('button');
+        loginBtn.className = 'login-btn';
+        loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
+        
+        // CRITICAL: Force the button to be clickable
+        loginBtn.style.cssText = `
+            position: relative !important;
+            z-index: 99999 !important;
+            pointer-events: auto !important;
+            cursor: pointer !important;
+        `;
+        
+        // Use onclick
+        loginBtn.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Login button clicked - redirecting to login.html');
+            window.location.href = 'login.html';
+        };
+        
+        // Add login button to user actions
+        if (userActions) {
+            userActions.appendChild(loginBtn);
+        }
+        
+        console.log('✓ Login button created and click handler attached');
+        
+        // Re-enable role switch
+        if (roleSwitch) {
+            roleSwitch.style.cursor = 'pointer';
+            roleSwitch.style.opacity = '1';
+            roleSwitch.classList.remove('disabled');
+        }
+    }
+}
+
+capitalizeFirst(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+    async handleLogout() {
+    try {
+        const res = await fetch('http://localhost:3000/logout', {
+            method: 'GET',
+            credentials: 'include'
+        });
+        
+        if (res.ok) {
+            this.isAuthenticated = false;
+            this.userData = null;
+            this.currentRole = 'donor';
+            
+            this.showToast('Logged out successfully', 'success');
+            
+            setTimeout(async () => {
+                if ('caches' in window) {
+                    const keys = await caches.keys();
+                    await Promise.all(keys.map(k => caches.delete(k)));
+                    console.log('[ShareBite] All caches cleared on logout');
+                }
+                
+                window.location.href = 'http://localhost:3000/';
+            }, 1000);
+        } else {
+            throw new Error('Logout failed');
+        }
+    } catch (err) {
+        console.error('Logout error:', err);
+        this.showToast('Error logging out', 'error');
+    }
+}
 
     init() {
         this.setupEventListeners();
@@ -58,8 +270,10 @@ class ShareBite {
         // Navigation
         this.setupNavigation();
         
-        // Role switching
-        this.setupRoleSwitch();
+        // Role switching (only if not authenticated)
+        if (!this.isAuthenticated) {
+            this.setupRoleSwitch();
+        }
         
         // Modal functionality
         this.setupModal();
@@ -107,9 +321,17 @@ class ShareBite {
         const roleSwitch = document.getElementById('roleSwitch');
         const currentRoleSpan = document.getElementById('currentRole');
         
+        if (!roleSwitch) return;
+        
         roleSwitch.addEventListener('click', () => {
+            // Only allow switching if not authenticated
+            if (this.isAuthenticated) {
+                this.showToast('Role is fixed based on your account', 'error');
+                return;
+            }
+            
             this.currentRole = this.currentRole === 'donor' ? 'collector' : 'donor';
-            currentRoleSpan.textContent = this.currentRole.charAt(0).toUpperCase() + this.currentRole.slice(1);
+            currentRoleSpan.textContent = this.capitalizeFirst(this.currentRole);
             
             // Update UI based on role
             this.updateUIForRole();
@@ -146,221 +368,200 @@ class ShareBite {
         this.renderFoodListings();
     }
 
-   setupModal() {
-    const modal = document.getElementById('addListingModal');
-    const addListingBtn = document.getElementById('addListingBtn');
-    const closeModalBtn = document.querySelector('.close-modal');
-    const cancelBtn = document.getElementById('cancelForm');
+    setupModal() {
+        const modal = document.getElementById('addListingModal');
+        const addListingBtn = document.getElementById('addListingBtn');
+        const closeModalBtn = document.querySelector('.close-modal');
+        const cancelBtn = document.getElementById('cancelForm');
 
-    this.currentStep = 1;
-    this.totalSteps = 3;
+        this.currentStep = 1;
+        this.totalSteps = 3;
 
-    addListingBtn.addEventListener('click', () => {
-        modal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-        this.resetFormSteps();
-    });
-
-    const closeModal = () => {
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-        this.resetForm();
-        this.resetFormSteps();
-    };
-
-    closeModalBtn.addEventListener('click', closeModal);
-    cancelBtn.addEventListener('click', closeModal);
-    
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeModal();
+        if (addListingBtn) {
+            addListingBtn.addEventListener('click', () => {
+                // Check authentication before opening modal
+                if (!this.isAuthenticated) {
+                    this.showToast('Please login to add a listing', 'error');
+                    setTimeout(() => {
+                        window.location.href = '/login.html';
+                    }, 1500);
+                    return;
+                }
+                
+                // Check if user is a donor
+                if (this.currentRole !== 'donor') {
+                    this.showToast('Only donors can add listings', 'error');
+                    return;
+                }
+                
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                this.resetFormSteps();
+            });
         }
-    });
 
-    this.setupFileUpload();
-    this.setupFormNavigation();
-}
+        const closeModal = () => {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            this.resetForm();
+            this.resetFormSteps();
+        };
 
-setupFormNavigation() {
-    const nextBtn = document.getElementById('nextStep');
-    const prevBtn = document.getElementById('prevStep');
-    const submitBtn = document.getElementById('submitForm');
-
-    nextBtn.addEventListener('click', () => {
-        if (this.validateCurrentStep()) {
-            this.goToStep(this.currentStep + 1);
-        }
-    });
-
-    prevBtn.addEventListener('click', () => {
-        this.goToStep(this.currentStep - 1);
-    });
-}
-
-goToStep(stepNumber) {
-    if (stepNumber < 1 || stepNumber > this.totalSteps) return;
-
-    document.querySelectorAll('.form-step').forEach(step => {
-        step.classList.remove('active');
-    });
-
-    const newStep = document.querySelector(`.form-step[data-step="${stepNumber}"]`);
-    if (newStep) {
-        newStep.classList.add('active');
-    }
-
-    this.updateProgress(stepNumber);
-
-    this.updateNavigationButtons(stepNumber);
-
-    this.currentStep = stepNumber;
-}
-
-updateProgress(stepNumber) {
-    const steps = document.querySelectorAll('.progress-step');
-    
-    steps.forEach((step, index) => {
-        const stepNum = index + 1;
+        if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+        if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
         
-        if (stepNum < stepNumber) {
-            step.classList.add('completed');
-            step.classList.remove('active');
-        } else if (stepNum === stepNumber) {
-            step.classList.add('active');
-            step.classList.remove('completed');
-        } else {
-            step.classList.remove('active', 'completed');
-        }
-    });
-}
-
-updateNavigationButtons(stepNumber) {
-    const nextBtn = document.getElementById('nextStep');
-    const prevBtn = document.getElementById('prevStep');
-    const submitBtn = document.getElementById('submitForm');
-
-    prevBtn.style.display = stepNumber === 1 ? 'none' : 'flex';
-    nextBtn.style.display = stepNumber === this.totalSteps ? 'none' : 'flex';
-    submitBtn.style.display = stepNumber === this.totalSteps ? 'flex' : 'none';
-}
-
-validateCurrentStep() {
-    const currentStepEl = document.querySelector(`.form-step[data-step="${this.currentStep}"]`);
-    const requiredInputs = currentStepEl.querySelectorAll('[required]');
-    
-    for (let input of requiredInputs) {
-        if (!input.value.trim()) {
-            input.focus();
-            this.showToast(`Please fill in the required field: ${input.previousElementSibling.textContent}`, 'error');
-            return false;
-        }
-    }
-    
-    return true;
-}
-
-resetFormSteps() {
-    this.currentStep = 1;
-    this.goToStep(1);
-}
-
-setupFileUpload() {
-    const fileInput = document.getElementById('photo');
-    const uploadArea = document.getElementById('photoUpload');
-    const imagePreview = document.getElementById('imagePreview');
-
-    uploadArea.addEventListener('click', () => {
-        fileInput.click();
-    });
-
-    uploadArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadArea.classList.add('drag-over');
-    });
-
-    uploadArea.addEventListener('dragleave', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('drag-over');
-    });
-
-    uploadArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('drag-over');
-        const files = e.dataTransfer.files;
-        if (files.length > 0 && files[0].type.startsWith('image/')) {
-            fileInput.files = files;
-            this.handleFileSelect(files[0]);
-        } else {
-            this.showToast('Please upload a valid image file', 'error');
-        }
-    });
-
-    fileInput.addEventListener('change', (e) => {
-        if (e.target.files.length > 0) {
-            this.handleFileSelect(e.target.files[0]);
-        }
-    });
-}
-
-handleFileSelect(file) {
-    const imagePreview = document.getElementById('imagePreview');
-    const uploadArea = document.getElementById('photoUpload');
-    
-    if (!file.type.startsWith('image/')) {
-        this.showToast('Please select an image file', 'error');
-        return;
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-        this.showToast('Image size should be less than 5MB', 'error');
-        return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        imagePreview.innerHTML = `
-            <img src="${e.target.result}" alt="Food preview">
-            <button type="button" class="remove-image">
-                <i class="fas fa-times"></i>
-            </button>
-        `;
-        imagePreview.classList.add('active');
-        uploadArea.style.display = 'none';
-
-        // Add remove functionality
-        const removeBtn = imagePreview.querySelector('.remove-image');
-        removeBtn.addEventListener('click', () => {
-            imagePreview.innerHTML = '';
-            imagePreview.classList.remove('active');
-            uploadArea.style.display = 'block';
-            document.getElementById('photo').value = '';
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
         });
-    };
-    reader.readAsDataURL(file);
-}
 
-    handleFileSelect(file) {
-        const uploadArea = document.getElementById('photoUpload');
-        if (file.type.startsWith('image/')) {
-            uploadArea.innerHTML = `
-                <i class="fas fa-check-circle" style="color: var(--primary-color);"></i>
-                <span style="color: var(--primary-color);">${file.name}</span>
-            `;
+        this.setupFileUpload();
+        this.setupFormNavigation();
+    }
+
+    setupFormNavigation() {
+        const nextBtn = document.getElementById('nextStep');
+        const prevBtn = document.getElementById('prevStep');
+        const submitBtn = document.getElementById('submitForm');
+
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                if (this.validateCurrentStep()) {
+                    this.goToStep(this.currentStep + 1);
+                }
+            });
+        }
+
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                this.goToStep(this.currentStep - 1);
+            });
         }
     }
+
+    goToStep(stepNumber) {
+        if (stepNumber < 1 || stepNumber > this.totalSteps) return;
+
+        document.querySelectorAll('.form-step').forEach(step => {
+            step.classList.remove('active');
+        });
+
+        const newStep = document.querySelector(`.form-step[data-step="${stepNumber}"]`);
+        if (newStep) {
+            newStep.classList.add('active');
+        }
+
+        this.updateProgress(stepNumber);
+        this.updateNavigationButtons(stepNumber);
+        this.currentStep = stepNumber;
+    }
+
+    updateProgress(stepNumber) {
+        const steps = document.querySelectorAll('.progress-step');
+        
+        steps.forEach((step, index) => {
+            const stepNum = index + 1;
+            
+            if (stepNum < stepNumber) {
+                step.classList.add('completed');
+                step.classList.remove('active');
+            } else if (stepNum === stepNumber) {
+                step.classList.add('active');
+                step.classList.remove('completed');
+            } else {
+                step.classList.remove('active', 'completed');
+            }
+        });
+    }
+
+    updateNavigationButtons(stepNumber) {
+        const nextBtn = document.getElementById('nextStep');
+        const prevBtn = document.getElementById('prevStep');
+        const submitBtn = document.getElementById('submitForm');
+
+        if (prevBtn) prevBtn.style.display = stepNumber === 1 ? 'none' : 'flex';
+        if (nextBtn) nextBtn.style.display = stepNumber === this.totalSteps ? 'none' : 'flex';
+        if (submitBtn) submitBtn.style.display = stepNumber === this.totalSteps ? 'flex' : 'none';
+    }
+
+    validateCurrentStep() {
+        const currentStepEl = document.querySelector(`.form-step[data-step="${this.currentStep}"]`);
+        const requiredInputs = currentStepEl.querySelectorAll('[required]');
+        
+        for (let input of requiredInputs) {
+            if (!input.value.trim()) {
+                input.focus();
+                this.showToast(`Please fill in the required field: ${input.previousElementSibling.textContent}`, 'error');
+                return false;
+            }
+        }
+        
+        return true;
+    }
+
+    resetFormSteps() {
+        this.currentStep = 1;
+        this.goToStep(1);
+    }
+
+    setupFileUpload() {
+        const fileInput = document.getElementById('photo');
+        const uploadArea = document.getElementById('photoUpload');
+        const imagePreview = document.getElementById('imagePreview');
+
+        if (!uploadArea || !fileInput) return;
+
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('drag-over');
+        });
+
+        uploadArea.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('drag-over');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('drag-over');
+            const files = e.dataTransfer.files;
+            if (files.length > 0 && files[0].type.startsWith('image/')) {
+                fileInput.files = files;
+                this.handleFileSelect(files[0]);
+            } else {
+                this.showToast('Please upload a valid image file', 'error');
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                this.handleFileSelect(e.target.files[0]);
+            }
+        });
+    }
+
 
     setupFormHandling() {
         const form = document.getElementById('listingForm');
         
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.handleFormSubmission();
-        });
+        if (form) {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.handleFormSubmission();
+            });
+        }
 
         const freshUntilInput = document.getElementById('freshUntil');
-        const now = new Date();
-        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-        freshUntilInput.min = now.toISOString().slice(0, 16);
+        if (freshUntilInput) {
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            freshUntilInput.min = now.toISOString().slice(0, 16);
+        }
     }
 
     handleFormSubmission() {
@@ -374,6 +575,11 @@ handleFileSelect(file) {
     }
 
     getFormData() {
+        const selectedTags = [];
+        document.querySelectorAll('input[name="dietary"]:checked').forEach(function(checkbox) {
+            selectedTags.push(checkbox.value);
+        });
+
         return {
             id: Date.now(),
             foodType: document.getElementById('foodType').value,
@@ -386,7 +592,8 @@ handleFileSelect(file) {
             contact: document.getElementById('contact').value,
             photo: document.getElementById('photo').files[0],
             createdAt: new Date(),
-            donor: 'Current User'
+            donor: 'Current User',
+            dietaryTags: selectedTags 
         };
     }
 
@@ -431,7 +638,6 @@ handleFileSelect(file) {
             <span>${message}</span>
         `;
         
-        // Add toast styles
         toast.style.cssText = `
             position: fixed;
             top: 100px;
@@ -458,146 +664,203 @@ handleFileSelect(file) {
     }
 
     closeModalAndReset() {
-        document.getElementById('addListingModal').style.display = 'none';
-        document.body.style.overflow = 'auto';
+        const modal = document.getElementById('addListingModal');
+        if (modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
         this.resetForm();
     }
 
     resetForm() {
-        document.getElementById('listingForm').reset();
-        document.getElementById('photoUpload').innerHTML = `
-            <i class="fas fa-cloud-upload-alt"></i>
-            <span>Click to upload or drag and drop</span>
-        `;
+        const form = document.getElementById('listingForm');
+        if (form) form.reset();
         
-        // Reset minimum date
+        const photoUpload = document.getElementById('photoUpload');
+        if (photoUpload) {
+            photoUpload.innerHTML = `
+                <i class="fas fa-cloud-upload-alt"></i>
+                <span>Drag & drop your image here or click to browse</span>
+                <small>Supports: JPG, PNG, GIF (Max 5MB)</small>
+            `;
+        }
+        
         const freshUntilInput = document.getElementById('freshUntil');
-        const now = new Date();
-        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-        freshUntilInput.min = now.toISOString().slice(0, 16);
+        if (freshUntilInput) {
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            freshUntilInput.min = now.toISOString().slice(0, 16);
+        }
     }
 
     setupFilteringAndSearch() {
-        const filterBtns = document.querySelectorAll('.filter-btn');
-        const searchInput = document.querySelector('.search-box input');
-        
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                // Remove active class from all buttons
-                filterBtns.forEach(b => b.classList.remove('active'));
-                // Add active class to clicked button
-                btn.classList.add('active');
-                
-                // Set current filter
-                this.currentFilter = btn.getAttribute('data-filter');
-                
-                // Filter and render listings
+    // --- Existing Category Filter Logic ---
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            this.currentFilter = btn.getAttribute('data-filter');
+            this.filterListings();
+            this.renderFoodListings();
+        });
+    });
+
+    // --- Existing Search Input Logic ---
+    const searchInput = document.querySelector('.search-box input');
+    let searchTimeout;
+    searchInput.addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            this.searchQuery = e.target.value.toLowerCase();
+            this.filterListings();
+            this.renderFoodListings();
+        }, 300);
+    });
+
+    // --- NEW: Dropdown and Filtering Logic ---
+    const dietaryBtn = document.getElementById('dietary-filter-btn');
+    const dietaryDropdown = document.getElementById('dietary-dropdown');
+    const dietaryCheckboxes = document.querySelectorAll('input[name="dietary-filter"]');
+
+    if (dietaryBtn) {
+        // Toggle dropdown visibility
+        dietaryBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dietaryDropdown.style.display = dietaryDropdown.style.display === 'block' ? 'none' : 'block';
+            dietaryBtn.classList.toggle('active');
+        });
+
+        // Add event listeners to checkboxes
+        dietaryCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
                 this.filterListings();
                 this.renderFoodListings();
+                
+                // Update button text to show selected count
+                const selectedCount = document.querySelectorAll('input[name="dietary-filter"]:checked').length;
+                const btnSpan = dietaryBtn.querySelector('span');
+                if (selectedCount > 0) {
+                    btnSpan.textContent = `Dietary Filters (${selectedCount})`;
+                } else {
+                    btnSpan.textContent = 'Dietary Filters';
+                }
             });
         });
 
-        let searchTimeout;
-        searchInput.addEventListener('input', (e) => {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                this.searchQuery = e.target.value.toLowerCase();
-                this.filterListings();
-                this.renderFoodListings();
-            }, 300);
+        // Close dropdown when clicking outside
+        document.addEventListener('click', () => {
+            if (dietaryDropdown.style.display === 'block') {
+                dietaryDropdown.style.display = 'none';
+                dietaryBtn.classList.remove('active');
+            }
+        });
+        
+        // Prevent closing when clicking inside the dropdown
+        dietaryDropdown.addEventListener('click', (e) => {
+            e.stopPropagation();
         });
     }
-
+}
     filterListings() {
+        const activeDietaryFilters = [];
+        document.querySelectorAll('input[name="dietary-filter"]:checked').forEach(checkbox => {
+            activeDietaryFilters.push(checkbox.value);
+        });
+
         this.filteredListings = this.foodListings.filter(listing => {
             const matchesFilter = this.currentFilter === 'all' || listing.category === this.currentFilter;
+            
             const matchesSearch = !this.searchQuery || 
                 listing.foodType.toLowerCase().includes(this.searchQuery) ||
                 listing.location.toLowerCase().includes(this.searchQuery) ||
                 listing.description.toLowerCase().includes(this.searchQuery);
+
+            const matchesDietary = activeDietaryFilters.length === 0 || 
+                (listing.dietaryTags && activeDietaryFilters.every(filter => listing.dietaryTags.includes(filter)));
             
-            return matchesFilter && matchesSearch;
+            return matchesFilter && matchesSearch && matchesDietary;
         });
     }
 
     setupSmoothScrolling() {
         const scrollIndicator = document.querySelector('.scroll-indicator');
         
-        scrollIndicator.addEventListener('click', () => {
-            document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
-        });
+        if (scrollIndicator) {
+            scrollIndicator.addEventListener('click', () => {
+                const features = document.getElementById('features');
+                if (features) {
+                    features.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        }
     }
 
     setupResponsiveNav() {
         const hamburger = document.querySelector('.hamburger');
         const navMenu = document.querySelector('.nav-menu');
         
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
-            navMenu.classList.toggle('active');
-        });
+        if (hamburger && navMenu) {
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                navMenu.classList.toggle('active');
+            });
+        }
     }
 
     setupHeroButtons() {
         const donateBtn = document.getElementById('donateFood');
         const findBtn = document.getElementById('findFood');
         
-        donateBtn.addEventListener('click', () => {
-            if (this.currentRole === 'donor') {
-                document.getElementById('addListingModal').style.display = 'block';
-                document.body.style.overflow = 'hidden';
-            } else {
-                document.getElementById('listings').scrollIntoView({ behavior: 'smooth' });
-            }
-        });
+        if (donateBtn) {
+            donateBtn.addEventListener('click', () => {
+                if (this.currentRole === 'donor') {
+                    const modal = document.getElementById('addListingModal');
+                    if (modal) {
+                        // Check authentication
+                        if (!this.isAuthenticated) {
+                            this.showToast('Please login to add a listing', 'error');
+                            setTimeout(() => {
+                                window.location.href = '/login.html';
+                            }, 1500);
+                            return;
+                        }
+                        modal.style.display = 'block';
+                        document.body.style.overflow = 'hidden';
+                    }
+                } else {
+                    const listings = document.getElementById('listings');
+                    if (listings) listings.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        }
         
-        findBtn.addEventListener('click', () => {
-            document.getElementById('listings').scrollIntoView({ behavior: 'smooth' });
-        });
+        if (findBtn) {
+            findBtn.addEventListener('click', () => {
+                const listings = document.getElementById('listings');
+                if (listings) listings.scrollIntoView({ behavior: 'smooth' });
+            });
+        }
     }
 
     setupStatsAnimation() {
         const stats = document.querySelectorAll('.stat-number');
-        let animated = false;
         
-        const animateStats = () => {
-            if (animated) return;
+        stats.forEach(stat => {
+            const target = parseInt(stat.getAttribute('data-count'));
             
-            stats.forEach(stat => {
-                const target = parseInt(stat.getAttribute('data-count'));
-                const duration = 2000;
-                const increment = target / (duration / 16);
-                let current = 0;
-                
-                const updateStat = () => {
-                    current += increment;
-                    if (current < target) {
-                        stat.textContent = Math.floor(current);
-                        requestAnimationFrame(updateStat);
-                    } else {
-                        stat.textContent = target;
-                    }
-                };
-                
-                updateStat();
-            });
+            stat.style.cssText = `
+                display: block !important;
+                font-size: 2rem !important;
+                font-weight: 700 !important;
+                color: #FFC107 !important;
+                animation: none !important;
+                transform: none !important;
+                transition: none !important;
+            `;
             
-            animated = true;
-        };
-        
-        // Trigger animation when hero section is in view
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    setTimeout(animateStats, 1000);
-                }
-            });
+            stat.textContent = target;
         });
-        
-        const heroStats = document.querySelector('.hero-stats');
-        if (heroStats) {
-            observer.observe(heroStats);
-        }
     }
 
     setupScrollEffects() {
@@ -615,7 +878,6 @@ handleFileSelect(file) {
         // Apply initial state in case page loads scrolled (anchor/hash navigation)
         handleScroll();
         
-        // Animate elements on scroll
         this.setupScrollAnimations();
     }
 
@@ -633,7 +895,6 @@ handleFileSelect(file) {
             });
         }, observerOptions);
         
-        // Observe elements to animate
         const elementsToAnimate = document.querySelectorAll('.feature-card, .food-card, .impact-item');
         elementsToAnimate.forEach(el => {
             observer.observe(el);
@@ -653,7 +914,8 @@ handleFileSelect(file) {
                 location: "Mario's Pizzeria, 123 Main Street",
                 contact: "+1 234-567-8900",
                 createdAt: new Date(Date.now() - 3600000),
-                donor: "Mario's Pizzeria"
+                donor: "Mario's Pizzeria",
+                dietaryTags: ["vegetarian"]
             },
             {
                 id: 2,
@@ -666,7 +928,8 @@ handleFileSelect(file) {
                 location: "Downtown Conference Center",
                 contact: "events@conference.com",
                 createdAt: new Date(Date.now() - 7200000),
-                donor: "Conference Center"
+                donor: "Conference Center",
+                dietaryTags: ["non-vegetarian"]
             },
             {
                 id: 3,
@@ -679,7 +942,8 @@ handleFileSelect(file) {
                 location: "Sunrise Bakery, Oak Avenue",
                 contact: "+1 234-567-8901",
                 createdAt: new Date(Date.now() - 1800000),
-                donor: "Sunrise Bakery"
+                donor: "Sunrise Bakery",
+                dietaryTags: ["diary-free"]
             },
             {
                 id: 4,
@@ -692,7 +956,22 @@ handleFileSelect(file) {
                 location: "Residential Area, Pine Street",
                 contact: "+1 234-567-8902",
                 createdAt: new Date(Date.now() - 900000),
-                donor: "Local Family"
+                donor: "Local Family",
+                dietaryTags: ["vegetarian", "gluten-free"]
+            },
+            {
+                id: 5,
+                foodType: "Fruit & Vegetable Box",
+                quantity: "1 large box",
+                category: "restaurant",
+                description: "Fresh produce that includes apples, oranges, carrots, and lettuce.",
+                freshUntil: this.getRandomFutureDate(),
+                pickupTime: "17:00",
+                location: "Green Garden Restaurant",
+                contact: "+1 234-567-8903",
+                createdAt: new Date(Date.now() - 5400000),
+                donor: "Green Garden Restaurant",
+                dietaryTags: ["vegan"]
             },
             {
                 id: 5,
@@ -705,20 +984,8 @@ handleFileSelect(file) {
                 location: "Green Garden Restaurant",
                 contact: "+1 234-567-8903",
                 createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant"
-            },
-            {
-                id: 5,
-                foodType: "Fruit & Vegetable Box",
-                quantity: "1 large box",
-                category: "restaurant",
-                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "17:00",
-                location: "Green Garden Restaurant",
-                contact: "+1 234-567-8903",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant"
+                donor: "Green Garden Restaurant",
+                dietaryTags: ["vegan"]
             },
             {
                 id: 7,
@@ -731,7 +998,8 @@ handleFileSelect(file) {
                 location: "Green Garden Restaurant",
                 contact: "+1 234-567-8903",
                 createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant"
+                donor: "Green Garden Restaurant",
+                dietaryTags: ["vegan"]
             },
             {
                 id: 8,
@@ -744,7 +1012,8 @@ handleFileSelect(file) {
                 location: "Green Garden Restaurant",
                 contact: "+1 234-567-8903",
                 createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant"
+                donor: "Green Garden Restaurant",
+                dietaryTags: ["vegan"]
             },
             {
                 id: 6,
@@ -757,7 +1026,8 @@ handleFileSelect(file) {
                 location: "Healthy Eats Cafe, Market Square",
                 contact: "+1 234-567-8904",
                 createdAt: new Date(Date.now() - 2700000),
-                donor: "Healthy Eats Cafe"
+                donor: "Healthy Eats Cafe",
+                dietaryTags: ["non-vegetarian", "diary-free"]
             }
         ];
         
@@ -767,7 +1037,7 @@ handleFileSelect(file) {
 
     getRandomFutureDate() {
         const now = new Date();
-        const hours = Math.floor(Math.random() * 48) + 2; // 2 to 50 hours from now
+        const hours = Math.floor(Math.random() * 48) + 2;
         const futureDate = new Date(now.getTime() + hours * 60 * 60 * 1000);
         return futureDate.toISOString().slice(0, 16);
     }
@@ -775,6 +1045,9 @@ handleFileSelect(file) {
     renderFoodListings() {
         const foodGrid = document.getElementById('foodGrid');
         const listingsToShow = this.filteredListings.slice(0, 6);
+        if (!foodGrid) {
+            return; 
+        }
 
         if (listingsToShow.length === 0) {
             foodGrid.innerHTML = `
@@ -818,20 +1091,31 @@ handleFileSelect(file) {
         }
     }
 
-    createFoodCard(listing) {
+   createFoodCard(listing) {
         const timeAgo = this.getTimeAgo(listing.createdAt);
         const freshUntil = this.formatDateTime(listing.freshUntil);
-        const pickupTime = this.formatTime(listing.pickupTime);
         const isClaimed = this.claimedItems.includes(listing.id);
+
+        // This logic generates the HTML for the tags
+        let tagsHTML = '';
+        if (listing.dietaryTags && listing.dietaryTags.length > 0) {
+            tagsHTML = `<div class="food-tags">` +
+                listing.dietaryTags.map(tag => `<span class="tag tag-${tag}">${tag}</span>`).join('') +
+            `</div>`;
+        }
         
+        // The return statement now correctly includes the tagsHTML
         return `
-            <div class="food-card ${isClaimed ? 'claimed' : ''}" data-id="${listing.id}">
+            <div class="food-card ${isClaimed ? 'claimed' : ''}" 
+                 data-id="${listing.id}" 
+                 data-tags="${listing.dietaryTags ? listing.dietaryTags.join(',') : ''}">
                 <div class="food-image">
                     ${listing.photo ? `<img src="${URL.createObjectURL(listing.photo)}" alt="${listing.foodType}">` : `<i class="fas fa-${this.getFoodIcon(listing.category)}"></i>`}
                     <div class="food-category">${this.capitalizeFirst(listing.category)}</div>
                 </div>
                 <div class="food-details">
                     <h3 class="food-title">${listing.foodType}</h3>
+                    ${tagsHTML} 
                     <p class="food-description">${listing.description}</p>
                     <div class="food-meta">
                         <span class="quantity"><i class="fas fa-utensils"></i> ${listing.quantity}</span>
@@ -861,7 +1145,6 @@ handleFileSelect(file) {
     }
 
     setupFoodCardInteractions() {
-        // Claim buttons
         const claimBtns = document.querySelectorAll('.claim-btn');
         claimBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -870,7 +1153,6 @@ handleFileSelect(file) {
             });
         });
         
-        // Contact buttons
         const contactBtns = document.querySelectorAll('.contact-btn');
         contactBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -881,6 +1163,21 @@ handleFileSelect(file) {
     }
 
     handleClaimFood(listingId) {
+        // Check authentication
+        if (!this.isAuthenticated) {
+            this.showToast('Please login to claim food', 'error');
+            setTimeout(() => {
+                window.location.href = '/login.html';
+            }, 1500);
+            return;
+        }
+        
+        // Check if user is a collector
+        if (this.currentRole !== 'collector') {
+            this.showToast('Only collectors can claim food', 'error');
+            return;
+        }
+        
         const listing = this.foodListings.find(l => l.id === listingId);
         if (!listing) return;
         
@@ -936,11 +1233,9 @@ handleFileSelect(file) {
     }
 
     handleContactDonor(contact) {
-        // Copy contact to clipboard
         navigator.clipboard.writeText(contact).then(() => {
             this.showToast('Contact information copied to clipboard!', 'success');
         }).catch(() => {
-            // Fallback for older browsers
             const textArea = document.createElement('textarea');
             textArea.value = contact;
             document.body.appendChild(textArea);
@@ -1003,16 +1298,12 @@ handleFileSelect(file) {
     }
 
     startAnimations() {
-        // Add stagger animation to feature cards
         const featureCards = document.querySelectorAll('.feature-card');
         featureCards.forEach((card, index) => {
             card.style.animationDelay = `${index * 0.2}s`;
         });
         
-        // Add floating animation to hero elements
         this.startFloatingAnimations();
-        
-        // Add periodic pulse to CTA buttons
         this.startButtonPulse();
     }
 
@@ -1034,17 +1325,19 @@ handleFileSelect(file) {
                     }, 600);
                 }, index * 200);
             });
-        }, 10000); // Pulse every 10 seconds
+        }, 10000);
     }
 
     hideLoadingOverlay() {
         const loadingOverlay = document.getElementById('loadingOverlay');
-        setTimeout(() => {
-            loadingOverlay.style.opacity = '0';
+        if (loadingOverlay) {
             setTimeout(() => {
-                loadingOverlay.style.display = 'none';
-            }, 500);
-        }, 1500); // Show loading for 1.5 seconds
+                loadingOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    loadingOverlay.style.display = 'none';
+                }, 500);
+            }, 1500);
+        }
     }
 
     // Notification System Methods
@@ -1240,7 +1533,6 @@ Contact information has been copied to clipboard.
     }
 }
 
-// Additional CSS animations via JavaScript
 function addDynamicStyles() {
     const style = document.createElement('style');
     style.textContent = `
@@ -1288,7 +1580,6 @@ function addDynamicStyles() {
             color: var(--dark-gray);
         }
         
-        /* Hamburger menu animation */
         .hamburger.active span:nth-child(1) {
             transform: rotate(-45deg) translate(-5px, 6px);
         }
@@ -1301,7 +1592,11 @@ function addDynamicStyles() {
             transform: rotate(45deg) translate(-5px, -6px);
         }
         
-        /* Mobile menu styles */
+        .role-switch.disabled {
+            pointer-events: none;
+            cursor: not-allowed !important;
+        }
+        
         @media (max-width: 768px) {
             .nav-menu.active {
                 display: flex;
@@ -1328,29 +1623,26 @@ function addDynamicStyles() {
     document.head.appendChild(style);
 }
 
-// Initialize the application
 document.addEventListener('DOMContentLoaded', () => {
     addDynamicStyles();
     new ShareBite();
 });
 
 // Service Worker registration for PWA capabilities (optional)
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-            .then(registration => {
-                console.log('SW registered: ', registration);
-            })
-            .catch(registrationError => {
-                console.log('SW registration failed: ', registrationError);
-            });
-    });
-}
+// if ('serviceWorker' in navigator) {
+//     window.addEventListener('load', () => {
+//         navigator.serviceWorker.register('/sw.js')
+//             .then(registration => {
+//                 console.log('SW registered: ', registration);
+//             })
+//             .catch(registrationError => {
+//                 console.log('SW registration failed: ', registrationError);
+//             });
+//     });
+// }
 
-// Export for potential testing or external use
 window.ShareBite = ShareBite;
 
-// Clear caches and trigger SW skipWaiting for debugging updates
 window.clearShareBiteCaches = async function() {
     if ('caches' in window) {
         const keys = await caches.keys();
@@ -1381,3 +1673,505 @@ scrollToTopBtn.addEventListener("click", () => {
     behavior: "smooth",
   });
 });
+
+// ===== Gallery Animation and Interactivity =====
+class GalleryManager {
+    constructor() {
+        this.galleryItems = document.querySelectorAll('.gallery-item');
+        this.init();
+    }
+
+    init() {
+        this.setupScrollAnimation();
+        this.setupHoverEffects();
+        this.setupClickEvents();
+    }
+
+    setupScrollAnimation() {
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('gallery-visible');
+                }
+            });
+        }, observerOptions);
+
+        this.galleryItems.forEach(item => {
+            observer.observe(item);
+        });
+    }
+
+    setupHoverEffects() {
+        this.galleryItems.forEach(item => {
+            // Add subtle parallax effect on mouse move
+            item.addEventListener('mousemove', (e) => {
+                const rect = item.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const moveX = (x - centerX) / 20;
+                const moveY = (y - centerY) / 20;
+
+                const img = item.querySelector('img');
+                if (img) {
+                    img.style.transform = `scale(1.1) translate(${moveX}px, ${moveY}px)`;
+                }
+            });
+
+            item.addEventListener('mouseleave', () => {
+                const img = item.querySelector('img');
+                if (img) {
+                    img.style.transform = 'scale(1.1)';
+                }
+            });
+        });
+    }
+
+    setupClickEvents() {
+        this.galleryItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const category = item.getAttribute('data-category');
+                const title = item.querySelector('h3').textContent;
+                const description = item.querySelector('p').textContent;
+
+                // Optional: Open lightbox or show more details
+                this.showGalleryDetail(item, title, description, category);
+            });
+        });
+    }
+
+    showGalleryDetail(item, title, description, category) {
+        // Create a simple lightbox effect
+        const imgSrc = item.querySelector('img').src;
+
+        const lightbox = document.createElement('div');
+        lightbox.className = 'gallery-lightbox';
+        lightbox.innerHTML = `
+            <div class="lightbox-overlay"></div>
+            <div class="lightbox-content">
+                <button class="lightbox-close">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="lightbox-image-container">
+                    <img src="${imgSrc}" alt="${title}">
+                </div>
+                <div class="lightbox-info">
+                    <span class="lightbox-category">
+                        <i class="fas fa-tag"></i> ${category}
+                    </span>
+                    <h2>${title}</h2>
+                    <p>${description}</p>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(lightbox);
+        document.body.style.overflow = 'hidden';
+
+        // Animate in
+        setTimeout(() => {
+            lightbox.classList.add('active');
+        }, 10);
+
+        // Close handlers
+        const closeBtn = lightbox.querySelector('.lightbox-close');
+        const overlay = lightbox.querySelector('.lightbox-overlay');
+
+        const closeLightbox = () => {
+            lightbox.classList.remove('active');
+            setTimeout(() => {
+                document.body.removeChild(lightbox);
+                document.body.style.overflow = 'auto';
+            }, 300);
+        };
+
+        closeBtn.addEventListener('click', closeLightbox);
+        overlay.addEventListener('click', closeLightbox);
+
+        // ESC key to close
+        const escHandler = (e) => {
+            if (e.key === 'Escape') {
+                closeLightbox();
+                document.removeEventListener('keydown', escHandler);
+            }
+        };
+        document.addEventListener('keydown', escHandler);
+    }
+}
+
+// Add lightbox styles dynamically
+function addGalleryLightboxStyles() {
+    const style = document.createElement('style');
+    style.textContent = `
+        .gallery-lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .gallery-lightbox.active {
+            opacity: 1;
+        }
+
+        .lightbox-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            cursor: pointer;
+        }
+
+        .lightbox-content {
+            position: relative;
+            background: white;
+            border-radius: 20px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: auto;
+            z-index: 1;
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .gallery-lightbox.active .lightbox-content {
+            transform: scale(1);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #333;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        .lightbox-close:hover {
+            background: var(--secondary-color);
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .lightbox-image-container {
+            width: 100%;
+            max-height: 500px;
+            overflow: hidden;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .lightbox-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .lightbox-info {
+            padding: 2rem;
+        }
+
+        .lightbox-category {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--primary-gradient);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .lightbox-info h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--black);
+            margin-bottom: 1rem;
+        }
+
+        .lightbox-info p {
+            font-size: 1.1rem;
+            color: var(--medium-gray);
+            line-height: 1.6;
+        }
+
+        /* Dark mode support */
+        :root.dark .lightbox-content {
+            background: #1E1E1E;
+            color: var(--black);
+        }
+
+        :root.dark .lightbox-info h2 {
+            color: var(--black);
+        }
+
+        :root.dark .lightbox-close {
+            background: rgba(42, 42, 42, 0.9);
+            color: white;
+        }
+
+        :root.dark .lightbox-close:hover {
+            background: var(--secondary-color);
+        }
+
+        @media (max-width: 768px) {
+            .lightbox-content {
+                margin: 1rem;
+            }
+
+            .lightbox-info h2 {
+                font-size: 1.5rem;
+            }
+
+            .lightbox-info p {
+                font-size: 1rem;
+            }
+
+            .lightbox-info {
+                padding: 1.5rem;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+// Initialize gallery when DOM is ready
+if (document.querySelector('.gallery-showcase')) {
+    addGalleryLightboxStyles();
+    new GalleryManager();
+}
+
+// ===== Testimonials Carousel =====
+class TestimonialsCarousel {
+    constructor() {
+        this.carousel = document.querySelector('.testimonials-carousel');
+        if (!this.carousel) return;
+
+        this.cards = document.querySelectorAll('.testimonial-card');
+        this.dots = document.querySelectorAll('.testimonial-dot');
+        this.prevBtn = document.querySelector('.testimonial-prev');
+        this.nextBtn = document.querySelector('.testimonial-next');
+
+        this.currentIndex = 0;
+        this.isAnimating = false;
+        this.autoPlayInterval = null;
+
+        this.init();
+    }
+
+    init() {
+        this.setupNavigation();
+        this.setupDots();
+        this.setupKeyboardNavigation();
+        this.setupTouchSwipe();
+        this.startAutoPlay();
+        this.animateStats();
+        this.pauseOnHover();
+    }
+
+    setupNavigation() {
+        this.prevBtn.addEventListener('click', () => this.goToPrevious());
+        this.nextBtn.addEventListener('click', () => this.goToNext());
+    }
+
+    setupDots() {
+        this.dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                this.goToSlide(index);
+            });
+        });
+    }
+
+    setupKeyboardNavigation() {
+        document.addEventListener('keydown', (e) => {
+            if (!this.isInViewport()) return;
+
+            if (e.key === 'ArrowLeft') {
+                this.goToPrevious();
+            } else if (e.key === 'ArrowRight') {
+                this.goToNext();
+            }
+        });
+    }
+
+    setupTouchSwipe() {
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        this.carousel.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        this.carousel.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            this.handleSwipe(touchStartX, touchEndX);
+        });
+    }
+
+    handleSwipe(startX, endX) {
+        const threshold = 50;
+        const diff = startX - endX;
+
+        if (Math.abs(diff) > threshold) {
+            if (diff > 0) {
+                this.goToNext();
+            } else {
+                this.goToPrevious();
+            }
+        }
+    }
+
+    goToNext() {
+        if (this.isAnimating) return;
+
+        const nextIndex = (this.currentIndex + 1) % this.cards.length;
+        this.goToSlide(nextIndex);
+    }
+
+    goToPrevious() {
+        if (this.isAnimating) return;
+
+        const prevIndex = (this.currentIndex - 1 + this.cards.length) % this.cards.length;
+        this.goToSlide(prevIndex);
+    }
+
+    goToSlide(index) {
+        if (this.isAnimating || index === this.currentIndex) return;
+
+        this.isAnimating = true;
+        this.stopAutoPlay();
+
+        // Remove all active classes
+        this.cards.forEach(card => {
+            card.classList.remove('active', 'prev');
+        });
+
+        this.dots.forEach(dot => {
+            dot.classList.remove('active');
+        });
+
+        // Set previous card
+        this.cards[this.currentIndex].classList.add('prev');
+
+        // Set active card
+        setTimeout(() => {
+            this.cards[index].classList.add('active');
+            this.dots[index].classList.add('active');
+            this.currentIndex = index;
+
+            setTimeout(() => {
+                this.isAnimating = false;
+                this.startAutoPlay();
+            }, 600);
+        }, 50);
+    }
+
+    startAutoPlay() {
+        this.stopAutoPlay();
+        this.autoPlayInterval = setInterval(() => {
+            this.goToNext();
+        }, 5000); // Change slide every 5 seconds
+    }
+
+    stopAutoPlay() {
+        if (this.autoPlayInterval) {
+            clearInterval(this.autoPlayInterval);
+            this.autoPlayInterval = null;
+        }
+    }
+
+    isInViewport() {
+        const rect = this.carousel.getBoundingClientRect();
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+    }
+
+    animateStats() {
+        const statNumbers = document.querySelectorAll('.testimonial-stat-number[data-target]');
+
+        const observerOptions = {
+            threshold: 0.5
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
+                    this.animateNumber(entry.target);
+                    entry.target.classList.add('animated');
+                }
+            });
+        }, observerOptions);
+
+        statNumbers.forEach(stat => observer.observe(stat));
+    }
+
+    animateNumber(element) {
+        const target = parseInt(element.getAttribute('data-target'));
+        const duration = 2000;
+        const increment = target / (duration / 16);
+        let current = 0;
+
+        const updateNumber = () => {
+            current += increment;
+            if (current < target) {
+                element.textContent = Math.floor(current);
+                requestAnimationFrame(updateNumber);
+            } else {
+                element.textContent = target + '+';
+            }
+        };
+
+        updateNumber();
+    }
+
+    // Pause autoplay when user hovers over carousel
+    pauseOnHover() {
+        this.carousel.addEventListener('mouseenter', () => {
+            this.stopAutoPlay();
+        });
+
+        this.carousel.addEventListener('mouseleave', () => {
+            this.startAutoPlay();
+        });
+    }
+}
+
+// Initialize testimonials carousel
+if (document.querySelector('.testimonials-section')) {
+    new TestimonialsCarousel();
+}
