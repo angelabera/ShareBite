@@ -347,18 +347,23 @@ handleFileSelect(file) {
 
 
     setupFormHandling() {
-        const form = document.getElementById('listingForm');
-        
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.handleFormSubmission();
-        });
+    const form = document.getElementById('listingForm');
+    
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.handleFormSubmission();
+    });
 
-        const freshUntilInput = document.getElementById('freshUntil');
-        const now = new Date();
-        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-        freshUntilInput.min = now.toISOString().slice(0, 16);
-    }
+    // Set minimum date to current local time
+    const freshUntilInput = document.getElementById('freshUntil');
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    freshUntilInput.min = `${year}-${month}-${day}T${hours}:${minutes}`;
+}
 
     handleFormSubmission() {
         const formData = this.getFormData();
@@ -467,18 +472,34 @@ handleFileSelect(file) {
     }
 
     resetForm() {
-        document.getElementById('listingForm').reset();
-        document.getElementById('photoUpload').innerHTML = `
-            <i class="fas fa-cloud-upload-alt"></i>
-            <span>Click to upload or drag and drop</span>
-        `;
-        
-        // Reset minimum date
-        const freshUntilInput = document.getElementById('freshUntil');
-        const now = new Date();
-        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-        freshUntilInput.min = now.toISOString().slice(0, 16);
-    }
+    const form = document.getElementById('listingForm');
+    const photoUpload = document.getElementById('photoUpload');
+    const imagePreview = document.getElementById('imagePreview');
+    const freshUntilInput = document.getElementById('freshUntil');
+    
+    // Reset form
+    form.reset();
+    
+    // Reset photo upload area
+    photoUpload.innerHTML = `
+        <i class="fas fa-cloud-upload-alt"></i>
+        <span>Click to upload or drag and drop</span>
+    `;
+    photoUpload.style.display = 'block';
+    
+    // Clear image preview
+    imagePreview.innerHTML = '';
+    imagePreview.classList.remove('active');
+    
+    // Reset minimum date to current local time
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    freshUntilInput.min = `${year}-${month}-${day}T${hours}:${minutes}`;
+}
 
     // Date Input Confirmation functionality
     setupDateInputConfirmation() {
@@ -957,7 +978,7 @@ handleFileSelect(file) {
                 dietaryTags: ["vegan"]
             },
             {
-                id: 5,
+                id: 6,
                 foodType: "Fruit & Vegetable Box",
                 quantity: "1 large box",
                 category: "restaurant",
@@ -999,7 +1020,7 @@ handleFileSelect(file) {
                 dietaryTags: ["vegan"]
             },
             {
-                id: 6,
+                id: 9,
                 foodType: "Grilled Chicken Meals",
                 quantity: "12 complete meals",
                 category: "restaurant",
@@ -1013,7 +1034,7 @@ handleFileSelect(file) {
                 dietaryTags: ["non-vegetarian", "dairy-free"]
             }
         ];
-        
+
         this.foodListings = sampleListings;
         this.filteredListings = sampleListings;
     }
