@@ -306,6 +306,12 @@ capitalizeFirst(str) {
         // Form handling
         this.setupFormHandling();
         
+        // Date input confirmation functionality
+        this.setupDateInputConfirmation();
+        
+        // Time input confirmation functionality
+        this.setupTimeInputConfirmation();
+        
         // Filtering and search
         this.setupFilteringAndSearch();
         
@@ -711,6 +717,200 @@ handleFileSelect(file) {
         const now = new Date();
         now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
         freshUntilInput.min = now.toISOString().slice(0, 16);
+    }
+
+    // Date Input Confirmation functionality
+    setupDateInputConfirmation() {
+        const freshUntilInput = document.getElementById('freshUntil');
+        if (!freshUntilInput) return;
+
+        const container = freshUntilInput.parentNode;
+        const checkmarkIcon = container.querySelector('.checkmark-icon');
+
+        if (!checkmarkIcon) return;
+
+        let isDateConfirmed = false;
+        let previousValue = freshUntilInput.value;
+
+        // Helper function to show checkmark only after date selection
+        const handleDateChange = () => {
+            const currentValue = freshUntilInput.value;
+            
+            // If value has changed from previous, reset confirmation status
+            if (currentValue !== previousValue) {
+                isDateConfirmed = false;
+            }
+            
+            // Only show checkmark if:
+            // 1. There's a new value
+            // 2. The value has changed from previous
+            // 3. Date hasn't been confirmed yet
+            if (currentValue && currentValue !== previousValue && !isDateConfirmed) {
+                checkmarkIcon.classList.remove('hidden');
+            }
+            
+            // If value is cleared, reset everything
+            if (!currentValue) {
+                checkmarkIcon.classList.add('hidden');
+                isDateConfirmed = false;
+            }
+            
+            previousValue = currentValue;
+        };
+
+        // Helper function to confirm date and hide checkmark
+        const confirmDate = () => {
+            if (freshUntilInput.value && !isDateConfirmed) {
+                // Mark as confirmed
+                isDateConfirmed = true;
+                
+                // Hide the checkmark
+                checkmarkIcon.classList.add('hidden');
+                
+                // Show success toast
+                this.showToast('Date confirmed successfully!', 'success');
+                
+                // Move focus to next input field if available
+                const nextInput = freshUntilInput.closest('.form-group').parentElement.nextElementSibling?.querySelector('input');
+                if (nextInput) {
+                    setTimeout(() => nextInput.focus(), 200);
+                } else {
+                    freshUntilInput.blur(); // Remove focus from current input
+                }
+            }
+        };
+
+        // Initially hide checkmark
+        checkmarkIcon.classList.add('hidden');
+
+        // Listen for date selection changes
+        freshUntilInput.addEventListener('change', handleDateChange);
+        freshUntilInput.addEventListener('input', handleDateChange);
+
+        // Checkmark click handler - confirm the date and hide checkmark
+        checkmarkIcon.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event bubbling
+            confirmDate();
+        });
+
+        // Click outside handler - hide checkmark when clicking outside
+        document.addEventListener('click', (e) => {
+            // Check if checkmark is currently visible
+            if (!checkmarkIcon.classList.contains('hidden')) {
+                // Check if click is outside the input container and not on the checkmark
+                if (!container.contains(e.target)) {
+                    // User clicked outside - confirm the date and hide checkmark
+                    confirmDate();
+                }
+            }
+        });
+
+        // Also hide checkmark when input loses focus (blur event)
+        freshUntilInput.addEventListener('blur', (e) => {
+            // Small delay to allow checkmark click to register first
+            setTimeout(() => {
+                if (!checkmarkIcon.classList.contains('hidden') && freshUntilInput.value) {
+                    confirmDate();
+                }
+            }, 100);
+        });
+    }
+
+    // Time Input Confirmation functionality
+    setupTimeInputConfirmation() {
+        const pickupTimeInput = document.getElementById('pickupTime');
+        if (!pickupTimeInput) return;
+
+        const container = pickupTimeInput.parentNode;
+        const checkmarkIcon = container.querySelector('.checkmark-icon-time');
+
+        if (!checkmarkIcon) return;
+
+        let isTimeConfirmed = false;
+        let previousValue = pickupTimeInput.value;
+
+        // Helper function to show checkmark only after time selection
+        const handleTimeChange = () => {
+            const currentValue = pickupTimeInput.value;
+            
+            // If value has changed from previous, reset confirmation status
+            if (currentValue !== previousValue) {
+                isTimeConfirmed = false;
+            }
+            
+            // Only show checkmark if:
+            // 1. There's a new value
+            // 2. The value has changed from previous
+            // 3. Time hasn't been confirmed yet
+            if (currentValue && currentValue !== previousValue && !isTimeConfirmed) {
+                checkmarkIcon.classList.remove('hidden');
+            }
+            
+            // If value is cleared, reset everything
+            if (!currentValue) {
+                checkmarkIcon.classList.add('hidden');
+                isTimeConfirmed = false;
+            }
+            
+            previousValue = currentValue;
+        };
+
+        // Helper function to confirm time and hide checkmark
+        const confirmTime = () => {
+            if (pickupTimeInput.value && !isTimeConfirmed) {
+                // Mark as confirmed
+                isTimeConfirmed = true;
+                
+                // Hide the checkmark
+                checkmarkIcon.classList.add('hidden');
+                
+                // Show success toast
+                this.showToast('Time confirmed successfully!', 'success');
+                
+                // Move focus to next input field if available
+                const nextInput = pickupTimeInput.closest('.form-group').parentElement.nextElementSibling?.querySelector('input');
+                if (nextInput) {
+                    setTimeout(() => nextInput.focus(), 200);
+                } else {
+                    pickupTimeInput.blur(); // Remove focus from current input
+                }
+            }
+        };
+
+        // Initially hide checkmark
+        checkmarkIcon.classList.add('hidden');
+
+        // Listen for time selection changes
+        pickupTimeInput.addEventListener('change', handleTimeChange);
+        pickupTimeInput.addEventListener('input', handleTimeChange);
+
+        // Checkmark click handler - confirm the time and hide checkmark
+        checkmarkIcon.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event bubbling
+            confirmTime();
+        });
+
+        // Click outside handler - hide checkmark when clicking outside
+        document.addEventListener('click', (e) => {
+            // Check if checkmark is currently visible
+            if (!checkmarkIcon.classList.contains('hidden')) {
+                // Check if click is outside the input container and not on the checkmark
+                if (!container.contains(e.target)) {
+                    // User clicked outside - confirm the time and hide checkmark
+                    confirmTime();
+                }
+            }
+        });
+
+        // Also hide checkmark when input loses focus (blur event)
+        pickupTimeInput.addEventListener('blur', (e) => {
+            // Small delay to allow checkmark click to register first
+            setTimeout(() => {
+                if (!checkmarkIcon.classList.contains('hidden') && pickupTimeInput.value) {
+                    confirmTime();
+                }
+            }, 100);
+        });
     }
 
     setupFilteringAndSearch() {

@@ -29,9 +29,9 @@
         /* Dark Mode */
         --bg-gradient-start-dark: #121212;
         --bg-gradient-end-dark: #1a1a1a;
-        --card-bg-dark: #2E2E2E;
+        --card-bg-dark: #2e2e2e;
         --text-color-dark: #f1f1f1;
-        --subtext-color-dark: #B0B0B0;
+        --subtext-color-dark: #b0b0b0;
         --input-bg-dark: #3a3a3a;
         --input-border-dark: #555;
       }
@@ -116,7 +116,8 @@
 
       body.dark-mode .auth-container {
         background-color: var(--card-bg-dark);
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), 0 5px 15px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4),
+          0 5px 15px rgba(0, 0, 0, 0.3);
         border: 1px solid #404040;
       }
 
@@ -215,7 +216,8 @@
       body.dark-mode .form-group input:focus,
       body.dark-mode .form-group select:focus {
         border-color: var(--primary-green);
-        box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2), inset 0 1px 3px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2),
+          inset 0 1px 3px rgba(0, 0, 0, 0.3);
       }
 
       .form-group input:focus,
@@ -388,7 +390,7 @@
         >Already have a User account? Login</a
       >
     </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/theme.js"></script>
     <script>
       // --- Password Visibility Toggle ---
@@ -440,6 +442,18 @@
       alert("Passwords do not match. Please re-enter.");
       return;
     }
+    
+     if (!fullName || !email || !password || !role) {
+          Swal.fire({
+            title: "Missing Information ⚠️",
+            text: "Please fill in all fields before registering.",
+            icon: "warning",
+            confirmButtonColor: "#FF6B35",
+            background: "#fff8f0",
+            color: "#333",
+          });
+          return;
+        }
 
     try {
       const response = await fetch("http://localhost:3000/signup", {
