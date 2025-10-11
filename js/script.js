@@ -2,16 +2,253 @@
 
 class ShareBite {
     constructor() {
-        this.currentRole = 'donor';
-        this.foodListings = [];
-        this.filteredListings = [];
-        this.currentFilter = 'all';
-        this.claimedItems = this.loadClaimedItems();
-        this.notifications = this.loadNotifications();
-        
-        this.init();
-        this.initTheme(); // add theme initialization after base init
+    this.currentRole = 'donor';
+    this.foodListings = [];
+    this.filteredListings = [];
+    this.currentFilter = 'all';
+    this.isAuthenticated = false;
+    this.userData = null;
+    this.claimedItems = this.loadClaimedItems();
+    this.notifications = this.loadNotifications();
+
+    // Only call initAuth once — it will handle everything after authentication
+    this.initAuth();
+}
+
+async initAuth() {
+    await this.checkAuthentication();
+
+    this.updateUIForAuthentication();
+    this.showWelcomeMessage();
+
+    // Initialize rest of the app *after* auth check
+    this.init();
+    this.initTheme();
+}
+
+showWelcomeMessage() {
+    if (sessionStorage.getItem('justLoggedIn') === 'true') {
+        const toast = document.getElementById('toast');
+
+        if (this.userData && this.userData.name) {
+            toast.textContent = `Welcome back, ${this.userData.name}! 🎉`;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Remove the flag so it doesn't show again on refresh
+        sessionStorage.removeItem('justLoggedIn');
     }
+}
+
+
+    async checkAuthentication() {
+    try {
+        console.log('=== Checking authentication ===');
+        const res = await fetch('http://localhost:3000/api/current-user', {
+            credentials: 'include'
+        });
+
+        console.log('Response status:', res.status);
+
+        if (res.ok) {
+            this.userData = await res.json();
+            this.isAuthenticated = true;
+            this.currentRole = this.userData.role;
+            console.log('✓ User authenticated:', this.userData);
+        } else {
+            this.isAuthenticated = false;
+            this.userData = null;
+            this.currentRole = 'donor';
+            console.log('✗ User not authenticated');
+        }
+    } catch (err) {
+        console.error('Auth check error:', err);
+        this.isAuthenticated = false;
+        this.userData = null;
+        this.currentRole = 'donor';
+    }
+}
+    updateUIForAuthentication() {
+    const roleDisplay = document.getElementById('currentRole');
+    const roleSwitch = document.getElementById('roleSwitch');
+    const userActions = document.querySelector('.user-actions');
+
+    console.log('Updating UI. Authenticated:', this.isAuthenticated, 'User:', this.userData);
+
+    if (this.isAuthenticated && this.userData) {
+        // Update role display
+        if (roleDisplay) {
+            roleDisplay.textContent = this.capitalizeFirst(this.userData.role);
+        }
+
+        // Disable role switch
+        if (roleSwitch) {
+            roleSwitch.style.cursor = 'not-allowed';
+            roleSwitch.style.opacity = '0.7';
+            roleSwitch.title = 'Role is set based on your account';
+            roleSwitch.classList.add('disabled');
+        }
+
+        // Remove ALL existing login buttons
+        const loginButtons = document.querySelectorAll('.login-btn');
+        loginButtons.forEach(btn => btn.remove());
+
+        // Create logout button
+        const logoutBtn = document.createElement('button');
+        logoutBtn.className = 'login-btn logout-btn';
+        logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
+
+        // CRITICAL: Force the button to be clickable
+        logoutBtn.style.cssText = `
+            position: relative !important;
+            z-index: 99999 !important;
+            pointer-events: auto !important;
+            cursor: pointer !important;
+        `;
+
+        // Add click event with multiple handlers
+        logoutBtn.onclick = async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Logout button clicked via onclick');
+            await this.handleLogout();
+        };
+
+        logoutBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Logout button clicked via addEventListener');
+            await this.handleLogout();
+        }, true); // Use capture phase
+
+        // Add logout button to user actions
+        if (userActions) {
+            userActions.appendChild(logoutBtn);
+        }
+
+        console.log('✓ Logout button created:', logoutBtn);
+
+        // Test if button is actually clickable
+        setTimeout(() => {
+            const btn = document.querySelector('.logout-btn');
+            console.log('Button in DOM:', btn);
+            console.log('Button styles:', window.getComputedStyle(btn));
+        }, 100);
+
+        this.updateUIForRole();
+
+    } else {
+        console.log('User not authenticated - showing Login buttons');
+
+        if (roleDisplay) {
+            roleDisplay.textContent = 'Donor';
+        }
+
+        // Remove logout button if exists
+        const logoutBtn = document.querySelector('.logout-btn');
+        if (logoutBtn) {
+            logoutBtn.remove();
+        }
+
+        // Remove any existing login buttons first
+        const existingLoginButtons = document.querySelectorAll('.login-btn');
+        existingLoginButtons.forEach(btn => btn.remove());
+
+        // Create User Login button
+        const loginUserBtn = document.createElement('button');
+        loginUserBtn.className = 'login-btn';
+        loginUserBtn.innerHTML = '<i class="fas fa-user"></i> Login as User';
+
+        // CRITICAL: Force the button to be clickable
+        loginUserBtn.style.cssText = `
+            position: relative !important;
+            z-index: 99999 !important;
+            pointer-events: auto !important;
+            cursor: pointer !important;
+            margin-right: 10px !important;
+        `;
+
+        loginUserBtn.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('User Login button clicked');
+            window.location.href = 'login.html';
+        };
+
+        // Create NGO Login button
+        const loginNGOBtn = document.createElement('button');
+        loginNGOBtn.className = 'login-btn';
+        loginNGOBtn.innerHTML = '<i class="fas fa-building"></i> Login as NGO';
+
+        // CRITICAL: Force the button to be clickable
+        loginNGOBtn.style.cssText = `
+            position: relative !important;
+            z-index: 99999 !important;
+            pointer-events: auto !important;
+            cursor: pointer !important;
+        `;
+
+        loginNGOBtn.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('NGO Login button clicked');
+            window.location.href = 'login_ngo.html';
+        };
+
+        // Add both login buttons to user actions
+        if (userActions) {
+            userActions.appendChild(loginUserBtn);
+            userActions.appendChild(loginNGOBtn);
+        }
+
+        console.log('✓ Login buttons created and click handlers attached');
+
+        // Re-enable role switch
+        if (roleSwitch) {
+            roleSwitch.style.cursor = 'pointer';
+            roleSwitch.style.opacity = '1';
+            roleSwitch.classList.remove('disabled');
+        }
+    }
+}
+
+capitalizeFirst(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+    async handleLogout() {
+    try {
+        const res = await fetch('http://localhost:3000/logout', {
+            method: 'GET',
+            credentials: 'include'
+        });
+
+        if (res.ok) {
+            this.isAuthenticated = false;
+            this.userData = null;
+            this.currentRole = 'donor';
+
+            this.showToast('Logged out successfully', 'success');
+
+            setTimeout(async () => {
+                if ('caches' in window) {
+                    const keys = await caches.keys();
+                    await Promise.all(keys.map(k => caches.delete(k)));
+                    console.log('[ShareBite] All caches cleared on logout');
+                }
+
+                window.location.href = 'http://localhost:3000/';
+            }, 1000);
+        } else {
+            throw new Error('Logout failed');
+        }
+    } catch (err) {
+        console.error('Logout error:', err);
+        this.showToast('Error logging out', 'error');
+    }
+}
 
     init() {
         this.setupEventListeners();
@@ -31,35 +268,37 @@ class ShareBite {
         this.setupThemeToggle();
     }
 
-    setupThemeToggle() {
-        const btn = document.getElementById('themeToggle');
-        if (!btn) return;
-        btn.addEventListener('click', () => {
-            const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
-            this.applyTheme(newTheme);
-            localStorage.setItem('sharebite-theme', newTheme);
-        });
-    }
+    // setupThemeToggle() {
+    //     const btn = document.getElementById('themeToggle');
+    //     if (!btn) return;
+    //     btn.addEventListener('click', () => {
+    //         const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+    //         this.applyTheme(newTheme);
+    //         localStorage.setItem('sharebite-theme', newTheme);
+    //     });
+    // }
 
-    applyTheme(theme) {
-        const root = document.documentElement;
-        if (theme === 'dark') {
-            root.classList.add('dark');
-            const icon = document.querySelector('#themeToggle i');
-            if (icon) { icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); }
-        } else {
-            root.classList.remove('dark');
-            const icon = document.querySelector('#themeToggle i');
-            if (icon) { icon.classList.remove('fa-sun'); icon.classList.add('fa-moon'); }
-        }
-    }
+    // applyTheme(theme) {
+    //     const root = document.documentElement;
+    //     if (theme === 'dark') {
+    //         root.classList.add('dark');
+    //         const icon = document.querySelector('#themeToggle i');
+    //         if (icon) { icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); }
+    //     } else {
+    //         root.classList.remove('dark');
+    //         const icon = document.querySelector('#themeToggle i');
+    //         if (icon) { icon.classList.remove('fa-sun'); icon.classList.add('fa-moon'); }
+    //     }
+    // }
 
     setupEventListeners() {
         // Navigation
         this.setupNavigation();
         
-        // Role switching
-        this.setupRoleSwitch();
+       if (!this.isAuthenticated) {
+            this.setupRoleSwitch();
+        }
+
         
         // Modal functionality
         this.setupModal();

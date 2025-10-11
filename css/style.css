@@ -4158,3 +4158,30 @@ body.dark-mode .notification-bell:hover {
     background: var(--primary-dark);
     box-shadow: 0 4px 12px rgba(76, 175, 80, 0.5);
 }
+
+
+.login-btn, .logout-btn {
+    position: relative !important;
+    z-index: 99999 !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+}
+
+.user-actions {
+    position: relative;
+    z-index: 9999;
+}
+
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 10000;
+    background-color: #fff; 
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+
+}
+
+body.dark-mode .navbar {
+    background-color: #1a1a1a; 
+}
