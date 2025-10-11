@@ -1,0 +1,361 @@
+/* cssfoodListing.css  -- append this at the end of the file */
+
+/* variables default (fallbacks) */
+:root{
+  --sb-listings-bg: #cfe6aa;        /* light theme listings bg (light green) */
+  --sb-listings-header-color: #2f6f2f; /* dark green title in light theme */
+   --sb-listings-subtitle-color: #4b4b4b;
+  --sb-listings-padding: 4.5rem 0 6rem;
+  --sb-transition: 200ms ease-in-out;
+} 
+
+/* Theme classes applied to <body> */
+ body.theme-light {
+  --sb-listings-bg: #cfe6aa;
+  --sb-listings-header-color: #2f6f2f;
+  --sb-listings-subtitle-color: #47624a;
+}
+
+body.theme-dark {
+  --sb-listings-bg: #0b0b0b;
+  --sb-listings-header-color: #ffffff;
+  --sb-listings-subtitle-color: #bdbdbd;
+} 
+
+/* Target only the listings section */
+ .listings {
+  background-color: var(--sb-listings-bg);
+  padding: var(--sb-listings-padding);
+  transition: background-color var(--sb-transition);
+
+} 
+
+/* Section header styles (only affect listings header) */
+ .listings .section-header {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+.listings .section-header .section-title { 
+
+   font-size: clamp(2.25rem, 4.8vw, 4rem);
+  line-height: 1;
+  margin: 0 0 0.5rem;
+  color: var(--sb-listings-header-color);
+  transition: color var(--sb-transition);
+} 
+
+/* subtitle under the title */
+ .listings .section-header .section-subtitle {
+  color: var(--sb-listings-subtitle-color);
+  margin: 0;
+  font-size: 1.05rem;
+  transition: color var(--sb-transition);
+}
+
+body.theme-dark .food-grid .food-card,
+body.theme-dark .listings .food-card {
+  background-color: #1a1a1a;
+  color: #ddd;
+  transition: background-color var(--sb-transition), color var(--sb-transition);
+}
+.learn-more-container .learn-more-btn{
+    color:White;
+    background-color: green;
+}
+
+body.theme-light {
+  background-color: #ffffff; 
+  color: #222; 
+}
+
+/* Dark theme → overall black background */
+body.theme-dark {
+  background-color: #000000; 
+  color: #ddd; 
+  transition: background-color 200ms ease-in-out, color 200ms ease-in-out;
+}
+
+
+/* Dark Theme Food Listings Container */
+.dark-food-listings-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+.dark-food-listings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid #333;
+  margin-bottom: 30px;
+}
+
+.dark-food-listings-title {
+  font-size: 2.2rem;
+  color: var(--sb-listings-header-color, #ffffff);
+  font-weight: 600;
+  margin: 0;
+  transition: color var(--sb-transition, 200ms ease-in-out);
+}
+
+.dark-food-listings-subtitle {
+  color: var(--sb-listings-subtitle-color, #bdbdbd);
+  font-size: 1.1rem;
+  margin: 10px 0 30px 0;
+  transition: color var(--sb-transition, 200ms ease-in-out);
+}
+
+.dark-theme-toggle {
+  background: #333;
+  border: none;
+  color: #e0e0e0;
+  padding: 8px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background var(--sb-transition, 200ms ease-in-out);
+  font-size: 0.9rem;
+}
+
+.dark-theme-toggle:hover {
+  background: #444;
+}
+
+.dark-food-listings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 25px;
+  margin-top: 20px;
+}
+
+/* Food Cards - Using  existing dark theme card styles */
+body.theme-dark .dark-food-card,
+.dark-food-card {
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, 
+              box-shadow 0.3s ease,
+              background-color var(--sb-transition, 200ms ease-in-out),
+              color var(--sb-transition, 200ms ease-in-out);
+  border: 1px solid #333;
+}
+
+body.theme-dark .dark-food-card:hover,
+.dark-food-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.dark-food-image {
+  height: 200px;
+  background-color: #2a2a2a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+  font-size: 1.1rem;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+}
+
+.dark-food-image::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.8) 100%);
+}
+
+.dark-food-content {
+  padding: 20px;
+}
+
+.dark-food-title {
+  font-size: 1.4rem;
+  color: var(--sb-listings-header-color, #ffffff);
+  margin-bottom: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+  transition: color var(--sb-transition, 200ms ease-in-out);
+}
+
+.dark-food-description {
+  color: var(--sb-listings-subtitle-color, #bdbdbd);
+  margin-bottom: 15px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  transition: color var(--sb-transition, 200ms ease-in-out);
+}
+
+.dark-food-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #333;
+}
+
+.dark-pickup-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #4a9c2f;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.dark-pickup-icon {
+  width: 18px;
+  height: 18px;
+  background: #4a9c2f;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: #000000;
+  font-weight: bold;
+}
+
+.dark-action-btn {
+  background: #333;
+  color: #e0e0e0;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.dark-action-btn:hover {
+  background: #444;
+  transform: translateY(-1px);
+}
+
+.dark-action-btn.primary {
+  background: #4a9c2f;
+  color: #ffffff;
+}
+
+.dark-action-btn.primary:hover {
+  background: #3d8a26;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(74, 156, 47, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dark-food-listings-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .dark-food-listings-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .dark-food-listings-title {
+    font-size: 1.8rem;
+  }
+  
+  .dark-food-listings-subtitle {
+    font-size: 1rem;
+  }
+  
+  .dark-food-card {
+    margin: 0 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dark-food-listings-container {
+    padding: 15px;
+  }
+  
+  .dark-food-meta {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  
+  .dark-action-btn {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .dark-food-image {
+    height: 160px;
+  }
+}
+
+/* Animation for smooth card appearance */
+@keyframes dark-card-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dark-food-card {
+  animation: dark-card-fade-in 0.5s ease-out;
+}
+
+.dark-food-card:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.dark-food-card:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+/* Focus states for accessibility */
+.dark-action-btn:focus,
+.dark-theme-toggle:focus {
+  outline: 2px solid #4a9c2f;
+  outline-offset: 2px;
+}
+
+/* High contrast support */
+@media (prefers-contrast: high) {
+  body.theme-dark .dark-food-card {
+    border: 2px solid #ffffff;
+  }
+  
+  .dark-food-meta {
+    border-top: 2px solid #333;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .dark-food-card,
+  .dark-action-btn,
+  .dark-theme-toggle {
+    transition: none;
+    animation: none;
+  }
+  
+  .dark-food-card:hover {
+    transform: none;
+  }
+}

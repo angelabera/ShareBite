@@ -321,15 +321,15 @@ handleFileSelect(file) {
     reader.readAsDataURL(file);
 }
 
-    handleFileSelect(file) {
-        const uploadArea = document.getElementById('photoUpload');
-        if (file.type.startsWith('image/')) {
-            uploadArea.innerHTML = `
-                <i class="fas fa-check-circle" style="color: var(--primary-color);"></i>
-                <span style="color: var(--primary-color);">${file.name}</span>
-            `;
-        }
-    }
+    // handleFileSelect(file) {
+    //     const uploadArea = document.getElementById('photoUpload');
+    //     if (file.type.startsWith('image/')) {
+    //         uploadArea.innerHTML = `
+    //             <i class="fas fa-check-circle" style="color: var(--primary-color);"></i>
+    //             <span style="color: var(--primary-color);">${file.name}</span>
+    //         `;
+    //     }
+    // }
 
     setupFormHandling() {
         const form = document.getElementById('listingForm');
@@ -746,48 +746,254 @@ handleFileSelect(file) {
         this.setupFoodCardInteractions();
     }
 
-    createFoodCard(listing) {
-        const timeAgo = this.getTimeAgo(listing.createdAt);
-        const freshUntil = this.formatDateTime(listing.freshUntil);
-        const pickupTime = this.formatTime(listing.pickupTime);
+    // createFoodCard(listing) {
+    //     const timeAgo = this.getTimeAgo(listing.createdAt);
+    //     const freshUntil = this.formatDateTime(listing.freshUntil);
+    //     const pickupTime = this.formatTime(listing.pickupTime);
         
-        return `
-            <div class="food-card" data-id="${listing.id}">
-                <div class="food-image">
-                    ${listing.photo ? `<img src="${URL.createObjectURL(listing.photo)}" alt="${listing.foodType}">` : `<i class="fas fa-${this.getFoodIcon(listing.category)}"></i>`}
-                    <div class="food-category">${this.capitalizeFirst(listing.category)}</div>
-                </div>
-                <div class="food-details">
-                    <h3 class="food-title">${listing.foodType}</h3>
-                    <p class="food-description">${listing.description}</p>
-                    <div class="food-meta">
-                        <span class="quantity"><i class="fas fa-utensils"></i> ${listing.quantity}</span>
-                        <span class="freshness"><i class="fas fa-clock"></i> ${freshUntil}</span>
-                    </div>
-                    <div class="food-location">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span>${listing.location}</span>
-                    </div>
-                    <div class="food-meta" style="margin-bottom: 1rem;">
-                        <span style="color: var(--medium-gray); font-size: 0.9rem;">
-                            <i class="fas fa-user"></i> ${listing.donor}
-                        </span>
-                        <span style="color: var(--medium-gray); font-size: 0.9rem;">
-                            <i class="fas fa-clock"></i> ${timeAgo}
-                        </span>
-                    </div>
-                    <div class="food-actions">
-                        <button class="claim-btn" data-id="${listing.id}">
-                            <i class="fas fa-hand-paper"></i> Claim Food
-                        </button>
-                        <button class="contact-btn" data-contact="${listing.contact}">
-                            <i class="fas fa-phone"></i>
-                        </button>
-                    </div>
+    //     return `
+    //         <div class="food-card" data-id="${listing.id}">
+    //             <div class="food-image">
+    //                 ${listing.photo ? `<img src="${URL.createObjectURL(listing.photo)}" alt="${listing.foodType}">` : `<i class="fas fa-${this.getFoodIcon(listing.category)}"></i>`}
+    //                 <div class="food-category">${this.capitalizeFirst(listing.category)}</div>
+    //             </div>
+    //             <div class="food-details">
+    //                 <h3 class="food-title">${listing.foodType}</h3>
+    //                 <p class="food-description">${listing.description}</p>
+    //                 <div class="food-meta">
+    //                     <span class="quantity"><i class="fas fa-utensils"></i> ${listing.quantity}</span>
+    //                     <span class="freshness"><i class="fas fa-clock"></i> ${freshUntil}</span>
+    //                 </div>
+    //                 <div class="food-location">
+    //                     <i class="fas fa-map-marker-alt"></i>
+    //                     <span>${listing.location}</span>
+    //                 </div>
+    //                 <div class="food-meta" style="margin-bottom: 1rem;">
+    //                     <span style="color: var(--medium-gray); font-size: 0.9rem;">
+    //                         <i class="fas fa-user"></i> ${listing.donor}
+    //                     </span>
+    //                     <span style="color: var(--medium-gray); font-size: 0.9rem;">
+    //                         <i class="fas fa-clock"></i> ${timeAgo}
+    //                     </span>
+    //                 </div>
+    //                 <div class="food-actions">
+    //                     <button class="claim-btn" data-id="${listing.id}">
+    //                         <i class="fas fa-hand-paper"></i> Claim Food
+    //                     </button>
+    //                     <button class="contact-btn" data-contact="${listing.contact}">
+    //                         <i class="fas fa-phone"></i>
+    //                     </button>
+    //                 </div>
+    //             </div>
+    //         </div>
+    //     `;
+    // }
+
+    createFoodCard(listing) {
+    const timeAgo = this.getTimeAgo(listing.createdAt);
+    const freshUntil = this.formatDateTime(listing.freshUntil);
+    const distance = this.getRandomDistance(); // Add this line
+    
+    // Get the appropriate Unsplash image based on food type or category
+    const foodImage = this.getFoodImage(listing.foodType, listing.category);
+    
+    return `
+        <div class="food-card" data-id="${listing.id}">
+            <div class="food-image-container">
+                <img src="${foodImage}" alt="${listing.foodType}" class="food-image">
+                <div class="category-icon">
+                    <i class="${this.getCategoryIconClass(listing.category)}"></i>
                 </div>
             </div>
-        `;
+            <div class="food-content">
+                <h3 class="food-title">${listing.foodType}</h3>
+                <p class="food-description">${listing.description}</p>
+                <div class="food-meta">
+                    <span class="category-badge" data-category="${listing.category}">
+                        ${this.capitalizeFirst(listing.category)}
+                    </span>
+                    <span class="distance">
+                        <i class="fas fa-map-marker-alt"></i> ${distance}
+                    </span>
+                </div>
+                <div class="food-info">
+                    <span class="quantity"><i class="fas fa-utensils"></i> ${listing.quantity}</span>
+                    <span class="freshness"><i class="fas fa-clock"></i> ${freshUntil}</span>
+                </div>
+                <div class="food-donor">
+                    <i class="fas fa-user"></i> ${listing.donor} • ${timeAgo}
+                </div>
+                <button class="claim-button" data-id="${listing.id}">
+                    <i class="fas fa-hand-holding-heart"></i> Claim Food
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+
+//     createFoodCard(listing) {
+//     const timeAgo = this.getTimeAgo(listing.createdAt);
+//     const freshUntil = this.formatDateTime(listing.freshUntil);
+//     const pickupTime = this.formatTime(listing.pickupTime);
+    
+//     // Get the appropriate Unsplash image based on food type or category
+//     const foodImage = this.getFoodImage(listing.foodType, listing.category);
+    
+//     return `
+//         <div class="food-card" data-id="${listing.id}">
+//             <div class="food-image-container">
+//                 <img src="${foodImage}" alt="${listing.foodType}" class="food-image">
+//                 <div class="category-icon">
+//                     <i class="${this.getCategoryIconClass(listing.category)}"></i>
+//                 </div>
+//             </div>
+//             <div class="food-details">
+//                 <h3 class="food-title">${listing.foodType}</h3>
+//                 <p class="food-description">${listing.description}</p>
+//                 <div class="food-meta">
+//                     <span class="quantity"><i class="fas fa-utensils"></i> ${listing.quantity}</span>
+//                     <span class="freshness"><i class="fas fa-clock"></i> ${freshUntil}</span>
+//                 </div>
+//                 <div class="food-location">
+//                     <i class="fas fa-map-marker-alt"></i>
+//                     <span>${listing.location}</span>
+//                 </div>
+//                 <div class="food-meta" style="margin-bottom: 1rem;">
+//                     <span style="color: var(--medium-gray); font-size: 0.9rem;">
+//                         <i class="fas fa-user"></i> ${listing.donor}
+//                     </span>
+//                     <span style="color: var(--medium-gray); font-size: 0.9rem;">
+//                         <i class="fas fa-clock"></i> ${timeAgo}
+//                     </span>
+//                 </div>
+//                 <div class="food-actions">
+//                     <button class="claim-btn" data-id="${listing.id}">
+//                         <i class="fas fa-hand-holding-heart"></i> Claim Food
+//                     </button>
+//                     <button class="contact-btn" data-contact="${listing.contact}">
+//                         <i class="fas fa-phone"></i>
+//                     </button>
+//                 </div>
+//             </div>
+//         </div>
+//     `;
+// }
+
+createFoodCard(listing) {
+    const timeAgo = this.getTimeAgo(listing.createdAt);
+    const freshUntil = this.formatDateTime(listing.freshUntil);
+    const distance = this.getRandomDistance();
+    
+    // Get the appropriate Unsplash image based on food type or category
+    const foodImage = this.getFoodImage(listing.foodType, listing.category);
+    
+    console.log('Creating card for:', listing.foodType);
+    console.log('Image URL:', foodImage);
+    console.log('Category:', listing.category);
+    
+    return `
+        <div class="food-card" data-id="${listing.id}" data-category="${listing.category}">
+            <div class="food-image-container">
+                <img src="${foodImage}" alt="${listing.foodType}" class="food-image">
+                <div class="category-icon">
+                    <i class="${this.getCategoryIconClass(listing.category)}"></i>
+                </div>
+            </div>
+            <div class="food-content">
+                <h3 class="food-title">${listing.foodType}</h3>
+                <p class="food-description">${listing.description}</p>
+                <div class="food-meta">
+                    <span class="category-badge" data-category="${listing.category}">
+                        ${this.capitalizeFirst(listing.category)}
+                    </span>
+                    <span class="distance">
+                        <i class="fas fa-map-marker-alt"></i> ${distance}
+                    </span>
+                </div>
+                <div class="food-info">
+                    <span class="quantity"><i class="fas fa-utensils"></i> ${listing.quantity}</span>
+                    <span class="freshness"><i class="fas fa-clock"></i> ${freshUntil}</span>
+                </div>
+                <div class="food-donor">
+                    <i class="fas fa-user"></i> ${listing.donor} • ${timeAgo}
+                </div>
+                <button class="claim-button" data-id="${listing.id}">
+                    <i class="fas fa-hand-holding-heart"></i> Claim Food
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+getRandomDistance() {
+    const distances = ['0.5 miles away', '0.8 miles away', '1.2 miles away', '1.5 miles away', '2.0 miles away'];
+    return distances[Math.floor(Math.random() * distances.length)];
+}
+
+// Add this method to map food types to Unsplash images
+getFoodImage(foodType, category) {
+    const foodImages = {
+        // Pizza images
+        'pizza': 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=800&h=600&fit=crop',
+        'fresh pizza margherita': 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=800&h=600&fit=crop',
+        
+        // Sandwich images
+        'sandwich': 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=800&h=600&fit=crop',
+        'sandwiches': 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=800&h=600&fit=crop',
+        'assorted sandwiches': 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=800&h=600&fit=crop',
+        
+        // Bakery images
+        'bread': 'https://plus.unsplash.com/premium_photo-1667806845059-51fa9165bda1?w=800&h=600&fit=crop',
+        'pastries': 'https://plus.unsplash.com/premium_photo-1667806845059-51fa9165bda1?w=800&h=600&fit=crop',
+        'bakery': 'https://plus.unsplash.com/premium_photo-1667806845059-51fa9165bda1?w=800&h=600&fit=crop',
+        'fresh bread & pastries': 'https://plus.unsplash.com/premium_photo-1667806845059-51fa9165bda1?w=800&h=600&fit=crop',
+        
+        // Curry images
+        'curry': 'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=800&h=600&fit=crop',
+        'home-cooked curry': 'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=800&h=600&fit=crop',
+        
+        // Fruit & Vegetable images
+        'fruit': 'https://images.unsplash.com/photo-1619566636858-adf3ef46400b?w=800&h=600&fit=crop',
+        'vegetable': 'https://images.unsplash.com/photo-1619566636858-adf3ef46400b?w=800&h=600&fit=crop',
+        'produce': 'https://images.unsplash.com/photo-1619566636858-adf3ef46400b?w=800&h=600&fit=crop',
+        'fruit & vegetable box': 'https://images.unsplash.com/photo-1619566636858-adf3ef46400b?w=800&h=600&fit=crop',
+        
+        // Chicken images
+        'chicken': 'https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=800&h=600&fit=crop',
+        'grilled chicken': 'https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=800&h=600&fit=crop',
+        'grilled chicken meals': 'https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=800&h=600&fit=crop'
+    };
+
+    // Try to find matching image by food type (case insensitive)
+    const lowerFoodType = foodType.toLowerCase();
+    for (const [key, image] of Object.entries(foodImages)) {
+        if (lowerFoodType.includes(key)) {
+            return image;
+        }
     }
+
+    // Fallback images by category
+    const categoryImages = {
+        'restaurant': 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=600&fit=crop',
+        'household': 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&h=600&fit=crop',
+        'bakery': 'https://plus.unsplash.com/premium_photo-1667806845059-51fa9165bda1?w=800&h=600&fit=crop',
+        'event': 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=600&fit=crop'
+    };
+
+    return categoryImages[category] || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&h=600&fit=crop';
+}
+
+// Add this method for category icons
+getCategoryIconClass(category) {
+    const icons = {
+        'restaurant': 'fas fa-utensils',
+        'household': 'fas fa-home',
+        'bakery': 'fas fa-bread-slice',
+        'event': 'fas fa-calendar-alt'
+    };
+    return icons[category] || 'fas fa-utensils';
+}
 
     setupFoodCardInteractions() {
         // Claim buttons

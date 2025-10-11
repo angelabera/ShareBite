@@ -612,9 +612,9 @@ body {
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
 }
-
+ 
 .add-listing-btn {
-    background: var(--secondary-gradient);
+    background:#386641;
     color: white;
     border: none;
     padding: 0.75rem 1.5rem;
@@ -741,7 +741,6 @@ body {
 }
 
 .learn-more-btn {
-    background: var(--secondary-gradient);
     color: white;
     border: none;
     padding: 0.75rem 2rem;
@@ -1598,6 +1597,12 @@ body {
 :root.dark body {
     background: var(--white);
     color: var(--black);
+    /* --bg-primary: #121212;
+  --bg-secondary: #1a1a1a;
+  --bg-card: #1e1e1e;
+  --text-primary: #a7c957;
+  --text-secondary: #6a994e;
+  --primary-dark-green: #a7c957; */
 }
 
 :root.dark .navbar {

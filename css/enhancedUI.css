@@ -1,0 +1,134 @@
+/* cssfoodListing.css  -- append this at the end of the file */
+
+/* variables default (fallbacks) */
+:root{
+  --sb-listings-bg: #cfe6aa;        /* light theme listings bg (light green) */
+  --sb-listings-header-color: #2f6f2f; /* dark green title in light theme */
+  --sb-listings-subtitle-color: #4b4b4b;
+  --sb-listings-padding: 4.5rem 0 6rem;
+  --sb-transition: 200ms ease-in-out;
+} 
+
+/* Theme classes applied to <body> */
+body.theme-light {
+  --sb-listings-bg: #cfe6aa;
+  --sb-listings-header-color: #2f6f2f;
+  --sb-listings-subtitle-color: #47624a;
+  background-color: #ffffff; 
+  color: #222; 
+}
+
+body.theme-dark {
+  --sb-listings-bg: #000000; /* Changed to pure black */
+  --sb-listings-header-color: #ffffff;
+  --sb-listings-subtitle-color: #bdbdbd;
+  background-color: #000000; /* full black */
+  color: #ddd; /* light text for contrast */
+} 
+
+/* Target only the listings section */
+.listings {
+  background-color: var(--sb-listings-bg);
+  padding: var(--sb-listings-padding);
+  transition: background-color var(--sb-transition);
+} 
+
+/* Section header styles (only affect listings header) */
+.listings .section-header {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+.listings .section-header .section-title { 
+  font-size: clamp(2.25rem, 4.8vw, 4rem);
+  line-height: 1;
+  margin: 0 0 0.5rem;
+  color: var(--sb-listings-header-color);
+  transition: color var(--sb-transition);
+} 
+
+/* subtitle under the title */
+.listings .section-header .section-subtitle {
+  color: var(--sb-listings-subtitle-color);
+  margin: 0;
+  font-size: 1.05rem;
+  transition: color var(--sb-transition);
+}
+
+/* Food cards in dark theme */
+body.theme-dark .food-grid .food-card,
+body.theme-dark .listings .food-card {
+  background-color: #1a1a1a;
+  color: #ddd;
+  border-color: #333;
+  transition: background-color var(--sb-transition), color var(--sb-transition);
+}
+
+/* Explore More Button - Green #4a9c2f */
+.learn-more-container .learn-more-btn {
+  color: white;
+  background-color: #4a9c2f !important;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  text-align: center;
+  justify-content: center;
+}
+
+.learn-more-container .learn-more-btn:hover {
+  background-color: #3d8a26 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(74, 156, 47, 0.3);
+}
+
+/* Ensure proper transitions for theme switching */
+body {
+  transition: background-color 200ms ease-in-out, color 200ms ease-in-out;
+}
+
+/* Additional dark theme styles for better contrast */
+body.theme-dark .navbar {
+  background-color: #000000 !important;
+  border-bottom: 1px solid #333;
+}
+
+body.theme-dark .food-card .food-title {
+  color: #ffffff !important;
+}
+
+body.theme-dark .food-card .food-description {
+  color: #cccccc !important;
+}
+
+body.theme-dark .filter-bar {
+  background-color: #000000 !important;
+  border-color: #333 !important;
+}
+body .theme-dark {
+    background-color:#1a1a1a;
+    color:white;
+}
+/* STRONG OVERRIDE - Pure black background everywhere */
+body.theme-dark {
+  background: #000000 !important;
+}
+
+body.theme-dark .listings {
+  background: #000000 !important;
+}
+
+body.theme-dark .container {
+  background: #000000 !important;
+}
+
+/* Only food cards should be dark gray, not black */
+body.theme-dark .food-card {
+  background: #1a1a1a !important;
+}

@@ -4,47 +4,67 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ShareBite - Food Waste Reducer</title>
-    <meta name="sharebite-build" content="v-darkmode-fix-1">
-    <link rel="stylesheet" href="css/style.css?v=darkmode-fix-1">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
+    <meta name="sharebite-build" content="v-darkmode-fix-1" />
+    <link rel="stylesheet" href="css/style.css?v=darkmode-fix-1" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link rel="icon" type="image/svg+xml" href="logo/logo.svg" />
+    <link rel="stylesheet" href="css/enhancedUI.css" />
+
+    <link rel="stylesheet" href="css/food.css" />
   </head>
   <body>
     <!-- Navigation -->
     <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-              <a href = "#home" class = "nav-logo-link">
-              <i class="fas fa-utensils"></i>
-              <span>ShareBite</span>
-              </a>
-            </div>
-            <ul class="nav-menu">
-                <li><a href="#home" class="nav-link">Home</a></li>
-                <li><a href="#features" class="nav-link">Features</a></li>
-                <li><a href="foodlisting.html" class="nav-link">Listings</a></li>
-                <li><a href="#about" class="nav-link">About</a></li>
-                <li><a href="#contact-section" class="nav-link">Contact</a></li>
-            </ul>
-            <div class="user-actions">
-                <!-- Added dark mode toggle -->
-                <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
-                    <i class="fas fa-moon"></i>
-                </button>
-                <button class="role-switch" id="roleSwitch">
-                    <i class="fas fa-exchange-alt"></i>
-                    <span id="currentRole">Donor</span>
-                </button>
-                <button class="login-btn" onclick="window.location.href='login.html'">Login as User</button>
-                 <button class="login-btn" onclick="window.location.href='login_ngo.html'">Login as NGO</button>
-            </div>
-            <div class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
+      <div class="nav-container">
+        <div class="nav-logo">
+          <a href="#home" class="nav-logo-link">
+            <i class="fas fa-utensils"></i>
+            <span>ShareBite</span>
+          </a>
         </div>
+        <ul class="nav-menu">
+          <li><a href="#home" class="nav-link">Home</a></li>
+          <li><a href="#features" class="nav-link">Features</a></li>
+          <li><a href="foodlisting.html" class="nav-link">Listings</a></li>
+          <li><a href="#about" class="nav-link">About</a></li>
+          <li><a href="#contact-section" class="nav-link">Contact</a></li>
+        </ul>
+        <div class="user-actions">
+          <!-- Added dark mode toggle -->
+          <button
+            id="themeToggle"
+            class="theme-toggle"
+            aria-label="Toggle dark mode"
+          >
+            <i class="fas fa-moon"></i>
+          </button>
+          <button class="role-switch" id="roleSwitch">
+            <i class="fas fa-exchange-alt"></i>
+            <span id="currentRole">Donor</span>
+          </button>
+          <button class="login-btn" onclick="window.location.href='login.html'">
+            Login as User
+          </button>
+          <button
+            class="login-btn"
+            onclick="window.location.href='login_ngo.html'"
+          >
+            Login as NGO
+          </button>
+        </div>
+        <div class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
     </nav>
 
     <!-- Hero Section -->
@@ -403,94 +423,115 @@
       </div>
     </section>
 
- <section id="contact-section" class="contact">
-  <h1 class="main-title">📞 Contact Us</h1>
-  <div class="contact-wrapper">
-    <div class="contact-container">
-      <!-- Left: Form -->
-      <div class="contact-left">
-        <h2 class="contact-title">💬 Do You Have a Question?</h2>
-        <p class="contact-subtitle">Fill out the form below to get started</p>
+    <section id="contact-section" class="contact">
+      <h1 class="main-title">📞 Contact Us</h1>
+      <div class="contact-wrapper">
+        <div class="contact-container">
+          <!-- Left: Form -->
+          <div class="contact-left">
+            <h2 class="contact-title">💬 Do You Have a Question?</h2>
+            <p class="contact-subtitle">
+              Fill out the form below to get started
+            </p>
 
-        <form id="contact-form">
-          <label for="contact-name">Full Name:</label>
-          <input type="text" id="contact-name" placeholder="Enter your full name" />
+            <form id="contact-form">
+              <label for="contact-name">Full Name:</label>
+              <input
+                type="text"
+                id="contact-name"
+                placeholder="Enter your full name"
+              />
 
-          <label for="contact-email">Email:</label>
-          <input type="email" id="contact-email" placeholder="Enter your email" />
+              <label for="contact-email">Email:</label>
+              <input
+                type="email"
+                id="contact-email"
+                placeholder="Enter your email"
+              />
 
-          <label for="contact-msg">Message:</label>
-          <textarea id="contact-msg" placeholder="Type in your Message"></textarea>
+              <label for="contact-msg">Message:</label>
+              <textarea
+                id="contact-msg"
+                placeholder="Type in your Message"
+              ></textarea>
 
-          <button type="submit">Submit</button>
-        </form>
-      </div>
-
-      <!-- Right: Info -->
-      <div class="contact-right">
-        <h3>Get In Touch</h3>
-        <p>We love to hear from you. Our team is always here to answer your questions.</p>
-
-        <div class="contact-info">
-          <div class="info-item">
-            <i class="fa-solid fa-house"></i>
-            <div>
-              <strong>Address:</strong>
-              <p>ShareBite Building, Noida, India </p>
-            </div>
+              <button type="submit">Submit</button>
+            </form>
           </div>
 
-          <div class="info-item">
-            <i class="fa-solid fa-phone"></i>
-            <div>
-              <strong>Phone No.:</strong>
-              <p>+91 8888889999</p>
-            </div>
-          </div>
+          <!-- Right: Info -->
+          <div class="contact-right">
+            <h3>Get In Touch</h3>
+            <p>
+              We love to hear from you. Our team is always here to answer your
+              questions.
+            </p>
 
-          <div class="info-item">
-            <i class="fa-solid fa-envelope"></i>
-            <div>
-              <strong>Email:</strong>
-              <p>sharebite@support.com.ng</p>
+            <div class="contact-info">
+              <div class="info-item">
+                <i class="fa-solid fa-house"></i>
+                <div>
+                  <strong>Address:</strong>
+                  <p>ShareBite Building, Noida, India</p>
+                </div>
+              </div>
+
+              <div class="info-item">
+                <i class="fa-solid fa-phone"></i>
+                <div>
+                  <strong>Phone No.:</strong>
+                  <p>+91 8888889999</p>
+                </div>
+              </div>
+
+              <div class="info-item">
+                <i class="fa-solid fa-envelope"></i>
+                <div>
+                  <strong>Email:</strong>
+                  <p>sharebite@support.com.ng</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="social-links">
+              <a href="#"><i class="fa-brands fa-github"></i></a>
+              <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+              <a href="tel:+234812387000000"
+                ><i class="fa-solid fa-phone"></i
+              ></a>
+              <a href="mailto:amrng@support.com.ng"
+                ><i class="fa-solid fa-envelope"></i
+              ></a>
             </div>
           </div>
         </div>
-
-        <div class="social-links">
-          <a href="#"><i class="fa-brands fa-github"></i></a>
-          <a href="#"><i class="fa-brands fa-linkedin"></i></a>
-          <a href="tel:+234812387000000"><i class="fa-solid fa-phone"></i></a>
-          <a href="mailto:amrng@support.com.ng"><i class="fa-solid fa-envelope"></i></a>
-        </div>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<!-- Font Awesome -->
-<script src="https://kit.fontawesome.com/a2e0e9c5b2.js" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <script
+      src="https://kit.fontawesome.com/a2e0e9c5b2.js"
+      crossorigin="anonymous"
+    ></script>
 
-<!-- ✅ Alert Script (keep this) -->
-<script>
-  const form = document.getElementById("contact-form");
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const name = document.getElementById("contact-name").value.trim();
-    const email = document.getElementById("contact-email").value.trim();
-    const msg = document.getElementById("contact-msg").value.trim();
+    <!-- ✅ Alert Script (keep this) -->
+    <script>
+      const form = document.getElementById("contact-form");
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const name = document.getElementById("contact-name").value.trim();
+        const email = document.getElementById("contact-email").value.trim();
+        const msg = document.getElementById("contact-msg").value.trim();
 
-    if (!name || !email || !msg) {
-      alert("⚠️ Please fill out all fields before submitting.");
-      return;
-    }
+        if (!name || !email || !msg) {
+          alert("⚠️ Please fill out all fields before submitting.");
+          return;
+        }
 
-    alert(`✅ Thank you, ${name}! Your message has been sent.`);
-    form.reset();
-  });
-</script>
-
-
+        alert(`✅ Thank you, ${name}! Your message has been sent.`);
+        form.reset();
+      });
+    </script>
 
     <!-- Footer -->
     <footer class="footer">
@@ -512,7 +553,7 @@
               <a href="#"><i class="fab fa-linkedin"></i></a>
             </div>
           </div>
-           <div class="footer-section">
+          <div class="footer-section">
             <h4>Quick Links</h4>
             <ul>
               <li><a href="#home">Home</a></li>
@@ -546,9 +587,7 @@
         <!-- Footer Bottom -->
         <div class="footer-bottom">
           <p class="footer-credit">Made with 💚 by Angela Bera</p>
-          <p>
-            &copy; 2025 ShareBite. All rights reserved. 
-          </p>
+          <p>&copy; 2025 ShareBite. All rights reserved.</p>
         </div>
       </div>
     </footer>
@@ -562,13 +601,12 @@
     </div>
 
     <!-- Scroll to Top Button -->
-<button id="scrollToTopBtn" title="Go to top">
-  <i class="fas fa-arrow-up"></i>
-</button>
-
+    <button id="scrollToTopBtn" title="Go to top">
+      <i class="fas fa-arrow-up"></i>
+    </button>
 
     <script src="js/theme.js"></script>
     <script src="js/script.js"></script>
-   
+    <script sr="js/UI.js"></script>
   </body>
 </html>
