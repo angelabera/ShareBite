@@ -1,51 +1,51 @@
-
 document.addEventListener('DOMContentLoaded', () => {
-    const themeToggle = document.getElementById('themeToggle') || document.getElementById('theme-toggle');
-    const body = document.body;
+    // Find the toggle button, accommodating both IDs used in the project
+    const themeToggle = document.getElementById('theme-toggle')  ;
+    if (!themeToggle) return;
 
-  
-    const applyTheme = () => {
-        // Default to 'light-mode' if no theme is saved.
-        const savedTheme = localStorage.getItem('theme') || 'light-mode';
+    const root = document.documentElement; // The <html> element
+    const body = document.body; // The <body> element
 
-        // Apply the theme class to the body.
-        body.classList.remove('light-mode', 'dark-mode');
-        body.classList.add(savedTheme);
+    // This function applies the theme class to both html and body
+    const applyTheme = (theme) => {
+        if (theme === 'dark') {
+            root.classList.add('dark');
+            body.classList.add('dark-mode'); // Add dark-mode to body for auth pages
+        } else {
+            root.classList.remove('dark');
+            body.classList.remove('dark-mode'); // Remove dark-mode from body
+        }
+        updateIcon(theme);
+    };
 
-        // Update the toggle button icon/text to reflect the current theme.
-        if (themeToggle) {
-            const icon = themeToggle.querySelector('i');
-            if (savedTheme === 'dark-mode') {
-                if (icon) { // For index.html with Font Awesome icon
-                    icon.classList.remove('fa-moon');
-                    icon.classList.add('fa-sun');
-                } else { // For login/register.html with emoji
-                    themeToggle.innerHTML = '☀️';
-                }
+    // This function updates the visual state of the toggle button
+    const updateIcon = (theme) => {
+        const icon = themeToggle.querySelector('i'); // For pages with Font Awesome icons
+        if (icon) {
+            if (theme === 'dark') {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
             } else {
-                if (icon) { // For index.html
-                    icon.classList.remove('fa-sun');
-                    icon.classList.add('fa-moon');
-                } else { // For login/register.html
-                    themeToggle.innerHTML = '🌙';
-                }
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
             }
+        } else { // For pages with emoji buttons
+            themeToggle.innerHTML = theme === 'dark' ? '☀️' : '🌙';
         }
     };
 
+    // This function handles the click event
     const toggleTheme = () => {
-        const currentTheme = localStorage.getItem('theme') || 'light-mode';
-        const newTheme = currentTheme === 'dark-mode' ? 'light-mode' : 'dark-mode';
-        
-        localStorage.setItem('theme', newTheme);
-        applyTheme();
+        const isDark = root.classList.contains('dark') || body.classList.contains('dark-mode');
+        const newTheme = isDark ? 'light' : 'dark';
+        localStorage.setItem('sharebite-theme', newTheme);
+        applyTheme(newTheme);
     };
 
-    // Attach the event listener to the theme toggle button if it exists.
-    if (themeToggle) {
-        themeToggle.addEventListener('click', toggleTheme);
-    }
+    themeToggle.addEventListener('click', toggleTheme);
 
-    // Apply the saved theme as soon as the page loads.
-    applyTheme();
+    // On page load, apply the saved theme or detect system preference
+    const savedTheme = localStorage.getItem('sharebite-theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(savedTheme || (prefersDark ? 'dark' : 'light'));
 });

@@ -6,6 +6,8 @@ class ShareBiteFoodListing {
         this.foodListings = [];
         this.filteredListings = [];
         this.currentFilter = 'all';
+        this.claimedItems = this.loadClaimedItems();
+        this.notifications = this.loadNotifications();
         
         this.init();
         this.initTheme(); // add theme initialization after base init
@@ -15,6 +17,8 @@ class ShareBiteFoodListing {
         this.setupEventListeners();
         this.generateSampleListings();
         this.renderFoodListings();
+        this.setupNotificationSystem();
+        this.updateNotificationDisplay();
         this.startAnimations();
         this.hideLoadingOverlay();
     }
@@ -62,6 +66,12 @@ class ShareBiteFoodListing {
         
         // Form handling
         this.setupFormHandling();
+        
+        // Date input confirmation functionality
+        this.setupDateInputConfirmation();
+        
+        // Time input confirmation functionality
+        this.setupTimeInputConfirmation();
         
         // Filtering and search
         this.setupFilteringAndSearch();
@@ -116,16 +126,30 @@ class ShareBiteFoodListing {
         const donateBtn = document.getElementById('donateFood');
         const findBtn = document.getElementById('findFood');
         const addListingBtn = document.getElementById('addListingBtn');
+        const notificationBell = document.getElementById('notificationBell');
         
         if (this.currentRole === 'collector') {
-            donateBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
-            findBtn.innerHTML = '<i class="fas fa-heart"></i> Help Others';
-            addListingBtn.style.display = 'none';
+            if (donateBtn) donateBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
+            if (findBtn) findBtn.innerHTML = '<i class="fas fa-heart"></i> Help Others';
+            if (addListingBtn) addListingBtn.style.display = 'none';
+            
+            // Show notification bell for collectors
+            if (notificationBell) {
+                notificationBell.style.display = 'block';
+            }
         } else {
-            donateBtn.innerHTML = '<i class="fas fa-heart"></i> Donate Food';
-            findBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
-            addListingBtn.style.display = 'flex';
+            if (donateBtn) donateBtn.innerHTML = '<i class="fas fa-heart"></i> Donate Food';
+            if (findBtn) findBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
+            if (addListingBtn) addListingBtn.style.display = 'flex';
+            
+            // Hide notification bell for donors (unless they have notifications)
+            if (notificationBell && this.notifications.length === 0) {
+                notificationBell.style.display = 'none';
+            }
         }
+        
+        // Re-render food listings to update claim button states
+        this.renderFoodListings();
     }
 
    setupModal() {
@@ -236,9 +260,42 @@ validateCurrentStep() {
             this.showToast(`Please fill in the required field: ${input.previousElementSibling.textContent}`, 'error');
             return false;
         }
+        
+        // Special validation for contact information
+        if (input.id === 'contact') {
+            if (!this.validateContactInfo(input.value.trim())) {
+                input.focus();
+                this.showToast('Please enter a valid email address or phone number', 'error');
+                return false;
+            }
+        }
     }
     
     return true;
+}
+
+// Validate contact information (email or phone number)
+validateContactInfo(contact) {
+    // Email regex pattern
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    
+    // Phone number regex pattern (supports various formats)
+    const phonePattern = /^[\+]?[1-9]?[\d\s\-\(\)]{7,15}$/;
+    
+    // Remove spaces and common characters for phone validation
+    const cleanedContact = contact.replace(/[\s\-\(\)]/g, '');
+    
+    // Check if it's a valid email
+    if (emailPattern.test(contact)) {
+        return true;
+    }
+    
+    // Check if it's a valid phone number
+    if (phonePattern.test(contact) && cleanedContact.length >= 7 && cleanedContact.length <= 15) {
+        return true;
+    }
+    
+    return false;
 }
 
 resetFormSteps() {
@@ -321,15 +378,7 @@ handleFileSelect(file) {
     reader.readAsDataURL(file);
 }
 
-    handleFileSelect(file) {
-        const uploadArea = document.getElementById('photoUpload');
-        if (file.type.startsWith('image/')) {
-            uploadArea.innerHTML = `
-                <i class="fas fa-check-circle" style="color: var(--primary-color);"></i>
-                <span style="color: var(--primary-color);">${file.name}</span>
-            `;
-        }
-    }
+
 
     setupFormHandling() {
         const form = document.getElementById('listingForm');
@@ -385,6 +434,12 @@ handleFileSelect(file) {
         const freshDate = new Date(data.freshUntil);
         if (freshDate <= new Date()) {
             this.showErrorMessage('Fresh until date must be in the future.');
+            return false;
+        }
+        
+        // Validate contact information
+        if (!this.validateContactInfo(data.contact)) {
+            this.showErrorMessage('Please enter a valid email address or phone number for contact information.');
             return false;
         }
         
@@ -459,46 +514,95 @@ handleFileSelect(file) {
         freshUntilInput.min = now.toISOString().slice(0, 16);
     }
 
+
     setupFilteringAndSearch() {
-        const filterBtns = document.querySelectorAll('.filter-btn');
-        const searchInput = document.querySelector('.search-box input');
-        
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                // Remove active class from all buttons
-                filterBtns.forEach(b => b.classList.remove('active'));
-                // Add active class to clicked button
-                btn.classList.add('active');
-                
-                // Set current filter
-                this.currentFilter = btn.getAttribute('data-filter');
-                
-                // Filter and render listings
+    // --- Existing Category Filter Logic ---
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            this.currentFilter = btn.getAttribute('data-filter');
+            this.filterListings();
+            this.renderFoodListings();
+        });
+    });
+
+    // --- Existing Search Input Logic ---
+    const searchInput = document.querySelector('.search-box input');
+    let searchTimeout;
+    searchInput.addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            this.searchQuery = e.target.value.toLowerCase();
+            this.filterListings();
+            this.renderFoodListings();
+        }, 300);
+    });
+
+    // --- NEW: Dropdown and Filtering Logic ---
+    const dietaryBtn = document.getElementById('dietary-filter-btn');
+    const dietaryDropdown = document.getElementById('dietary-dropdown');
+    const dietaryCheckboxes = document.querySelectorAll('input[name="dietary-filter"]');
+
+    if (dietaryBtn) {
+        // Toggle dropdown visibility
+        dietaryBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dietaryDropdown.style.display = dietaryDropdown.style.display === 'block' ? 'none' : 'block';
+            dietaryBtn.classList.toggle('active');
+        });
+
+        // Add event listeners to checkboxes
+        dietaryCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
                 this.filterListings();
                 this.renderFoodListings();
+                
+                // Update button text to show selected count
+                const selectedCount = document.querySelectorAll('input[name="dietary-filter"]:checked').length;
+                const btnSpan = dietaryBtn.querySelector('span');
+                if (selectedCount > 0) {
+                    btnSpan.textContent = `Dietary Filters (${selectedCount})`;
+                } else {
+                    btnSpan.textContent = 'Dietary Filters';
+                }
             });
         });
 
-        let searchTimeout;
-        searchInput.addEventListener('input', (e) => {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                this.searchQuery = e.target.value.toLowerCase();
-                this.filterListings();
-                this.renderFoodListings();
-            }, 300);
+        // Close dropdown when clicking outside
+        document.addEventListener('click', () => {
+            if (dietaryDropdown.style.display === 'block') {
+                dietaryDropdown.style.display = 'none';
+                dietaryBtn.classList.remove('active');
+            }
+        });
+        
+        // Prevent closing when clicking inside the dropdown
+        dietaryDropdown.addEventListener('click', (e) => {
+            e.stopPropagation();
         });
     }
+}
 
     filterListings() {
+        const activeDietaryFilters = [];
+        document.querySelectorAll('input[name="dietary-filter"]:checked').forEach(checkbox => {
+            activeDietaryFilters.push(checkbox.value);
+        });
+
         this.filteredListings = this.foodListings.filter(listing => {
             const matchesFilter = this.currentFilter === 'all' || listing.category === this.currentFilter;
+            
             const matchesSearch = !this.searchQuery || 
                 listing.foodType.toLowerCase().includes(this.searchQuery) ||
                 listing.location.toLowerCase().includes(this.searchQuery) ||
                 listing.description.toLowerCase().includes(this.searchQuery);
+
+            const matchesDietary = activeDietaryFilters.length === 0 || 
+                (listing.dietaryTags && activeDietaryFilters.every(filter => listing.dietaryTags.includes(filter)));
             
-            return matchesFilter && matchesSearch;
+            return matchesFilter && matchesSearch && matchesDietary;
         });
     }
 
@@ -558,16 +662,17 @@ handleFileSelect(file) {
 
     setupScrollEffects() {
         // Navbar background on scroll
-        window.addEventListener('scroll', () => {
+        const handleScroll = () => {
             const navbar = document.querySelector('.navbar');
+            if (!navbar) return;
             if (window.scrollY > 50) {
-                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
-                navbar.style.boxShadow = 'var(--shadow-light)';
+                navbar.classList.add('scrolled');
             } else {
-                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-                navbar.style.boxShadow = 'none';
+                navbar.classList.remove('scrolled');
             }
-        });
+        };
+        window.addEventListener('scroll', handleScroll);
+        handleScroll();
         
         // Animate elements on scroll
         this.setupScrollAnimations();
@@ -607,7 +712,8 @@ handleFileSelect(file) {
                 location: "Mario's Pizzeria, 123 Main Street",
                 contact: "+1 234-567-8900",
                 createdAt: new Date(Date.now() - 3600000),
-                donor: "Mario's Pizzeria"
+                donor: "Mario's Pizzeria",
+                dietaryTags: ["vegetarian"]
             },
             {
                 id: 2,
@@ -620,7 +726,8 @@ handleFileSelect(file) {
                 location: "Downtown Conference Center",
                 contact: "events@conference.com",
                 createdAt: new Date(Date.now() - 7200000),
-                donor: "Conference Center"
+                donor: "Conference Center",
+                dietaryTags: ["non-vegetarian"]
             },
             {
                 id: 3,
@@ -633,7 +740,8 @@ handleFileSelect(file) {
                 location: "Sunrise Bakery, Oak Avenue",
                 contact: "+1 234-567-8901",
                 createdAt: new Date(Date.now() - 1800000),
-                donor: "Sunrise Bakery"
+                donor: "Sunrise Bakery",
+                dietaryTags: ["dairy-free"]
             },
             {
                 id: 4,
@@ -646,7 +754,8 @@ handleFileSelect(file) {
                 location: "Residential Area, Pine Street",
                 contact: "+1 234-567-8902",
                 createdAt: new Date(Date.now() - 900000),
-                donor: "Local Family"
+                donor: "Local Family",
+                dietaryTags: ["vegetarian", "gluten-free"]
             },
             {
                 id: 5,
@@ -659,7 +768,8 @@ handleFileSelect(file) {
                 location: "Green Garden Restaurant",
                 contact: "+1 234-567-8903",
                 createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant"
+                donor: "Green Garden Restaurant",
+                dietaryTags: ["vegan"]
             },
             {
                 id: 5,
@@ -672,7 +782,8 @@ handleFileSelect(file) {
                 location: "Green Garden Restaurant",
                 contact: "+1 234-567-8903",
                 createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant"
+                donor: "Green Garden Restaurant",
+                dietaryTags: ["vegan"]
             },
             {
                 id: 7,
@@ -685,7 +796,8 @@ handleFileSelect(file) {
                 location: "Green Garden Restaurant",
                 contact: "+1 234-567-8903",
                 createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant"
+                donor: "Green Garden Restaurant",
+                dietaryTags: ["vegan"]
             },
             {
                 id: 8,
@@ -698,7 +810,8 @@ handleFileSelect(file) {
                 location: "Green Garden Restaurant",
                 contact: "+1 234-567-8903",
                 createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant"
+                donor: "Green Garden Restaurant",
+                dietaryTags: ["vegan"]
             },
             {
                 id: 6,
@@ -711,7 +824,8 @@ handleFileSelect(file) {
                 location: "Healthy Eats Cafe, Market Square",
                 contact: "+1 234-567-8904",
                 createdAt: new Date(Date.now() - 2700000),
-                donor: "Healthy Eats Cafe"
+                donor: "Healthy Eats Cafe",
+                dietaryTags: ["non-vegetarian", "dairy-free"]
             }
         ];
         
@@ -727,7 +841,7 @@ handleFileSelect(file) {
     }
 
     renderFoodListings() {
-        const foodGrid = document.getElementById('fullfoodGrid');
+        const foodGrid = document.getElementById('foodGrid');
         
         if (this.filteredListings.length === 0) {
             foodGrid.innerHTML = `
@@ -746,19 +860,56 @@ handleFileSelect(file) {
         this.setupFoodCardInteractions();
     }
 
+    createClaimButton(listing) {
+        const isClaimed = this.claimedItems.includes(listing.id);
+        const isCollector = this.currentRole === 'collector';
+        
+        if (isClaimed) {
+            return `
+                <button class="claim-btn claimed" disabled>
+                    <i class="fas fa-check-circle"></i> Claimed
+                </button>
+            `;
+        } else if (isCollector) {
+            return `
+                <button class="claim-btn" data-id="${listing.id}">
+                    <i class="fas fa-hand-paper"></i> Claim Food
+                </button>
+            `;
+        } else {
+            return `
+                <button class="claim-btn" style="opacity: 0.5; cursor: not-allowed;" disabled>
+                    <i class="fas fa-hand-paper"></i> Switch to Collector
+                </button>
+            `;
+        }
+    }
+
     createFoodCard(listing) {
         const timeAgo = this.getTimeAgo(listing.createdAt);
         const freshUntil = this.formatDateTime(listing.freshUntil);
-        const pickupTime = this.formatTime(listing.pickupTime);
+        const isClaimed = this.claimedItems.includes(listing.id);
+
+        // This logic generates the HTML for the tags
+        let tagsHTML = '';
+        if (listing.dietaryTags && listing.dietaryTags.length > 0) {
+            tagsHTML = `<div class="food-tags">` +
+                listing.dietaryTags.map(tag => `<span class="tag tag-${tag}">${tag}</span>`).join('') +
+            `</div>`;
+        }
         
+        // The return statement now correctly includes the tagsHTML
         return `
-            <div class="food-card" data-id="${listing.id}">
+            <div class="food-card ${isClaimed ? 'claimed' : ''}" 
+                 data-id="${listing.id}" 
+                 data-tags="${listing.dietaryTags ? listing.dietaryTags.join(',') : ''}">
                 <div class="food-image">
                     ${listing.photo ? `<img src="${URL.createObjectURL(listing.photo)}" alt="${listing.foodType}">` : `<i class="fas fa-${this.getFoodIcon(listing.category)}"></i>`}
                     <div class="food-category">${this.capitalizeFirst(listing.category)}</div>
                 </div>
                 <div class="food-details">
                     <h3 class="food-title">${listing.foodType}</h3>
+                    ${tagsHTML} 
                     <p class="food-description">${listing.description}</p>
                     <div class="food-meta">
                         <span class="quantity"><i class="fas fa-utensils"></i> ${listing.quantity}</span>
@@ -777,9 +928,7 @@ handleFileSelect(file) {
                         </span>
                     </div>
                     <div class="food-actions">
-                        <button class="claim-btn" data-id="${listing.id}">
-                            <i class="fas fa-hand-paper"></i> Claim Food
-                        </button>
+                        ${this.createClaimButton(listing)}
                         <button class="contact-btn" data-contact="${listing.contact}">
                             <i class="fas fa-phone"></i>
                         </button>
@@ -813,26 +962,49 @@ handleFileSelect(file) {
         const listing = this.foodListings.find(l => l.id === listingId);
         if (!listing) return;
         
+        // Check if already claimed
+        if (this.claimedItems.includes(listingId)) {
+            this.showToast('This item has already been claimed!', 'error');
+            return;
+        }
+        
         // Show confirmation dialog
         const confirmed = confirm(`Claim "${listing.foodType}" from ${listing.donor}?\n\nPickup: ${listing.location}\nTime: ${this.formatTime(listing.pickupTime)}\nContact: ${listing.contact}`);
         
         if (confirmed) {
-            // Remove listing from available items
-            this.foodListings = this.foodListings.filter(l => l.id !== listingId);
-            this.filterListings();
-            this.renderFoodListings();
+            // Add to claimed items
+            this.claimedItems.push(listingId);
+            this.saveClaimedItems();
+            
+            // Create notification
+            const notification = {
+                id: Date.now(),
+                listingId: listingId,
+                foodType: listing.foodType,
+                donor: listing.donor,
+                location: listing.location,
+                pickupTime: listing.pickupTime,
+                contact: listing.contact,
+                claimedAt: new Date(),
+                status: 'claimed'
+            };
+            
+            this.addNotification(notification);
+            
+            // Update button appearance only
+            const claimBtn = document.querySelector(`[data-id="${listingId}"]`);
+            
+            if (claimBtn) {
+                claimBtn.classList.add('claimed');
+                claimBtn.innerHTML = '<i class="fas fa-check-circle"></i> Claimed';
+                claimBtn.disabled = true;
+            }
             
             // Show success message
-            this.showToast(`Successfully claimed "${listing.foodType}"! Check your email for pickup details.`, 'success');
+            this.showToast(`Successfully claimed "${listing.foodType}"! Check notifications for pickup details.`, 'success');
             
-            // Animate removal
-            const card = document.querySelector(`[data-id="${listingId}"]`);
-            if (card) {
-                card.style.animation = 'fadeOut 0.3s ease forwards';
-                setTimeout(() => {
-                    this.renderFoodListings();
-                }, 300);
-            }
+            // Update notification display
+            this.updateNotificationDisplay();
         }
     }
 
@@ -947,6 +1119,392 @@ handleFileSelect(file) {
             }, 500);
         }, 1500); // Show loading for 1.5 seconds
     }
+
+    // Notification System Methods
+    setupNotificationSystem() {
+        const notificationBell = document.getElementById('notificationBell');
+        const notificationPanel = document.getElementById('notificationPanel');
+        
+        if (!notificationBell) return;
+        
+        // Show notification bell when in collector mode or when there are notifications
+        if (this.currentRole === 'collector' || this.notifications.length > 0) {
+            notificationBell.style.display = 'block';
+        }
+        
+        // Toggle notification panel
+        notificationBell.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isActive = notificationPanel.classList.contains('active');
+            
+            if (isActive) {
+                notificationPanel.classList.remove('active');
+                notificationBell.classList.remove('active');
+            } else {
+                notificationPanel.classList.add('active');
+                notificationBell.classList.add('active');
+            }
+        });
+        
+        // Close panel when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!notificationBell.contains(e.target)) {
+                notificationPanel.classList.remove('active');
+                notificationBell.classList.remove('active');
+            }
+        });
+        
+        // Prevent panel from closing when clicking inside
+        notificationPanel.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    }
+    
+    loadClaimedItems() {
+        const stored = localStorage.getItem('sharebite-claimed-items');
+        return stored ? JSON.parse(stored) : [];
+    }
+    
+    saveClaimedItems() {
+        localStorage.setItem('sharebite-claimed-items', JSON.stringify(this.claimedItems));
+    }
+    
+    loadNotifications() {
+        const stored = localStorage.getItem('sharebite-notifications');
+        return stored ? JSON.parse(stored) : [];
+    }
+    
+    saveNotifications() {
+        localStorage.setItem('sharebite-notifications', JSON.stringify(this.notifications));
+    }
+    
+    addNotification(notification) {
+        this.notifications.unshift(notification);
+        this.saveNotifications();
+        this.updateNotificationDisplay();
+        this.renderNotifications();
+    }
+    
+    updateNotificationDisplay() {
+        const notificationBell = document.getElementById('notificationBell');
+        const notificationBadge = document.getElementById('notificationBadge');
+        
+        if (!notificationBell || !notificationBadge) return;
+        
+        const unreadCount = this.notifications.length;
+        
+        if (unreadCount > 0) {
+            notificationBell.style.display = 'block';
+            notificationBadge.style.display = 'flex';
+            notificationBadge.textContent = unreadCount > 99 ? '99+' : unreadCount.toString();
+        } else {
+            notificationBadge.style.display = 'none';
+            // Keep bell visible if in collector mode
+            if (this.currentRole !== 'collector') {
+                notificationBell.style.display = 'none';
+            }
+        }
+        
+        this.renderNotifications();
+    }
+    
+    renderNotifications() {
+        const notificationList = document.getElementById('notificationList');
+        if (!notificationList) return;
+        
+        if (this.notifications.length === 0) {
+            notificationList.innerHTML = `
+                <div class="no-notifications">
+                    <i class="fas fa-bell-slash"></i>
+                    <h4>No claimed items yet</h4>
+                    <p>Start claiming food items to see them here</p>
+                </div>
+            `;
+            return;
+        }
+        
+        notificationList.innerHTML = `
+            <div class="notification-content">
+                ${this.notifications.map(notification => this.createNotificationItem(notification)).join('')}
+            </div>
+        `;
+        
+        // Add event listeners for notification actions
+        this.setupNotificationActions();
+    }
+    
+    createNotificationItem(notification) {
+        const timeAgo = this.getTimeAgo(notification.claimedAt);
+        
+        return `
+            <div class="notification-item" data-id="${notification.id}">
+                <div class="notification-item-header">
+                    <div class="notification-item-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <div class="notification-item-content">
+                        <h4>${notification.foodType}</h4>
+                        <div class="notification-detail">
+                            <i class="fas fa-store"></i>
+                            <span>${notification.donor}</span>
+                        </div>
+                        <div class="notification-detail">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>${notification.location}</span>
+                        </div>
+                        <div class="notification-detail">
+                            <i class="fas fa-clock"></i>
+                            <span>Pickup: ${this.formatTime(notification.pickupTime)}</span>
+                        </div>
+                        <div class="notification-detail">
+                            <i class="fas fa-phone"></i>
+                            <span>${notification.contact}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="notification-meta">
+                    <span class="notification-time">Claimed ${timeAgo}</span>
+                    <span class="notification-status">${this.capitalizeFirst(notification.status)}</span>
+                </div>
+            </div>
+        `;
+    }
+    
+    setupNotificationActions() {
+        const notificationItems = document.querySelectorAll('.notification-item');
+        
+        notificationItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                const notificationId = parseInt(item.getAttribute('data-id'));
+                this.viewNotificationDetails(notificationId);
+            });
+        });
+    }
+    
+    viewNotificationDetails(notificationId) {
+        const notification = this.notifications.find(n => n.id === notificationId);
+        if (!notification) return;
+        
+        const details = `
+Food: ${notification.foodType}
+Donor: ${notification.donor}
+Location: ${notification.location}
+Pickup Time: ${this.formatTime(notification.pickupTime)}
+Contact: ${notification.contact}
+Claimed: ${new Date(notification.claimedAt).toLocaleString()}
+
+Contact information has been copied to clipboard.
+        `;
+        
+        // Copy contact to clipboard
+        navigator.clipboard.writeText(notification.contact).then(() => {
+            alert(details);
+        }).catch(() => {
+            alert(details);
+        });
+    }
+    
+    clearAllNotifications() {
+        this.notifications = [];
+        this.claimedItems = [];
+        this.saveNotifications();
+        this.saveClaimedItems();
+        this.updateNotificationDisplay();
+    }
+
+    // Date Input Confirmation functionality
+    setupDateInputConfirmation() {
+        const freshUntilInput = document.getElementById('freshUntil');
+        if (!freshUntilInput) return;
+
+        const container = freshUntilInput.parentNode;
+        const checkmarkIcon = container.querySelector('.checkmark-icon');
+
+        if (!checkmarkIcon) return;
+
+        let isDateConfirmed = false;
+        let previousValue = freshUntilInput.value;
+
+        // Helper function to show checkmark only after date selection
+        const handleDateChange = () => {
+            const currentValue = freshUntilInput.value;
+            
+            // If value has changed from previous, reset confirmation status
+            if (currentValue !== previousValue) {
+                isDateConfirmed = false;
+            }
+            
+            // Only show checkmark if:
+            // 1. There's a new value
+            // 2. The value has changed from previous
+            // 3. Date hasn't been confirmed yet
+            if (currentValue && currentValue !== previousValue && !isDateConfirmed) {
+                checkmarkIcon.classList.remove('hidden');
+            }
+            
+            // If value is cleared, reset everything
+            if (!currentValue) {
+                checkmarkIcon.classList.add('hidden');
+                isDateConfirmed = false;
+            }
+            
+            previousValue = currentValue;
+        };
+
+        // Helper function to confirm date and hide checkmark
+        const confirmDate = () => {
+            if (freshUntilInput.value && !isDateConfirmed) {
+                // Mark as confirmed
+                isDateConfirmed = true;
+                
+                // Hide the checkmark
+                checkmarkIcon.classList.add('hidden');
+                
+                // Show success toast
+                this.showToast('Date confirmed successfully!', 'success');
+                
+                // Move focus to next input field if available
+                const nextInput = freshUntilInput.closest('.form-group').parentElement.nextElementSibling?.querySelector('input');
+                if (nextInput) {
+                    setTimeout(() => nextInput.focus(), 200);
+                } else {
+                    freshUntilInput.blur(); // Remove focus from current input
+                }
+            }
+        };
+
+        // Initially hide checkmark
+        checkmarkIcon.classList.add('hidden');
+
+        // Listen for date selection changes
+        freshUntilInput.addEventListener('change', handleDateChange);
+        freshUntilInput.addEventListener('input', handleDateChange);
+
+        // Checkmark click handler - confirm the date and hide checkmark
+        checkmarkIcon.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event bubbling
+            confirmDate();
+        });
+
+        // Click outside handler - hide checkmark when clicking outside
+        document.addEventListener('click', (e) => {
+            // Check if checkmark is currently visible
+            if (!checkmarkIcon.classList.contains('hidden')) {
+                // Check if click is outside the input container and not on the checkmark
+                if (!container.contains(e.target)) {
+                    // User clicked outside - confirm the date and hide checkmark
+                    confirmDate();
+                }
+            }
+        });
+
+        // Also hide checkmark when input loses focus (blur event)
+        freshUntilInput.addEventListener('blur', (e) => {
+            // Small delay to allow checkmark click to register first
+            setTimeout(() => {
+                if (!checkmarkIcon.classList.contains('hidden') && freshUntilInput.value) {
+                    confirmDate();
+                }
+            }, 100);
+        });
+    }
+
+    // Time Input Confirmation functionality
+    setupTimeInputConfirmation() {
+        const pickupTimeInput = document.getElementById('pickupTime');
+        if (!pickupTimeInput) return;
+
+        const container = pickupTimeInput.parentNode;
+        const checkmarkIcon = container.querySelector('.checkmark-icon-time');
+
+        if (!checkmarkIcon) return;
+
+        let isTimeConfirmed = false;
+        let previousValue = pickupTimeInput.value;
+
+        // Helper function to show checkmark only after time selection
+        const handleTimeChange = () => {
+            const currentValue = pickupTimeInput.value;
+            
+            // If value has changed from previous, reset confirmation status
+            if (currentValue !== previousValue) {
+                isTimeConfirmed = false;
+            }
+            
+            // Only show checkmark if:
+            // 1. There's a new value
+            // 2. The value has changed from previous
+            // 3. Time hasn't been confirmed yet
+            if (currentValue && currentValue !== previousValue && !isTimeConfirmed) {
+                checkmarkIcon.classList.remove('hidden');
+            }
+            
+            // If value is cleared, reset everything
+            if (!currentValue) {
+                checkmarkIcon.classList.add('hidden');
+                isTimeConfirmed = false;
+            }
+            
+            previousValue = currentValue;
+        };
+
+        // Helper function to confirm time and hide checkmark
+        const confirmTime = () => {
+            if (pickupTimeInput.value && !isTimeConfirmed) {
+                // Mark as confirmed
+                isTimeConfirmed = true;
+                
+                // Hide the checkmark
+                checkmarkIcon.classList.add('hidden');
+                
+                // Show success toast
+                this.showToast('Time confirmed successfully!', 'success');
+                
+                // Move focus to next input field if available
+                const nextInput = pickupTimeInput.closest('.form-group').parentElement.nextElementSibling?.querySelector('input');
+                if (nextInput) {
+                    setTimeout(() => nextInput.focus(), 200);
+                } else {
+                    pickupTimeInput.blur(); // Remove focus from current input
+                }
+            }
+        };
+
+        // Initially hide checkmark
+        checkmarkIcon.classList.add('hidden');
+
+        // Listen for time selection changes
+        pickupTimeInput.addEventListener('change', handleTimeChange);
+        pickupTimeInput.addEventListener('input', handleTimeChange);
+
+        // Checkmark click handler - confirm the time and hide checkmark
+        checkmarkIcon.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event bubbling
+            confirmTime();
+        });
+
+        // Click outside handler - hide checkmark when clicking outside
+        document.addEventListener('click', (e) => {
+            // Check if checkmark is currently visible
+            if (!checkmarkIcon.classList.contains('hidden')) {
+                // Check if click is outside the input container and not on the checkmark
+                if (!container.contains(e.target)) {
+                    // User clicked outside - confirm the time and hide checkmark
+                    confirmTime();
+                }
+            }
+        });
+
+        // Also hide checkmark when input loses focus (blur event)
+        pickupTimeInput.addEventListener('blur', (e) => {
+            // Small delay to allow checkmark click to register first
+            setTimeout(() => {
+                if (!checkmarkIcon.classList.contains('hidden') && pickupTimeInput.value) {
+                    confirmTime();
+                }
+            }, 100);
+        });
+    }
 }
 
 // Additional CSS animations via JavaScript
@@ -1044,17 +1602,17 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Service Worker registration for PWA capabilities (optional)
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('../sw.js')
-            .then(registration => {
-                console.log('SW registered: ', registration);
-            })
-            .catch(registrationError => {
-                console.log('SW registration failed: ', registrationError);
-            });
-    });
-}
+// if ('serviceWorker' in navigator) {
+//     window.addEventListener('load', () => {
+//         navigator.serviceWorker.register('../sw.js')
+//             .then(registration => {
+//                 console.log('SW registered: ', registration);
+//             })
+//             .catch(registrationError => {
+//                 console.log('SW registration failed: ', registrationError);
+//             });
+//     });
+// }
 
 // Export for potential testing or external use
 window.ShareBiteFoodListing = ShareBiteFoodListing;
