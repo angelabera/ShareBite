@@ -1356,17 +1356,20 @@ body {
     background: var(--primary-light);
 }
 
+.social-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+}
+
 .social-links h5 {
     font-size: 1.3rem;
     font-weight: 600;
-    margin-bottom: 1rem;
+    margin-bottom: 0;
+    margin-right: 0.5rem;
     color: white;
-}
-
-.social-links {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
+    width: 100%;
 }
 
 .social-links a {
@@ -1378,6 +1381,7 @@ body {
     background: rgba(255, 255, 255, 0.15);
     border-radius: 50%;
     color: white;
+    font-size: 1.2rem;
     text-decoration: none;
     transition: var(--transition-medium);
     border: 2px solid transparent;
@@ -1424,11 +1428,14 @@ body {
 }
 
 /* Footer Brand Section */
-.footer-section:first-child {
+.footer-section {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
     align-items: flex-start;
+}
+
+.footer-section:first-child {
+    gap: 2rem;
 }
 
 .footer-logo {
@@ -1722,7 +1729,7 @@ body {
         text-align: center;
     }
 
-    .footer-section:first-child {
+    .footer-section {
         align-items: center;
         text-align: center;
     }
@@ -1801,6 +1808,11 @@ body {
 
     .footer-section h4 {
         font-size: 1.2rem;
+    }
+
+    .footer-section h4::after {
+        left: 50%;
+        transform: translateX(-50%);
     }
 
     .footer-nav li {
