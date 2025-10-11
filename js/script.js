@@ -23,6 +23,45 @@ class ShareBite {
         this.hideLoadingOverlay();
     }
 
+    /**
+     * Sanitizes user input to prevent XSS attacks
+     * Converts HTML special characters to their entity equivalents
+     * @param {string} str - The string to sanitize
+     * @returns {string} - Sanitized string safe for HTML rendering
+     */
+    sanitizeHTML(str) {
+        if (typeof str !== 'string') return '';
+        
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    /**
+     * Sanitizes an entire listing object
+     * @param {Object} listing - The listing object to sanitize
+     * @returns {Object} - Sanitized listing object
+     */
+    sanitizeListing(listing) {
+        return {
+            ...listing,
+            foodType: this.sanitizeHTML(listing.foodType),
+            description: this.sanitizeHTML(listing.description),
+            location: this.sanitizeHTML(listing.location),
+            contact: this.sanitizeHTML(listing.contact),
+            donor: this.sanitizeHTML(listing.donor),
+            quantity: this.sanitizeHTML(listing.quantity),
+            // Note: Don't sanitize IDs, dates, or other non-string fields
+            id: listing.id,
+            category: listing.category,
+            freshUntil: listing.freshUntil,
+            pickupTime: listing.pickupTime,
+            photo: listing.photo,
+            createdAt: listing.createdAt,
+            dietaryTags: listing.dietaryTags
+        };
+    }
+
     initTheme() {
         const stored = localStorage.getItem('sharebite-theme');
         const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -407,7 +446,9 @@ handleFileSelect(file) {
     }
 
     addNewListing(data) {
-        this.foodListings.unshift(data);
+        // ✅ Sanitize before adding to listings
+        const sanitizedData = this.sanitizeListing(data);
+        this.foodListings.unshift(sanitizedData);
         this.filterListings();
         this.renderFoodListings();
     }
@@ -879,6 +920,13 @@ handleFileSelect(file) {
         const freshUntil = this.formatDateTime(listing.freshUntil);
         const isClaimed = this.claimedItems.includes(listing.id);
 
+        // ✅ Sanitize all user inputs to prevent XSS
+        const safeFoodType = this.sanitizeHTML(listing.foodType);
+        const safeDescription = this.sanitizeHTML(listing.description);
+        const safeLocation = this.sanitizeHTML(listing.location);
+        const safeDonor = this.sanitizeHTML(listing.donor);
+        const safeQuantity = this.sanitizeHTML(listing.quantity);
+
         // This logic generates the HTML for the tags
         let tagsHTML = '';
         if (listing.dietaryTags && listing.dietaryTags.length > 0) {
@@ -887,30 +935,30 @@ handleFileSelect(file) {
             `</div>`;
         }
         
-        // The return statement now correctly includes the tagsHTML
+        // The return statement now uses sanitized values
         return `
             <div class="food-card ${isClaimed ? 'claimed' : ''}" 
                  data-id="${listing.id}" 
                  data-tags="${listing.dietaryTags ? listing.dietaryTags.join(',') : ''}">
                 <div class="food-image">
-                    ${listing.photo ? `<img src="${URL.createObjectURL(listing.photo)}" alt="${listing.foodType}">` : `<i class="fas fa-${this.getFoodIcon(listing.category)}"></i>`}
+                    ${listing.photo ? `<img src="${URL.createObjectURL(listing.photo)}" alt="${safeFoodType}">` : `<i class="fas fa-${this.getFoodIcon(listing.category)}"></i>`}
                     <div class="food-category">${this.capitalizeFirst(listing.category)}</div>
                 </div>
                 <div class="food-details">
-                    <h3 class="food-title">${listing.foodType}</h3>
+                    <h3 class="food-title">${safeFoodType}</h3>
                     ${tagsHTML} 
-                    <p class="food-description">${listing.description}</p>
+                    <p class="food-description">${safeDescription}</p>
                     <div class="food-meta">
-                        <span class="quantity"><i class="fas fa-utensils"></i> ${listing.quantity}</span>
+                        <span class="quantity"><i class="fas fa-utensils"></i> ${safeQuantity}</span>
                         <span class="freshness"><i class="fas fa-clock"></i> ${freshUntil}</span>
                     </div>
                     <div class="food-location">
                         <i class="fas fa-map-marker-alt"></i>
-                        <span>${listing.location}</span>
+                        <span>${safeLocation}</span>
                     </div>
                     <div class="food-meta" style="margin-bottom: 1rem;">
                         <span style="color: var(--medium-gray); font-size: 0.9rem;">
-                            <i class="fas fa-user"></i> ${listing.donor}
+                            <i class="fas fa-user"></i> ${safeDonor}
                         </span>
                         <span style="color: var(--medium-gray); font-size: 0.9rem;">
                             <i class="fas fa-clock"></i> ${timeAgo}
@@ -918,7 +966,7 @@ handleFileSelect(file) {
                     </div>
                     <div class="food-actions">
                         ${this.createClaimButton(listing)}
-                        <button class="contact-btn" data-contact="${listing.contact}">
+                        <button class="contact-btn" data-contact="${this.sanitizeHTML(listing.contact)}">
                             <i class="fas fa-phone"></i>
                         </button>
                     </div>
