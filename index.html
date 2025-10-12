@@ -42,6 +42,7 @@
                 <li><a href="foodlisting.html" class="nav-link">Listings</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
                 <li><a href="#contact-section" class="nav-link">Contact</a></li>
+                <li><a href="map.html" class="nav-link">Map</a></li>
             </ul>
             <div class="user-actions">
                 <!-- Added dark mode toggle -->
@@ -50,9 +51,9 @@
                 </button>
                 
                 <!-- Notification Bell -->
-                <div class="notification-bell" id="notificationBell" style="display: none;">
+                <div class="notification-bell hidden" id="notificationBell">
                     <i class="fas fa-bell"></i>
-                    <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+                    <span class="notification-badge hidden" id="notificationBadge">0</span>
                     <div class="notification-panel" id="notificationPanel">
                         <div class="notification-header">Claimed Food Items</div>
                         <div id="notificationList">
@@ -787,11 +788,11 @@
 
           <!-- Dots Navigation -->
           <div class="testimonial-dots">
-            <button class="testimonial-dot active" data-slide="0"></button>
-            <button class="testimonial-dot" data-slide="1"></button>
-            <button class="testimonial-dot" data-slide="2"></button>
-            <button class="testimonial-dot" data-slide="3"></button>
-            <button class="testimonial-dot" data-slide="4"></button>
+            <button type="button" class="testimonial-dot active" data-slide="0" aria-label="Show testimonial 1" title="Show testimonial 1"></button>
+            <button type="button" class="testimonial-dot" data-slide="1" aria-label="Show testimonial 2" title="Show testimonial 2"></button>
+            <button type="button" class="testimonial-dot" data-slide="2" aria-label="Show testimonial 3" title="Show testimonial 3"></button>
+            <button type="button" class="testimonial-dot" data-slide="3" aria-label="Show testimonial 4" title="Show testimonial 4"></button>
+            <button type="button" class="testimonial-dot" data-slide="4" aria-label="Show testimonial 5" title="Show testimonial 5"></button>
           </div>
         </div>
 
@@ -884,10 +885,10 @@
         </div>
 
         <div class="social-links">
-          <a href="#"><i class="fa-brands fa-github"></i></a>
-          <a href="#"><i class="fa-brands fa-linkedin"></i></a>
-          <a href="tel:+234812387000000"><i class="fa-solid fa-phone"></i></a>
-          <a href="mailto:amrng@support.com.ng"><i class="fa-solid fa-envelope"></i></a>
+          <a href="#" aria-label="GitHub" title="GitHub"><i class="fa-brands fa-github" aria-hidden="true"></i></a>
+          <a href="#" aria-label="LinkedIn" title="LinkedIn"><i class="fa-brands fa-linkedin" aria-hidden="true"></i></a>
+          <a href="tel:+234812387000000" aria-label="Call +234 812 387 000 000" title="Call +234 812 387 000 000"><i class="fa-solid fa-phone" aria-hidden="true"></i></a>
+          <a href="mailto:amrng@support.com.ng" aria-label="Email amrng@support.com.ng" title="Email amrng@support.com.ng"><i class="fa-solid fa-envelope" aria-hidden="true"></i></a>
         </div>
       </div>
     </div>

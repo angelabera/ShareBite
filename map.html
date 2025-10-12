@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Food Map | ShareBite</title>
+  <link rel="stylesheet" href="css/style.css?v=map-darklight">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Leaflet Map CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <style>
+    :root {
+      --bg-light: #ffffff;
+      --bg-dark: #121212;
+      --text-light: #111;
+      --text-dark: #f5f5f5;
+      --card-light: #f7f7f7;
+      --card-dark: #1e1e1e;
+      --primary: #ff6a00;
+      --primary-light: #ff8c42;
+      --secondary: #ee0979;
+      --secondary-light: #f5317f;
+      --accent: #00b894;
+      --accent-light: #26c9a6;
+      --info: #0984e3;
+      --info-light: #3498db;
+      --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+      --gradient-light: linear-gradient(135deg, var(--primary-light), var(--secondary-light));
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      --shadow-dark: 0 4px 20px rgba(0, 0, 0, 0.3);
+      --radius: 12px;
+      --transition: all 0.3s ease;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      transition: background 0.3s, color 0.3s;
+      background-color: var(--bg-light);
+      color: var(--text-light);
+      overflow-x: hidden;
+    }
+
+    body.dark {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    /* Enhanced Navigation */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      transition: var(--transition);
+      z-index: 1000;
+      padding: 15px 0;
+    }
+    
+    body.dark .navbar {
+      background: rgba(18, 18, 18, 0.95);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+    
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .nav-logo-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: green;
+      text-decoration: none;
+    }
+    
+    .nav-menu {
+      display: flex;
+      list-style: none;
+      gap: 30px;
+    }
+    
+    .nav-link {
+      color: var(--text-light);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+      position: relative;
+    }
+    
+    body.dark .nav-link {
+      color: var(--text-dark);
+    }
+    
+    .nav-link:hover,
+    .nav-link.active {
+      color: var(--primary);
+    }
+    
+    .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--primary);
+    }
+    
+    .user-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .login-btn {
+      background: var(--gradient);
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 4px 10px rgba(255, 106, 0, 0.3);
+    }
+    
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(255, 106, 0, 0.4);
+    }
+
+    /* Enhanced Map Header */
+    .map-header {
+      text-align: center;
+      margin-top: 100px;
+      padding: 40px 20px;
+      background: linear-gradient(135deg, rgba(255, 106, 0, 0.05) 0%, rgba(238, 9, 121, 0.05) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    body.dark .map-header {
+      background: linear-gradient(135deg, rgba(255, 106, 0, 0.1) 0%, rgba(238, 9, 121, 0.1) 100%);
+    }
+
+    .map-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ff6a00' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      opacity: 0.5;
+    }
+
+    .map-header h2 {
+      font-size: 2.8rem;
+      margin-bottom: 15px;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+      position: relative;
+    }
+
+    .map-header p {
+      font-size: 1.2rem;
+      opacity: 0.8;
+      max-width: 600px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* Enhanced Map Container */
+    .map-container {
+      height: 75vh;
+      width: 100%;
+      margin-top: 20px;
+      position: relative;
+      padding: 0 20px;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #map {
+      height: 100%;
+      width: 100%;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+    
+    body.dark #map {
+      box-shadow: var(--shadow-dark);
+    }
+
+    .legend {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      background: var(--card-light);
+      color: var(--text-light);
+      padding: 20px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      font-size: 14px;
+      transition: var(--transition);
+      z-index: 1000;
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+      min-width: 200px;
+    }
+    
+
+    body.dark .legend {
+      background: var(--card-dark);
+      color: var(--text-dark);
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .legend h4 {
+      margin: 0 0 15px 0;
+      font-size: 16px;
+      font-weight: 600;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .legend h4 i {
+      font-size: 1.1rem;
+    }
+
+    .legend div {
+      margin: 10px 0;
+      display: flex;
+      align-items: center;
+      padding: 5px 0;
+    }
+
+    .legend span {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      margin-right: 12px;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      flex-shrink: 0;
+    }
+
+    .legend .donor { background: var(--primary); }
+    .legend .ngo { background: var(--accent); }
+    .legend .pickup { background: var(--info); }
+
+    /* Enhanced Map Controls */
+    .map-controls {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 1000;
+    }
+
+    .map-control-btn {
+      background: var(--card-light);
+      color: var(--text-light);
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+    
+    body.dark .map-control-btn {
+      background: var(--card-dark);
+      color: var(--text-dark);
+      box-shadow: var(--shadow-dark);
+    }
+
+    .map-control-btn:hover {
+      background: var(--primary);
+      color: white;
+      transform: scale(1.05);
+    }
+    .search-panel {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: var(--card-light);
+      color: var(--text-light);
+      padding: 20px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      z-index: 1000;
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+      width: 300px;
+    }
+     
+    
+    
+    body.dark .search-panel {
+      background: var(--card-dark);
+      color: var(--text-dark);
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .search-panel h3 {
+      margin: 0 0 15px 0;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .search-box {
+      position: relative;
+      margin-bottom: 15px;
+    }
+
+    .search-box i {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-light);
+      opacity: 0.7;
+    }
+    
+    body.dark .search-box i {
+      color: var(--text-dark);
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px 15px 12px 45px;
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,0.8);
+      transition: var(--transition);
+    }
+    
+    body.dark .search-box input {
+      background: rgba(30,30,30,0.8);
+      border-color: rgba(255,255,255,0.1);
+      color: var(--text-dark);
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(255, 106, 0, 0.2);
+    }
+
+    .filter-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .filter-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      padding: 8px 0;
+      transition: var(--transition);
+    }
+
+    .filter-option:hover {
+      color: var(--primary);
+    }
+
+    .filter-option input {
+      margin: 0;
+    }
+
+    .filter-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* Enhanced Popup Styling */
+    .leaflet-popup-content-wrapper {
+      background: var(--card-light);
+      color: var(--text-light);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 5px;
+    }
+    
+    body.dark .leaflet-popup-content-wrapper {
+      background: var(--card-dark);
+      color: var(--text-dark);
+      box-shadow: var(--shadow-dark);
+    }
+
+    .leaflet-popup-tip {
+      background: var(--card-light);
+    }
+    
+    body.dark .leaflet-popup-tip {
+      background: var(--card-dark);
+    }
+
+    .leaflet-popup-content {
+      margin: 15px 20px;
+      line-height: 1.5;
+    }
+
+    .popup-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .popup-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 0.9rem;
+    }
+
+    .popup-icon.donor {
+      background: var(--primary);
+    }
+
+    .popup-icon.ngo {
+      background: var(--accent);
+    }
+
+    .popup-icon.pickup {
+      background: var(--info);
+    }
+
+    .popup-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin: 0;
+    }
+
+    .popup-details {
+      margin: 10px 0;
+    }
+
+    .popup-detail {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .popup-detail i {
+      color: var(--primary);
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .popup-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .popup-btn {
+      flex: 1;
+      padding: 8px 12px;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 0.9rem;
+    }
+
+    .popup-btn.primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .popup-btn.secondary {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+    }
+
+    .popup-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    /* Enhanced Zoom Controls */
+    .leaflet-control-zoom a {
+      background: var(--card-light);
+      color: var(--text-light);
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+      transition: var(--transition);
+    }
+    
+    body.dark .leaflet-control-zoom a {
+      background: var(--card-dark);
+      color: var(--text-dark);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .leaflet-control-zoom a:hover {
+      background: var(--primary);
+      color: white;
+    .stats-panel {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: var(--card-light);
+      color: var(--text-light);
+      padding: 20px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      z-index: 1000;
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+      min-width: 200px;
+    }
+      border: 1px solid rgba(255,255,255,0.1);
+      min-width: 200px;
+    }
+    
+    body.dark .stats-panel {
+      background: var(--card-dark);
+      color: var(--text-dark);
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .stats-panel h4 {
+      margin: 0 0 15px 0;
+      font-size: 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stat-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+    
+    body.dark .stat-item {
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .stat-item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .stat-value {
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--accent);
+      color: white;
+      padding: 15px 25px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      z-index: 2000;
+      transform: translateX(150%);
+      transition: transform 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .toast.show {
+      transform: translateX(0);
+    }
+
+    .toast i {
+      font-size: 1.2rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .map-container {
+        height: 70vh;
+      }
+      
+      .search-panel {
+        width: 250px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .map-header h2 {
+        font-size: 2.2rem;
+      }
+      
+      .map-header p {
+        font-size: 1rem;
+      }
+      
+      .map-container {
+        height: 65vh;
+        padding: 0 10px;
+      }
+      
+      .search-panel {
+        width: 200px;
+        left: 10px;
+        top: 10px;
+      }
+      
+      .legend {
+        left: 10px;
+        bottom: 10px;
+        padding: 15px;
+      }
+      
+      .stats-panel {
+        right: 10px;
+        bottom: 10px;
+        padding: 15px;
+      }
+      
+      .map-controls {
+        right: 10px;
+        top: 10px;
+      }
+      
+      .nav-menu {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .map-header {
+        padding: 30px 15px;
+      }
+      
+      .map-header h2 {
+        font-size: 1.8rem;
+      }
+      
+      .search-panel {
+        width: calc(100% - 20px);
+        left: 10px;
+      }
+      
+      .legend, .stats-panel {
+        position: relative;
+        margin: 10px;
+        width: calc(100% - 20px);
+        left: 0;
+        bottom: 0;
+        right: 0;
+      }
+      
+      .map-controls {
+        flex-direction: row;
+        top: auto;
+        bottom: 80px;
+        right: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <a href="index.html" class="nav-logo-link">
+          <i class="fas fa-utensils"></i> <span>ShareBite</span>
+        </a>
+      </div>
+      <ul class="nav-menu">
+        <li><a href="index.html#home" class="nav-link">Home</a></li>
+        <li><a href="index.html#features" class="nav-link">Features</a></li>
+        <li><a href="foodlisting.html" class="nav-link">Listings</a></li>
+        <li><a href="map.html" class="nav-link active">Map</a></li>
+        <li><a href="index.html#contact-section" class="nav-link">Contact</a></li>
+      </ul>
+      <div class="user-actions">
+        <button class="login-btn" onclick="window.location.href='login.html'">Login</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Map Header -->
+  <div class="map-header">
+    <h2>Find Nearby Food Donations</h2>
+    <p>Explore local donors, NGOs, and pickup points on the map to reduce food waste and help those in need</p>
+  </div>
+
+  <!-- Map Container -->
+  <div class="map-container">
+    <div id="map"></div>
+    
+    <!-- Search Panel -->
+    <div class="search-panel">
+      <h3><i class="fas fa-filter"></i> Filter Locations</h3>
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Search locations...">
+      </div>
+      <div class="filter-options">
+        <div class="filter-option" data-type="all">
+          <input type="checkbox" id="filter-all" checked>
+          <span class="filter-color" style="background: var(--primary);"></span>
+          <label for="filter-all">All Locations</label>
+        </div>
+        <div class="filter-option" data-type="donor">
+          <input type="checkbox" id="filter-donor" checked>
+          <span class="filter-color" style="background: var(--primary);"></span>
+          <label for="filter-donor">Donors</label>
+        </div>
+        <div class="filter-option" data-type="ngo">
+          <input type="checkbox" id="filter-ngo" checked>
+          <span class="filter-color" style="background: var(--accent);"></span>
+          <label for="filter-ngo">NGOs</label>
+        </div>
+        <div class="filter-option" data-type="pickup">
+          <input type="checkbox" id="filter-pickup" checked>
+          <span class="filter-color" style="background: var(--info);"></span>
+          <label for="filter-pickup">Pickup Points</label>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Map Controls -->
+    <div class="map-controls">
+      <button class="map-control-btn" id="locateMe" title="Find my location">
+        <i class="fas fa-location-arrow"></i>
+      </button>
+      <button class="map-control-btn" id="refreshMap" title="Refresh map">
+        <i class="fas fa-sync-alt"></i>
+      </button>
+    </div>
+    
+    <!-- Legend -->
+    <div class="legend">
+      <h4><i class="fas fa-map"></i> Map Legend</h4>
+      <div><span class="donor"></span> Donor Locations</div>
+      <div><span class="ngo"></span> NGO Centers</div>
+      <div><span class="pickup"></span> Pickup Points</div>
+    </div>
+    
+    <!-- Stats Panel -->
+    <div class="stats-panel">
+      <h4><i class="fas fa-chart-pie"></i> Statistics</h4>
+      <div class="stat-item">
+        <span>Total Locations:</span>
+        <span class="stat-value" id="totalLocations">5</span>
+      </div>
+      <div class="stat-item">
+        <span>Donors:</span>
+        <span class="stat-value" id="donorCount">2</span>
+      </div>
+      <div class="stat-item">
+        <span>NGOs:</span>
+        <span class="stat-value" id="ngoCount">2</span>
+      </div>
+      <div class="stat-item">
+        <span>Pickup Points:</span>
+        <span class="stat-value" id="pickupCount">1</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="toastMessage">Location found successfully!</span>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <script>
+    // Initialize map
+    const map = L.map('map').setView([19.0760, 72.8777], 12); // Mumbai default
+
+    // Tile layers
+    const lightTiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap'
+    });
+
+    const darkTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap, &copy; CartoDB'
+    });
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark');
+      darkTiles.addTo(map);
+    } else {
+      lightTiles.addTo(map);
+    }
+
+    // Enhanced locations with more details
+    const locations = [
+      { 
+        type: "donor", 
+        name: "Sunrise Restaurant", 
+        coords: [19.0822, 72.8568], 
+        details: "10 portions of biryani until 9 PM",
+        contact: "Phone: 98765 43210",
+        hours: "8 AM - 10 PM",
+        status: "Available",
+        address: "123 Main Street, Mumbai"
+      },
+      { 
+        type: "ngo", 
+        name: "Helping Hands NGO", 
+        coords: [19.0938, 72.8385], 
+        details: "Community kitchen support",
+        contact: "Phone: 98765 43211",
+        hours: "9 AM - 6 PM",
+        status: "Open",
+        address: "456 NGO Lane, Mumbai"
+      },
+      { 
+        type: "pickup", 
+        name: "Local Pickup Point", 
+        coords: [19.0600, 72.8900], 
+        details: "Open until 7 PM",
+        contact: "Phone: 98765 43212",
+        hours: "10 AM - 7 PM",
+        status: "Available",
+        address: "789 Collection Center, Mumbai"
+      },
+      { 
+        type: "donor", 
+        name: "Green Cafe", 
+        coords: [19.0700, 72.8700], 
+        details: "Fresh sandwiches and salads",
+        contact: "Phone: 98765 43213",
+        hours: "7 AM - 9 PM",
+        status: "Available until 8 PM",
+        address: "321 Green Street, Mumbai"
+      },
+      { 
+        type: "ngo", 
+        name: "Food for All Foundation", 
+        coords: [19.0850, 72.8400], 
+        details: "Daily meal distribution",
+        contact: "Phone: 98765 43214",
+        hours: "8 AM - 8 PM",
+        status: "Open",
+        address: "654 Foundation Road, Mumbai"
+      },
+      { 
+        type: "pickup", 
+        name: "Community Center", 
+        coords: [19.0750, 72.8650], 
+        details: "Food distribution point",
+        contact: "Phone: 98765 43215",
+        hours: "9 AM - 5 PM",
+        status: "Available",
+        address: "987 Community Ave, Mumbai"
+      }
+    ];
+
+    // Custom icons
+    const icons = {
+      donor: L.divIcon({
+        html: '<i class="fas fa-store" style="color: #ff6a00; font-size: 20px;"></i>',
+        iconSize: [30, 30],
+        className: 'custom-div-icon'
+      }),
+      ngo: L.divIcon({
+        html: '<i class="fas fa-hands-helping" style="color: #00b894; font-size: 20px;"></i>',
+        iconSize: [30, 30],
+        className: 'custom-div-icon'
+      }),
+      pickup: L.divIcon({
+        html: '<i class="fas fa-map-marker-alt" style="color: #0984e3; font-size: 20px;"></i>',
+        iconSize: [30, 30],
+        className: 'custom-div-icon'
+      })
+    };
+
+    // Create markers
+    const markers = [];
+    const markerLayer = L.layerGroup().addTo(map);
+
+    locations.forEach(loc => {
+      const marker = L.marker(loc.coords, { icon: icons[loc.type] });
+      
+      // Enhanced popup content
+      const popupContent = `
+        <div style="min-width: 250px;">
+          <div class="popup-header">
+            <div class="popup-icon ${loc.type}">
+              <i class="fas ${loc.type === 'donor' ? 'fa-store' : loc.type === 'ngo' ? 'fa-hands-helping' : 'fa-map-marker-alt'}"></i>
+            </div>
+            <h3 class="popup-title">${loc.name}</h3>
+          </div>
+          <div class="popup-details">
+            <div class="popup-detail">
+              <i class="fas fa-info-circle"></i>
+              <span>${loc.details}</span>
+            </div>
+            <div class="popup-detail">
+              <i class="fas fa-clock"></i>
+              <span>${loc.hours}</span>
+            </div>
+            <div class="popup-detail">
+              <i class="fas fa-phone"></i>
+              <span>${loc.contact}</span>
+            </div>
+            <div class="popup-detail">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>${loc.address}</span>
+            </div>
+            <div class="popup-detail">
+              <i class="fas fa-circle"></i>
+              <span style="color: ${loc.status === 'Available' || loc.status === 'Open' ? '#00b894' : '#ff6a00'}">${loc.status}</span>
+            </div>
+          </div>
+          <div class="popup-actions">
+            <button class="popup-btn primary" onclick="claimFood('${loc.name}')">
+              <i class="fas fa-heart"></i> Claim
+            </button>
+            <button class="popup-btn secondary" onclick="getDirections(${loc.coords[0]}, ${loc.coords[1]})">
+              <i class="fas fa-route"></i> Directions
+            </button>
+          </div>
+        </div>
+      `;
+      
+      marker.bindPopup(popupContent);
+      marker.addTo(markerLayer);
+      markers.push({
+        marker: marker,
+        type: loc.type,
+        name: loc.name
+      });
+    });
+
+    // User Location
+    let userLocationMarker = null;
+    
+    // Locate me functionality
+    document.getElementById('locateMe').addEventListener('click', () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => {
+          const lat = pos.coords.latitude, lon = pos.coords.longitude;
+          
+          // Remove existing user location marker
+          if (userLocationMarker) {
+            map.removeLayer(userLocationMarker);
+          }
+          
+          userLocationMarker = L.circleMarker([lat, lon], {
+            radius: 10,
+            color: "#0984e3",
+            fillColor: "#74b9ff",
+            fillOpacity: 0.8,
+            weight: 3
+          }).addTo(map).bindPopup("<b>You are here</b>");
+          
+          map.setView([lat, lon], 13);
+          showToast("Your location has been found!");
+        }, () => {
+          showToast("Unable to retrieve your location", "error");
+        });
+      } else {
+        showToast("Geolocation is not supported by your browser", "error");
+      }
+    });
+
+    // Refresh map functionality
+    document.getElementById('refreshMap').addEventListener('click', () => {
+      map.setView([19.0760, 72.8777], 12);
+      showToast("Map has been reset");
+    });
+
+    // Filter functionality
+    const filterOptions = document.querySelectorAll('.filter-option input');
+    
+    filterOptions.forEach(option => {
+      option.addEventListener('change', updateMapFilters);
+    });
+
+    function updateMapFilters() {
+      const selectedTypes = [];
+      
+      filterOptions.forEach(option => {
+        if (option.checked && option.id !== 'filter-all') {
+          selectedTypes.push(option.closest('.filter-option').dataset.type);
+        }
+      });
+      
+      // If "All" is checked or no specific filters are selected, show all
+      const showAll = document.getElementById('filter-all').checked || selectedTypes.length === 0;
+      
+      markers.forEach(item => {
+        if (showAll || selectedTypes.includes(item.type)) {
+          if (!map.hasLayer(item.marker)) {
+            item.marker.addTo(markerLayer);
+          }
+        } else {
+          if (map.hasLayer(item.marker)) {
+            markerLayer.removeLayer(item.marker);
+          }
+        }
+      });
+      
+      updateStats();
+    }
+
+    // Search functionality
+    document.getElementById('searchInput').addEventListener('input', function() {
+      const searchTerm = this.value.toLowerCase();
+      
+      markers.forEach(item => {
+        if (item.name.toLowerCase().includes(searchTerm)) {
+          if (!map.hasLayer(item.marker)) {
+            item.marker.addTo(markerLayer);
+          }
+        } else {
+          if (map.hasLayer(item.marker)) {
+            markerLayer.removeLayer(item.marker);
+          }
+        }
+      });
+      
+      updateStats();
+    });
+
+    // Update statistics
+    function updateStats() {
+      const visibleMarkers = markers.filter(item => map.hasLayer(item.marker));
+      
+      document.getElementById('totalLocations').textContent = visibleMarkers.length;
+      document.getElementById('donorCount').textContent = visibleMarkers.filter(item => item.type === 'donor').length;
+      document.getElementById('ngoCount').textContent = visibleMarkers.filter(item => item.type === 'ngo').length;
+      document.getElementById('pickupCount').textContent = visibleMarkers.filter(item => item.type === 'pickup').length;
+    }
+
+    // Toast notification
+    function showToast(message, type = "success") {
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toastMessage');
+      
+      toastMessage.textContent = message;
+      
+      // Change color based on type
+      if (type === "error") {
+        toast.style.background = "var(--secondary)";
+      } else {
+        toast.style.background = "var(--accent)";
+      }
+      
+      toast.classList.add('show');
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // Claim food function
+    function claimFood(locationName) {
+      showToast(`Food from ${locationName} has been claimed!`);
+      // In a real app, you would make an API call here
+    }
+
+    // Get directions function
+    function getDirections(lat, lng) {
+      // In a real app, this would open Google Maps or another navigation app
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+      window.open(url, '_blank');
+      showToast("Opening directions in Google Maps");
+    }
+
+    // Initialize stats
+    updateStats();
+  </script>
+</body>
+</html>

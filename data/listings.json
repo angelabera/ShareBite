@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Community Kitchen",
+    "desc": "Leftover sandwiches and fruit boxes available.",
+    "lat": 19.076,
+    "lng": 72.8777
+  },
+  {
+    "name": "Local NGO Center",
+    "desc": "Fresh cooked meals for 50 people.",
+    "lat": 19.09,
+    "lng": 72.89
+  },
+  {
+    "name": "Bakery Corner",
+    "desc": "Free bread loaves and pastries until 8 PM.",
+    "lat": 19.1,
+    "lng": 72.875
+  }
+]
