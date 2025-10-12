@@ -3,10 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Cache Control for Development -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <title>ShareBite - Food Waste Reducer</title>
+    <meta name="sharebite-build" content="v-gallery-update-2">
     <meta name="sharebite-build" content="v-darkmode-fix-1">
     <link rel="stylesheet" href="css/style.css?v=2024-10-09-22-40">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=darkmode-fix-1">
+
+    <!-- CSS with timestamp cache busting -->
+    <script>
+      // Dynamic cache busting
+      document.write('<link rel="stylesheet" href="css/style.css?v=' + Date.now() + '">');
+    </script>
+    <noscript>
+      <link rel="stylesheet" href="css/style.css?v=gallery-update-2">
+    </noscript>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
   </head>
@@ -52,6 +69,7 @@
                 <button class="login-btn" onclick="window.location.href='login.html'">Login as User</button>
                  <button class="login-btn" onclick="window.location.href='login_ngo.html'">Login as NGO</button>
             </div>
+            <div id="toast" class="toast"></div>
             <div class="hamburger">
                 <span></span>
                 <span></span>
@@ -78,7 +96,7 @@
               <i class="fas fa-heart"></i>
               Donate Food
             </button>
-            <button class="btn btn-secondary" id="findFood">
+            <button class="btn btn-secondary" id="findFood" onclick="window.location.href='foodlisting.html'">
               <i class="fas fa-search"></i>
               Find Food
             </button>
@@ -180,30 +198,44 @@
           <p class="section-subtitle">Available food waiting to be collected</p>
         </div>
 
-        <!-- Filter Bar -->
-        <div class="filter-bar">
-          <div class="filter-group">
-            <button class="filter-btn active" data-filter="all">All</button>
-            <button class="filter-btn" data-filter="restaurant">
-              Restaurant
-            </button>
-            <button class="filter-btn" data-filter="household">
-              Household
-            </button>
-            <button class="filter-btn" data-filter="bakery">Bakery</button>
-          </div>
-          <div class="search-box">
-            <i class="fas fa-search"></i>
-            <input
-              type="text"
-              placeholder="Search by location or food type..."
-            />
-          </div>
-          <button class="add-listing-btn" id="addListingBtn">
-            <i class="fas fa-plus"></i>
-            Add Listing
-          </button>
-        </div>
+       <div class="filter-bar">
+    <div class="filter-group">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="restaurant">
+            Restaurant
+        </button>
+        <button class="filter-btn" data-filter="household">
+            Household
+        </button>
+        <button class="filter-btn" data-filter="bakery">Bakery</button>
+    </div>
+
+   <div class="dropdown-check-container">
+    <button class="dropdown-btn" id="dietary-filter-btn">
+        <span>Dietary Filters</span>
+        <i class="fas fa-chevron-down"></i>
+    </button>
+    <div class="dropdown-content" id="dietary-dropdown">
+        <label><input type="checkbox" name="dietary-filter" value="vegetarian"> Vegetarian</label>
+        <label><input type="checkbox" name="dietary-filter" value="vegan"> Vegan</label>
+        <label><input type="checkbox" name="dietary-filter" value="gluten-free"> Gluten-Free</label>
+        <label><input type="checkbox" name="dietary-filter" value="dairy-free"> Dairy-Free</label>
+        <label><input type="checkbox" name="dietary-filter" value="non-vegetarian"> Non-Vegetarian</label>
+    </div>
+</div>
+    
+    <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input
+            type="text"
+            placeholder="Search by location or food type..."
+        />
+    </div>
+    <button class="add-listing-btn" id="addListingBtn">
+        <i class="fas fa-plus"></i>
+        Add Listing
+    </button>
+</div>
 
         <!-- Food Cards Grid -->
         <div class="food-grid" id="foodGrid">
@@ -285,6 +317,15 @@
                 placeholder="Additional details about the food..."
               ></textarea>
             </div>
+            <div class="form-group">
+              <label>Dietary Information (optional)</label>
+              <div class="checkbox-group">
+                  <div><input type="checkbox" id="tag-vegetarian" name="dietary" value="vegetarian"><label for="tag-vegetarian">Vegetarian</label></div>
+                  <div><input type="checkbox" id="tag-vegan" name="dietary" value="vegan"><label for="tag-vegan">Vegan</label></div>
+                  <div><input type="checkbox" id="tag-gluten-free" name="dietary" value="gluten-free"><label for="tag-gluten-free">Gluten-Free</label></div>
+                  <div><input type="checkbox" id="tag-nut-free" name="dietary" value="nut-free"><label for="tag-nut-free">Nut-Free</label></div>
+              </div>
+            </div>
           </div>
 
           <!-- Step 2: Pickup Info -->
@@ -293,11 +334,17 @@
             <div class="form-row">
               <div class="form-group">
                 <label for="freshUntil">Fresh Until *</label>
-                <input type="datetime-local" id="freshUntil" required />
+                <div class="input-container-relative">
+                  <input type="datetime-local" id="freshUntil" class="datetime-input" required />
+                  <span class="checkmark-icon hidden">✓</span>
+                </div>
               </div>
               <div class="form-group">
                 <label for="pickupTime">Preferred Pickup Time *</label>
-                <input type="time" id="pickupTime" required />
+                <div class="input-container-relative">
+                  <input type="time" id="pickupTime" class="datetime-input" required />
+                  <span class="checkmark-icon-time hidden">✓</span>
+                </div>
               </div>
             </div>
             <div class="form-group">
@@ -425,6 +472,364 @@
       <div class="divider-line"></div>
     </div>
 
+    <!-- Gallery Section -->
+    <section id="gallery" class="gallery-showcase">
+      <div class="container-fluid" style="margin: 0px 20px; margin-top: 40px;">
+        <div class="section-header">
+          <h2 class="section-title">Our Impact Gallery</h2>
+          <p class="section-subtitle">Moments of making a difference, one meal at a time</p>
+        </div>
+
+        <div class="gallery-grid">
+          <!-- Large item -->
+          <div class="gallery-item gallery-large" data-category="community">
+            <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800" alt="Community Food Distribution">
+            <div class="gallery-overlay">
+              <div class="gallery-info">
+                <h3>Community Food Distribution</h3>
+                <p>Serving 500+ meals to local communities</p>
+                <span class="gallery-tag"><i class="fas fa-users"></i> Community</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Small item -->
+          <div class="gallery-item gallery-small" data-category="donation">
+            <img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?w=400" alt="Fresh Produce">
+            <div class="gallery-overlay">
+              <div class="gallery-info">
+                <h3>Fresh Produce</h3>
+                <p>Daily vegetable donations</p>
+                <span class="gallery-tag"><i class="fas fa-leaf"></i> Donation</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Medium item -->
+          <div class="gallery-item gallery-medium" data-category="restaurant">
+            <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600" alt="Restaurant Partnership">
+            <div class="gallery-overlay">
+              <div class="gallery-info">
+                <h3>Restaurant Partnership</h3>
+                <p>Quality meals from local restaurants</p>
+                <span class="gallery-tag"><i class="fas fa-store"></i> Restaurant</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Small item -->
+          <div class="gallery-item gallery-small" data-category="volunteers">
+            <img src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=400" alt="Volunteer Team">
+            <div class="gallery-overlay">
+              <div class="gallery-info">
+                <h3>Volunteer Team</h3>
+                <p>Dedicated volunteers in action</p>
+                <span class="gallery-tag"><i class="fas fa-hands-helping"></i> Volunteers</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Large item -->
+          <div class="gallery-item gallery-large" data-category="bakery">
+            <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800" alt="Bakery Donations">
+            <div class="gallery-overlay">
+              <div class="gallery-info">
+                <h3>Bakery Donations</h3>
+                <p>Fresh bread and pastries daily</p>
+                <span class="gallery-tag"><i class="fas fa-bread-slice"></i> Bakery</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Medium item -->
+          <div class="gallery-item gallery-medium" data-category="events">
+            <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=600" alt="Food Drive Event">
+            <div class="gallery-overlay">
+              <div class="gallery-info">
+                <h3>Food Drive Event</h3>
+                <p>Monthly community gatherings</p>
+                <span class="gallery-tag"><i class="fas fa-calendar-alt"></i> Events</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Small item -->
+          <div class="gallery-item gallery-small" data-category="impact">
+            <img src="https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=400" alt="Happy Recipients">
+            <div class="gallery-overlay">
+              <div class="gallery-info">
+                <h3>Happy Recipients</h3>
+                <p>Making smiles, one meal at a time</p>
+                <span class="gallery-tag"><i class="fas fa-heart"></i> Impact</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Medium item -->
+          <div class="gallery-item gallery-medium" data-category="ngo">
+            <img src="https://images.unsplash.com/photo-1593113646773-028c64a8f1b8?w=600" alt="NGO Partnership">
+            <div class="gallery-overlay">
+              <div class="gallery-info">
+                <h3>NGO Partnership</h3>
+                <p>Working with 85+ NGO partners</p>
+                <span class="gallery-tag"><i class="fas fa-handshake"></i> NGO</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="gallery-item gallery-small" data-category="impact">
+            <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Happy Recipients">
+            <div class="gallery-overlay">
+              <div class="gallery-info">
+                <h3>Happy Recipients</h3>
+                <p>Happiness of the poor children.</p>
+                <span class="gallery-tag"><i class="fas fa-heart"></i> Impact</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="gallery-item gallery-medium" data-category="ngo">
+            <img src="https://plus.unsplash.com/premium_photo-1733317223968-9bb3a925b245?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="NGO Partnership">
+            <div class="gallery-overlay">
+              <div class="gallery-info">
+                <h3>Partnership</h3>
+                <p>Diverse group of people sorting donated food for those in need while working at community center.</p>
+                <span class="gallery-tag"><i class="fas fa-handshake"></i> NGO</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section Divider -->
+    <div class="section-divider">
+      <div class="divider-line"></div>
+      <div class="divider-icon">
+        <i class="fas fa-utensils"></i>
+      </div>
+      <div class="divider-line"></div>
+    </div>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonials-section">
+      <!-- Decorative Background Elements -->
+      <div class="testimonial-bg-decor">
+        <div class="testimonial-bubble testimonial-bubble-1"></div>
+        <div class="testimonial-bubble testimonial-bubble-2"></div>
+        <div class="testimonial-bubble testimonial-bubble-3"></div>
+        <div class="testimonial-bubble testimonial-bubble-4"></div>
+        <div class="testimonial-bubble testimonial-bubble-5"></div>
+        <div class="testimonial-bubble testimonial-bubble-6"></div>
+        <div class="testimonial-bubble testimonial-bubble-7"></div>
+        <div class="testimonial-bubble testimonial-bubble-8"></div>
+        <div class="testimonial-wave testimonial-wave-1"></div>
+        <div class="testimonial-wave testimonial-wave-2"></div>
+      </div>
+
+      <div class="container">
+        <div class="section-header" style="margin: 0;">
+          <h2 class="section-title">What People Say</h2>
+          <p class="section-subtitle">Real stories from our amazing community</p>
+        </div>
+
+        <div class="testimonials-carousel">
+          <div class="testimonial-track">
+
+            <!-- Testimonial Card 1 -->
+            <div class="testimonial-card active">
+              <div class="testimonial-header">
+                <div class="testimonial-avatar">
+                  <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah Johnson">
+                </div>
+                <div class="testimonial-author">
+                  <h4>Sarah Johnson</h4>
+                  <p class="testimonial-role">Restaurant Owner</p>
+                  <div class="testimonial-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="testimonial-content">
+                <i class="fas fa-quote-left testimonial-quote"></i>
+                <p>ShareBite has transformed how we handle excess food at our restaurant. Instead of wasting perfectly good meals, we now connect with local shelters. It feels amazing to make a real difference!</p>
+                <div class="testimonial-meta">
+                  <span><i class="fas fa-map-marker-alt"></i> New York, USA</span>
+                  <span><i class="fas fa-calendar"></i> Member since 2023</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Testimonial Card 2 -->
+            <div class="testimonial-card">
+              <div class="testimonial-header">
+                <div class="testimonial-avatar">
+                  <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Michael Chen">
+                </div>
+                <div class="testimonial-author">
+                  <h4>Michael Chen</h4>
+                  <p class="testimonial-role">NGO Coordinator</p>
+                  <div class="testimonial-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="testimonial-content">
+                <i class="fas fa-quote-left testimonial-quote"></i>
+                <p>This platform has been a game-changer for our food distribution efforts. We can now reach more families in need and coordinate pickups seamlessly. The impact on our community has been tremendous!</p>
+                <div class="testimonial-meta">
+                  <span><i class="fas fa-map-marker-alt"></i> San Francisco, USA</span>
+                  <span><i class="fas fa-calendar"></i> Member since 2022</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Testimonial Card 3 -->
+            <div class="testimonial-card">
+              <div class="testimonial-header">
+                <div class="testimonial-avatar">
+                  <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Emily Rodriguez">
+                </div>
+                <div class="testimonial-author">
+                  <h4>Emily Rodriguez</h4>
+                  <p class="testimonial-role">Volunteer Coordinator</p>
+                  <div class="testimonial-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="testimonial-content">
+                <i class="fas fa-quote-left testimonial-quote"></i>
+                <p>As a volunteer, ShareBite makes it so easy to find and claim food donations. The notification system keeps me updated, and I love seeing the positive impact we're making together in reducing food waste.</p>
+                <div class="testimonial-meta">
+                  <span><i class="fas fa-map-marker-alt"></i> Chicago, USA</span>
+                  <span><i class="fas fa-calendar"></i> Member since 2023</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Testimonial Card 4 -->
+            <div class="testimonial-card">
+              <div class="testimonial-header">
+                <div class="testimonial-avatar">
+                  <img src="https://randomuser.me/api/portraits/men/56.jpg" alt="David Thompson">
+                </div>
+                <div class="testimonial-author">
+                  <h4>David Thompson</h4>
+                  <p class="testimonial-role">Bakery Manager</p>
+                  <div class="testimonial-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="testimonial-content">
+                <i class="fas fa-quote-left testimonial-quote"></i>
+                <p>Every evening, we have fresh bread and pastries left over. Thanks to ShareBite, these don't go to waste anymore. It's incredibly rewarding to know our baked goods are feeding people who need them.</p>
+                <div class="testimonial-meta">
+                  <span><i class="fas fa-map-marker-alt"></i> Boston, USA</span>
+                  <span><i class="fas fa-calendar"></i> Member since 2022</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Testimonial Card 5 -->
+            <div class="testimonial-card">
+              <div class="testimonial-header">
+                <div class="testimonial-avatar">
+                  <img src="https://randomuser.me/api/portraits/women/28.jpg" alt="Priya Sharma">
+                </div>
+                <div class="testimonial-author">
+                  <h4>Priya Sharma</h4>
+                  <p class="testimonial-role">Community Leader</p>
+                  <div class="testimonial-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="testimonial-content">
+                <i class="fas fa-quote-left testimonial-quote"></i>
+                <p>ShareBite connects our entire community. From donors to recipients, everyone benefits. The platform is user-friendly, and the support team is always helpful. This is what social impact looks like!</p>
+                <div class="testimonial-meta">
+                  <span><i class="fas fa-map-marker-alt"></i> Seattle, USA</span>
+                  <span><i class="fas fa-calendar"></i> Member since 2023</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Navigation Controls -->
+          <button class="testimonial-nav testimonial-prev" aria-label="Previous testimonial">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button class="testimonial-nav testimonial-next" aria-label="Next testimonial">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+
+          <!-- Dots Navigation -->
+          <div class="testimonial-dots">
+            <button class="testimonial-dot active" data-slide="0"></button>
+            <button class="testimonial-dot" data-slide="1"></button>
+            <button class="testimonial-dot" data-slide="2"></button>
+            <button class="testimonial-dot" data-slide="3"></button>
+            <button class="testimonial-dot" data-slide="4"></button>
+          </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="testimonial-stats">
+          <div class="testimonial-stat-item">
+            <div class="testimonial-stat-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="testimonial-stat-info">
+              <h3 class="testimonial-stat-number" data-target="2500">100+</h3>
+              <p>Active Users</p>
+            </div>
+          </div>
+          <div class="testimonial-stat-item">
+            <div class="testimonial-stat-icon">
+              <i class="fas fa-star"></i>
+            </div>
+            <div class="testimonial-stat-info">
+              <h3 class="testimonial-stat-number">4.9</h3>
+              <p>Average Rating</p>
+            </div>
+          </div>
+          <div class="testimonial-stat-item">
+            <div class="testimonial-stat-icon">
+              <i class="fas fa-smile"></i>
+            </div>
+            <div class="testimonial-stat-info">
+              <h3 class="testimonial-stat-number" data-target="98">98%</h3>
+              <p>Satisfaction Rate</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    
  <section id="contact-section" class="contact">
   <h1 class="main-title">📞 Contact Us</h1>
   <div class="contact-wrapper">
@@ -511,6 +916,19 @@
     alert(`✅ Thank you, ${name}! Your message has been sent.`);
     form.reset();
   });
+  const username = JSON.parse(localStorage.getItem('user')).name;
+  const toast = document.getElementById('toast');
+
+  if (username) {
+    // Show toast message
+    toast.textContent = `Welcome, ${username}! 🎉`;
+    toast.classList.add('show');
+
+    // Hide toast after 3 seconds
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 3000);
+  }
 </script>
 
 
@@ -565,7 +983,7 @@
             <ul class="footer-nav">
               <li><a href="#home">Home</a></li>
               <li><a href="#features">How It Works</a></li>
-              <li><a href="#listings">Food Listings</a></li>
+              <li><a href="foodlisting.html">Food Listings</a></li>
               <li><a href="#about">About Us</a></li>
               <li><a href="#contact-section">Contact</a></li>
             </ul>
@@ -576,6 +994,9 @@
             <ul class="footer-nav">
               <li><a href="#">List Food</a></li>
               <li><a href="#">Donor Guidelines</a></li>
+            <ul>
+              <li><a href="foodlisting.html">List Food</a></li>
+              <li><a href="donor-guidelines.html">Donor Guidelines</a></li>
               <li><a href="#">Track Impact</a></li>
               <li><a href="support.html">Support</a></li>
             </ul>
@@ -586,7 +1007,7 @@
             <ul class="footer-nav">
               <li><a href="#">Find Food</a></li>
               <li><a href="ngo-register.html">Register NGO</a></li>
-              <li><a href="#">Volunteer</a></li>
+              <li><a href="vounteer_food.html">Volunteer</a></li>
               <li><a href="#">Resources</a></li>
             </ul>
           </div>
