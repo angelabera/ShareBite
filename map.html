@@ -128,6 +128,173 @@
       gap: 15px;
     }
     
+    /* Theme Toggle Button */
+    .theme-toggle {
+      background: transparent;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--text-light);
+    }
+    
+    body.dark .theme-toggle {
+      color: var(--text-dark);
+    }
+    
+    .theme-toggle:hover {
+      background: rgba(0, 0, 0, 0.05);
+      transform: scale(1.05);
+    }
+    
+    body.dark .theme-toggle:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Notification Bell */
+    .notification-bell {
+      position: relative;
+      background: transparent;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--text-light);
+    }
+    
+    body.dark .notification-bell {
+      color: var(--text-dark);
+    }
+    
+    .notification-bell:hover {
+      background: rgba(0, 0, 0, 0.05);
+      transform: scale(1.05);
+    }
+    
+    body.dark .notification-bell:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .notification-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: var(--secondary);
+      color: white;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+    
+    .notification-panel {
+      position: absolute;
+      top: 50px;
+      right: 0;
+      background: var(--card-light);
+      color: var(--text-light);
+      width: 300px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      z-index: 1001;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: var(--transition);
+    }
+    
+    body.dark .notification-panel {
+      background: var(--card-dark);
+      color: var(--text-dark);
+      box-shadow: var(--shadow-dark);
+    }
+    
+    .notification-bell.active .notification-panel {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    
+    .notification-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    body.dark .notification-header {
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .notification-list {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    
+    .notification-item {
+      padding: 15px 20px;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      transition: var(--transition);
+    }
+    
+    body.dark .notification-item {
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    
+    .notification-item:hover {
+      background: rgba(0,0,0,0.02);
+    }
+    
+    body.dark .notification-item:hover {
+      background: rgba(255,255,255,0.05);
+    }
+    
+    .notification-item:last-child {
+      border-bottom: none;
+    }
+    
+    .notification-title {
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+    
+    .notification-time {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      opacity: 0.7;
+    }
+    
+    body.dark .notification-time {
+      color: var(--text-dark);
+    }
+    
+    .no-notifications {
+      padding: 20px;
+      text-align: center;
+      color: var(--text-light);
+      opacity: 0.7;
+    }
+    
+    body.dark .no-notifications {
+      color: var(--text-dark);
+    }
+    
     .login-btn {
       background: var(--gradient);
       border: none;
@@ -313,6 +480,7 @@
       color: white;
       transform: scale(1.05);
     }
+    
     .search-panel {
       position: absolute;
       top: 20px;
@@ -330,8 +498,6 @@
       width: 300px;
     }
      
-    
-    
     body.dark .search-panel {
       background: var(--card-dark);
       color: var(--text-dark);
@@ -546,6 +712,8 @@
     .leaflet-control-zoom a:hover {
       background: var(--primary);
       color: white;
+    }
+    
     .stats-panel {
       position: absolute;
       bottom: 20px;
@@ -559,9 +727,6 @@
       z-index: 1000;
       -webkit-backdrop-filter: blur(10px);
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.1);
-      min-width: 200px;
-    }
       border: 1px solid rgba(255,255,255,0.1);
       min-width: 200px;
     }
@@ -681,6 +846,11 @@
       .nav-menu {
         display: none;
       }
+      
+      .notification-panel {
+        width: 280px;
+        right: -20px;
+      }
     }
 
     @media (max-width: 480px) {
@@ -712,6 +882,11 @@
         bottom: 80px;
         right: 10px;
       }
+      
+      .notification-panel {
+        width: 260px;
+        right: -40px;
+      }
     }
   </style>
 </head>
@@ -733,6 +908,37 @@
         <li><a href="index.html#contact-section" class="nav-link">Contact</a></li>
       </ul>
       <div class="user-actions">
+        <!-- Dark/Light Mode Toggle -->
+        <button id="themeToggle" class="theme-toggle" title="Toggle theme" aria-label="Toggle theme">
+          <i class="fas fa-moon"></i>
+        </button>
+        
+        <!-- Notification Bell -->
+        <div class="notification-bell" id="notificationBell">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge" id="notificationBadge">3</span>
+          <div class="notification-panel">
+            <div class="notification-header">
+              <span>Notifications</span>
+              <button class="clear-notifications" id="clearNotifications">Clear All</button>
+            </div>
+            <div class="notification-list" id="notificationList">
+              <div class="notification-item">
+                <div class="notification-title">New food donation available</div>
+                <div class="notification-time">5 minutes ago</div>
+              </div>
+              <div class="notification-item">
+                <div class="notification-title">Your food claim was successful</div>
+                <div class="notification-time">2 hours ago</div>
+              </div>
+              <div class="notification-item">
+                <div class="notification-title">New NGO joined ShareBite</div>
+                <div class="notification-time">1 day ago</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
         <button class="login-btn" onclick="window.location.href='login.html'">Login</button>
       </div>
     </div>
@@ -848,9 +1054,56 @@
     if (savedTheme === 'dark') {
       document.body.classList.add('dark');
       darkTiles.addTo(map);
+      document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
     } else {
       lightTiles.addTo(map);
     }
+
+    // Toggle theme functionality
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      const isDark = document.body.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      
+      // Update map tiles
+      map.eachLayer(layer => map.removeLayer(layer));
+      (isDark ? darkTiles : lightTiles).addTo(map);
+      
+      // Update theme toggle icon
+      document.getElementById('themeToggle').innerHTML = isDark
+        ? '<i class="fas fa-sun"></i>'
+        : '<i class="fas fa-moon"></i>';
+      
+      // Re-add markers
+      markers.forEach(m => m.marker.addTo(markerLayer));
+      
+      // Re-add user location marker
+      if (userLocationMarker) {
+        userLocationMarker.addTo(map);
+      }
+    });
+
+    // Notification bell functionality
+    const notificationBell = document.getElementById('notificationBell');
+    const clearNotificationsBtn = document.getElementById('clearNotifications');
+    
+    notificationBell.addEventListener('click', (e) => {
+      e.stopPropagation();
+      notificationBell.classList.toggle('active');
+    });
+    
+    clearNotificationsBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.getElementById('notificationList').innerHTML = '<div class="no-notifications">No notifications</div>';
+      document.getElementById('notificationBadge').textContent = '0';
+      document.getElementById('notificationBadge').style.display = 'none';
+      notificationBell.classList.remove('active');
+    });
+    
+    // Close notification panel when clicking outside
+    document.addEventListener('click', () => {
+      notificationBell.classList.remove('active');
+    });
 
     // Enhanced locations with more details
     const locations = [
