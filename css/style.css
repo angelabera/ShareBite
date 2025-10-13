@@ -75,7 +75,7 @@ body {
       top: 0;
       z-index: 999;
       transition: all 0.4s ease;
-      overflow: hidden;
+      /* overflow: hidden; */
     }
 
     .nav-container {
@@ -162,6 +162,8 @@ body {
       transition: all 0.3s;
     }
 
+    
+
     /* Mobile */
     @media (max-width: 1064px) {
       .nav-container {
@@ -175,7 +177,6 @@ body {
         width: 100%;
         opacity: 0;
         max-height: 0;
-        overflow: hidden;
         transition: all 0.4s ease;
         background: transparent;
       }
@@ -210,6 +211,60 @@ body {
         transform: rotate(-45deg) translateY(-8px);
       }
     }
+
+    /* Media query to handle smaller screens */
+@media (max-width: 710px) {
+    /* * 1. Target the notification-panel 
+     * We'll position it absolutely relative to the viewport/document 
+     * (since its closest positioned ancestor is likely the body or the navbar) 
+     */
+    .notification-panel {
+        /* Set position and ensure it's on top of everything */
+        position: absolute;
+        z-index: 1000; 
+        
+        /* Anchor it to the right edge of the viewport */
+        right: 1.5rem; /* Matches the nav-container padding for alignment */
+        
+        /* Position it below the notification bell icon. 
+           Adjust 'top' based on the final height of your header. */
+        top: 100%; 
+        
+        /* Set fixed dimensions and style for visibility */
+        width: 280px; /* A fixed width is often best for pop-ups */
+        max-width: calc(100% - 3rem); /* Ensures it fits even on tiny screens */
+        background-color: var(--bg-color-secondary, white); /* Ensure it has a background */
+        border: 1px solid var(--border-color);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        /* Start with it hidden (assuming your JavaScript toggles a class for visibility) */
+        display: none; 
+    }
+
+    /* * 2. Adjust the notification-bell container 
+     * This is needed to ensure the notification-panel can position itself
+     * relative to the bell icon or be styled correctly in the column layout.
+     */
+    .notification-bell {
+        /* On mobile, this element is a full-width item in the column.
+           We'll keep it centered but ensure the panel is anchored right. */
+        width: 100%;
+        display: flex !important; /* Override the inline style 'display: none;' for testing/open state */
+        justify-content: center;
+        position: relative; /* Make it the positioning context for the panel */
+    }
+
+    /* * 3. Adjust the .nav-link to make sure the clickable area is large 
+     */
+    
+
+    /* * You'll likely need to target the active/visible state of the panel with JavaScript, 
+     * for example, by adding a class like '.open' to the .notification-panel.
+     * * .notification-panel.open {
+     * display: block; 
+     * }
+     */
+}
  
 /* Hero Section */
 .hero {

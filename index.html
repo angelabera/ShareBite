@@ -47,9 +47,6 @@
         <span></span>
       </button>
 
-      <!-- Menu -->
-      
-
       <!-- User Actions -->
       <div class="user-actions" id="userActions">
         <a href="#home" class="nav-link">Home</a>
@@ -57,6 +54,24 @@
         <a href="foodlisting.html" class="nav-link">Listings</a>
         <a href="#about" class="nav-link">About</a>
         <a href="#contact-section" class="nav-link">Contact</a>
+
+        <!-- Notification Bell --> 
+        <div class="notification-bell" id="notificationBell" style="display: none;"> 
+          <i class="fas fa-bell"></i> 
+          <span class="notification-badge" id="notificationBadge" style="display: none;">
+            0
+          </span> 
+          <div class="notification-panel" id="notificationPanel">
+            <div class="notification-header">
+              Claimed Food Items
+            </div> 
+            <div id="notificationList">
+              <div class="no-notifications">
+                No claimed items yet
+              </div> 
+            </div> 
+          </div> 
+        </div>
       
         <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
           <i class="fas fa-moon"></i>
