@@ -94,6 +94,12 @@
         transform: scale(1.1) rotate(15deg);
       }
 
+      /* Home button sits at top-left matches theme-toggle */
+      .home-button {
+        left: 20px;
+        right: auto;
+      }
+
       .auth-container {
         background-color: var(--card-bg-light);
         padding: 3rem;
@@ -250,6 +256,11 @@
     <button id="theme-toggle" class="theme-toggle" title="Toggle dark mode">
       🌙
     </button>
+
+      <!-- Home button: navigates to index.html, styled to match theme-toggle -->
+      <button id="home-button" class="theme-toggle home-button" title="Go to Home">
+        🏠
+      </button>
 
     <div class="auth-container">
       <h1>Create Your ShareBite Account</h1>
@@ -427,16 +438,24 @@
           window.location.href = "index.html";
         }, 500); // 0.5 second delay
       });
+
+      // --- Home button navigation ---
+      const homeButton = document.getElementById("home-button");
+      if (homeButton) {
+        homeButton.addEventListener("click", () => {
+          window.location.href = "index.html";
+        });
+      }
+
+      // Guarded password show/hide checkbox (only if present in DOM)
       const password = document.getElementById("password");
       const show_pwd = document.getElementById("show-pwd");
-      function passwordToggle() {
-        if (show_pwd.checked) {
-          password.type = "text";
-        } else {
-          password.type = "password";
+      if (password && show_pwd) {
+        function passwordToggle() {
+          password.type = show_pwd.checked ? "text" : "password";
         }
+        show_pwd.addEventListener("change", passwordToggle);
       }
-      show_pwd.addEventListener("change", passwordToggle);
     </script>
   </body>
 </html>
