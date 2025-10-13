@@ -1175,7 +1175,7 @@ handleFileSelect(file) {
     this.renderFoodListings();
 
     this.showToast("Filters cleared!", "success");
-  }
+    }
 
     createClaimButton(listing) {
         const isClaimed = this.claimedItems.includes(listing.id);

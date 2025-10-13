@@ -972,6 +972,7 @@ body.dark .profile-menu-item:hover {
 /* Listings Section */
 .listings {
     padding: var(--section-padding);
+    padding-top: calc(5rem + 80px); /* Add extra top padding for fixed navbar on all screens */
 }
 
 .filter-bar {
@@ -1970,12 +1971,40 @@ body.dark .profile-menu-item:hover {
         --container-padding: 0 1rem;
     }
     
+    /* Ensure listings section has proper spacing on mobile */
+    .listings {
+        padding-top: calc(3rem + 70px); /* Adjust for mobile navbar height */
+    }
+    
+    /* Mobile navigation layout */
+    .nav-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+    }
+    
     .nav-menu {
         display: none;
     }
     
+    /* Mobile navigation layout - theme toggle centered */
+    .user-actions {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
     .hamburger {
         display: flex;
+        position: absolute;
+        right: 1rem; /* Add padding from the edge */
+        top: 50%;
+        transform: translateY(-50%);
     }
 
     /* Mobile menu fallback (CSS-based) */
@@ -2013,13 +2042,20 @@ body.dark .profile-menu-item:hover {
     .filter-group {
         justify-content: center;
     }
-    .user-actions { flex-wrap: wrap; gap: .5rem; }
+    
     .login-btn, .role-switch, .theme-toggle { padding: 0.6rem 1rem; }
 
     /* Hide duplicate actions on mobile header; they are shown in menu */
     .user-actions .role-switch,
     .user-actions .login-btn {
         display: none !important;
+    }
+    
+    /* Show only theme toggle on mobile, centered */
+    .user-actions .theme-toggle {
+        display: flex !important;
+        padding: 0.5rem !important; /* Smaller padding for mobile */
+        font-size: 1rem !important; /* Adjust icon size */
     }
     
     .search-box {
@@ -2057,6 +2093,31 @@ body.dark .profile-menu-item:hover {
     
     .hero {
         padding-top: 60px;
+    }
+    
+    /* Ensure listings section has proper spacing on small mobile screens */
+    .listings {
+        padding-top: calc(3rem + 60px); /* Adjust for smaller mobile navbar height */
+    }
+    
+    /* Adjust mobile navigation for smaller screens */
+    .nav-container {
+        padding: 0.8rem 1rem;
+    }
+    
+    .user-actions {
+        gap: 0.5rem;
+    }
+    
+    /* Ensure theme toggle stays centered on small screens with proper sizing */
+    .user-actions .theme-toggle {
+        padding: 0.4rem !important; /* Even smaller padding for small screens */
+        font-size: 0.9rem !important; /* Smaller icon size for small screens */
+    }
+    
+    /* Adjust hamburger spacing for smaller screens */
+    .hamburger {
+        right: 0.8rem; /* Slightly less padding on small screens */
     }
     
     .hero-container {
