@@ -2,10 +2,10 @@
 
 class ShareBiteFoodListing {
     constructor() {
-        this.currentRole = 'donor';
+    this.currentRole = "donor";
         this.foodListings = [];
         this.filteredListings = [];
-        this.currentFilter = 'all';
+    this.currentFilter = "all";
         this.claimedItems = this.loadClaimedItems();
         this.notifications = this.loadNotifications();
         
@@ -24,33 +24,43 @@ class ShareBiteFoodListing {
     }
 
     initTheme() {
-        const stored = localStorage.getItem('sharebite-theme');
-        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const theme = stored || (prefersDark ? 'dark' : 'light');
+    const stored = localStorage.getItem("sharebite-theme");
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const theme = stored || (prefersDark ? "dark" : "light");
         this.applyTheme(theme);
         this.setupThemeToggle();
     }
 
     setupThemeToggle() {
-        const btn = document.getElementById('themeToggle');
+    const btn = document.getElementById("themeToggle");
         if (!btn) return;
-        btn.addEventListener('click', () => {
-            const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+    btn.addEventListener("click", () => {
+      const newTheme = document.documentElement.classList.contains("dark")
+        ? "light"
+        : "dark";
             this.applyTheme(newTheme);
-            localStorage.setItem('sharebite-theme', newTheme);
+      localStorage.setItem("sharebite-theme", newTheme);
         });
     }
 
     applyTheme(theme) {
         const root = document.documentElement;
-        if (theme === 'dark') {
-            root.classList.add('dark');
-            const icon = document.querySelector('#themeToggle i');
-            if (icon) { icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); }
+    if (theme === "dark") {
+      root.classList.add("dark");
+      const icon = document.querySelector("#themeToggle i");
+      if (icon) {
+        icon.classList.remove("fa-moon");
+        icon.classList.add("fa-sun");
+      }
         } else {
-            root.classList.remove('dark');
-            const icon = document.querySelector('#themeToggle i');
-            if (icon) { icon.classList.remove('fa-sun'); icon.classList.add('fa-moon'); }
+      root.classList.remove("dark");
+      const icon = document.querySelector("#themeToggle i");
+      if (icon) {
+        icon.classList.remove("fa-sun");
+        icon.classList.add("fa-moon");
+      }
         }
     }
 
@@ -87,22 +97,22 @@ class ShareBiteFoodListing {
     }
 
     setupNavigation() {
-        const navLinks = document.querySelectorAll('.nav-link');
-        navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                const href = link.getAttribute('href');
+    const navLinks = document.querySelectorAll(".nav-link");
+    navLinks.forEach((link) => {
+      link.addEventListener("click", (e) => {
+        const href = link.getAttribute("href");
                 // If it's an anchor for current page, scroll smoothly
-                if (href && href.startsWith('#')) {
+        if (href && href.startsWith("#")) {
                     e.preventDefault();
                     const targetId = href.substring(1);
                     const targetElement = document.getElementById(targetId);
                     if (targetElement) {
-                        targetElement.scrollIntoView({ behavior: 'smooth' });
+            targetElement.scrollIntoView({ behavior: "smooth" });
                     }
-                } else if (href && href.includes('.html#')) {
+        } else if (href && href.includes(".html#")) {
                     // If it's index.html#features or similar, navigate normally
                     // (let browser handle navigation)
-                } else if (href && href.endsWith('.html')) {
+        } else if (href && href.endsWith(".html")) {
                     // If it's a plain .html link, let browser handle navigation
                 }
             });
@@ -110,12 +120,13 @@ class ShareBiteFoodListing {
     }
 
     setupRoleSwitch() {
-        const roleSwitch = document.getElementById('roleSwitch');
-        const currentRoleSpan = document.getElementById('currentRole');
-        
-        roleSwitch.addEventListener('click', () => {
-            this.currentRole = this.currentRole === 'donor' ? 'collector' : 'donor';
-            currentRoleSpan.textContent = this.currentRole.charAt(0).toUpperCase() + this.currentRole.slice(1);
+    const roleSwitch = document.getElementById("roleSwitch");
+    const currentRoleSpan = document.getElementById("currentRole");
+
+    roleSwitch.addEventListener("click", () => {
+      this.currentRole = this.currentRole === "donor" ? "collector" : "donor";
+      currentRoleSpan.textContent =
+        this.currentRole.charAt(0).toUpperCase() + this.currentRole.slice(1);
             
             // Update UI based on role
             this.updateUIForRole();
@@ -123,28 +134,32 @@ class ShareBiteFoodListing {
     }
 
     updateUIForRole() {
-        const donateBtn = document.getElementById('donateFood');
-        const findBtn = document.getElementById('findFood');
-        const addListingBtn = document.getElementById('addListingBtn');
-        const notificationBell = document.getElementById('notificationBell');
-        
-        if (this.currentRole === 'collector') {
-            if (donateBtn) donateBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
-            if (findBtn) findBtn.innerHTML = '<i class="fas fa-heart"></i> Help Others';
-            if (addListingBtn) addListingBtn.style.display = 'none';
+    const donateBtn = document.getElementById("donateFood");
+    const findBtn = document.getElementById("findFood");
+    const addListingBtn = document.getElementById("addListingBtn");
+    const notificationBell = document.getElementById("notificationBell");
+
+    if (this.currentRole === "collector") {
+      if (donateBtn)
+        donateBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
+      if (findBtn)
+        findBtn.innerHTML = '<i class="fas fa-heart"></i> Help Others';
+      if (addListingBtn) addListingBtn.style.display = "none";
             
             // Show notification bell for collectors
             if (notificationBell) {
-                notificationBell.style.display = 'block';
+        notificationBell.style.display = "block";
             }
         } else {
-            if (donateBtn) donateBtn.innerHTML = '<i class="fas fa-heart"></i> Donate Food';
-            if (findBtn) findBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
-            if (addListingBtn) addListingBtn.style.display = 'flex';
+      if (donateBtn)
+        donateBtn.innerHTML = '<i class="fas fa-heart"></i> Donate Food';
+      if (findBtn)
+        findBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
+      if (addListingBtn) addListingBtn.style.display = "flex";
             
             // Hide notification bell for donors (unless they have notifications)
             if (notificationBell && this.notifications.length === 0) {
-                notificationBell.style.display = 'none';
+        notificationBell.style.display = "none";
             }
         }
         
@@ -153,31 +168,31 @@ class ShareBiteFoodListing {
     }
 
    setupModal() {
-    const modal = document.getElementById('addListingModal');
-    const addListingBtn = document.getElementById('addListingBtn');
-    const closeModalBtn = document.querySelector('.close-modal');
-    const cancelBtn = document.getElementById('cancelForm');
+    const modal = document.getElementById("addListingModal");
+    const addListingBtn = document.getElementById("addListingBtn");
+    const closeModalBtn = document.querySelector(".close-modal");
+    const cancelBtn = document.getElementById("cancelForm");
 
     this.currentStep = 1;
     this.totalSteps = 3;
 
-    addListingBtn.addEventListener('click', () => {
-        modal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
+    addListingBtn.addEventListener("click", () => {
+      modal.style.display = "block";
+      document.body.style.overflow = "hidden";
         this.resetFormSteps();
     });
 
     const closeModal = () => {
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
+      modal.style.display = "none";
+      document.body.style.overflow = "auto";
         this.resetForm();
         this.resetFormSteps();
     };
 
-    closeModalBtn.addEventListener('click', closeModal);
-    cancelBtn.addEventListener('click', closeModal);
+    closeModalBtn.addEventListener("click", closeModal);
+    cancelBtn.addEventListener("click", closeModal);
     
-    modal.addEventListener('click', (e) => {
+    modal.addEventListener("click", (e) => {
         if (e.target === modal) {
             closeModal();
         }
@@ -188,17 +203,17 @@ class ShareBiteFoodListing {
 }
 
 setupFormNavigation() {
-    const nextBtn = document.getElementById('nextStep');
-    const prevBtn = document.getElementById('prevStep');
-    const submitBtn = document.getElementById('submitForm');
+    const nextBtn = document.getElementById("nextStep");
+    const prevBtn = document.getElementById("prevStep");
+    const submitBtn = document.getElementById("submitForm");
 
-    nextBtn.addEventListener('click', () => {
+    nextBtn.addEventListener("click", () => {
         if (this.validateCurrentStep()) {
             this.goToStep(this.currentStep + 1);
         }
     });
 
-    prevBtn.addEventListener('click', () => {
+    prevBtn.addEventListener("click", () => {
         this.goToStep(this.currentStep - 1);
     });
 }
@@ -206,13 +221,15 @@ setupFormNavigation() {
 goToStep(stepNumber) {
     if (stepNumber < 1 || stepNumber > this.totalSteps) return;
 
-    document.querySelectorAll('.form-step').forEach(step => {
-        step.classList.remove('active');
+    document.querySelectorAll(".form-step").forEach((step) => {
+      step.classList.remove("active");
     });
 
-    const newStep = document.querySelector(`.form-step[data-step="${stepNumber}"]`);
+    const newStep = document.querySelector(
+      `.form-step[data-step="${stepNumber}"]`
+    );
     if (newStep) {
-        newStep.classList.add('active');
+      newStep.classList.add("active");
     }
 
     this.updateProgress(stepNumber);
@@ -223,49 +240,57 @@ goToStep(stepNumber) {
 }
 
 updateProgress(stepNumber) {
-    const steps = document.querySelectorAll('.progress-step');
+    const steps = document.querySelectorAll(".progress-step");
     
     steps.forEach((step, index) => {
         const stepNum = index + 1;
         
         if (stepNum < stepNumber) {
-            step.classList.add('completed');
-            step.classList.remove('active');
+        step.classList.add("completed");
+        step.classList.remove("active");
         } else if (stepNum === stepNumber) {
-            step.classList.add('active');
-            step.classList.remove('completed');
+        step.classList.add("active");
+        step.classList.remove("completed");
         } else {
-            step.classList.remove('active', 'completed');
+        step.classList.remove("active", "completed");
         }
     });
 }
 
 updateNavigationButtons(stepNumber) {
-    const nextBtn = document.getElementById('nextStep');
-    const prevBtn = document.getElementById('prevStep');
-    const submitBtn = document.getElementById('submitForm');
+    const nextBtn = document.getElementById("nextStep");
+    const prevBtn = document.getElementById("prevStep");
+    const submitBtn = document.getElementById("submitForm");
 
-    prevBtn.style.display = stepNumber === 1 ? 'none' : 'flex';
-    nextBtn.style.display = stepNumber === this.totalSteps ? 'none' : 'flex';
-    submitBtn.style.display = stepNumber === this.totalSteps ? 'flex' : 'none';
+    prevBtn.style.display = stepNumber === 1 ? "none" : "flex";
+    nextBtn.style.display = stepNumber === this.totalSteps ? "none" : "flex";
+    submitBtn.style.display = stepNumber === this.totalSteps ? "flex" : "none";
 }
 
 validateCurrentStep() {
-    const currentStepEl = document.querySelector(`.form-step[data-step="${this.currentStep}"]`);
-    const requiredInputs = currentStepEl.querySelectorAll('[required]');
+    const currentStepEl = document.querySelector(
+      `.form-step[data-step="${this.currentStep}"]`
+    );
+    const requiredInputs = currentStepEl.querySelectorAll("[required]");
     
     for (let input of requiredInputs) {
         if (!input.value.trim()) {
             input.focus();
-            this.showToast(`Please fill in the required field: ${input.previousElementSibling.textContent}`, 'error');
+        this.showToast(
+          `Please fill in the required field: ${input.previousElementSibling.textContent}`,
+          "error"
+        );
             return false;
         }
         
         // Special validation for contact information
-        if (input.id === 'contact') {
+      if (input.id === "contact") {
             if (!this.validateContactInfo(input.value.trim())) {
                 input.focus();
-                this.showToast('Please enter a valid email address or phone number', 'error');
+          this.showToast(
+            "Please enter a valid email address or phone number",
+            "error"
+          );
                 return false;
             }
         }
@@ -283,7 +308,7 @@ validateContactInfo(contact) {
     const phonePattern = /^[\+]?[1-9]?[\d\s\-\(\)]{7,15}$/;
     
     // Remove spaces and common characters for phone validation
-    const cleanedContact = contact.replace(/[\s\-\(\)]/g, '');
+    const cleanedContact = contact.replace(/[\s\-\(\)]/g, "");
     
     // Check if it's a valid email
     if (emailPattern.test(contact)) {
@@ -291,7 +316,11 @@ validateContactInfo(contact) {
     }
     
     // Check if it's a valid phone number
-    if (phonePattern.test(contact) && cleanedContact.length >= 7 && cleanedContact.length <= 15) {
+    if (
+      phonePattern.test(contact) &&
+      cleanedContact.length >= 7 &&
+      cleanedContact.length <= 15
+    ) {
         return true;
     }
     
@@ -304,37 +333,37 @@ resetFormSteps() {
 }
 
 setupFileUpload() {
-    const fileInput = document.getElementById('photo');
-    const uploadArea = document.getElementById('photoUpload');
-    const imagePreview = document.getElementById('imagePreview');
+    const fileInput = document.getElementById("photo");
+    const uploadArea = document.getElementById("photoUpload");
+    const imagePreview = document.getElementById("imagePreview");
 
-    uploadArea.addEventListener('click', () => {
+    uploadArea.addEventListener("click", () => {
         fileInput.click();
     });
 
-    uploadArea.addEventListener('dragover', (e) => {
+    uploadArea.addEventListener("dragover", (e) => {
         e.preventDefault();
-        uploadArea.classList.add('drag-over');
+      uploadArea.classList.add("drag-over");
     });
 
-    uploadArea.addEventListener('dragleave', (e) => {
+    uploadArea.addEventListener("dragleave", (e) => {
         e.preventDefault();
-        uploadArea.classList.remove('drag-over');
+      uploadArea.classList.remove("drag-over");
     });
 
-    uploadArea.addEventListener('drop', (e) => {
+    uploadArea.addEventListener("drop", (e) => {
         e.preventDefault();
-        uploadArea.classList.remove('drag-over');
+      uploadArea.classList.remove("drag-over");
         const files = e.dataTransfer.files;
-        if (files.length > 0 && files[0].type.startsWith('image/')) {
+      if (files.length > 0 && files[0].type.startsWith("image/")) {
             fileInput.files = files;
             this.handleFileSelect(files[0]);
         } else {
-            this.showToast('Please upload a valid image file', 'error');
+        this.showToast("Please upload a valid image file", "error");
         }
     });
 
-    fileInput.addEventListener('change', (e) => {
+    fileInput.addEventListener("change", (e) => {
         if (e.target.files.length > 0) {
             this.handleFileSelect(e.target.files[0]);
         }
@@ -342,16 +371,16 @@ setupFileUpload() {
 }
 
 handleFileSelect(file) {
-    const imagePreview = document.getElementById('imagePreview');
-    const uploadArea = document.getElementById('photoUpload');
+    const imagePreview = document.getElementById("imagePreview");
+    const uploadArea = document.getElementById("photoUpload");
     
-    if (!file.type.startsWith('image/')) {
-        this.showToast('Please select an image file', 'error');
+    if (!file.type.startsWith("image/")) {
+      this.showToast("Please select an image file", "error");
         return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-        this.showToast('Image size should be less than 5MB', 'error');
+      this.showToast("Image size should be less than 5MB", "error");
         return;
     }
 
@@ -363,32 +392,30 @@ handleFileSelect(file) {
                 <i class="fas fa-times"></i>
             </button>
         `;
-        imagePreview.classList.add('active');
-        uploadArea.style.display = 'none';
+      imagePreview.classList.add("active");
+      uploadArea.style.display = "none";
 
         // Add remove functionality
-        const removeBtn = imagePreview.querySelector('.remove-image');
-        removeBtn.addEventListener('click', () => {
-            imagePreview.innerHTML = '';
-            imagePreview.classList.remove('active');
-            uploadArea.style.display = 'block';
-            document.getElementById('photo').value = '';
+      const removeBtn = imagePreview.querySelector(".remove-image");
+      removeBtn.addEventListener("click", () => {
+        imagePreview.innerHTML = "";
+        imagePreview.classList.remove("active");
+        uploadArea.style.display = "block";
+        document.getElementById("photo").value = "";
         });
     };
     reader.readAsDataURL(file);
 }
 
-
-
     setupFormHandling() {
-        const form = document.getElementById('listingForm');
+    const form = document.getElementById("listingForm");
         
-        form.addEventListener('submit', (e) => {
+    form.addEventListener("submit", (e) => {
             e.preventDefault();
             this.handleFormSubmission();
         });
 
-        const freshUntilInput = document.getElementById('freshUntil');
+    const freshUntilInput = document.getElementById("freshUntil");
         const now = new Date();
         now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
         freshUntilInput.min = now.toISOString().slice(0, 16);
@@ -407,39 +434,53 @@ handleFileSelect(file) {
     getFormData() {
         return {
             id: Date.now(),
-            foodType: document.getElementById('foodType').value,
-            quantity: document.getElementById('quantity').value,
-            category: document.getElementById('category').value,
-            description: document.getElementById('description').value,
-            freshUntil: document.getElementById('freshUntil').value,
-            pickupTime: document.getElementById('pickupTime').value,
-            location: document.getElementById('location').value,
-            contact: document.getElementById('contact').value,
-            photo: document.getElementById('photo').files[0],
+      foodType: document.getElementById("foodType").value,
+      quantity: document.getElementById("quantity").value,
+      category: document.getElementById("category").value,
+      description: document.getElementById("description").value,
+      freshUntil: document.getElementById("freshUntil").value,
+      pickupTime: document.getElementById("pickupTime").value,
+      location: document.getElementById("location").value,
+      contact: document.getElementById("contact").value,
+      photo: document.getElementById("photo").files[0],
             createdAt: new Date(),
-            donor: 'Current User'
+      donor: "Current User",
         };
     }
 
     validateFormData(data) {
-        const requiredFields = ['foodType', 'quantity', 'category', 'freshUntil', 'pickupTime', 'location', 'contact'];
+    const requiredFields = [
+      "foodType",
+      "quantity",
+      "category",
+      "freshUntil",
+      "pickupTime",
+      "location",
+      "contact",
+    ];
         
         for (let field of requiredFields) {
-            if (!data[field] || data[field].trim() === '') {
-                this.showErrorMessage(`Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}.`);
+      if (!data[field] || data[field].trim() === "") {
+        this.showErrorMessage(
+          `Please fill in the ${field
+            .replace(/([A-Z])/g, " $1")
+            .toLowerCase()}.`
+        );
                 return false;
             }
         }
         
         const freshDate = new Date(data.freshUntil);
         if (freshDate <= new Date()) {
-            this.showErrorMessage('Fresh until date must be in the future.');
+      this.showErrorMessage("Fresh until date must be in the future.");
             return false;
         }
         
         // Validate contact information
         if (!this.validateContactInfo(data.contact)) {
-            this.showErrorMessage('Please enter a valid email address or phone number for contact information.');
+      this.showErrorMessage(
+        "Please enter a valid email address or phone number for contact information."
+      );
             return false;
         }
         
@@ -453,18 +494,20 @@ handleFileSelect(file) {
     }
 
     showSuccessMessage() {
-        this.showToast('Food listing added successfully!', 'success');
+    this.showToast("Food listing added successfully!", "success");
     }
 
     showErrorMessage(message) {
-        this.showToast(message, 'error');
+    this.showToast(message, "error");
     }
 
     showToast(message, type) {
-        const toast = document.createElement('div');
+    const toast = document.createElement("div");
         toast.className = `toast toast-${type}`;
         toast.innerHTML = `
-            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+            <i class="fas fa-${
+              type === "success" ? "check-circle" : "exclamation-circle"
+            }"></i>
             <span>${message}</span>
         `;
         
@@ -473,7 +516,11 @@ handleFileSelect(file) {
             position: fixed;
             top: 100px;
             right: 20px;
-            background: ${type === 'success' ? 'var(--primary-color)' : 'var(--secondary-color)'};
+            background: ${
+              type === "success"
+                ? "var(--primary-color)"
+                : "var(--secondary-color)"
+            };
             color: white;
             padding: 1rem 1.5rem;
             border-radius: var(--border-radius);
@@ -495,43 +542,42 @@ handleFileSelect(file) {
     }
 
     closeModalAndReset() {
-        document.getElementById('addListingModal').style.display = 'none';
-        document.body.style.overflow = 'auto';
+    document.getElementById("addListingModal").style.display = "none";
+    document.body.style.overflow = "auto";
         this.resetForm();
     }
 
     resetForm() {
-        document.getElementById('listingForm').reset();
-        document.getElementById('photoUpload').innerHTML = `
+    document.getElementById("listingForm").reset();
+    document.getElementById("photoUpload").innerHTML = `
             <i class="fas fa-cloud-upload-alt"></i>
             <span>Click to upload or drag and drop</span>
         `;
         
         // Reset minimum date
-        const freshUntilInput = document.getElementById('freshUntil');
+    const freshUntilInput = document.getElementById("freshUntil");
         const now = new Date();
         now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
         freshUntilInput.min = now.toISOString().slice(0, 16);
     }
 
-
     setupFilteringAndSearch() {
     // --- Existing Category Filter Logic ---
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            filterBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            this.currentFilter = btn.getAttribute('data-filter');
+    const filterBtns = document.querySelectorAll(".filter-btn");
+    filterBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        filterBtns.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        this.currentFilter = btn.getAttribute("data-filter");
             this.filterListings();
             this.renderFoodListings();
         });
     });
 
     // --- Existing Search Input Logic ---
-    const searchInput = document.querySelector('.search-box input');
+    const searchInput = document.querySelector(".search-box input");
     let searchTimeout;
-    searchInput.addEventListener('input', (e) => {
+    searchInput.addEventListener("input", (e) => {
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(() => {
             this.searchQuery = e.target.value.toLowerCase();
@@ -541,45 +587,50 @@ handleFileSelect(file) {
     });
 
     // --- NEW: Dropdown and Filtering Logic ---
-    const dietaryBtn = document.getElementById('dietary-filter-btn');
-    const dietaryDropdown = document.getElementById('dietary-dropdown');
-    const dietaryCheckboxes = document.querySelectorAll('input[name="dietary-filter"]');
+    const dietaryBtn = document.getElementById("dietary-filter-btn");
+    const dietaryDropdown = document.getElementById("dietary-dropdown");
+    const dietaryCheckboxes = document.querySelectorAll(
+      'input[name="dietary-filter"]'
+    );
 
     if (dietaryBtn) {
         // Toggle dropdown visibility
-        dietaryBtn.addEventListener('click', (e) => {
+      dietaryBtn.addEventListener("click", (e) => {
             e.stopPropagation();
-            dietaryDropdown.style.display = dietaryDropdown.style.display === 'block' ? 'none' : 'block';
-            dietaryBtn.classList.toggle('active');
+        dietaryDropdown.style.display =
+          dietaryDropdown.style.display === "block" ? "none" : "block";
+        dietaryBtn.classList.toggle("active");
         });
 
         // Add event listeners to checkboxes
-        dietaryCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', () => {
+      dietaryCheckboxes.forEach((checkbox) => {
+        checkbox.addEventListener("change", () => {
                 this.filterListings();
                 this.renderFoodListings();
                 
                 // Update button text to show selected count
-                const selectedCount = document.querySelectorAll('input[name="dietary-filter"]:checked').length;
-                const btnSpan = dietaryBtn.querySelector('span');
+          const selectedCount = document.querySelectorAll(
+            'input[name="dietary-filter"]:checked'
+          ).length;
+          const btnSpan = dietaryBtn.querySelector("span");
                 if (selectedCount > 0) {
                     btnSpan.textContent = `Dietary Filters (${selectedCount})`;
                 } else {
-                    btnSpan.textContent = 'Dietary Filters';
+            btnSpan.textContent = "Dietary Filters";
                 }
             });
         });
 
         // Close dropdown when clicking outside
-        document.addEventListener('click', () => {
-            if (dietaryDropdown.style.display === 'block') {
-                dietaryDropdown.style.display = 'none';
-                dietaryBtn.classList.remove('active');
+      document.addEventListener("click", () => {
+        if (dietaryDropdown.style.display === "block") {
+          dietaryDropdown.style.display = "none";
+          dietaryBtn.classList.remove("active");
             }
         });
         
         // Prevent closing when clicking inside the dropdown
-        dietaryDropdown.addEventListener('click', (e) => {
+      dietaryDropdown.addEventListener("click", (e) => {
             e.stopPropagation();
         });
     }
@@ -587,44 +638,86 @@ handleFileSelect(file) {
 
     filterListings() {
         const activeDietaryFilters = [];
-        document.querySelectorAll('input[name="dietary-filter"]:checked').forEach(checkbox => {
+    document
+      .querySelectorAll('input[name="dietary-filter"]:checked')
+      .forEach((checkbox) => {
             activeDietaryFilters.push(checkbox.value);
         });
 
-        this.filteredListings = this.foodListings.filter(listing => {
-            const matchesFilter = this.currentFilter === 'all' || listing.category === this.currentFilter;
+    this.filteredListings = this.foodListings.filter((listing) => {
+      const matchesFilter =
+        this.currentFilter === "all" || listing.category === this.currentFilter;
             
-            const matchesSearch = !this.searchQuery || 
+      const matchesSearch =
+        !this.searchQuery ||
                 listing.foodType.toLowerCase().includes(this.searchQuery) ||
                 listing.location.toLowerCase().includes(this.searchQuery) ||
                 listing.description.toLowerCase().includes(this.searchQuery);
 
-            const matchesDietary = activeDietaryFilters.length === 0 || 
-                (listing.dietaryTags && activeDietaryFilters.every(filter => listing.dietaryTags.includes(filter)));
+      const matchesDietary =
+        activeDietaryFilters.length === 0 ||
+        (listing.dietaryTags &&
+          activeDietaryFilters.every((filter) =>
+            listing.dietaryTags.includes(filter)
+          ));
             
             return matchesFilter && matchesSearch && matchesDietary;
         });
     }
 
     setupResponsiveNav() {
-        const hamburger = document.querySelector('.hamburger');
-        const navMenu = document.querySelector('.nav-menu');
-        
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
-            navMenu.classList.toggle('active');
+    const hamburger = document.querySelector(".hamburger");
+    const navMenu = document.querySelector(".nav-menu");
+    const userActions = document.querySelector(".user-actions");
+    const roleSwitch = document.getElementById("roleSwitch");
+    const loginButtons = Array.from(document.querySelectorAll(".login-btn"));
+    let moved = false;
+
+    hamburger.addEventListener("click", () => {
+      hamburger.classList.toggle("active");
+      navMenu.classList.toggle("active");
+
+      if (navMenu.classList.contains("active") && !moved) {
+        const container = document.createElement("li");
+        container.className = "nav-mobile-actions";
+        const wrapper = document.createElement("div");
+        wrapper.className = "nav-mobile-actions-wrapper";
+        if (roleSwitch) wrapper.appendChild(roleSwitch);
+        loginButtons.forEach((btn) => wrapper.appendChild(btn));
+        container.appendChild(wrapper);
+        navMenu.appendChild(container);
+        moved = true;
+      } else if (!navMenu.classList.contains("active") && moved) {
+        if (roleSwitch) userActions.appendChild(roleSwitch);
+        loginButtons.forEach((btn) => userActions.appendChild(btn));
+        const mobileContainer = navMenu.querySelector(".nav-mobile-actions");
+        if (mobileContainer) navMenu.removeChild(mobileContainer);
+        moved = false;
+      }
+    });
+
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 768 && moved) {
+        if (roleSwitch) userActions.appendChild(roleSwitch);
+        loginButtons.forEach((btn) => userActions.appendChild(btn));
+        const mobileContainer = navMenu.querySelector(".nav-mobile-actions");
+        if (mobileContainer) navMenu.removeChild(mobileContainer);
+        navMenu.classList.remove("active");
+        hamburger.classList.remove("active");
+        moved = false;
+      }
         });
     }
 
     setupStatsAnimation() {
-        const stats = document.querySelectorAll('.stat-number');
+    const stats = document.querySelectorAll(".stat-number");
         let animated = false;
         
         const animateStats = () => {
             if (animated) return;
             
-            stats.forEach(stat => {
-                const target = parseInt(stat.getAttribute('data-count'));
+      stats.forEach((stat) => {
+        const target = parseInt(stat.getAttribute("data-count"));
                 const duration = 2000;
                 const increment = target / (duration / 16);
                 let current = 0;
@@ -647,14 +740,14 @@ handleFileSelect(file) {
         
         // Trigger animation when hero section is in view
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
+      entries.forEach((entry) => {
                 if (entry.isIntersecting) {
                     setTimeout(animateStats, 1000);
                 }
             });
         });
         
-        const heroStats = document.querySelector('.hero-stats');
+    const heroStats = document.querySelector(".hero-stats");
         if (heroStats) {
             observer.observe(heroStats);
         }
@@ -663,15 +756,15 @@ handleFileSelect(file) {
     setupScrollEffects() {
         // Navbar background on scroll
         const handleScroll = () => {
-            const navbar = document.querySelector('.navbar');
+      const navbar = document.querySelector(".navbar");
             if (!navbar) return;
             if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
+        navbar.classList.add("scrolled");
             } else {
-                navbar.classList.remove('scrolled');
+        navbar.classList.remove("scrolled");
             }
         };
-        window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
         handleScroll();
         
         // Animate elements on scroll
@@ -681,20 +774,22 @@ handleFileSelect(file) {
     setupScrollAnimations() {
         const observerOptions = {
             threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
+      rootMargin: "0px 0px -50px 0px",
         };
         
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
+      entries.forEach((entry) => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('animate-in');
+          entry.target.classList.add("animate-in");
                 }
             });
         }, observerOptions);
         
         // Observe elements to animate
-        const elementsToAnimate = document.querySelectorAll('.feature-card, .food-card, .impact-item');
-        elementsToAnimate.forEach(el => {
+    const elementsToAnimate = document.querySelectorAll(
+      ".feature-card, .food-card, .impact-item"
+    );
+    elementsToAnimate.forEach((el) => {
             observer.observe(el);
         });
     }
@@ -706,7 +801,8 @@ handleFileSelect(file) {
                 foodType: "Fresh Pizza Margherita",
                 quantity: "8 slices",
                 category: "restaurant",
-                description: "Freshly made pizza with mozzarella, tomato sauce, and basil. Perfect condition, just from lunch service.",
+        description:
+          "Freshly made pizza with mozzarella, tomato sauce, and basil. Perfect condition, just from lunch service.",
                 freshUntil: this.getRandomFutureDate(),
                 pickupTime: "18:00",
                 location: "Mario's Pizzeria, 123 Main Street",
@@ -714,14 +810,16 @@ handleFileSelect(file) {
                 createdAt: new Date(Date.now() - 3600000),
                 donor: "Mario's Pizzeria",
                 dietaryTags: ["vegetarian"],
-                photoUrl: "https://www.allrecipes.com/thmb/2rQA_OlnLbhidei70glz6HCCYAs=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/1453815-authentic-pizza-margherita-Cynthia-Ross-4x3-1-7410c69552274163a9049342b60c22ff.jpg",
+        photoUrl:
+          "https://www.allrecipes.com/thmb/2rQA_OlnLbhidei70glz6HCCYAs=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/1453815-authentic-pizza-margherita-Cynthia-Ross-4x3-1-7410c69552274163a9049342b60c22ff.jpg",
             },
             {
                 id: 2,
                 foodType: "Assorted Sandwiches",
                 quantity: "15 sandwiches",
                 category: "event",
-                description: "Various sandwiches including turkey, ham, and vegetarian options from corporate catering event.",
+        description:
+          "Various sandwiches including turkey, ham, and vegetarian options from corporate catering event.",
                 freshUntil: this.getRandomFutureDate(),
                 pickupTime: "16:30",
                 location: "Downtown Conference Center",
@@ -729,15 +827,16 @@ handleFileSelect(file) {
                 createdAt: new Date(Date.now() - 7200000),
                 donor: "Conference Center",
                 dietaryTags: ["non-vegetarian"],
-                photoUrl: "https://bangkok.mandarinorientalshop.com/cdn/shop/files/078-_3729_2048x.jpg?v=1690709512",
-
+        photoUrl:
+          "https://bangkok.mandarinorientalshop.com/cdn/shop/files/078-_3729_2048x.jpg?v=1690709512",
             },
             {
                 id: 3,
                 foodType: "Fresh Bread & Pastries",
                 quantity: "20+ items",
                 category: "bakery",
-                description: "End-of-day fresh bread, croissants, and pastries. All baked today and still perfectly fresh.",
+        description:
+          "End-of-day fresh bread, croissants, and pastries. All baked today and still perfectly fresh.",
                 freshUntil: this.getRandomFutureDate(),
                 pickupTime: "20:00",
                 location: "Sunrise Bakery, Oak Avenue",
@@ -745,14 +844,16 @@ handleFileSelect(file) {
                 createdAt: new Date(Date.now() - 1800000),
                 donor: "Sunrise Bakery",
                 dietaryTags: ["dairy-free"],
-                photoUrl: "https://media.istockphoto.com/id/507021914/photo/assorted-croissand-and-bread.jpg?s=612x612&w=0&k=20&c=ruHrARluyF_yR1-hmrurOyz4sLPNeohj1zKKv8fHa8U=",
+        photoUrl:
+          "https://media.istockphoto.com/id/507021914/photo/assorted-croissand-and-bread.jpg?s=612x612&w=0&k=20&c=ruHrARluyF_yR1-hmrurOyz4sLPNeohj1zKKv8fHa8U=",
             },
             {
                 id: 4,
                 foodType: "Home-cooked Curry",
                 quantity: "4-6 portions",
                 category: "household",
-                description: "Vegetarian curry with rice, made too much for family dinner. Spice level: medium.",
+        description:
+          "Vegetarian curry with rice, made too much for family dinner. Spice level: medium.",
                 freshUntil: this.getRandomFutureDate(),
                 pickupTime: "19:00",
                 location: "Residential Area, Pine Street",
@@ -760,14 +861,16 @@ handleFileSelect(file) {
                 createdAt: new Date(Date.now() - 900000),
                 donor: "Local Family",
                 dietaryTags: ["vegetarian", "gluten-free"],
-                photoUrl: "https://www.tasteofhome.com/wp-content/uploads/2019/04/shutterstock_610126394.jpg",
+        photoUrl:
+          "https://www.tasteofhome.com/wp-content/uploads/2019/04/shutterstock_610126394.jpg",
             },
             {
                 id: 5,
                 foodType: "Fruit & Vegetable Box",
                 quantity: "1 large box",
                 category: "restaurant",
-                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
+        description:
+          "Fresh produce includes apples, oranges, carrots, and lettuce.",
                 freshUntil: this.getRandomFutureDate(),
                 pickupTime: "17:00",
                 location: "Green Garden Restaurant",
@@ -775,14 +878,16 @@ handleFileSelect(file) {
                 createdAt: new Date(Date.now() - 5400000),
                 donor: "Green Garden Restaurant",
                 dietaryTags: ["vegan"],
-                photoUrl: "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
+        photoUrl:
+          "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
             },
             {
                 id: 6,
                 foodType: "Grilled Chicken Meals",
                 quantity: "12 complete meals",
                 category: "restaurant",
-                description: "Grilled chicken with rice and vegetables. Prepared for cancelled catering order.",
+        description:
+          "Grilled chicken with rice and vegetables. Prepared for cancelled catering order.",
                 freshUntil: this.getRandomFutureDate(),
                 pickupTime: "18:30",
                 location: "Healthy Eats Cafe, Market Square",
@@ -790,14 +895,16 @@ handleFileSelect(file) {
                 createdAt: new Date(Date.now() - 2700000),
                 donor: "Healthy Eats Cafe",
                 dietaryTags: ["non-vegetarian", "dairy-free"],
-                photoUrl: "https://i0.wp.com/smittenkitchen.com/wp-content/uploads/2019/05/exceptional-grilled-chicken-scaled.jpg?fit=1200%2C800&ssl=1",
+        photoUrl:
+          "https://i0.wp.com/smittenkitchen.com/wp-content/uploads/2019/05/exceptional-grilled-chicken-scaled.jpg?fit=1200%2C800&ssl=1",
             },
             {
                 id: 5,
                 foodType: "Fruit & Vegetable Box",
                 quantity: "1 large box",
                 category: "restaurant",
-                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
+        description:
+          "Fresh produce includes apples, oranges, carrots, and lettuce.",
                 freshUntil: this.getRandomFutureDate(),
                 pickupTime: "17:00",
                 location: "Green Garden Restaurant",
@@ -805,14 +912,16 @@ handleFileSelect(file) {
                 createdAt: new Date(Date.now() - 5400000),
                 donor: "Green Garden Restaurant",
                 dietaryTags: ["vegan"],
-                photoUrl: "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
+        photoUrl:
+          "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
             },
             {
                 id: 7,
                 foodType: "Fruit & Vegetable Box",
                 quantity: "1 large box",
                 category: "restaurant",
-                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
+        description:
+          "Fresh produce includes apples, oranges, carrots, and lettuce.",
                 freshUntil: this.getRandomFutureDate(),
                 pickupTime: "17:00",
                 location: "Green Garden Restaurant",
@@ -820,14 +929,16 @@ handleFileSelect(file) {
                 createdAt: new Date(Date.now() - 5400000),
                 donor: "Green Garden Restaurant",
                 dietaryTags: ["vegan"],
-                photoUrl: "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
+        photoUrl:
+          "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
             },
             {
                 id: 8,
                 foodType: "Fruit & Vegetable Box",
                 quantity: "1 large box",
                 category: "restaurant",
-                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
+        description:
+          "Fresh produce includes apples, oranges, carrots, and lettuce.",
                 freshUntil: this.getRandomFutureDate(),
                 pickupTime: "17:00",
                 location: "Green Garden Restaurant",
@@ -835,9 +946,9 @@ handleFileSelect(file) {
                 createdAt: new Date(Date.now() - 5400000),
                 donor: "Green Garden Restaurant",
                 dietaryTags: ["vegan"],
-                photoUrl: "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
+        photoUrl:
+          "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
             },
-            
         ];
         
         this.foodListings = sampleListings;
@@ -852,31 +963,226 @@ handleFileSelect(file) {
     }
 
     renderFoodListings() {
-        const foodGrid = document.getElementById('foodGrid');
+    const foodGrid = document.getElementById("foodGrid");
         
         if (this.filteredListings.length === 0) {
-            foodGrid.innerHTML = `
-                <div class="no-listings">
-                    <i class="fas fa-search" style="font-size: 3rem; color: var(--medium-gray); margin-bottom: 1rem;"></i>
-                    <h3>No listings found</h3>
-                    <p>Try adjusting your filters or search terms.</p>
-                </div>
-            `;
+      foodGrid.innerHTML = this.createNoResultsMessage();
             return;
         }
         
-        foodGrid.innerHTML = this.filteredListings.map(listing => this.createFoodCard(listing)).join('');
+    foodGrid.innerHTML = this.filteredListings
+      .map((listing) => this.createFoodCard(listing))
+      .join("");
         
         // Add event listeners to food cards
         this.setupFoodCardInteractions();
     }
 
+  createNoResultsMessage() {
+    const hasSearchQuery = this.searchQuery && this.searchQuery.trim() !== "";
+    const hasActiveFilters = this.currentFilter !== "all";
+    const hasDietaryFilters =
+      document.querySelectorAll('input[name="dietary-filter"]:checked').length >
+      0;
+    const totalListings = this.foodListings.length;
+
+    // Determine the scenario and create appropriate message
+    let icon = "fas fa-search";
+    let title = "No Results Found";
+    let message = "";
+    let suggestions = [];
+    let actionButton = "";
+
+    if (totalListings === 0) {
+      // No listings at all
+      icon = "fas fa-utensils";
+      title = "No Food Listings Available";
+      message =
+        "There are currently no food listings available. Be the first to share some food!";
+      suggestions = [
+        'Add a new food listing using the "Add Listing" button',
+        "Check back later for new listings",
+        "Share ShareBite with others to grow the community",
+      ];
+      actionButton =
+        '<button class="btn btn-primary" onclick="document.getElementById(\'addListingBtn\').click()"><i class="fas fa-plus"></i> Add First Listing</button>';
+    } else if (hasSearchQuery && hasActiveFilters) {
+      // Search + filters applied
+      title = "No Matching Results";
+      message = `No food listings match your search "${this.searchQuery}" and current filters.`;
+      suggestions = [
+        "Try different search terms",
+        "Clear some filters to see more results",
+        "Check your spelling",
+        "Try broader search terms",
+      ];
+      actionButton =
+        '<button class="btn btn-secondary" onclick="window.shareBiteApp.clearSearchAndFilters()"><i class="fas fa-refresh"></i> Clear All Filters</button>';
+    } else if (hasSearchQuery) {
+      // Only search applied
+      title = "No Search Results";
+      message = `No food listings found for "${this.searchQuery}".`;
+      suggestions = [
+        "Try different keywords",
+        "Check your spelling",
+        "Try broader search terms",
+        "Search by location or food type",
+      ];
+      actionButton =
+        '<button class="btn btn-secondary" onclick="window.shareBiteApp.clearSearch()"><i class="fas fa-times"></i> Clear Search</button>';
+    } else if (hasActiveFilters || hasDietaryFilters) {
+      // Only filters applied
+      title = "No Matching Listings";
+      message = "No food listings match your current filter settings.";
+      suggestions = [
+        "Try different filter combinations",
+        "Clear dietary restrictions",
+        'Select "All" categories',
+        "Check back later for new listings",
+      ];
+      actionButton =
+        '<button class="btn btn-secondary" onclick="window.shareBiteApp.clearFilters()"><i class="fas fa-filter"></i> Clear Filters</button>';
+    } else {
+      // This shouldn't happen, but fallback
+      title = "No Listings Found";
+      message = "No food listings are currently available.";
+      suggestions = [
+        "Check back later",
+        "Add a new listing",
+        "Share ShareBite with others",
+      ];
+    }
+
+    return `
+            <div class="no-results-container">
+                <div class="no-results-icon">
+                    <i class="${icon}"></i>
+                </div>
+                <div class="no-results-content">
+                    <h3 class="no-results-title">${title}</h3>
+                    <p class="no-results-message">${message}</p>
+                    
+                    <div class="no-results-suggestions">
+                        <h4>Try these suggestions:</h4>
+                        <ul class="suggestions-list">
+                            ${suggestions
+                              .map(
+                                (suggestion) =>
+                                  `<li><i class="fas fa-lightbulb"></i> ${suggestion}</li>`
+                              )
+                              .join("")}
+                        </ul>
+                    </div>
+                    
+                    ${
+                      actionButton
+                        ? `<div class="no-results-action">${actionButton}</div>`
+                        : ""
+                    }
+                    
+                    <div class="no-results-stats">
+                        <small>
+                            <i class="fas fa-info-circle"></i> 
+                            Showing 0 of ${totalListings} total listings
+                        </small>
+                    </div>
+                </div>
+            </div>
+        `;
+  }
+
+  clearSearchAndFilters() {
+    // Clear search input
+    const searchInput = document.querySelector(".search-box input");
+    if (searchInput) {
+      searchInput.value = "";
+      this.searchQuery = "";
+    }
+
+    // Reset category filters
+    const allFilterBtn = document.querySelector(
+      '.filter-btn[data-filter="all"]'
+    );
+    if (allFilterBtn) {
+      document
+        .querySelectorAll(".filter-btn")
+        .forEach((btn) => btn.classList.remove("active"));
+      allFilterBtn.classList.add("active");
+      this.currentFilter = "all";
+    }
+
+    // Clear dietary filters
+    document
+      .querySelectorAll('input[name="dietary-filter"]:checked')
+      .forEach((checkbox) => {
+        checkbox.checked = false;
+      });
+
+    // Reset dietary filter button text
+    const dietaryBtn = document.getElementById("dietary-filter-btn");
+    if (dietaryBtn) {
+      const btnSpan = dietaryBtn.querySelector("span");
+      btnSpan.textContent = "Dietary Filters";
+    }
+
+    // Re-filter and re-render
+    this.filterListings();
+    this.renderFoodListings();
+
+    this.showToast("All filters and search cleared!", "success");
+  }
+
+  clearSearch() {
+    const searchInput = document.querySelector(".search-box input");
+    if (searchInput) {
+      searchInput.value = "";
+      this.searchQuery = "";
+      this.filterListings();
+      this.renderFoodListings();
+      this.showToast("Search cleared!", "success");
+    }
+  }
+
+  clearFilters() {
+    // Reset category filters
+    const allFilterBtn = document.querySelector(
+      '.filter-btn[data-filter="all"]'
+    );
+    if (allFilterBtn) {
+      document
+        .querySelectorAll(".filter-btn")
+        .forEach((btn) => btn.classList.remove("active"));
+      allFilterBtn.classList.add("active");
+      this.currentFilter = "all";
+    }
+
+    // Clear dietary filters
+    document
+      .querySelectorAll('input[name="dietary-filter"]:checked')
+      .forEach((checkbox) => {
+        checkbox.checked = false;
+      });
+
+    // Reset dietary filter button text
+    const dietaryBtn = document.getElementById("dietary-filter-btn");
+    if (dietaryBtn) {
+      const btnSpan = dietaryBtn.querySelector("span");
+      btnSpan.textContent = "Dietary Filters";
+    }
+
+    // Re-filter and re-render
+    this.filterListings();
+    this.renderFoodListings();
+
+    this.showToast("Filters cleared!", "success");
+  }
+
     createClaimButton(listing) {
         const isClaimed = this.claimedItems.includes(listing.id);
-        const isCollector = this.currentRole === 'collector';
-        const username = JSON.parse(localStorage.getItem('user'))?.name;
+    const isCollector = this.currentRole === "collector";
+    const username = JSON.parse(localStorage.getItem("user"))?.name;
 
-        if(username) {
+    if (username) {
             if (isClaimed) {
             return `
                 <button class="claim-btn claimed" disabled>
@@ -911,12 +1217,16 @@ handleFileSelect(file) {
     const isClaimed = this.claimedItems.includes(listing.id);
 
     // *** MODIFIED LOGIC START ***
-    let imgSource = '';
+    let imgSource = "";
 
     if (listing.photoUrl) {
         // 1. Use external/sample URL if provided
         imgSource = listing.photoUrl;
-    } else if (listing.photo && typeof listing.photo === 'object' && listing.photo instanceof File) {
+    } else if (
+      listing.photo &&
+      typeof listing.photo === "object" &&
+      listing.photo instanceof File
+    ) {
         // 2. Use temporary URL for newly uploaded file objects
         imgSource = URL.createObjectURL(listing.photo);
     } 
@@ -929,28 +1239,37 @@ handleFileSelect(file) {
     // *** MODIFIED LOGIC END ***
 
     // This logic generates the HTML for the tags
-    let tagsHTML = '';
+    let tagsHTML = "";
     if (listing.dietaryTags && listing.dietaryTags.length > 0) {
-        tagsHTML = `<div class="food-tags">` +
-            listing.dietaryTags.map(tag => `<span class="tag tag-${tag}">${tag}</span>`).join('') +
+      tagsHTML =
+        `<div class="food-tags">` +
+        listing.dietaryTags
+          .map((tag) => `<span class="tag tag-${tag}">${tag}</span>`)
+          .join("") +
         `</div>`;
     }
     
     // The main HTML template now uses the correctly generated imageHTML
     return `
-        <div class="food-card ${isClaimed ? 'claimed' : ''}" 
+        <div class="food-card ${isClaimed ? "claimed" : ""}" 
              data-id="${listing.id}" 
-             data-tags="${listing.dietaryTags ? listing.dietaryTags.join(',') : ''}">
+             data-tags="${
+               listing.dietaryTags ? listing.dietaryTags.join(",") : ""
+             }">
             <div class="food-image">
                 ${imageHTML}
-                <div class="food-category">${this.capitalizeFirst(listing.category)}</div>
+                <div class="food-category">${this.capitalizeFirst(
+                  listing.category
+                )}</div>
             </div>
             <div class="food-details">
                 <h3 class="food-title">${listing.foodType}</h3>
                 ${tagsHTML} 
                 <p class="food-description">${listing.description}</p>
                 <div class="food-meta">
-                    <span class="quantity"><i class="fas fa-utensils"></i> ${listing.quantity}</span>
+                    <span class="quantity"><i class="fas fa-utensils"></i> ${
+                      listing.quantity
+                    }</span>
                     <span class="freshness"><i class="fas fa-clock"></i> ${freshUntil}</span>
                 </div>
                 <div class="food-location">
@@ -967,7 +1286,9 @@ handleFileSelect(file) {
                 </div>
                 <div class="food-actions">
                     ${this.createClaimButton(listing)}
-                    <button class="contact-btn" data-contact="${listing.contact}">
+                    <button class="contact-btn" data-contact="${
+                      listing.contact
+                    }">
                         <i class="fas fa-phone"></i>
                     </button>
                 </div>
@@ -978,36 +1299,42 @@ handleFileSelect(file) {
 
     setupFoodCardInteractions() {
         // Claim buttons
-        const claimBtns = document.querySelectorAll('.claim-btn');
-        claimBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const listingId = parseInt(btn.getAttribute('data-id'));
+    const claimBtns = document.querySelectorAll(".claim-btn");
+    claimBtns.forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        const listingId = parseInt(btn.getAttribute("data-id"));
                 this.handleClaimFood(listingId);
             });
         });
         
         // Contact buttons
-        const contactBtns = document.querySelectorAll('.contact-btn');
-        contactBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const contact = btn.getAttribute('data-contact');
+    const contactBtns = document.querySelectorAll(".contact-btn");
+    contactBtns.forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        const contact = btn.getAttribute("data-contact");
                 this.handleContactDonor(contact);
             });
         });
     }
 
     handleClaimFood(listingId) {
-        const listing = this.foodListings.find(l => l.id === listingId);
+    const listing = this.foodListings.find((l) => l.id === listingId);
         if (!listing) return;
         
         // Check if already claimed
         if (this.claimedItems.includes(listingId)) {
-            this.showToast('This item has already been claimed!', 'error');
+      this.showToast("This item has already been claimed!", "error");
             return;
         }
         
         // Show confirmation dialog
-        const confirmed = confirm(`Claim "${listing.foodType}" from ${listing.donor}?\n\nPickup: ${listing.location}\nTime: ${this.formatTime(listing.pickupTime)}\nContact: ${listing.contact}`);
+    const confirmed = confirm(
+      `Claim "${listing.foodType}" from ${listing.donor}?\n\nPickup: ${
+        listing.location
+      }\nTime: ${this.formatTime(listing.pickupTime)}\nContact: ${
+        listing.contact
+      }`
+    );
         
         if (confirmed) {
             // Add to claimed items
@@ -1024,7 +1351,7 @@ handleFileSelect(file) {
                 pickupTime: listing.pickupTime,
                 contact: listing.contact,
                 claimedAt: new Date(),
-                status: 'claimed'
+        status: "claimed",
             };
             
             this.addNotification(notification);
@@ -1033,13 +1360,16 @@ handleFileSelect(file) {
             const claimBtn = document.querySelector(`[data-id="${listingId}"]`);
             
             if (claimBtn) {
-                claimBtn.classList.add('claimed');
+        claimBtn.classList.add("claimed");
                 claimBtn.innerHTML = '<i class="fas fa-check-circle"></i> Claimed';
                 claimBtn.disabled = true;
             }
             
             // Show success message
-            this.showToast(`Successfully claimed "${listing.foodType}"! Check notifications for pickup details.`, 'success');
+      this.showToast(
+        `Successfully claimed "${listing.foodType}"! Check notifications for pickup details.`,
+        "success"
+      );
             
             // Update notification display
             this.updateNotificationDisplay();
@@ -1048,28 +1378,31 @@ handleFileSelect(file) {
 
     handleContactDonor(contact) {
         // Copy contact to clipboard
-        navigator.clipboard.writeText(contact).then(() => {
-            this.showToast('Contact information copied to clipboard!', 'success');
-        }).catch(() => {
+    navigator.clipboard
+      .writeText(contact)
+      .then(() => {
+        this.showToast("Contact information copied to clipboard!", "success");
+      })
+      .catch(() => {
             // Fallback for older browsers
-            const textArea = document.createElement('textarea');
+        const textArea = document.createElement("textarea");
             textArea.value = contact;
             document.body.appendChild(textArea);
             textArea.select();
-            document.execCommand('copy');
+        document.execCommand("copy");
             document.body.removeChild(textArea);
-            this.showToast('Contact information copied to clipboard!', 'success');
+        this.showToast("Contact information copied to clipboard!", "success");
         });
     }
 
     getFoodIcon(category) {
         const icons = {
-            restaurant: 'store',
-            household: 'home',
-            bakery: 'bread-slice',
-            event: 'calendar-alt'
-        };
-        return icons[category] || 'utensils';
+      restaurant: "store",
+      household: "home",
+      bakery: "bread-slice",
+      event: "calendar-alt",
+    };
+    return icons[category] || "utensils";
     }
 
     capitalizeFirst(str) {
@@ -1107,15 +1440,15 @@ handleFileSelect(file) {
     }
 
     formatTime(timeString) {
-        const [hours, minutes] = timeString.split(':');
+    const [hours, minutes] = timeString.split(":");
         const date = new Date();
         date.setHours(hours, minutes);
-        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
     }
 
     startAnimations() {
         // Add stagger animation to feature cards
-        const featureCards = document.querySelectorAll('.feature-card');
+    const featureCards = document.querySelectorAll(".feature-card");
         featureCards.forEach((card, index) => {
             card.style.animationDelay = `${index * 0.2}s`;
         });
@@ -1128,20 +1461,20 @@ handleFileSelect(file) {
     }
 
     startFloatingAnimations() {
-        const floatingElements = document.querySelectorAll('.floating-card');
+    const floatingElements = document.querySelectorAll(".floating-card");
         floatingElements.forEach((element, index) => {
             element.style.animationDelay = `${index * 0.5}s`;
         });
     }
 
     startButtonPulse() {
-        const ctaButtons = document.querySelectorAll('.btn-primary');
+    const ctaButtons = document.querySelectorAll(".btn-primary");
         setInterval(() => {
             ctaButtons.forEach((btn, index) => {
                 setTimeout(() => {
-                    btn.style.animation = 'pulse 0.6s ease';
+          btn.style.animation = "pulse 0.6s ease";
                     setTimeout(() => {
-                        btn.style.animation = '';
+            btn.style.animation = "";
                     }, 600);
                 }, index * 200);
             });
@@ -1149,71 +1482,77 @@ handleFileSelect(file) {
     }
 
     hideLoadingOverlay() {
-        const loadingOverlay = document.getElementById('loadingOverlay');
+    const loadingOverlay = document.getElementById("loadingOverlay");
         setTimeout(() => {
-            loadingOverlay.style.opacity = '0';
+      loadingOverlay.style.opacity = "0";
             setTimeout(() => {
-                loadingOverlay.style.display = 'none';
+        loadingOverlay.style.display = "none";
             }, 500);
         }, 1500); // Show loading for 1.5 seconds
     }
 
     // Notification System Methods
     setupNotificationSystem() {
-        const notificationBell = document.getElementById('notificationBell');
-        const notificationPanel = document.getElementById('notificationPanel');
+    const notificationBell = document.getElementById("notificationBell");
+    const notificationPanel = document.getElementById("notificationPanel");
         
         if (!notificationBell) return;
         
         // Show notification bell when in collector mode or when there are notifications
-        if (this.currentRole === 'collector' || this.notifications.length > 0) {
-            notificationBell.style.display = 'block';
+    if (this.currentRole === "collector" || this.notifications.length > 0) {
+      notificationBell.style.display = "block";
         }
         
         // Toggle notification panel
-        notificationBell.addEventListener('click', (e) => {
+    notificationBell.addEventListener("click", (e) => {
             e.stopPropagation();
-            const isActive = notificationPanel.classList.contains('active');
+      const isActive = notificationPanel.classList.contains("active");
             
             if (isActive) {
-                notificationPanel.classList.remove('active');
-                notificationBell.classList.remove('active');
+        notificationPanel.classList.remove("active");
+        notificationBell.classList.remove("active");
             } else {
-                notificationPanel.classList.add('active');
-                notificationBell.classList.add('active');
+        notificationPanel.classList.add("active");
+        notificationBell.classList.add("active");
             }
         });
         
         // Close panel when clicking outside
-        document.addEventListener('click', (e) => {
+    document.addEventListener("click", (e) => {
             if (!notificationBell.contains(e.target)) {
-                notificationPanel.classList.remove('active');
-                notificationBell.classList.remove('active');
+        notificationPanel.classList.remove("active");
+        notificationBell.classList.remove("active");
             }
         });
         
         // Prevent panel from closing when clicking inside
-        notificationPanel.addEventListener('click', (e) => {
+    notificationPanel.addEventListener("click", (e) => {
             e.stopPropagation();
         });
     }
     
     loadClaimedItems() {
-        const stored = localStorage.getItem('sharebite-claimed-items');
+    const stored = localStorage.getItem("sharebite-claimed-items");
         return stored ? JSON.parse(stored) : [];
     }
     
     saveClaimedItems() {
-        localStorage.setItem('sharebite-claimed-items', JSON.stringify(this.claimedItems));
+    localStorage.setItem(
+      "sharebite-claimed-items",
+      JSON.stringify(this.claimedItems)
+    );
     }
     
     loadNotifications() {
-        const stored = localStorage.getItem('sharebite-notifications');
+    const stored = localStorage.getItem("sharebite-notifications");
         return stored ? JSON.parse(stored) : [];
     }
     
     saveNotifications() {
-        localStorage.setItem('sharebite-notifications', JSON.stringify(this.notifications));
+    localStorage.setItem(
+      "sharebite-notifications",
+      JSON.stringify(this.notifications)
+    );
     }
     
     addNotification(notification) {
@@ -1224,22 +1563,23 @@ handleFileSelect(file) {
     }
     
     updateNotificationDisplay() {
-        const notificationBell = document.getElementById('notificationBell');
-        const notificationBadge = document.getElementById('notificationBadge');
+    const notificationBell = document.getElementById("notificationBell");
+    const notificationBadge = document.getElementById("notificationBadge");
         
         if (!notificationBell || !notificationBadge) return;
         
         const unreadCount = this.notifications.length;
         
         if (unreadCount > 0) {
-            notificationBell.style.display = 'block';
-            notificationBadge.style.display = 'flex';
-            notificationBadge.textContent = unreadCount > 99 ? '99+' : unreadCount.toString();
+      notificationBell.style.display = "block";
+      notificationBadge.style.display = "flex";
+      notificationBadge.textContent =
+        unreadCount > 99 ? "99+" : unreadCount.toString();
         } else {
-            notificationBadge.style.display = 'none';
+      notificationBadge.style.display = "none";
             // Keep bell visible if in collector mode
-            if (this.currentRole !== 'collector') {
-                notificationBell.style.display = 'none';
+      if (this.currentRole !== "collector") {
+        notificationBell.style.display = "none";
             }
         }
         
@@ -1247,7 +1587,7 @@ handleFileSelect(file) {
     }
     
     renderNotifications() {
-        const notificationList = document.getElementById('notificationList');
+    const notificationList = document.getElementById("notificationList");
         if (!notificationList) return;
         
         if (this.notifications.length === 0) {
@@ -1263,7 +1603,11 @@ handleFileSelect(file) {
         
         notificationList.innerHTML = `
             <div class="notification-content">
-                ${this.notifications.map(notification => this.createNotificationItem(notification)).join('')}
+                ${this.notifications
+                  .map((notification) =>
+                    this.createNotificationItem(notification)
+                  )
+                  .join("")}
             </div>
         `;
         
@@ -1292,7 +1636,9 @@ handleFileSelect(file) {
                         </div>
                         <div class="notification-detail">
                             <i class="fas fa-clock"></i>
-                            <span>Pickup: ${this.formatTime(notification.pickupTime)}</span>
+                            <span>Pickup: ${this.formatTime(
+                              notification.pickupTime
+                            )}</span>
                         </div>
                         <div class="notification-detail">
                             <i class="fas fa-phone"></i>
@@ -1302,25 +1648,29 @@ handleFileSelect(file) {
                 </div>
                 <div class="notification-meta">
                     <span class="notification-time">Claimed ${timeAgo}</span>
-                    <span class="notification-status">${this.capitalizeFirst(notification.status)}</span>
+                    <span class="notification-status">${this.capitalizeFirst(
+                      notification.status
+                    )}</span>
                 </div>
             </div>
         `;
     }
     
     setupNotificationActions() {
-        const notificationItems = document.querySelectorAll('.notification-item');
-        
-        notificationItems.forEach(item => {
-            item.addEventListener('click', (e) => {
-                const notificationId = parseInt(item.getAttribute('data-id'));
+    const notificationItems = document.querySelectorAll(".notification-item");
+
+    notificationItems.forEach((item) => {
+      item.addEventListener("click", (e) => {
+        const notificationId = parseInt(item.getAttribute("data-id"));
                 this.viewNotificationDetails(notificationId);
             });
         });
     }
     
     viewNotificationDetails(notificationId) {
-        const notification = this.notifications.find(n => n.id === notificationId);
+    const notification = this.notifications.find(
+      (n) => n.id === notificationId
+    );
         if (!notification) return;
         
         const details = `
@@ -1335,9 +1685,12 @@ Contact information has been copied to clipboard.
         `;
         
         // Copy contact to clipboard
-        navigator.clipboard.writeText(notification.contact).then(() => {
+    navigator.clipboard
+      .writeText(notification.contact)
+      .then(() => {
             alert(details);
-        }).catch(() => {
+      })
+      .catch(() => {
             alert(details);
         });
     }
@@ -1352,11 +1705,11 @@ Contact information has been copied to clipboard.
 
     // Date Input Confirmation functionality
     setupDateInputConfirmation() {
-        const freshUntilInput = document.getElementById('freshUntil');
+    const freshUntilInput = document.getElementById("freshUntil");
         if (!freshUntilInput) return;
 
         const container = freshUntilInput.parentNode;
-        const checkmarkIcon = container.querySelector('.checkmark-icon');
+    const checkmarkIcon = container.querySelector(".checkmark-icon");
 
         if (!checkmarkIcon) return;
 
@@ -1377,12 +1730,12 @@ Contact information has been copied to clipboard.
             // 2. The value has changed from previous
             // 3. Date hasn't been confirmed yet
             if (currentValue && currentValue !== previousValue && !isDateConfirmed) {
-                checkmarkIcon.classList.remove('hidden');
+        checkmarkIcon.classList.remove("hidden");
             }
             
             // If value is cleared, reset everything
             if (!currentValue) {
-                checkmarkIcon.classList.add('hidden');
+        checkmarkIcon.classList.add("hidden");
                 isDateConfirmed = false;
             }
             
@@ -1396,13 +1749,15 @@ Contact information has been copied to clipboard.
                 isDateConfirmed = true;
                 
                 // Hide the checkmark
-                checkmarkIcon.classList.add('hidden');
+        checkmarkIcon.classList.add("hidden");
                 
                 // Show success toast
-                this.showToast('Date confirmed successfully!', 'success');
+        this.showToast("Date confirmed successfully!", "success");
                 
                 // Move focus to next input field if available
-                const nextInput = freshUntilInput.closest('.form-group').parentElement.nextElementSibling?.querySelector('input');
+        const nextInput = freshUntilInput
+          .closest(".form-group")
+          .parentElement.nextElementSibling?.querySelector("input");
                 if (nextInput) {
                     setTimeout(() => nextInput.focus(), 200);
                 } else {
@@ -1412,22 +1767,22 @@ Contact information has been copied to clipboard.
         };
 
         // Initially hide checkmark
-        checkmarkIcon.classList.add('hidden');
+    checkmarkIcon.classList.add("hidden");
 
         // Listen for date selection changes
-        freshUntilInput.addEventListener('change', handleDateChange);
-        freshUntilInput.addEventListener('input', handleDateChange);
+    freshUntilInput.addEventListener("change", handleDateChange);
+    freshUntilInput.addEventListener("input", handleDateChange);
 
         // Checkmark click handler - confirm the date and hide checkmark
-        checkmarkIcon.addEventListener('click', (e) => {
+    checkmarkIcon.addEventListener("click", (e) => {
             e.stopPropagation(); // Prevent event bubbling
             confirmDate();
         });
 
         // Click outside handler - hide checkmark when clicking outside
-        document.addEventListener('click', (e) => {
+    document.addEventListener("click", (e) => {
             // Check if checkmark is currently visible
-            if (!checkmarkIcon.classList.contains('hidden')) {
+      if (!checkmarkIcon.classList.contains("hidden")) {
                 // Check if click is outside the input container and not on the checkmark
                 if (!container.contains(e.target)) {
                     // User clicked outside - confirm the date and hide checkmark
@@ -1437,10 +1792,13 @@ Contact information has been copied to clipboard.
         });
 
         // Also hide checkmark when input loses focus (blur event)
-        freshUntilInput.addEventListener('blur', (e) => {
+    freshUntilInput.addEventListener("blur", (e) => {
             // Small delay to allow checkmark click to register first
             setTimeout(() => {
-                if (!checkmarkIcon.classList.contains('hidden') && freshUntilInput.value) {
+        if (
+          !checkmarkIcon.classList.contains("hidden") &&
+          freshUntilInput.value
+        ) {
                     confirmDate();
                 }
             }, 100);
@@ -1449,11 +1807,11 @@ Contact information has been copied to clipboard.
 
     // Time Input Confirmation functionality
     setupTimeInputConfirmation() {
-        const pickupTimeInput = document.getElementById('pickupTime');
+    const pickupTimeInput = document.getElementById("pickupTime");
         if (!pickupTimeInput) return;
 
         const container = pickupTimeInput.parentNode;
-        const checkmarkIcon = container.querySelector('.checkmark-icon-time');
+    const checkmarkIcon = container.querySelector(".checkmark-icon-time");
 
         if (!checkmarkIcon) return;
 
@@ -1474,12 +1832,12 @@ Contact information has been copied to clipboard.
             // 2. The value has changed from previous
             // 3. Time hasn't been confirmed yet
             if (currentValue && currentValue !== previousValue && !isTimeConfirmed) {
-                checkmarkIcon.classList.remove('hidden');
+        checkmarkIcon.classList.remove("hidden");
             }
             
             // If value is cleared, reset everything
             if (!currentValue) {
-                checkmarkIcon.classList.add('hidden');
+        checkmarkIcon.classList.add("hidden");
                 isTimeConfirmed = false;
             }
             
@@ -1493,13 +1851,15 @@ Contact information has been copied to clipboard.
                 isTimeConfirmed = true;
                 
                 // Hide the checkmark
-                checkmarkIcon.classList.add('hidden');
+        checkmarkIcon.classList.add("hidden");
                 
                 // Show success toast
-                this.showToast('Time confirmed successfully!', 'success');
+        this.showToast("Time confirmed successfully!", "success");
                 
                 // Move focus to next input field if available
-                const nextInput = pickupTimeInput.closest('.form-group').parentElement.nextElementSibling?.querySelector('input');
+        const nextInput = pickupTimeInput
+          .closest(".form-group")
+          .parentElement.nextElementSibling?.querySelector("input");
                 if (nextInput) {
                     setTimeout(() => nextInput.focus(), 200);
                 } else {
@@ -1509,22 +1869,22 @@ Contact information has been copied to clipboard.
         };
 
         // Initially hide checkmark
-        checkmarkIcon.classList.add('hidden');
+    checkmarkIcon.classList.add("hidden");
 
         // Listen for time selection changes
-        pickupTimeInput.addEventListener('change', handleTimeChange);
-        pickupTimeInput.addEventListener('input', handleTimeChange);
+    pickupTimeInput.addEventListener("change", handleTimeChange);
+    pickupTimeInput.addEventListener("input", handleTimeChange);
 
         // Checkmark click handler - confirm the time and hide checkmark
-        checkmarkIcon.addEventListener('click', (e) => {
+    checkmarkIcon.addEventListener("click", (e) => {
             e.stopPropagation(); // Prevent event bubbling
             confirmTime();
         });
 
         // Click outside handler - hide checkmark when clicking outside
-        document.addEventListener('click', (e) => {
+    document.addEventListener("click", (e) => {
             // Check if checkmark is currently visible
-            if (!checkmarkIcon.classList.contains('hidden')) {
+      if (!checkmarkIcon.classList.contains("hidden")) {
                 // Check if click is outside the input container and not on the checkmark
                 if (!container.contains(e.target)) {
                     // User clicked outside - confirm the time and hide checkmark
@@ -1534,10 +1894,13 @@ Contact information has been copied to clipboard.
         });
 
         // Also hide checkmark when input loses focus (blur event)
-        pickupTimeInput.addEventListener('blur', (e) => {
+    pickupTimeInput.addEventListener("blur", (e) => {
             // Small delay to allow checkmark click to register first
             setTimeout(() => {
-                if (!checkmarkIcon.classList.contains('hidden') && pickupTimeInput.value) {
+        if (
+          !checkmarkIcon.classList.contains("hidden") &&
+          pickupTimeInput.value
+        ) {
                     confirmTime();
                 }
             }, 100);
@@ -1547,7 +1910,7 @@ Contact information has been copied to clipboard.
 
 // Additional CSS animations via JavaScript
 function addDynamicStyles() {
-    const style = document.createElement('style');
+  const style = document.createElement("style");
     style.textContent = `
         @keyframes pulse {
             0% { transform: scale(1); }
@@ -1581,16 +1944,152 @@ function addDynamicStyles() {
             animation: slideInUp 0.6s ease forwards;
         }
         
-        .no-listings {
+        .no-results-container {
             grid-column: 1 / -1;
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             padding: 4rem 2rem;
+            text-align: center;
+            background: var(--light-gray);
+            border-radius: var(--border-radius);
+            margin: 2rem 0;
+            box-shadow: var(--shadow-light);
+        }
+        
+        .no-results-icon {
+            margin-bottom: 1.5rem;
+        }
+        
+        .no-results-icon i {
+            font-size: 4rem;
+            color: var(--medium-gray);
+            opacity: 0.7;
+        }
+        
+        .no-results-content {
+            max-width: 500px;
+        }
+        
+        .no-results-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark-gray);
+            margin-bottom: 0.5rem;
+        }
+        
+        .no-results-message {
+            font-size: 1rem;
+            color: var(--medium-gray);
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+        
+        .no-results-suggestions {
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        
+        .no-results-suggestions h4 {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--dark-gray);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .suggestions-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .suggestions-list li {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 0;
+            color: var(--medium-gray);
+            font-size: 0.9rem;
+        }
+        
+        .suggestions-list li i {
+            color: var(--primary-color);
+            margin-right: 0.75rem;
+            font-size: 0.8rem;
+        }
+        
+        .no-results-action {
+            margin-bottom: 1.5rem;
+        }
+        
+        .no-results-action .btn-secondary {
+            color: var(--success-color, #28a745) !important;
+            border-color: var(--success-color, #28a745) !important;
+        }
+        
+        .no-results-action .btn-secondary:hover {
+            background-color: var(--success-color, #28a745) !important;
+            color: white !important;
+        }
+        
+        .no-results-stats {
+            padding-top: 1rem;
+            border-top: 1px solid var(--light-gray);
+            color: var(--medium-gray);
+            font-size: 0.85rem;
+        }
+        
+        .no-results-stats i {
+            margin-right: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        /* Dark mode styles */
+        .dark .no-results-container {
+            background: var(--dark-bg-secondary);
+            border: 1px solid var(--dark-border);
+        }
+        
+        .dark .no-results-title {
+            color: var(--light-text);
+        }
+        
+        .dark .no-results-message {
             color: var(--medium-gray);
         }
         
-        .no-listings h3 {
-            margin-bottom: 0.5rem;
-            color: var(--dark-gray);
+        .dark .no-results-suggestions h4 {
+            color: var(--light-text);
+        }
+        
+        .dark .no-results-stats {
+            border-top-color: var(--dark-border);
+            color: var(--medium-gray);
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .no-results-container {
+                padding: 2rem 1rem;
+                margin: 1rem 0;
+            }
+            
+            .no-results-icon i {
+                font-size: 3rem;
+            }
+            
+            .no-results-title {
+                font-size: 1.25rem;
+            }
+            
+            .no-results-suggestions {
+                text-align: center;
+            }
+            
+            .suggestions-list {
+                text-align: left;
+            }
         }
         
         /* Hamburger menu animation */
@@ -1634,9 +2133,9 @@ function addDynamicStyles() {
 }
 
 // Initialize the application
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
     addDynamicStyles();
-    new ShareBiteFoodListing();
+  window.shareBiteApp = new ShareBiteFoodListing();
 });
 
 // Service Worker registration for PWA capabilities (optional)
@@ -1656,14 +2155,14 @@ document.addEventListener('DOMContentLoaded', () => {
 window.ShareBiteFoodListing = ShareBiteFoodListing;
 
 // Clear caches and trigger SW skipWaiting for debugging updates
-window.clearShareBiteCaches = async function() {
-    if ('caches' in window) {
+window.clearShareBiteCaches = async function () {
+  if ("caches" in window) {
         const keys = await caches.keys();
-        await Promise.all(keys.map(k => caches.delete(k)));
-        console.log('[ShareBite] All caches cleared');
+    await Promise.all(keys.map((k) => caches.delete(k)));
+    console.log("[ShareBite] All caches cleared");
     }
     if (navigator.serviceWorker?.controller) {
-        navigator.serviceWorker.controller.postMessage('SKIP_WAITING');
-        console.log('[ShareBite] Sent SKIP_WAITING to service worker');
+    navigator.serviceWorker.controller.postMessage("SKIP_WAITING");
+    console.log("[ShareBite] Sent SKIP_WAITING to service worker");
     }
 };

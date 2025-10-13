@@ -149,6 +149,38 @@ body {
     width: 100%;
 }
 
+/* Role switch styled for nav menu context */
+.nav-role-switch {
+    background: transparent;
+    color: var(--black);
+    border: 2px solid transparent;
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    font-weight: 600;
+}
+.nav-role-switch:hover {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+body.dark .nav-role-switch { color: var(--medium-gray); }
+body.dark .nav-role-switch:hover { color: var(--primary-light); border-color: var(--primary-light); }
+
+/* Mobile-in-menu actions layout */
+.nav-mobile-actions {
+    width: 100%;
+    padding: 1rem 2rem;
+}
+.nav-mobile-actions-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+}
+.nav-mobile-actions-wrapper .role-switch,
+.nav-mobile-actions-wrapper .login-btn {
+    width: 100%;
+}
+
 .user-actions {
     display: flex;
     align-items: center;
@@ -1945,6 +1977,24 @@ body.dark .profile-menu-item:hover {
     .hamburger {
         display: flex;
     }
+
+    /* Mobile menu fallback (CSS-based) */
+    .nav-menu.active {
+        display: flex;
+        position: fixed;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        height: calc(100vh - 70px);
+        background: rgba(255, 255, 255, 0.98);
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        padding-top: 2rem;
+        backdrop-filter: blur(10px);
+    }
+    .nav-menu.active .nav-link { margin: 1rem 0; font-size: 1.1rem; }
+    body.dark .nav-menu.active { background: rgba(18,18,18,0.98); }
     
     .hero-buttons {
         flex-direction: column;
@@ -1962,6 +2012,14 @@ body.dark .profile-menu-item:hover {
     
     .filter-group {
         justify-content: center;
+    }
+    .user-actions { flex-wrap: wrap; gap: .5rem; }
+    .login-btn, .role-switch, .theme-toggle { padding: 0.6rem 1rem; }
+
+    /* Hide duplicate actions on mobile header; they are shown in menu */
+    .user-actions .role-switch,
+    .user-actions .login-btn {
+        display: none !important;
     }
     
     .search-box {
@@ -2023,6 +2081,38 @@ body.dark .profile-menu-item:hover {
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     }
 
+}
+
+/* Additional mobile optimizations for listings */
+@media (max-width: 480px) {
+    .filter-btn {
+        width: 100%;
+    }
+
+    .dropdown-check-container,
+    .search-box,
+    .add-listing-btn {
+        width: 100%;
+    }
+
+    .food-image {
+        height: 160px;
+    }
+
+    .food-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .food-actions {
+        flex-direction: column;
+    }
+
+    .claim-btn,
+    .contact-btn {
+        width: 100%;
+    }
 }
 
 /* Dark Mode Styles */
