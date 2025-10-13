@@ -67,11 +67,18 @@
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
-        transition: color 0.3s ease;
+        transition: all 0.3s ease;
       }
 
       body.dark-mode .dashboard-title {
-        color: var(--white, #ffffff);
+        background: linear-gradient(
+          135deg,
+          #81c784 0%,
+          #ffab40 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
       }
 
       .dashboard-subtitle {
@@ -132,7 +139,7 @@
       .chart-title {
         font-size: 1.2rem;
         font-weight: 600;
-        color: var(--black, #212121);
+        color: #212121;
         margin-bottom: 1rem;
         text-align: center;
         position: relative;
@@ -140,7 +147,7 @@
       }
 
       body.dark-mode .chart-title {
-        color: var(--white, #ffffff);
+        color: #ffffff !important;
       }
 
       .chart-title::after {
@@ -496,6 +503,9 @@
               data: ["Fruits", "Vegetables", "Grains", "Dairy", "Others"],
               top: "12%",
               left: "center",
+              textStyle: {
+                color: isDarkMode ? "#ffffff" : "#333333"
+              }
             },
             grid: {
               left: "10%",
@@ -614,6 +624,9 @@
               orient: "vertical",
               left: "left",
               top: "15%",
+              textStyle: {
+                color: isDarkMode ? "#ffffff" : "#333333"
+              }
             },
             series: [
               {
