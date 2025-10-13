@@ -1611,7 +1611,7 @@ handleFileSelect(file) {
             </div>
         `;
         
-        // Add event listeners for notification actions
+        
         this.setupNotificationActions();
     }
     
