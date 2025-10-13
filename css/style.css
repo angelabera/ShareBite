@@ -1989,11 +1989,16 @@ body.dark .profile-menu-item:hover {
         background: rgba(255, 255, 255, 0.98);
         flex-direction: column;
         justify-content: flex-start;
-        align-items: center;
-        padding-top: 2rem;
+        align-items: flex-start; /* Align text to the left side */
+        padding: 2rem 2rem 0 2rem; /* Add left padding for better spacing */
         backdrop-filter: blur(10px);
     }
-    .nav-menu.active .nav-link { margin: 1rem 0; font-size: 1.1rem; }
+    .nav-menu.active .nav-link { 
+        margin: 1rem 0; 
+        font-size: 1.1rem; 
+        text-align: left; /* Ensure text is left-aligned */
+        width: 100%; /* Full width for better touch targets */
+    }
     body.dark .nav-menu.active { background: rgba(18,18,18,0.98); }
     
     .hero-buttons {
