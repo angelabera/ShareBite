@@ -25,13 +25,13 @@
             --input-border-light: #ddd;
 
             /* Dark Mode */
-            --bg-gradient-start-dark: #1C1C1C;
-            --bg-gradient-end-dark: #2C2C2C;
+            --bg-gradient-start-dark: #121212;
+            --bg-gradient-end-dark: #1a1a1a;
             --card-bg-dark: #2E2E2E;
             --text-color-dark: #f1f1f1;
-            --subtext-color-dark: #aaa;
+            --subtext-color-dark: #B0B0B0;
             --input-bg-dark: #3a3a3a;
-            --input-border-dark: #444;
+            --input-border-dark: #555;
         }
 
         * {
@@ -82,6 +82,13 @@
 
         .theme-toggle:hover {
             transform: scale(1.1) rotate(15deg);
+            border-color: var(--primary-green);
+            color: var(--primary-green);
+        }
+
+        body.dark-mode .theme-toggle:hover {
+            border-color: var(--secondary-orange);
+            color: var(--secondary-orange);
         }
 
         .auth-container {
@@ -99,7 +106,8 @@
 
         body.dark-mode .auth-container {
             background-color: var(--card-bg-dark);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid #404040;
         }
 
         @keyframes fadeIn {
@@ -113,6 +121,11 @@
             margin-bottom: 0.75rem;
             font-weight: 600;
             font-size: 1.8rem;
+            color: var(--text-color-light);
+        }
+
+        body.dark-mode .auth-container h1 {
+            color: var(--text-color-dark);
         }
 
         .auth-container p.subtitle {
@@ -134,6 +147,11 @@
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
+            color: var(--text-color-light);
+        }
+
+        body.dark-mode .form-group label {
+            color: var(--text-color-dark);
         }
 
         .form-group input {
@@ -179,6 +197,12 @@
             border-color: var(--input-border-dark);
             background-color: var(--input-bg-dark);
             color: var(--text-color-dark);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-mode .form-group input:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2), inset 0 1px 3px rgba(0, 0, 0, 0.3);
         }
 
         .form-group input:focus {
@@ -213,6 +237,9 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            text-align: center;
+            display: block;
+            margin: 0 auto;
         }
 
         .btn-primary {
@@ -232,10 +259,15 @@
             color: var(--secondary-orange);
             text-decoration: none;
             font-weight: 500;
+            text-align: center;
         }
 
         .register-link:hover {
             text-decoration: underline;
+        }
+
+        body.dark-mode .register-link {
+            color: var(--secondary-orange);
         }
 
         @media (max-width:520px) {
@@ -281,7 +313,9 @@
         <a href="ngo-register.html" class="register-link">Don't have a registered NGO? Register</a>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
     <script>
 
         // --- Password Visibility Toggle ---
@@ -310,16 +344,44 @@
             const password = loginForm.password.value.trim();
 
             if (!email || !password) {
-                alert("Please fill in all fields before logging in.");
+                Swal.fire({
+                    title: "Missing Information ⚠️",
+                    text: "Please fill in all fields before logging in.",
+                    icon: "warning",
+                    confirmButtonColor: "#FF6B35"
+                });
                 return;
             }
 
-            alert("NGO logged in successfully!");
+            // Extract NGO name from email (before @) for display
+            const ngoName = email.split('@')[0].replace(/[._-]/g, ' ')
+                .split(' ')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                .join(' ') + ' NGO';
+
+            // Create NGO user data
+            const ngoData = {
+                name: ngoName,
+                email: email,
+                type: 'ngo'
+            };
+
+            // Use auth system to log in NGO
+            sharebiteAuth.login(ngoData);
+
+            Swal.fire({
+                title: "NGO Login Successful 🎉",
+                text: `Welcome back, ${ngoName}!`,
+                icon: "success",
+                confirmButtonColor: "#28a745",
+                timer: 1500,
+                showConfirmButton: false
+            });
 
             // Redirect after short delay
             setTimeout(() => {
                 window.location.href = "index.html"; // Further we can redirect to NGO dashboard with "ngo-dashboard.html"
-            }, 500);
+            }, 1500);
         });
     </script>
 

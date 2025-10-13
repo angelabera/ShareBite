@@ -12,6 +12,7 @@
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -52,7 +53,8 @@
                     <i class="fas fa-exchange-alt"></i>
                     <span id="currentRole">Donor</span>
                 </button>
-                <button class="login-btn" onclick="window.location.href='login.html'">Login</button>
+                <button class="login-btn" onclick="window.location.href='login.html'">Login as User</button>
+                <button class="login-btn" onclick="window.location.href='login_ngo.html'">Login as NGO</button>
             </div>
             <div class="hamburger">
                 <span></span>
@@ -278,6 +280,7 @@
     </div>
 
     <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
     <script src="js/foodlisting.js"></script>
 </body>
 
