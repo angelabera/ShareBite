@@ -149,6 +149,24 @@ body {
     width: 100%;
 }
 
+.nav-link.active {
+    color: var(--primary-color) !important;
+    font-weight: 600 !important;
+}
+
+.nav-link.active::after {
+    width: 100% !important;
+    background: var(--primary-color) !important;
+}
+
+:root.dark .nav-link.active {
+    color: var(--primary-color) !important;
+}
+
+:root.dark .nav-link.active::after {
+    background: var(--primary-color) !important;
+}
+
 .user-actions {
     display: flex;
     align-items: center;

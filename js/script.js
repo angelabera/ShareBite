@@ -94,19 +94,75 @@ class ShareBite {
 
     setupNavigation() {
         const navLinks = document.querySelectorAll('.nav-link');
+        
+        // Set initial active state for HOME or current page
+        this.setInitialActiveNavLink();
+        
         navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 const href = link.getAttribute('href');
-                // Ignore .html links
-                if (href && href.endsWith('.html')) return;
+                
+                // For .html links, let them navigate normally but set active state
+                if (href && href.endsWith('.html')) {
+                    this.setActiveNavLink(href);
+                    return;
+                }
+                
+                // For anchor links, prevent default and scroll smoothly
                 e.preventDefault();
                 const targetId = href.substring(1);
                 const targetElement = document.getElementById(targetId);
                 if (targetElement) {
                     targetElement.scrollIntoView({ behavior: 'smooth' });
+                    // Update active state after scrolling
+                    setTimeout(() => this.setActiveNavLink(targetId), 500);
                 }
             });
         });
+        
+        // Listen for hash changes (browser back/forward buttons or direct hash changes)
+        window.addEventListener('hashchange', () => {
+            this.setInitialActiveNavLink();
+        });
+    }
+
+    setInitialActiveNavLink() {
+        // Check if we're on the foodlisting page
+        if (window.location.pathname.includes('foodlisting.html')) {
+            this.setActiveNavLink('foodlisting.html');
+        } else {
+            // Check if there's a hash in the URL (e.g., #about, #features)
+            const hash = window.location.hash;
+            if (hash) {
+                // Remove the # and set active based on the hash
+                const targetId = hash.substring(1);
+                this.setActiveNavLink(targetId);
+            } else {
+                // Default to home if no hash
+                this.setActiveNavLink('home');
+            }
+        }
+    }
+
+    setActiveNavLink(targetId) {
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        // Remove active class from all links first
+        navLinks.forEach(link => link.classList.remove('active'));
+        
+        // Handle different types of links
+        let targetLink;
+        if (targetId === 'home') {
+            targetLink = document.querySelector('.nav-link[href="#home"]');
+        } else if (targetId === 'foodlisting.html') {
+            targetLink = document.querySelector('.nav-link[href="foodlisting.html"]');
+        } else {
+            targetLink = document.querySelector(`.nav-link[href="#${targetId}"]`);
+        }
+        
+        if (targetLink) {
+            targetLink.classList.add('active');
+        }
     }
 
     setupRoleSwitch() {
