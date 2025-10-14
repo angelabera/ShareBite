@@ -1,391 +1,348 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Support | ShareBite</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
-  <style>
-    /* Custom styles for the Support page, using project CSS variables for color consistency */
-    .support-header {
-      /* Removed padding-top: 80px; as nav is gone */
-      padding-top: 3rem; 
-      background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
-      color: var(--white);
-      text-align: center;
-      padding-bottom: 3rem;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Support | ShareBite</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+      /* Small page-specific adjustments, leveraging CSS variables from main stylesheet */
+      .support-hero {
+        background: var(--primary-gradient);
+        color: white;
+        padding: 6rem 0 3rem;
+        text-align: center;
+      }
 
-    :root.dark .support-header {
-      background: var(--hero-gradient);
-      color: #F1F1F1; 
-    }
-    
-    .support-header h1 {
-      font-size: var(--h1-size);
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      color: inherit; 
-    }
+      .support-card {
+        background: var(--card-bg);
+        border-radius: var(--card-radius);
+        box-shadow: var(--shadow-light);
+        padding: 2rem;
+        margin-top: -3rem;
+      }
 
-    .support-header p {
-      font-size: 1.2rem;
-      opacity: 0.9;
-      color: inherit;
-    }
+      .faq-list {
+        display: grid;
+        gap: 1rem;
+      }
 
-    .content-wrapper {
-        max-width: 1200px;
-        margin: 30px auto;
-        padding: 0 2rem;
-    }
+      .faq-item {
+        border-radius: 12px;
+        overflow: hidden;
+        background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
+        box-shadow: 0 6px 18px rgba(23,32,56,0.06);
+        border: 1px solid rgba(23,32,56,0.06);
+      }
 
-    .support-container {
-      max-width: 900px; 
-      margin: 30px auto;
-      padding: 2rem;
-      background: var(--card-bg);
-      border-radius: var(--card-radius);
-      box-shadow: var(--shadow-medium);
-      position: relative;
-    }
-
-    .section-title-custom {
-      font-size: var(--h2-size);
-      font-weight: 700;
-      color: var(--black);
-      margin-bottom: 2rem;
-      border-bottom: 2px solid var(--primary-light);
-      padding-bottom: 0.5rem;
-    }
-
-    /* FAQ Styling */
-    .faq {
-      margin: 1.5rem 0;
-      border: 1px solid var(--light-gray);
-      border-radius: var(--border-radius);
-      overflow: hidden;
-      transition: box-shadow 0.3s ease;
-    }
-
-    .faq:hover {
-      box-shadow: var(--shadow-light);
-    }
-
-    .faq h3 {
-      cursor: pointer;
-      padding: 1rem 1.5rem;
-      background: var(--light-gray);
-      color: var(--black);
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin: 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: background 0.3s ease;
-    }
-
-    .faq h3:hover {
-      background: rgba(76, 175, 80, 0.1);
-      color: var(--primary-dark);
-    }
-
-    .faq-icon {
-      transition: transform 0.3s ease;
-      color: var(--primary-color);
-    }
-
-    .faq h3.open .faq-icon {
-      transform: rotate(180deg);
-    }
-
-    .faq p {
-      display: none;
-      padding: 1.5rem;
-      border-top: 1px solid var(--light-gray);
-      margin: 0;
-      background: var(--card-bg);
-      color: var(--medium-gray);
-      line-height: 1.6;
-    }
-
-    /* Contact Form Styling */
-    .contact-form-support {
-      margin-top: 0;
-      padding: 2rem;
-      border-radius: var(--border-radius);
-      background: var(--light-gray);
-    }
-    
-    .contact-form-support input, 
-    .contact-form-support textarea {
-      width: 100%;
-      margin: 10px 0;
-      padding: 12px;
-      border: 1px solid var(--medium-gray);
-      border-radius: 8px;
-      background: var(--white);
-      color: var(--black);
-      font-size: 1rem;
-      transition: border-color 0.3s;
-    }
-
-    .contact-form-support input:focus, 
-    .contact-form-support textarea:focus {
-        outline: none;
-        border-color: var(--secondary-color);
-        box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.2);
-    }
-
-    .contact-form-support button {
-      background: var(--secondary-gradient);
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-size: 1.1rem;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      padding: 1rem;
-      border-radius: 8px;
-    }
-
-    .contact-form-support button:hover {
-      background: var(--primary-gradient);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-medium);
-    }
-
-    /* Dark Mode Adjustments */
-    :root.dark .section-title-custom {
-      color: var(--black);
-      border-bottom: 2px solid var(--primary-dark);
-    }
-
-    :root.dark .faq {
-      border: 1px solid #3a3a3a;
-    }
-
-    :root.dark .faq h3 {
-      background: #2a2a2a;
-      color: var(--black);
-    }
-
-    :root.dark .faq h3:hover {
-      background: rgba(95, 73, 10, 0.2);
-    }
-
-    :root.dark .faq p {
-      background: var(--card-bg);
-      border-top: 1px solid #3a3a3a;
-      color: var(--medium-gray);
-    }
-
-    :root.dark .contact-form-support {
-        background: #2a2a2a;
-    }
-
-    :root.dark .contact-form-support input,
-    :root.dark .contact-form-support textarea {
-        background: #1c1c1c;
-        border-color: #333;
-        color: var(--black);
-    }
-    
-    :root.dark .contact-form-support input::placeholder,
-    :root.dark .contact-form-support textarea::placeholder {
-        color: var(--medium-gray); 
-        opacity: 0.8; 
-    }
-
-    :root.dark .footer { 
-        background: #0d0d0d;
-        color: var(--black); 
-        padding: 0.5rem 0; 
-    }
-    :root.dark .footer-bottom p {
-        color: var(--medium-gray);
-    }
-
-    /* New style for simplified footer alignment */
-    .simplified-footer-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 2rem;
-      text-align: center;
-      color: var(--medium-gray);
-    }
-
-    .simplified-footer-container p {
-      margin: 0;
-      padding: 0.2rem 0;
-      font-size: 0.9rem;
-    }
-    
-    /* Style for the standalone theme toggle button */
-    .standalone-toggle-wrapper {
-        position: fixed; /* Keep it visible */
-        top: 20px;
-        right: 20px;
-        z-index: 1000; /* Ensure it's above other elements */
-    }
-
-    .theme-toggle {
-        background: var(--primary-color);
-        color: var(--white);
-        border: none;
-        padding: 10px;
-        border-radius: 50%;
+      .faq-question {
+        padding: 1rem 1.2rem;
         cursor: pointer;
-        font-size: 1.2rem;
-        box-shadow: var(--shadow-medium);
-        transition: background 0.3s, transform 0.2s;
-    }
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        font-weight: 600;
+        transition: background 200ms ease, color 200ms ease;
+      }
 
-    .theme-toggle:hover {
-        background: var(--primary-dark);
-        transform: scale(1.05);
-    }
+      .faq-question:hover {
+        background: rgba(0,0,0,0.02);
+      }
 
-    /* Dark mode toggle button style */
-    :root.dark .theme-toggle {
-        background: var(--secondary-color);
-        color: var(--black);
-    }
+      .faq-question:focus {
+        outline: 2px solid var(--primary-color, #2b6cb0);
+        outline-offset: 2px;
+      }
 
-    :root.dark .theme-toggle:hover {
-        background: var(--secondary-dark);
-    }
+      .faq-answer {
+        padding: 0 1.2rem 1rem 1.2rem;
+        background: var(--light-gray);
+        display: block;
+        line-height: 1.6;
+        height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: height 260ms cubic-bezier(.2,.9,.2,1), opacity 200ms ease 60ms;
+      }
 
-    @media (max-width: 768px) {
-        .content-wrapper {
-            padding: 0 1rem;
-        }
-        .standalone-toggle-wrapper {
-             top: 10px;
-             right: 10px;
-        }
-    }
-  </style>
-</head>
-<body>
-    
-    <div class="standalone-toggle-wrapper">
-        <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
-            <i class="fas fa-moon"></i>
-        </button>
-    </div>
+      .faq-item.open .faq-answer {
+        height: auto; /* will be overridden by JS calculated height */
+        opacity: 1;
+      }
 
-    <header class="support-header">
-        <h1>Support Center</h1>
-        <p>How can we help you today?</p>
-    </header>
+      .faq-chevron {
+        transition: transform 220ms ease;
+        display: inline-block;
+      }
 
-    <div class="content-wrapper">
-    
-        <div class="support-container">
-            <section>
-              <h2 class="section-title-custom">Contact Our Support Team</h2>
-              <form class="contact-form-support">
-                <input type="text" placeholder="Your Name" required>
-                <input type="email" placeholder="Your Email" required>
-                <textarea rows="5" placeholder="Write your message here..." required></textarea>
-                <button type="submit">Send Message</button>
-              </form>
-            </section>
+      .faq-item.open .faq-chevron {
+        transform: rotate(180deg);
+      }
+
+      .contact-form .form-group + .form-group { margin-top: 1rem; }
+
+      @media (min-width: 768px) {
+        .support-grid { display: grid; grid-template-columns: 1fr 380px; gap: 2rem; align-items: start; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Navigation (consistent with main site) -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="nav-logo">
+          <a href="index.html" class="nav-logo-link"><i class="fas fa-utensils"></i><span>ShareBite</span></a>
         </div>
-
-        <div class="support-container">
-            <section>
-              <h2 class="section-title-custom">Frequently Asked Questions</h2>
-
-              <div class="faq">
-                <h3 class="faq-question">How can I donate surplus food? <i class="fas fa-chevron-down faq-icon"></i></h3>
-                <p>You can register your restaurant/household and schedule a pickup. Our partnered NGOs and volunteers will collect and distribute the food.</p>
-              </div>
-
-              <div class="faq">
-                <h3 class="faq-question">How do NGOs join the platform? <i class="fas fa-chevron-down faq-icon"></i></h3>
-                <p>NGOs can sign up through our registration form and get verified before they can start receiving donations. The registration form is available at the <a href="ngo-register.html">NGO Register page</a> mentioned in the footer.</p>
-              </div>
-
-              <div class="faq">
-                <h3 class="faq-question">Can volunteers join individually? <i class="fas fa-chevron-down faq-icon"></i></h3>
-                <p>Yes! Volunteers can sign up, and we’ll connect them with nearby NGOs for food distribution. They primarily act as collectors on the platform.</p>
-              </div>
-               <div class="faq">
-                <h3 class="faq-question">Is there a cost to use ShareBite? <i class="fas fa-chevron-down faq-icon"></i></h3>
-                <p>No, ShareBite is a Free platform dedicated to fighting food waste and hunger. Our services for donors, NGOs, and volunteers are completely free of charge.</p>
-              </div>
-            </section>
+        <ul class="nav-menu">
+          <li><a href="index.html#home" class="nav-link">Home</a></li>
+          <li><a href="index.html#features" class="nav-link">Features</a></li>
+          <li><a href="foodlisting.html" class="nav-link">Listings</a></li>
+          <li><a href="index.html#about" class="nav-link">About</a></li>
+          <li><a href="support.html" class="nav-link">Support</a></li>
+        </ul>
+        <div class="user-actions">
+          <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode"><i class="fas fa-moon"></i></button>
+          <button class="role-switch" id="roleSwitch"><i class="fas fa-exchange-alt"></i><span id="currentRole">Donor</span></button>
+          <button class="login-btn" onclick="window.location.href='login.html'">Login as User</button>
         </div>
-    </div>
+      </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="support-hero">
+      <div class="container">
+        <h1 class="hero-title">Support & Help Center</h1>
+        <p class="hero-description">Find answers to common questions about donating, registering, and using ShareBite.</p>
+      </div>
+    </section>
+
+    <main class="container">
+      <!-- FAQ Section -->
+      <div class="support-card">
+        <section>
+          <h2 class="section-title">Frequently Asked Questions</h2>
+          <p class="section-subtitle">Quick answers to common questions. Click a question to expand.</p>
+
+          <div class="faq-list" id="faqList">
+            <div class="faq-item">
+              <button class="faq-question" aria-expanded="false">How can I donate surplus food? <i class="fas fa-chevron-down"></i></button>
+              <div class="faq-answer">Create an account, list the food with details (type, quantity, pickup time), and choose whether you'd like volunteers or partner NGOs to collect it. You can edit or cancel a listing anytime before pickup.</div>
+            </div>
+
+            <div class="faq-item">
+              <button class="faq-question" aria-expanded="false">How do NGOs join the platform? <i class="fas fa-chevron-down"></i></button>
+              <div class="faq-answer">NGOs can register via the <a href="ngo-register.html">NGO registration form</a>. After verification (ID and organization documents), NGOs get access to claim nearby listings and coordinate pickups.</div>
+            </div>
+
+            <div class="faq-item">
+              <button class="faq-question" aria-expanded="false">Can volunteers sign up individually? <i class="fas fa-chevron-down"></i></button>
+              <div class="faq-answer">Yes. Volunteers can sign up as individuals and will see nearby pickup opportunities. We encourage volunteers to follow the safety guidelines and confirm pickup times with donors.</div>
+            </div>
+
+            <div class="faq-item">
+              <button class="faq-question" aria-expanded="false">What types of food are accepted? <i class="fas fa-chevron-down"></i></button>
+              <div class="faq-answer">We accept freshly prepared, safely stored food such as cooked meals, bakery items, packaged goods, fruits & vegetables, and sealed non-perishables. Per local regulations, certain foods (e.g., raw meat) may be restricted—please check the listing guidance.</div>
+            </div>
+
+            <div class="faq-item">
+              <button class="faq-question" aria-expanded="false">How is food safety handled? <i class="fas fa-chevron-down"></i></button>
+              <div class="faq-answer">Donors should list the time the food was prepared and provide instructions for safe transport. NGOs and volunteers are encouraged to follow basic food-safety practices: keep hot food hot, cold food cold, and avoid cross-contamination. Our platform provides safety tips when creating a listing.</div>
+            </div>
+
+            <div class="faq-item">
+              <button class="faq-question" aria-expanded="false">How do I schedule or change a pickup? <i class="fas fa-chevron-down"></i></button>
+              <div class="faq-answer">Pickup times are set when you create a listing. Donors and pickup organizations can message each other to reschedule. If you need support, contact us using the form on this page and include your listing ID.</div>
+            </div>
+
+            <div class="faq-item">
+              <button class="faq-question" aria-expanded="false">What about privacy and data? <i class="fas fa-chevron-down"></i></button>
+              <div class="faq-answer">We only collect the information necessary to facilitate pickups and ensure safety. Personal contact details are shared only between donors and the assigned collectors. See our <a href="#">privacy policy</a> for full details.</div>
+            </div>
+
+            <div class="faq-item">
+              <button class="faq-question" aria-expanded="false">How can I report a problem or abuse? <i class="fas fa-chevron-down"></i></button>
+              <div class="faq-answer">If you encounter misuse, safety issues, or inaccurate listings, report the listing using the 'Report' option on the listing card or send us details through the contact form. Include dates, listing IDs, and any photos if available.</div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Separator -->
+      <hr class="section-divider" style="margin: 2rem 0; border: 0; border-top: 1px solid rgba(0, 0, 0, 0.1);" />
+
+      <!-- Contact Support Section -->
+      <div class="support-card">
+        <aside>
+          <div class="card contact-form">
+            <h3>Contact Support</h3>
+            <p>If you couldn't find an answer above, send us a message and include as much context as possible.</p>
+            <form id="supportForm">
+              <div class="form-group">
+                <label for="name">Your name</label>
+                <input id="name" name="name" type="text" required />
+              </div>
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" required />
+              </div>
+              <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" name="message" rows="5" required></textarea>
+              </div>
+              <div class="form-group">
+                <button class="btn btn-primary" type="submit">Send Message</button>
+              </div>
+            </form>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <hr class="section-divider" style="margin: 2rem 0; border: 0; border-top: 1px solid rgba(0, 0, 0, 0.1);" />
     
-  <footer class="footer">
-      <div class="simplified-footer-container">
-        <p class="footer-credit">Made with 💚 by Angela Bera</p>
-        <p>
-          &copy; 2025 ShareBite. All rights reserved. 
-        </p>
+    <!-- Footer (consistent with main site) -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <div class="footer-logo"><i class="fas fa-utensils"></i><span>ShareBite</span></div>
+            <p>Making a difference, one meal at a time. Join us in the fight against food waste and hunger.</p>
+            <div class="social-links"><a href="#"><i class="fab fa-facebook"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-instagram"></i></a></div>
+          </div>
+          <div class="footer-section">
+            <h4>Quick Links</h4>
+            <ul>
+              <li><a href="index.html#home">Home</a></li>
+              <li><a href="index.html#features">How It Works</a></li>
+              <li><a href="foodlisting.html">Food Listings</a></li>
+              <li><a href="index.html#about">About Us</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h4>For Donors</h4>
+            <ul>
+              <li><a href="foodlisting.html">List Food</a></li>
+              <li><a href="#">Donor Guidelines</a></li>
+              <li><a href="#">Track Impact</a></li>
+              <li><a href="support.html">Support</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h4>For Collectors</h4>
+            <ul>
+              <li><a href="#">Find Food</a></li>
+              <li><a href="ngo-register.html">Register NGO</a></li>
+              <li><a href="#">Volunteer</a></li>
+              <li><a href="#">Resources</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p class="footer-credit">Made with 💚 by Angela Bera</p>
+          <p>&copy; 2025 ShareBite. All rights reserved.</p>
+        </div>
       </div>
     </footer>
+
     <script>
-    // FAQ toggle functionality
-    document.querySelectorAll(".faq h3").forEach(item => {
-      item.addEventListener("click", () => {
-        let content = item.nextElementSibling;
-        let icon = item.querySelector('.faq-icon');
-        
-        // Close all other open FAQs
-        document.querySelectorAll(".faq p").forEach(p => {
-            if(p !== content) {
-                p.style.display = "none";
-                p.previousElementSibling.classList.remove('open');
-                p.previousElementSibling.querySelector('.faq-icon').style.transform = "rotate(0deg)";
-            }
-        });
+      // Animated, accessible accordion for FAQs
+      (function () {
+        const items = document.querySelectorAll('.faq-item');
 
-        // Toggle current FAQ
-        if (content.style.display === "block") {
-            content.style.display = "none";
+        items.forEach(item => {
+          const btn = item.querySelector('.faq-question');
+          const answer = item.querySelector('.faq-answer');
+          const chevron = btn.querySelector('i') || document.createElement('span');
+          if (!chevron.classList) chevron.className = 'faq-chevron';
+          else chevron.classList.add('faq-chevron');
+
+          // ensure aria attributes
+          btn.setAttribute('role', 'button');
+          btn.setAttribute('tabindex', '0');
+          btn.setAttribute('aria-expanded', 'false');
+
+          // prepare answer height
+          const setClosed = () => {
+            answer.style.height = '0px';
+            answer.style.opacity = '0';
             item.classList.remove('open');
-            icon.style.transform = "rotate(0deg)";
-        } else {
-            content.style.display = "block";
-            item.classList.add('open');
-            icon.style.transform = "rotate(180deg)";
-        }
-      });
-    });
+            btn.setAttribute('aria-expanded', 'false');
+          };
 
-    // Simple form submission alert
-    document.querySelector(".contact-form-support").addEventListener("submit", (e) => {
-        e.preventDefault();
-        alert("✅ Thank you! Your message has been submitted to the support team.");
-        e.target.reset();
-    });
-    
-    // Theme toggle functionality
-    document.addEventListener('DOMContentLoaded', () => {
-        const themeToggle = document.getElementById('themeToggle');
-        if (themeToggle) {
-            // Check for existing theme preference (assuming 'dark' class is used)
-            const isDark = document.documentElement.classList.contains('dark');
-            // Use sun icon for light mode, moon for dark mode
-            themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+          const setOpen = () => {
+            // measure natural height
+            const prevHeight = answer.style.height;
+            answer.style.height = 'auto';
+            const natural = answer.scrollHeight + 'px';
+            answer.style.height = prevHeight;
 
-            themeToggle.addEventListener('click', () => {
-                const isNowDark = document.documentElement.classList.toggle('dark');
-                document.documentElement.classList.toggle('dark-mode'); // For older style.css references
-                // Update icon based on the new theme
-                themeToggle.innerHTML = isNowDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+            // trigger animation
+            requestAnimationFrame(() => {
+              answer.style.height = natural;
+              answer.style.opacity = '1';
             });
-        }
-    });
-  </script>
-</body>
+
+            item.classList.add('open');
+            btn.setAttribute('aria-expanded', 'true');
+          };
+
+          // Start closed
+          setClosed();
+
+          const toggle = () => {
+            const isOpen = btn.getAttribute('aria-expanded') === 'true';
+            if (isOpen) {
+              // close with measured transition
+              answer.style.height = answer.scrollHeight + 'px';
+              requestAnimationFrame(() => {
+                answer.style.height = '0px';
+                answer.style.opacity = '0';
+              });
+              item.classList.remove('open');
+              btn.setAttribute('aria-expanded', 'false');
+            } else {
+              setOpen();
+            }
+          };
+
+          btn.addEventListener('click', (e) => {
+            toggle();
+          });
+
+          btn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              toggle();
+            }
+          });
+
+          // When transition ends and it's open, clear explicit height so it can resize naturally
+          answer.addEventListener('transitionend', (e) => {
+            if (btn.getAttribute('aria-expanded') === 'true') {
+              answer.style.height = 'auto';
+            }
+          });
+        });
+      })();
+
+      // Basic contact form handler (no network)
+      document.getElementById('supportForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const message = document.getElementById('message').value.trim();
+        if (!name || !email || !message) return;
+        // Show a simple in-page confirmation
+        alert('Thanks, ' + name + '! Your message has been received. We will respond to ' + email + ' shortly.');
+        e.target.reset();
+      });
+    </script>
+    <script src="js/theme.js"></script>
+    <script src="js/script.js"></script>
+  </body>
 </html>
