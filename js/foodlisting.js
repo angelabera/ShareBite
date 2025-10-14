@@ -838,7 +838,7 @@ class ShareBiteFoodListing {
     } else {
       return `
                 <button class="claim-btn" style="opacity: 0.5; cursor: not-allowed;" disabled>
-                    <i class="fas fa-hand-paper"></i> Switch to Collector
+                    <i class="fas fa-hand-paper"></i> Login to Claim
                 </button>
             `;
     }

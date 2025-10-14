@@ -5,11 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - ShareBite</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/svg+xml" href="logo/logo.svg" />
+    <link rel="stylesheet" href="css/style.css" />
     <style>
         /* Toast styles */
         .custom-toast {
@@ -335,24 +338,80 @@
         </form>
         <a href="register.html" class="register-link">Don't have a User account? Register</a>
     </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
     <script>
+      // --- Password Visibility Toggle ---
+      const togglePassword = document.getElementById("togglePassword");
+      const passwordInput = document.getElementById("password");
 
-        // --- Password Visibility Toggle ---
-        const togglePassword = document.getElementById('togglePassword');
-        const passwordInput = document.getElementById('password');
+      const eyeIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+      const eyeOffIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
 
-        const eyeIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
-        const eyeOffIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
+      let passwordVisible = false;
 
-        let passwordVisible = false;
+      togglePassword.addEventListener("click", () => {
+        passwordVisible = !passwordVisible;
+        passwordInput.type = passwordVisible ? "text" : "password";
+        togglePassword.innerHTML = passwordVisible ? eyeOffIcon : eyeIcon;
+        togglePassword.title = passwordVisible
+          ? "Hide Password"
+          : "Show Password";
+      });
 
-        togglePassword.addEventListener('click', () => {
-            passwordVisible = !passwordVisible;
-            passwordInput.type = passwordVisible ? 'text' : 'password';
-            togglePassword.innerHTML = passwordVisible ? eyeOffIcon : eyeIcon;
-            togglePassword.title = passwordVisible ? 'Hide Password' : 'Show Password';
+      // --- Form Submission ---
+      const loginForm = document.getElementById("loginForm");
+
+      loginForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        // Get form values
+        const email = loginForm.email.value.trim();
+        const password = loginForm.password.value.trim();
+
+        // Validation for empty fields
+        if (!email || !password) {
+          Swal.fire({
+            title: "Missing Information ⚠️",
+            text: "Please fill in all fields before logging in.",
+            icon: "warning",
+            confirmButtonColor: "#FF6B35",
+            background: "#fff8f0",
+            color: "#333",
+          });
+          return;
+        }
+
+        // Simulate login validation (in real app, this would be an API call)
+        // For demo purposes, accept any email/password combination
+        
+        // Extract name from email (before @) for display
+        const userName = email.split('@')[0].replace(/[._-]/g, ' ')
+          .split(' ')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+          .join(' ');
+
+        // Create user data
+        const userData = {
+          name: userName,
+          email: email,
+          type: 'user'
+        };
+
+        // Use auth system to log in user
+        sharebiteAuth.login(userData);
+
+        // Success message
+        Swal.fire({
+          title: "Login Successful 🎉",
+          text: `Welcome back, ${userName}!`,
+          icon: "success",
+          confirmButtonColor: "#28a745",
+          background: "#f0fff4",
+          color: "#333",
+          timer: 1500,
+          showConfirmButton: false,
         });
 
         // --- Form Submission ---
