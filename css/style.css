@@ -4274,7 +4274,7 @@ body.dark-mode .notification-bell:hover {
   }
 .toast {
     position: fixed;
-    bottom: 20px;
+    bottom: 30px;
     right: 30px;
     background-color: #4CAF50;
     color: white;

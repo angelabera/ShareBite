@@ -433,7 +433,7 @@
       // --- Form Submission ---
       const registerForm = document.getElementById("registerForm");
 
-      registerForm.addEventListener("submit", (async function(e) {
+      registerForm.addEventListener("submit", (e) => {
         e.preventDefault();
 
         // Get form values
@@ -442,13 +442,6 @@
         const password = registerForm.password.value.trim();
         const confirmPassword = registerForm.confirmPassword.value.trim();
         const role = registerForm.role.value;
-
-        // Hash password using SHA-256
-        const encoder = new TextEncoder();
-        const data = encoder.encode(password);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashedPassword = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 
         // Missing field validation
         if (!fullName || !email || !password || !role) {
@@ -482,7 +475,6 @@
           JSON.stringify({
             name: fullName,
             email: email,
-            password: hashedPassword,
             role: role,
           })
         );
@@ -490,7 +482,7 @@
         // Success message
         Swal.fire({
           title: "Registration Successful 🎉",
-          text: "Your account has been created successfully! Please log in to continue.",
+          text: "Your account has been created successfully!",
           icon: "success",
           confirmButtonColor: "#28a745",
           background: "#f0fff4",
@@ -501,9 +493,9 @@
 
         // Redirect after short delay
         setTimeout(() => {
-          window.location.href = "login.html";
+          window.location.href = "index.html";
         }, 1500); // wait for the Swal to close
-      }));
+      });
 
       const password = document.getElementById("password");
       const show_pwd = document.getElementById("show-pwd");
