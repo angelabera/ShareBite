@@ -187,6 +187,26 @@ body.dark .nav-role-switch:hover { color: var(--primary-light); border-color: va
     gap: 1rem;
 }
 
+/* Ensure notification bell is visible on desktop */
+.notification-bell {
+    display: flex !important;
+}
+
+/* Desktop-specific styles to ensure notification bell is visible */
+@media (min-width: 769px) {
+    .user-actions .notification-bell {
+        display: flex !important;
+        visibility: visible !important;
+    }
+    
+    .user-actions {
+        position: static !important;
+        left: auto !important;
+        top: auto !important;
+        transform: none !important;
+    }
+}
+
 .role-switch {
     background: var(--primary-gradient);
     color: #fff;
@@ -1944,6 +1964,43 @@ body.dark .profile-menu-item:hover {
         --h3-size: 1.6rem;
     }
     
+    /* Show hamburger menu on tablets */
+    .nav-menu {
+        display: none;
+    }
+    
+    .hamburger {
+        display: flex;
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    
+    /* Tablet user-actions positioning */
+    .user-actions {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+    
+    /* Show notification bell and theme toggle on tablets */
+    .user-actions .notification-bell,
+    .user-actions .theme-toggle {
+        display: flex !important;
+    }
+    
+    /* Hide other actions on tablets */
+    .user-actions .role-switch,
+    .user-actions .login-btn {
+        display: none !important;
+    }
+    
     .hero-container {
         grid-template-columns: 1fr;
         gap: 2rem;
@@ -2018,13 +2075,29 @@ body.dark .profile-menu-item:hover {
     .filter-group {
         justify-content: center;
     }
-    .user-actions { flex-wrap: wrap; gap: .5rem; }
+    .user-actions { 
+        flex-wrap: wrap; 
+        gap: .5rem; 
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
     .login-btn, .role-switch, .theme-toggle { padding: 0.6rem 1rem; }
 
     /* Hide duplicate actions on mobile header; they are shown in menu */
     .user-actions .role-switch,
     .user-actions .login-btn {
         display: none !important;
+    }
+    
+    /* Show notification bell and theme toggle on mobile */
+    .user-actions .notification-bell,
+    .user-actions .theme-toggle {
+        display: flex !important;
     }
     
     .search-box {
