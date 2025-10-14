@@ -361,6 +361,7 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
     <script>
       // --- Password Visibility Toggle ---
       const togglePassword = document.getElementById("togglePassword");
@@ -403,10 +404,29 @@
           return;
         }
 
+        // Simulate login validation (in real app, this would be an API call)
+        // For demo purposes, accept any email/password combination
+        
+        // Extract name from email (before @) for display
+        const userName = email.split('@')[0].replace(/[._-]/g, ' ')
+          .split(' ')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+          .join(' ');
+
+        // Create user data
+        const userData = {
+          name: userName,
+          email: email,
+          type: 'user'
+        };
+
+        // Use auth system to log in user
+        sharebiteAuth.login(userData);
+
         // Success message
         Swal.fire({
           title: "Login Successful 🎉",
-          text: "You have logged in successfully!",
+          text: `Welcome back, ${userName}!`,
           icon: "success",
           confirmButtonColor: "#28a745",
           background: "#f0fff4",

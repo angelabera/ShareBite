@@ -12,7 +12,6 @@
     <meta name="sharebite-build" content="v-darkmode-fix-1">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/style.css?v=darkmode-fix-1">
-    
 
     <!-- CSS with timestamp cache busting -->
     <script>
@@ -26,9 +25,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
   <body>
-    
     <!-- Navigation -->
     <nav class="navbar" id="navbar">
     <div class="nav-container">
@@ -93,12 +92,21 @@
     const navbar = document.getElementById("navbar");
     const themeToggle = document.getElementById("themeToggle");
 
-    // Hamburger toggle
-    hamburger.addEventListener("click", () => {
-      hamburger.classList.toggle("active");
-      navbar.classList.toggle("expanded");
-    });
-  </script>
+                <button class="role-switch" id="roleSwitch">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span id="currentRole">Donor</span>
+                </button>
+                <button class="login-btn" onclick="window.location.href='login.html'">Login as User</button>
+                 <button class="login-btn" onclick="window.location.href='login_ngo.html'">Login as NGO</button>
+            </div>
+            <div id="toast" class="toast"></div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
 
     <!-- Hero Section -->
     <section id="home" class="hero">
@@ -851,69 +859,71 @@
       </div>
     </section>
 
-  <!-- Contact Section -->
-  <section id="contact-section" class="contact">
-    <h1 class="main-title">📞 Contact Us</h1>
-      <div class="contact-container">
-        <!-- Left: Form -->
-        <div class="contact-left">
-          <h2 class="contact-title">💬 Do You Have a Question?</h2>
-          <p class="contact-subtitle">Fill out the form below to get started</p>
+    
+ <section id="contact-section" class="contact">
+  <h1 class="main-title">📞 Contact Us</h1>
+  <div class="contact-wrapper">
+    <div class="contact-container">
+      <!-- Left: Form -->
+      <div class="contact-left">
+        <h2 class="contact-title">💬 Do You Have a Question?</h2>
+        <p class="contact-subtitle">Fill out the form below to get started</p>
 
-          <form id="contact-form">
-            <label for="contact-name">Full Name:</label>
-            <input type="text" id="contact-name" placeholder="Enter your full name" />
+        <form id="contact-form">
+          <label for="contact-name">Full Name:</label>
+          <input type="text" id="contact-name" placeholder="Enter your full name" />
 
-            <label for="contact-email">Email:</label>
-            <input type="email" id="contact-email" placeholder="Enter your email" />
+          <label for="contact-email">Email:</label>
+          <input type="email" id="contact-email" placeholder="Enter your email" />
 
-            <label for="contact-msg">Message:</label>
-            <textarea id="contact-msg" placeholder="Type in your Message"></textarea>
+          <label for="contact-msg">Message:</label>
+          <textarea id="contact-msg" placeholder="Type in your Message"></textarea>
 
-            <button type="submit">Submit</button>
-          </form>
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+
+      <!-- Right: Info -->
+      <div class="contact-right">
+        <h3>Get In Touch</h3>
+        <p>We love to hear from you. Our team is always here to answer your questions.</p>
+
+        <div class="contact-info">
+          <div class="info-item">
+            <i class="fa-solid fa-house"></i>
+            <div>
+              <strong>Address:</strong>
+              <p>ShareBite Building, Noida, India </p>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <i class="fa-solid fa-phone"></i>
+            <div>
+              <strong>Phone No.:</strong>
+              <p>+91 8888889999</p>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <i class="fa-solid fa-envelope"></i>
+            <div>
+              <strong>Email:</strong>
+              <p>sharebite@support.com.ng</p>
+            </div>
+          </div>
         </div>
 
-        <!-- Right: Info -->
-        <div class="contact-right">
-          <h3>Get In Touch</h3>
-          <p>We love to hear from you. Our team is always here to answer your questions.</p>
-
-          <div class="contact-info">
-            <div class="info-item">
-              <i class="fa-solid fa-house"></i>
-              <div>
-                <strong>Address:</strong>
-                <p>ShareBite Building, Noida, India </p>
-              </div>
-            </div>
-
-            <div class="info-item">
-              <i class="fa-solid fa-phone"></i>
-              <div>
-                <strong>Phone No.:</strong>
-                <p>+91 8888889999</p>
-              </div>
-            </div>
-
-            <div class="info-item">
-              <i class="fa-solid fa-envelope"></i>
-              <div>
-                <strong>Email:</strong>
-                <p>sharebite@support.com.ng</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="social-links">
-            <a href="#"><i class="fa-brands fa-github"></i></a>
-            <a href="#"><i class="fa-brands fa-linkedin"></i></a>
-            <a href="tel:+234812387000000"><i class="fa-solid fa-phone"></i></a>
-            <a href="mailto:amrng@support.com.ng"><i class="fa-solid fa-envelope"></i></a>
-          </div>
+        <div class="social-links">
+          <a href="#"><i class="fa-brands fa-github"></i></a>
+          <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+          <a href="tel:+234812387000000"><i class="fa-solid fa-phone"></i></a>
+          <a href="mailto:amrng@support.com.ng"><i class="fa-solid fa-envelope"></i></a>
         </div>
       </div>
-  </section>
+    </div>
+  </div>
+</section>
 
 <!-- Font Awesome -->
 <script src="https://kit.fontawesome.com/a2e0e9c5b2.js" crossorigin="anonymous"></script>
@@ -1007,7 +1017,7 @@
         <div class="footer-bottom">
           <p class="footer-credit">Made with 💚 by Angela Bera</p>
           <p>
-            &copy; 2025 ShareBite. All rights reserved. 
+            &copy; 2025 ShareBite. All rights reserved. <a href="License.html">License</a> 
           </p>
         </div>
       </div>
@@ -1028,6 +1038,7 @@
 
 
     <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
     <script src="js/script.js"></script>
    
   </body>
