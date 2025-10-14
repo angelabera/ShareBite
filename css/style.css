@@ -3383,6 +3383,7 @@ body.dark-mode .notification-bell:hover {
   position: absolute;
   border-radius: 50%;
   background: radial-gradient(circle at 30% 30%, rgba(76, 175, 80, 0.3), rgba(76, 175, 80, 0.05));
+  -webkit-backdrop-filter: blur(2px);
   backdrop-filter: blur(2px);
   border: 1px solid rgba(76, 175, 80, 0.2);
   animation: testimonialFloat 20s ease-in-out infinite;
@@ -3974,11 +3975,43 @@ body.dark-mode .notification-bell:hover {
 }
 
 /* ===== Scroll to Top Button ===== */
-#scrollToTopBtn {
+ /* Wrapper for scroll button + link */
+/* Wrapper */
+#scrollTopWrapper {
   position: fixed;
   bottom: 30px;
   right: 30px;
-  z-index: 99;
+  z-index: 9999; /* ensure it's above everything */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  gap: 10px; /* space between link and button */
+}
+
+/* Map Link */
+.scroll-link {
+  display: inline-block; /* make sure it takes space */
+  background-color: #4CAF50;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-size: 14px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+.scroll-link i {
+  margin-right: 6px; /* space between icon and text */
+}
+
+.scroll-link:hover {
+  background-color: #45a049;
+  transform: scale(1.05);
+}
+
+/* Scroll Button */
+#scrollToTopBtn {
   width: 45px;
   height: 45px;
   background-color: #4CAF50;
@@ -3987,7 +4020,7 @@ body.dark-mode .notification-bell:hover {
   border-radius: 50%;
   cursor: pointer;
   font-size: 18px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   outline: none;
   opacity: 0;
   visibility: hidden;
@@ -3995,18 +4028,12 @@ body.dark-mode .notification-bell:hover {
   transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
 }
 
-/* Show state (added by JS) */
 #scrollToTopBtn.show {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
 }
 
-/* Hover animation */
-#scrollToTopBtn:hover {
-  background-color: #45a049;
-  transform: scale(1.1);
-}
 
 
   .section-divider {
