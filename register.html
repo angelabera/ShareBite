@@ -27,13 +27,13 @@
         --input-border-light: #ddd;
 
         /* Dark Mode */
-        --bg-gradient-start-dark: #1c1c1c;
-        --bg-gradient-end-dark: #2c2c2c;
+        --bg-gradient-start-dark: #121212;
+        --bg-gradient-end-dark: #1a1a1a;
         --card-bg-dark: #2e2e2e;
         --text-color-dark: #f1f1f1;
-        --subtext-color-dark: #aaa;
+        --subtext-color-dark: #b0b0b0;
         --input-bg-dark: #3a3a3a;
-        --input-border-dark: #444;
+        --input-border-dark: #555;
       }
 
       * {
@@ -92,6 +92,13 @@
 
       .theme-toggle:hover {
         transform: scale(1.1) rotate(15deg);
+        border-color: var(--primary-green);
+        color: var(--primary-green);
+      }
+
+      body.dark-mode .theme-toggle:hover {
+        border-color: var(--secondary-orange);
+        color: var(--secondary-orange);
       }
 
       .auth-container {
@@ -109,7 +116,9 @@
 
       body.dark-mode .auth-container {
         background-color: var(--card-bg-dark);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4),
+          0 5px 15px rgba(0, 0, 0, 0.3);
+        border: 1px solid #404040;
       }
 
       @keyframes fadeIn {
@@ -123,6 +132,11 @@
         margin-bottom: 0.75rem;
         font-weight: 600;
         font-size: 1.8rem;
+        color: var(--text-color-light);
+      }
+
+      body.dark-mode .auth-container h1 {
+        color: var(--text-color-dark);
       }
 
       .auth-container p.subtitle {
@@ -144,6 +158,11 @@
         display: block;
         margin-bottom: 0.5rem;
         font-weight: 500;
+        color: var(--text-color-light);
+      }
+
+      body.dark-mode .form-group label {
+        color: var(--text-color-dark);
       }
 
       .form-group input,
@@ -191,6 +210,14 @@
         border-color: var(--input-border-dark);
         background-color: var(--input-bg-dark);
         color: var(--text-color-dark);
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+      }
+
+      body.dark-mode .form-group input:focus,
+      body.dark-mode .form-group select:focus {
+        border-color: var(--primary-green);
+        box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2),
+          inset 0 1px 3px rgba(0, 0, 0, 0.3);
       }
 
       .form-group input:focus,
@@ -210,6 +237,9 @@
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s;
+        text-align: center;
+        display: block;
+        margin: 0 auto;
       }
 
       .btn-primary {
@@ -229,10 +259,15 @@
         color: var(--secondary-orange);
         text-decoration: none;
         font-weight: 500;
+        text-align: center;
       }
 
       .login-link:hover {
         text-decoration: underline;
+      }
+
+      body.dark-mode .login-link {
+        color: var(--secondary-orange);
       }
 
       /* Responsive Design */
@@ -355,7 +390,7 @@
         >Already have a User account? Login</a
       >
     </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/theme.js"></script>
     <script>
       // --- Password Visibility Toggle ---
@@ -408,32 +443,60 @@
         const confirmPassword = registerForm.confirmPassword.value.trim();
         const role = registerForm.role.value;
 
+        // Missing field validation
         if (!fullName || !email || !password || !role) {
-          alert("Please fill in all fields before registering.");
+          Swal.fire({
+            title: "Missing Information ⚠️",
+            text: "Please fill in all fields before registering.",
+            icon: "warning",
+            confirmButtonColor: "#FF6B35",
+            background: "#fff8f0",
+            color: "#333",
+          });
           return;
         }
 
         // Password match validation
         if (password !== confirmPassword) {
-          alert("Passwords do not match. Please re-enter.");
+          Swal.fire({
+            title: "Password Mismatch ❌",
+            text: "Passwords do not match. Please re-enter them.",
+            icon: "error",
+            confirmButtonColor: "#FF6B35",
+            background: "#fff8f0",
+            color: "#333",
+          });
           return;
         }
 
-        // Store user data
-        localStorage.setItem('user', JSON.stringify({
+        // Store user data in localStorage
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
             name: fullName,
             email: email,
-            role: role
-        }));
+            role: role,
+          })
+        );
 
-        // Show success message
-        alert("Registered successfully!");
+        // Success message
+        Swal.fire({
+          title: "Registration Successful 🎉",
+          text: "Your account has been created successfully!",
+          icon: "success",
+          confirmButtonColor: "#28a745",
+          background: "#f0fff4",
+          color: "#333",
+          timer: 1500,
+          showConfirmButton: false,
+        });
 
-        // Redirect to index.html after short delay (so alert can be seen)
+        // Redirect after short delay
         setTimeout(() => {
           window.location.href = "index.html";
-        }, 500); // 0.5 second delay
+        }, 1500); // wait for the Swal to close
       });
+
       const password = document.getElementById("password");
       const show_pwd = document.getElementById("show-pwd");
       function passwordToggle() {

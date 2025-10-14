@@ -67,6 +67,12 @@ class ShareBite {
         // Form handling
         this.setupFormHandling();
         
+        // Date input confirmation functionality
+        this.setupDateInputConfirmation();
+        
+        // Time input confirmation functionality
+        this.setupTimeInputConfirmation();
+        
         // Filtering and search
         this.setupFilteringAndSearch();
         
@@ -339,15 +345,6 @@ handleFileSelect(file) {
     reader.readAsDataURL(file);
 }
 
-    handleFileSelect(file) {
-        const uploadArea = document.getElementById('photoUpload');
-        if (file.type.startsWith('image/')) {
-            uploadArea.innerHTML = `
-                <i class="fas fa-check-circle" style="color: var(--primary-color);"></i>
-                <span style="color: var(--primary-color);">${file.name}</span>
-            `;
-        }
-    }
 
     setupFormHandling() {
         const form = document.getElementById('listingForm');
@@ -374,6 +371,11 @@ handleFileSelect(file) {
     }
 
     getFormData() {
+        const selectedTags = [];
+        document.querySelectorAll('input[name="dietary"]:checked').forEach(function(checkbox) {
+            selectedTags.push(checkbox.value);
+        });
+
         return {
             id: Date.now(),
             foodType: document.getElementById('foodType').value,
@@ -386,7 +388,8 @@ handleFileSelect(file) {
             contact: document.getElementById('contact').value,
             photo: document.getElementById('photo').files[0],
             createdAt: new Date(),
-            donor: 'Current User'
+            donor: 'Current User',
+            dietaryTags: selectedTags 
         };
     }
 
@@ -477,46 +480,287 @@ handleFileSelect(file) {
         freshUntilInput.min = now.toISOString().slice(0, 16);
     }
 
-    setupFilteringAndSearch() {
-        const filterBtns = document.querySelectorAll('.filter-btn');
-        const searchInput = document.querySelector('.search-box input');
-        
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                // Remove active class from all buttons
-                filterBtns.forEach(b => b.classList.remove('active'));
-                // Add active class to clicked button
-                btn.classList.add('active');
+    // Date Input Confirmation functionality
+    setupDateInputConfirmation() {
+        const freshUntilInput = document.getElementById('freshUntil');
+        if (!freshUntilInput) return;
+
+        const container = freshUntilInput.parentNode;
+        const checkmarkIcon = container.querySelector('.checkmark-icon');
+
+        if (!checkmarkIcon) return;
+
+        let isDateConfirmed = false;
+        let previousValue = freshUntilInput.value;
+
+        // Helper function to show checkmark only after date selection
+        const handleDateChange = () => {
+            const currentValue = freshUntilInput.value;
+            
+            // If value has changed from previous, reset confirmation status
+            if (currentValue !== previousValue) {
+                isDateConfirmed = false;
+            }
+            
+            // Only show checkmark if:
+            // 1. There's a new value
+            // 2. The value has changed from previous
+            // 3. Date hasn't been confirmed yet
+            if (currentValue && currentValue !== previousValue && !isDateConfirmed) {
+                checkmarkIcon.classList.remove('hidden');
+            }
+            
+            // If value is cleared, reset everything
+            if (!currentValue) {
+                checkmarkIcon.classList.add('hidden');
+                isDateConfirmed = false;
+            }
+            
+            previousValue = currentValue;
+        };
+
+        // Helper function to confirm date and hide checkmark
+        const confirmDate = () => {
+            if (freshUntilInput.value && !isDateConfirmed) {
+                // Mark as confirmed
+                isDateConfirmed = true;
                 
-                // Set current filter
-                this.currentFilter = btn.getAttribute('data-filter');
+                // Hide the checkmark
+                checkmarkIcon.classList.add('hidden');
                 
-                // Filter and render listings
-                this.filterListings();
-                this.renderFoodListings();
-            });
+                // Show success toast
+                this.showToast('Date confirmed successfully!', 'success');
+                
+                // Move focus to next input field if available
+                const nextInput = freshUntilInput.closest('.form-group').parentElement.nextElementSibling?.querySelector('input');
+                if (nextInput) {
+                    setTimeout(() => nextInput.focus(), 200);
+                } else {
+                    freshUntilInput.blur(); // Remove focus from current input
+                }
+            }
+        };
+
+        // Initially hide checkmark
+        checkmarkIcon.classList.add('hidden');
+
+        // Listen for date selection changes
+        freshUntilInput.addEventListener('change', handleDateChange);
+        freshUntilInput.addEventListener('input', handleDateChange);
+
+        // Checkmark click handler - confirm the date and hide checkmark
+        checkmarkIcon.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event bubbling
+            confirmDate();
         });
 
-        let searchTimeout;
-        searchInput.addEventListener('input', (e) => {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                this.searchQuery = e.target.value.toLowerCase();
-                this.filterListings();
-                this.renderFoodListings();
-            }, 300);
+        // Click outside handler - hide checkmark when clicking outside
+        document.addEventListener('click', (e) => {
+            // Check if checkmark is currently visible
+            if (!checkmarkIcon.classList.contains('hidden')) {
+                // Check if click is outside the input container and not on the checkmark
+                if (!container.contains(e.target)) {
+                    // User clicked outside - confirm the date and hide checkmark
+                    confirmDate();
+                }
+            }
+        });
+
+        // Also hide checkmark when input loses focus (blur event)
+        freshUntilInput.addEventListener('blur', (e) => {
+            // Small delay to allow checkmark click to register first
+            setTimeout(() => {
+                if (!checkmarkIcon.classList.contains('hidden') && freshUntilInput.value) {
+                    confirmDate();
+                }
+            }, 100);
         });
     }
 
+    // Time Input Confirmation functionality
+    setupTimeInputConfirmation() {
+        const pickupTimeInput = document.getElementById('pickupTime');
+        if (!pickupTimeInput) return;
+
+        const container = pickupTimeInput.parentNode;
+        const checkmarkIcon = container.querySelector('.checkmark-icon-time');
+
+        if (!checkmarkIcon) return;
+
+        let isTimeConfirmed = false;
+        let previousValue = pickupTimeInput.value;
+
+        // Helper function to show checkmark only after time selection
+        const handleTimeChange = () => {
+            const currentValue = pickupTimeInput.value;
+            
+            // If value has changed from previous, reset confirmation status
+            if (currentValue !== previousValue) {
+                isTimeConfirmed = false;
+            }
+            
+            // Only show checkmark if:
+            // 1. There's a new value
+            // 2. The value has changed from previous
+            // 3. Time hasn't been confirmed yet
+            if (currentValue && currentValue !== previousValue && !isTimeConfirmed) {
+                checkmarkIcon.classList.remove('hidden');
+            }
+            
+            // If value is cleared, reset everything
+            if (!currentValue) {
+                checkmarkIcon.classList.add('hidden');
+                isTimeConfirmed = false;
+            }
+            
+            previousValue = currentValue;
+        };
+
+        // Helper function to confirm time and hide checkmark
+        const confirmTime = () => {
+            if (pickupTimeInput.value && !isTimeConfirmed) {
+                // Mark as confirmed
+                isTimeConfirmed = true;
+                
+                // Hide the checkmark
+                checkmarkIcon.classList.add('hidden');
+                
+                // Show success toast
+                this.showToast('Time confirmed successfully!', 'success');
+                
+                // Move focus to next input field if available
+                const nextInput = pickupTimeInput.closest('.form-group').parentElement.nextElementSibling?.querySelector('input');
+                if (nextInput) {
+                    setTimeout(() => nextInput.focus(), 200);
+                } else {
+                    pickupTimeInput.blur(); // Remove focus from current input
+                }
+            }
+        };
+
+        // Initially hide checkmark
+        checkmarkIcon.classList.add('hidden');
+
+        // Listen for time selection changes
+        pickupTimeInput.addEventListener('change', handleTimeChange);
+        pickupTimeInput.addEventListener('input', handleTimeChange);
+
+        // Checkmark click handler - confirm the time and hide checkmark
+        checkmarkIcon.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event bubbling
+            confirmTime();
+        });
+
+        // Click outside handler - hide checkmark when clicking outside
+        document.addEventListener('click', (e) => {
+            // Check if checkmark is currently visible
+            if (!checkmarkIcon.classList.contains('hidden')) {
+                // Check if click is outside the input container and not on the checkmark
+                if (!container.contains(e.target)) {
+                    // User clicked outside - confirm the time and hide checkmark
+                    confirmTime();
+                }
+            }
+        });
+
+        // Also hide checkmark when input loses focus (blur event)
+        pickupTimeInput.addEventListener('blur', (e) => {
+            // Small delay to allow checkmark click to register first
+            setTimeout(() => {
+                if (!checkmarkIcon.classList.contains('hidden') && pickupTimeInput.value) {
+                    confirmTime();
+                }
+            }, 100);
+        });
+    }
+
+    setupFilteringAndSearch() {
+    // --- Existing Category Filter Logic ---
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            this.currentFilter = btn.getAttribute('data-filter');
+            this.filterListings();
+            this.renderFoodListings();
+        });
+    });
+
+    // --- Existing Search Input Logic ---
+    const searchInput = document.querySelector('.search-box input');
+    let searchTimeout;
+    searchInput.addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            this.searchQuery = e.target.value.toLowerCase();
+            this.filterListings();
+            this.renderFoodListings();
+        }, 300);
+    });
+
+    // --- NEW: Dropdown and Filtering Logic ---
+    const dietaryBtn = document.getElementById('dietary-filter-btn');
+    const dietaryDropdown = document.getElementById('dietary-dropdown');
+    const dietaryCheckboxes = document.querySelectorAll('input[name="dietary-filter"]');
+
+    if (dietaryBtn) {
+        // Toggle dropdown visibility
+        dietaryBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dietaryDropdown.style.display = dietaryDropdown.style.display === 'block' ? 'none' : 'block';
+            dietaryBtn.classList.toggle('active');
+        });
+
+        // Add event listeners to checkboxes
+        dietaryCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                this.filterListings();
+                this.renderFoodListings();
+                
+                // Update button text to show selected count
+                const selectedCount = document.querySelectorAll('input[name="dietary-filter"]:checked').length;
+                const btnSpan = dietaryBtn.querySelector('span');
+                if (selectedCount > 0) {
+                    btnSpan.textContent = `Dietary Filters (${selectedCount})`;
+                } else {
+                    btnSpan.textContent = 'Dietary Filters';
+                }
+            });
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', () => {
+            if (dietaryDropdown.style.display === 'block') {
+                dietaryDropdown.style.display = 'none';
+                dietaryBtn.classList.remove('active');
+            }
+        });
+        
+        // Prevent closing when clicking inside the dropdown
+        dietaryDropdown.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    }
+}
     filterListings() {
+        const activeDietaryFilters = [];
+        document.querySelectorAll('input[name="dietary-filter"]:checked').forEach(checkbox => {
+            activeDietaryFilters.push(checkbox.value);
+        });
+
         this.filteredListings = this.foodListings.filter(listing => {
             const matchesFilter = this.currentFilter === 'all' || listing.category === this.currentFilter;
+            
             const matchesSearch = !this.searchQuery || 
                 listing.foodType.toLowerCase().includes(this.searchQuery) ||
                 listing.location.toLowerCase().includes(this.searchQuery) ||
                 listing.description.toLowerCase().includes(this.searchQuery);
+
+            const matchesDietary = activeDietaryFilters.length === 0 || 
+                (listing.dietaryTags && activeDietaryFilters.every(filter => listing.dietaryTags.includes(filter)));
             
-            return matchesFilter && matchesSearch;
+            return matchesFilter && matchesSearch && matchesDietary;
         });
     }
 
@@ -670,7 +914,9 @@ handleFileSelect(file) {
                 location: "Mario's Pizzeria, 123 Main Street",
                 contact: "+1 234-567-8900",
                 createdAt: new Date(Date.now() - 3600000),
-                donor: "Mario's Pizzeria"
+                donor: "Mario's Pizzeria",
+                dietaryTags: ["vegetarian"],
+                photoUrl: "https://www.allrecipes.com/thmb/2rQA_OlnLbhidei70glz6HCCYAs=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/1453815-authentic-pizza-margherita-Cynthia-Ross-4x3-1-7410c69552274163a9049342b60c22ff.jpg",
             },
             {
                 id: 2,
@@ -683,7 +929,10 @@ handleFileSelect(file) {
                 location: "Downtown Conference Center",
                 contact: "events@conference.com",
                 createdAt: new Date(Date.now() - 7200000),
-                donor: "Conference Center"
+                donor: "Conference Center",
+                dietaryTags: ["non-vegetarian"],
+                photoUrl: "https://bangkok.mandarinorientalshop.com/cdn/shop/files/078-_3729_2048x.jpg?v=1690709512",
+
             },
             {
                 id: 3,
@@ -696,7 +945,9 @@ handleFileSelect(file) {
                 location: "Sunrise Bakery, Oak Avenue",
                 contact: "+1 234-567-8901",
                 createdAt: new Date(Date.now() - 1800000),
-                donor: "Sunrise Bakery"
+                donor: "Sunrise Bakery",
+                dietaryTags: ["dairy-free"],
+                photoUrl: "https://media.istockphoto.com/id/507021914/photo/assorted-croissand-and-bread.jpg?s=612x612&w=0&k=20&c=ruHrARluyF_yR1-hmrurOyz4sLPNeohj1zKKv8fHa8U=",
             },
             {
                 id: 4,
@@ -709,7 +960,9 @@ handleFileSelect(file) {
                 location: "Residential Area, Pine Street",
                 contact: "+1 234-567-8902",
                 createdAt: new Date(Date.now() - 900000),
-                donor: "Local Family"
+                donor: "Local Family",
+                dietaryTags: ["vegetarian", "gluten-free"],
+                photoUrl: "https://www.tasteofhome.com/wp-content/uploads/2019/04/shutterstock_610126394.jpg",
             },
             {
                 id: 5,
@@ -722,46 +975,9 @@ handleFileSelect(file) {
                 location: "Green Garden Restaurant",
                 contact: "+1 234-567-8903",
                 createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant"
-            },
-            {
-                id: 5,
-                foodType: "Fruit & Vegetable Box",
-                quantity: "1 large box",
-                category: "restaurant",
-                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "17:00",
-                location: "Green Garden Restaurant",
-                contact: "+1 234-567-8903",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant"
-            },
-            {
-                id: 7,
-                foodType: "Fruit & Vegetable Box",
-                quantity: "1 large box",
-                category: "restaurant",
-                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "17:00",
-                location: "Green Garden Restaurant",
-                contact: "+1 234-567-8903",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant"
-            },
-            {
-                id: 8,
-                foodType: "Fruit & Vegetable Box",
-                quantity: "1 large box",
-                category: "restaurant",
-                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "17:00",
-                location: "Green Garden Restaurant",
-                contact: "+1 234-567-8903",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant"
+                donor: "Green Garden Restaurant",
+                dietaryTags: ["vegan"],
+                photoUrl: "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
             },
             {
                 id: 6,
@@ -774,8 +990,56 @@ handleFileSelect(file) {
                 location: "Healthy Eats Cafe, Market Square",
                 contact: "+1 234-567-8904",
                 createdAt: new Date(Date.now() - 2700000),
-                donor: "Healthy Eats Cafe"
-            }
+                donor: "Healthy Eats Cafe",
+                dietaryTags: ["non-vegetarian", "dairy-free"],
+                photoUrl: "https://i0.wp.com/smittenkitchen.com/wp-content/uploads/2019/05/exceptional-grilled-chicken-scaled.jpg?fit=1200%2C800&ssl=1",
+            },
+            {
+                id: 5,
+                foodType: "Fruit & Vegetable Box",
+                quantity: "1 large box",
+                category: "restaurant",
+                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
+                freshUntil: this.getRandomFutureDate(),
+                pickupTime: "17:00",
+                location: "Green Garden Restaurant",
+                contact: "+1 234-567-8903",
+                createdAt: new Date(Date.now() - 5400000),
+                donor: "Green Garden Restaurant",
+                dietaryTags: ["vegan"],
+                photoUrl: "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
+            },
+            {
+                id: 7,
+                foodType: "Fruit & Vegetable Box",
+                quantity: "1 large box",
+                category: "restaurant",
+                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
+                freshUntil: this.getRandomFutureDate(),
+                pickupTime: "17:00",
+                location: "Green Garden Restaurant",
+                contact: "+1 234-567-8903",
+                createdAt: new Date(Date.now() - 5400000),
+                donor: "Green Garden Restaurant",
+                dietaryTags: ["vegan"],
+                photoUrl: "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
+            },
+            {
+                id: 8,
+                foodType: "Fruit & Vegetable Box",
+                quantity: "1 large box",
+                category: "restaurant",
+                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
+                freshUntil: this.getRandomFutureDate(),
+                pickupTime: "17:00",
+                location: "Green Garden Restaurant",
+                contact: "+1 234-567-8903",
+                createdAt: new Date(Date.now() - 5400000),
+                donor: "Green Garden Restaurant",
+                dietaryTags: ["vegan"],
+                photoUrl: "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
+            },
+            
         ];
         
         this.foodListings = sampleListings;
@@ -792,6 +1056,9 @@ handleFileSelect(file) {
     renderFoodListings() {
         const foodGrid = document.getElementById('foodGrid');
         const listingsToShow = this.filteredListings.slice(0, 6);
+        if (!foodGrid) {
+            return; 
+        }
 
         if (listingsToShow.length === 0) {
             foodGrid.innerHTML = `
@@ -813,69 +1080,108 @@ handleFileSelect(file) {
     createClaimButton(listing) {
         const isClaimed = this.claimedItems.includes(listing.id);
         const isCollector = this.currentRole === 'collector';
+        const username = JSON.parse(localStorage.getItem('user'))?.name;
         
-        if (isClaimed) {
+        if(username) {
+            if (isClaimed) {
             return `
                 <button class="claim-btn claimed" disabled>
                     <i class="fas fa-check-circle"></i> Claimed
                 </button>
             `;
-        } else if (isCollector) {
-            return `
-                <button class="claim-btn" data-id="${listing.id}">
-                    <i class="fas fa-hand-paper"></i> Claim Food
-                </button>
-            `;
+            } else if (isCollector) {
+                return `
+                    <button class="claim-btn" data-id="${listing.id}">
+                        <i class="fas fa-hand-paper"></i> Claim Food
+                    </button>
+                `;
+            } else {
+                return `
+                    <button class="claim-btn" style="opacity: 0.5; cursor: not-allowed;" disabled>
+                        <i class="fas fa-hand-paper"></i> Switch to Collector
+                    </button>
+                `;
+            }
         } else {
             return `
                 <button class="claim-btn" style="opacity: 0.5; cursor: not-allowed;" disabled>
-                    <i class="fas fa-hand-paper"></i> Switch to Collector
+                    <i class="fas fa-hand-paper"></i> Login to Claim
                 </button>
             `;
         }
     }
 
-    createFoodCard(listing) {
-        const timeAgo = this.getTimeAgo(listing.createdAt);
-        const freshUntil = this.formatDateTime(listing.freshUntil);
-        const pickupTime = this.formatTime(listing.pickupTime);
-        const isClaimed = this.claimedItems.includes(listing.id);
-        
-        return `
-            <div class="food-card ${isClaimed ? 'claimed' : ''}" data-id="${listing.id}">
-                <div class="food-image">
-                    ${listing.photo ? `<img src="${URL.createObjectURL(listing.photo)}" alt="${listing.foodType}">` : `<i class="fas fa-${this.getFoodIcon(listing.category)}"></i>`}
-                    <div class="food-category">${this.capitalizeFirst(listing.category)}</div>
+createFoodCard(listing) {
+    const timeAgo = this.getTimeAgo(listing.createdAt);
+    const freshUntil = this.formatDateTime(listing.freshUntil);
+    const isClaimed = this.claimedItems.includes(listing.id);
+
+    // *** MODIFIED LOGIC START ***
+    let imgSource = '';
+
+    if (listing.photoUrl) {
+        // 1. Use external/sample URL if provided
+        imgSource = listing.photoUrl;
+    } else if (listing.photo && typeof listing.photo === 'object' && listing.photo instanceof File) {
+        // 2. Use temporary URL for newly uploaded file objects
+        imgSource = URL.createObjectURL(listing.photo);
+    } 
+    // If neither photoUrl nor a valid File object exists, imgSource remains empty.
+    
+    // Create the image/icon HTML based on the determined source
+    const imageHTML = imgSource 
+        ? `<img src="${imgSource}" alt="${listing.foodType}">` 
+        : `<i class="fas fa-${this.getFoodIcon(listing.category)}"></i>`;
+    // *** MODIFIED LOGIC END ***
+
+    // This logic generates the HTML for the tags
+    let tagsHTML = '';
+    if (listing.dietaryTags && listing.dietaryTags.length > 0) {
+        tagsHTML = `<div class="food-tags">` +
+            listing.dietaryTags.map(tag => `<span class="tag tag-${tag}">${tag}</span>`).join('') +
+        `</div>`;
+    }
+    
+    // The main HTML template now uses the correctly generated imageHTML
+    return `
+        <div class="food-card ${isClaimed ? 'claimed' : ''}" 
+             data-id="${listing.id}" 
+             data-tags="${listing.dietaryTags ? listing.dietaryTags.join(',') : ''}">
+            <div class="food-image">
+                ${imageHTML}
+                <div class="food-category">${this.capitalizeFirst(listing.category)}</div>
+            </div>
+            <div class="food-details">
+                <h3 class="food-title">${listing.foodType}</h3>
+                ${tagsHTML} 
+                <p class="food-description">${listing.description}</p>
+                <div class="food-meta">
+                    <span class="quantity"><i class="fas fa-utensils"></i> ${listing.quantity}</span>
+                    <span class="freshness"><i class="fas fa-clock"></i> ${freshUntil}</span>
                 </div>
-                <div class="food-details">
-                    <h3 class="food-title">${listing.foodType}</h3>
-                    <p class="food-description">${listing.description}</p>
-                    <div class="food-meta">
-                        <span class="quantity"><i class="fas fa-utensils"></i> ${listing.quantity}</span>
-                        <span class="freshness"><i class="fas fa-clock"></i> ${freshUntil}</span>
-                    </div>
-                    <div class="food-location">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span>${listing.location}</span>
-                    </div>
-                    <div class="food-meta" style="margin-bottom: 1rem;">
-                        <span style="color: var(--medium-gray); font-size: 0.9rem;">
-                            <i class="fas fa-user"></i> ${listing.donor}
-                        </span>
-                        <span style="color: var(--medium-gray); font-size: 0.9rem;">
-                            <i class="fas fa-clock"></i> ${timeAgo}
-                        </span>
-                    </div>
-                    <div class="food-actions">
-                        ${this.createClaimButton(listing)}
-                        <button class="contact-btn" data-contact="${listing.contact}">
-                            <i class="fas fa-phone"></i>
-                        </button>
-                    </div>
+                <div class="food-location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>${listing.location}</span>
+                </div>
+                <div class="food-meta" style="margin-bottom: 1rem;">
+                    <span style="color: var(--medium-gray); font-size: 0.9rem;">
+                        <i class="fas fa-user"></i> ${listing.donor}
+                    </span>
+                    <span style="color: var(--medium-gray); font-size: 0.9rem;">
+                        <i class="fas fa-clock"></i> ${timeAgo}
+                    </span>
+                </div>
+                <div class="food-actions">
+                    ${this.createClaimButton(listing)}
+                    <button class="contact-btn" data-contact="${listing.contact}">
+                        <i class="fas fa-phone"></i>
+                    </button>
                 </div>
             </div>
-        `;
-    }
+        </div>
+    `;
+}
+
 
     setupFoodCardInteractions() {
         // Claim buttons
@@ -1352,17 +1658,17 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Service Worker registration for PWA capabilities (optional)
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-            .then(registration => {
-                console.log('SW registered: ', registration);
-            })
-            .catch(registrationError => {
-                console.log('SW registration failed: ', registrationError);
-            });
-    });
-}
+// if ('serviceWorker' in navigator) {
+//     window.addEventListener('load', () => {
+//         navigator.serviceWorker.register('/sw.js')
+//             .then(registration => {
+//                 console.log('SW registered: ', registration);
+//             })
+//             .catch(registrationError => {
+//                 console.log('SW registration failed: ', registrationError);
+//             });
+//     });
+// }
 
 // Export for potential testing or external use
 window.ShareBite = ShareBite;
@@ -1398,3 +1704,505 @@ scrollToTopBtn.addEventListener("click", () => {
     behavior: "smooth",
   });
 });
+
+// ===== Gallery Animation and Interactivity =====
+class GalleryManager {
+    constructor() {
+        this.galleryItems = document.querySelectorAll('.gallery-item');
+        this.init();
+    }
+
+    init() {
+        this.setupScrollAnimation();
+        this.setupHoverEffects();
+        this.setupClickEvents();
+    }
+
+    setupScrollAnimation() {
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('gallery-visible');
+                }
+            });
+        }, observerOptions);
+
+        this.galleryItems.forEach(item => {
+            observer.observe(item);
+        });
+    }
+
+    setupHoverEffects() {
+        this.galleryItems.forEach(item => {
+            // Add subtle parallax effect on mouse move
+            item.addEventListener('mousemove', (e) => {
+                const rect = item.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const moveX = (x - centerX) / 20;
+                const moveY = (y - centerY) / 20;
+
+                const img = item.querySelector('img');
+                if (img) {
+                    img.style.transform = `scale(1.1) translate(${moveX}px, ${moveY}px)`;
+                }
+            });
+
+            item.addEventListener('mouseleave', () => {
+                const img = item.querySelector('img');
+                if (img) {
+                    img.style.transform = 'scale(1.1)';
+                }
+            });
+        });
+    }
+
+    setupClickEvents() {
+        this.galleryItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const category = item.getAttribute('data-category');
+                const title = item.querySelector('h3').textContent;
+                const description = item.querySelector('p').textContent;
+
+                // Optional: Open lightbox or show more details
+                this.showGalleryDetail(item, title, description, category);
+            });
+        });
+    }
+
+    showGalleryDetail(item, title, description, category) {
+        // Create a simple lightbox effect
+        const imgSrc = item.querySelector('img').src;
+
+        const lightbox = document.createElement('div');
+        lightbox.className = 'gallery-lightbox';
+        lightbox.innerHTML = `
+            <div class="lightbox-overlay"></div>
+            <div class="lightbox-content">
+                <button class="lightbox-close">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="lightbox-image-container">
+                    <img src="${imgSrc}" alt="${title}">
+                </div>
+                <div class="lightbox-info">
+                    <span class="lightbox-category">
+                        <i class="fas fa-tag"></i> ${category}
+                    </span>
+                    <h2>${title}</h2>
+                    <p>${description}</p>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(lightbox);
+        document.body.style.overflow = 'hidden';
+
+        // Animate in
+        setTimeout(() => {
+            lightbox.classList.add('active');
+        }, 10);
+
+        // Close handlers
+        const closeBtn = lightbox.querySelector('.lightbox-close');
+        const overlay = lightbox.querySelector('.lightbox-overlay');
+
+        const closeLightbox = () => {
+            lightbox.classList.remove('active');
+            setTimeout(() => {
+                document.body.removeChild(lightbox);
+                document.body.style.overflow = 'auto';
+            }, 300);
+        };
+
+        closeBtn.addEventListener('click', closeLightbox);
+        overlay.addEventListener('click', closeLightbox);
+
+        // ESC key to close
+        const escHandler = (e) => {
+            if (e.key === 'Escape') {
+                closeLightbox();
+                document.removeEventListener('keydown', escHandler);
+            }
+        };
+        document.addEventListener('keydown', escHandler);
+    }
+}
+
+// Add lightbox styles dynamically
+function addGalleryLightboxStyles() {
+    const style = document.createElement('style');
+    style.textContent = `
+        .gallery-lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .gallery-lightbox.active {
+            opacity: 1;
+        }
+
+        .lightbox-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            cursor: pointer;
+        }
+
+        .lightbox-content {
+            position: relative;
+            background: white;
+            border-radius: 20px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: auto;
+            z-index: 1;
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .gallery-lightbox.active .lightbox-content {
+            transform: scale(1);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #333;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        .lightbox-close:hover {
+            background: var(--secondary-color);
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .lightbox-image-container {
+            width: 100%;
+            max-height: 500px;
+            overflow: hidden;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .lightbox-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .lightbox-info {
+            padding: 2rem;
+        }
+
+        .lightbox-category {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--primary-gradient);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .lightbox-info h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--black);
+            margin-bottom: 1rem;
+        }
+
+        .lightbox-info p {
+            font-size: 1.1rem;
+            color: var(--medium-gray);
+            line-height: 1.6;
+        }
+
+        /* Dark mode support */
+        :root.dark .lightbox-content {
+            background: #1E1E1E;
+            color: var(--black);
+        }
+
+        :root.dark .lightbox-info h2 {
+            color: var(--black);
+        }
+
+        :root.dark .lightbox-close {
+            background: rgba(42, 42, 42, 0.9);
+            color: white;
+        }
+
+        :root.dark .lightbox-close:hover {
+            background: var(--secondary-color);
+        }
+
+        @media (max-width: 768px) {
+            .lightbox-content {
+                margin: 1rem;
+            }
+
+            .lightbox-info h2 {
+                font-size: 1.5rem;
+            }
+
+            .lightbox-info p {
+                font-size: 1rem;
+            }
+
+            .lightbox-info {
+                padding: 1.5rem;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+// Initialize gallery when DOM is ready
+if (document.querySelector('.gallery-showcase')) {
+    addGalleryLightboxStyles();
+    new GalleryManager();
+}
+
+// ===== Testimonials Carousel =====
+class TestimonialsCarousel {
+    constructor() {
+        this.carousel = document.querySelector('.testimonials-carousel');
+        if (!this.carousel) return;
+
+        this.cards = document.querySelectorAll('.testimonial-card');
+        this.dots = document.querySelectorAll('.testimonial-dot');
+        this.prevBtn = document.querySelector('.testimonial-prev');
+        this.nextBtn = document.querySelector('.testimonial-next');
+
+        this.currentIndex = 0;
+        this.isAnimating = false;
+        this.autoPlayInterval = null;
+
+        this.init();
+    }
+
+    init() {
+        this.setupNavigation();
+        this.setupDots();
+        this.setupKeyboardNavigation();
+        this.setupTouchSwipe();
+        this.startAutoPlay();
+        this.animateStats();
+        this.pauseOnHover();
+    }
+
+    setupNavigation() {
+        this.prevBtn.addEventListener('click', () => this.goToPrevious());
+        this.nextBtn.addEventListener('click', () => this.goToNext());
+    }
+
+    setupDots() {
+        this.dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                this.goToSlide(index);
+            });
+        });
+    }
+
+    setupKeyboardNavigation() {
+        document.addEventListener('keydown', (e) => {
+            if (!this.isInViewport()) return;
+
+            if (e.key === 'ArrowLeft') {
+                this.goToPrevious();
+            } else if (e.key === 'ArrowRight') {
+                this.goToNext();
+            }
+        });
+    }
+
+    setupTouchSwipe() {
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        this.carousel.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        this.carousel.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            this.handleSwipe(touchStartX, touchEndX);
+        });
+    }
+
+    handleSwipe(startX, endX) {
+        const threshold = 50;
+        const diff = startX - endX;
+
+        if (Math.abs(diff) > threshold) {
+            if (diff > 0) {
+                this.goToNext();
+            } else {
+                this.goToPrevious();
+            }
+        }
+    }
+
+    goToNext() {
+        if (this.isAnimating) return;
+
+        const nextIndex = (this.currentIndex + 1) % this.cards.length;
+        this.goToSlide(nextIndex);
+    }
+
+    goToPrevious() {
+        if (this.isAnimating) return;
+
+        const prevIndex = (this.currentIndex - 1 + this.cards.length) % this.cards.length;
+        this.goToSlide(prevIndex);
+    }
+
+    goToSlide(index) {
+        if (this.isAnimating || index === this.currentIndex) return;
+
+        this.isAnimating = true;
+        this.stopAutoPlay();
+
+        // Remove all active classes
+        this.cards.forEach(card => {
+            card.classList.remove('active', 'prev');
+        });
+
+        this.dots.forEach(dot => {
+            dot.classList.remove('active');
+        });
+
+        // Set previous card
+        this.cards[this.currentIndex].classList.add('prev');
+
+        // Set active card
+        setTimeout(() => {
+            this.cards[index].classList.add('active');
+            this.dots[index].classList.add('active');
+            this.currentIndex = index;
+
+            setTimeout(() => {
+                this.isAnimating = false;
+                this.startAutoPlay();
+            }, 600);
+        }, 50);
+    }
+
+    startAutoPlay() {
+        this.stopAutoPlay();
+        this.autoPlayInterval = setInterval(() => {
+            this.goToNext();
+        }, 5000); // Change slide every 5 seconds
+    }
+
+    stopAutoPlay() {
+        if (this.autoPlayInterval) {
+            clearInterval(this.autoPlayInterval);
+            this.autoPlayInterval = null;
+        }
+    }
+
+    isInViewport() {
+        const rect = this.carousel.getBoundingClientRect();
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+    }
+
+    animateStats() {
+        const statNumbers = document.querySelectorAll('.testimonial-stat-number[data-target]');
+
+        const observerOptions = {
+            threshold: 0.5
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
+                    this.animateNumber(entry.target);
+                    entry.target.classList.add('animated');
+                }
+            });
+        }, observerOptions);
+
+        statNumbers.forEach(stat => observer.observe(stat));
+    }
+
+    animateNumber(element) {
+        const target = parseInt(element.getAttribute('data-target'));
+        const duration = 2000;
+        const increment = target / (duration / 16);
+        let current = 0;
+
+        const updateNumber = () => {
+            current += increment;
+            if (current < target) {
+                element.textContent = Math.floor(current);
+                requestAnimationFrame(updateNumber);
+            } else {
+                element.textContent = target + '+';
+            }
+        };
+
+        updateNumber();
+    }
+
+    // Pause autoplay when user hovers over carousel
+    pauseOnHover() {
+        this.carousel.addEventListener('mouseenter', () => {
+            this.stopAutoPlay();
+        });
+
+        this.carousel.addEventListener('mouseleave', () => {
+            this.startAutoPlay();
+        });
+    }
+}
+
+// Initialize testimonials carousel
+if (document.querySelector('.testimonials-section')) {
+    new TestimonialsCarousel();
+}
