@@ -115,6 +115,26 @@
         transform: translateY(20px);
       }
 
+      /* back to home button */
+      a{
+        text-decoration: none;
+      }
+      .back-button {
+      background: none;
+      border: none;
+      color: var(--primary-green);
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: transform 0.2s ease, color 0.2s ease;
+      }
+
+      .back-button:hover {
+        transform: translateY(-3px);
+      }
+
       body.dark-mode .auth-container {
         background-color: var(--card-bg-dark);
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4),
@@ -304,6 +324,10 @@
     </button>
 
     <div class="auth-container">
+      <!-- Back to home button -->
+       <a href="index.html">
+      <button id="back-btn" class="back-button">← Back</button>
+      </a>
       <h1>Welcome Back to ShareBite</h1>
       <p class="subtitle">Log in to continue your journey with us.</p>
       <form id="loginForm">
@@ -363,6 +387,11 @@
     <script src="js/theme.js"></script>
     <script src="js/auth.js"></script>
     <script>
+      // Back to home button
+      document.getElementById("home-btn").addEventListener("click", () => {
+      window.location.href = "/index.html";
+      });
+
       // --- Password Visibility Toggle ---
       const togglePassword = document.getElementById("togglePassword");
       const passwordInput = document.getElementById("password");
