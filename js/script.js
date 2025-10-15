@@ -1,4 +1,5 @@
 // ShareBite JavaScript - Interactive Food Waste Reduction Platform
+import foodData from '../data/foods.json' assert { type: 'json' };
 
 class ShareBite {
     constructor() {
@@ -885,148 +886,9 @@ handleFileSelect(file) {
     }
 
     generateSampleListings() {
-        const sampleListings = [
-            {
-                id: 1,
-                foodType: "Fresh Pizza Margherita",
-                quantity: "8 slices",
-                category: "restaurant",
-                description: "Freshly made pizza with mozzarella, tomato sauce, and basil. Perfect condition, just from lunch service.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "18:00",
-                location: "Mario's Pizzeria, 123 Main Street",
-                contact: "+1 234-567-8900",
-                createdAt: new Date(Date.now() - 3600000),
-                donor: "Mario's Pizzeria",
-                dietaryTags: ["vegetarian"],
-                photoUrl: "https://www.allrecipes.com/thmb/2rQA_OlnLbhidei70glz6HCCYAs=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/1453815-authentic-pizza-margherita-Cynthia-Ross-4x3-1-7410c69552274163a9049342b60c22ff.jpg",
-            },
-            {
-                id: 2,
-                foodType: "Assorted Sandwiches",
-                quantity: "15 sandwiches",
-                category: "event",
-                description: "Various sandwiches including turkey, ham, and vegetarian options from corporate catering event.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "16:30",
-                location: "Downtown Conference Center",
-                contact: "events@conference.com",
-                createdAt: new Date(Date.now() - 7200000),
-                donor: "Conference Center",
-                dietaryTags: ["non-vegetarian"],
-                photoUrl: "https://bangkok.mandarinorientalshop.com/cdn/shop/files/078-_3729_2048x.jpg?v=1690709512",
-
-            },
-            {
-                id: 3,
-                foodType: "Fresh Bread & Pastries",
-                quantity: "20+ items",
-                category: "bakery",
-                description: "End-of-day fresh bread, croissants, and pastries. All baked today and still perfectly fresh.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "20:00",
-                location: "Sunrise Bakery, Oak Avenue",
-                contact: "+1 234-567-8901",
-                createdAt: new Date(Date.now() - 1800000),
-                donor: "Sunrise Bakery",
-                dietaryTags: ["dairy-free"],
-                photoUrl: "https://media.istockphoto.com/id/507021914/photo/assorted-croissand-and-bread.jpg?s=612x612&w=0&k=20&c=ruHrARluyF_yR1-hmrurOyz4sLPNeohj1zKKv8fHa8U=",
-            },
-            {
-                id: 4,
-                foodType: "Home-cooked Curry",
-                quantity: "4-6 portions",
-                category: "household",
-                description: "Vegetarian curry with rice, made too much for family dinner. Spice level: medium.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "19:00",
-                location: "Residential Area, Pine Street",
-                contact: "+1 234-567-8902",
-                createdAt: new Date(Date.now() - 900000),
-                donor: "Local Family",
-                dietaryTags: ["vegetarian", "gluten-free"],
-                photoUrl: "https://www.tasteofhome.com/wp-content/uploads/2019/04/shutterstock_610126394.jpg",
-            },
-            {
-                id: 5,
-                foodType: "Fruit & Vegetable Box",
-                quantity: "1 large box",
-                category: "restaurant",
-                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "17:00",
-                location: "Green Garden Restaurant",
-                contact: "+1 234-567-8903",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant",
-                dietaryTags: ["vegan"],
-                photoUrl: "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
-            },
-            {
-                id: 6,
-                foodType: "Grilled Chicken Meals",
-                quantity: "12 complete meals",
-                category: "restaurant",
-                description: "Grilled chicken with rice and vegetables. Prepared for cancelled catering order.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "18:30",
-                location: "Healthy Eats Cafe, Market Square",
-                contact: "+1 234-567-8904",
-                createdAt: new Date(Date.now() - 2700000),
-                donor: "Healthy Eats Cafe",
-                dietaryTags: ["non-vegetarian", "dairy-free"],
-                photoUrl: "https://i0.wp.com/smittenkitchen.com/wp-content/uploads/2019/05/exceptional-grilled-chicken-scaled.jpg?fit=1200%2C800&ssl=1",
-            },
-            {
-                id: 5,
-                foodType: "Fruit & Vegetable Box",
-                quantity: "1 large box",
-                category: "restaurant",
-                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "17:00",
-                location: "Green Garden Restaurant",
-                contact: "+1 234-567-8903",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant",
-                dietaryTags: ["vegan"],
-                photoUrl: "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
-            },
-            {
-                id: 7,
-                foodType: "Fruit & Vegetable Box",
-                quantity: "1 large box",
-                category: "restaurant",
-                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "17:00",
-                location: "Green Garden Restaurant",
-                contact: "+1 234-567-8903",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant",
-                dietaryTags: ["vegan"],
-                photoUrl: "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
-            },
-            {
-                id: 8,
-                foodType: "Fruit & Vegetable Box",
-                quantity: "1 large box",
-                category: "restaurant",
-                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "17:00",
-                location: "Green Garden Restaurant",
-                contact: "+1 234-567-8903",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant",
-                dietaryTags: ["vegan"],
-                photoUrl: "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
-            },
-            
-        ];
-        
-        this.foodListings = sampleListings;
-        this.filteredListings = sampleListings;
+        console.log('Sample food listings loaded:', this.foodListings);
+        this.foodListings = foodData.foods;
+        this.filteredListings = foodData.foods;
     }
 
     getRandomFutureDate() {

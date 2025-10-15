@@ -896,7 +896,7 @@
 </section>
 
 <!-- Font Awesome -->
-<script src="https://kit.fontawesome.com/a2e0e9c5b2.js" crossorigin="anonymous"></script>
+<!-- <script src="https://kit.fontawesome.com/a2e0e9c5b2.js" crossorigin="anonymous"></script> -->
 
 <!-- ✅ Alert Script (keep this) -->
 <script>
@@ -915,7 +915,7 @@
     alert(`✅ Thank you, ${name}! Your message has been sent.`);
     form.reset();
   });
-  const username = JSON.parse(localStorage.getItem('user')).name;
+  const username = JSON.parse(localStorage.getItem('user'))?.name;
   const toast = document.getElementById('toast');
 
   if (username) {
@@ -1009,7 +1009,7 @@
 
     <script src="js/theme.js"></script>
     <script src="js/auth.js"></script>
-    <script src="js/script.js"></script>
+    <script type="module" src="js/script.js"></script>
    
   </body>
 </html>
