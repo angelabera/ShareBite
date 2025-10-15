@@ -725,7 +725,7 @@ body.dark .profile-menu-item:hover {
     transform: translateY(-50%);
     width: 20px;
     height: 20px;
-    border-radius: 50%;
+    border-radius: 4px;
     border: 2px solid var(--medium-gray);
     background-color: transparent;
     transition: all 0.2s ease;
@@ -733,15 +733,19 @@ body.dark .profile-menu-item:hover {
 
 /* Create the inner circle (the 'check') */
 .checkbox-group label::after {
-    content: '';
+    content: '✔';
+    color: var(--secondary-orange);
     position: absolute;
-    left: 5px;
+    left: 0;
     top: 50%;
-    transform: translateY(-50%) scale(0); /* Hidden by default */
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: var(--secondary-orange);
+    font-size: 14px;
+    text-align: center;
+    line-height: 20px;
+    width: 20px;
+    height: 20px;
+    background-color: transparent;
+    border-radius: 4px;
+    transform: translateY(-50%) scale(0);
     transition: all 0.2s ease;
 }
 
