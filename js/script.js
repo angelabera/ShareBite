@@ -10,7 +10,7 @@ class ShareBite {
         this.notifications = this.loadNotifications();
         
         this.init();
-        this.initTheme(); // add theme initialization after base init
+        // Theme is now handled by theme.js - removed duplicate initTheme()
     }
 
     init() {
@@ -21,37 +21,6 @@ class ShareBite {
         this.updateNotificationDisplay();
         this.startAnimations();
         this.hideLoadingOverlay();
-    }
-
-    initTheme() {
-        const stored = localStorage.getItem('sharebite-theme');
-        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const theme = stored || (prefersDark ? 'dark' : 'light');
-        this.applyTheme(theme);
-        this.setupThemeToggle();
-    }
-
-    setupThemeToggle() {
-        const btn = document.getElementById('themeToggle');
-        if (!btn) return;
-        btn.addEventListener('click', () => {
-            const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
-            this.applyTheme(newTheme);
-            localStorage.setItem('sharebite-theme', newTheme);
-        });
-    }
-
-    applyTheme(theme) {
-        const root = document.documentElement;
-        if (theme === 'dark') {
-            root.classList.add('dark');
-            const icon = document.querySelector('#themeToggle i');
-            if (icon) { icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); }
-        } else {
-            root.classList.remove('dark');
-            const icon = document.querySelector('#themeToggle i');
-            if (icon) { icon.classList.remove('fa-sun'); icon.classList.add('fa-moon'); }
-        }
     }
 
     setupEventListeners() {
