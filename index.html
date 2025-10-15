@@ -918,6 +918,80 @@
             <i class="fas fa-utensils"></i>
             <span>ShareBite</span>
           </div>
+    alert(`✅ Thank you, ${name}! Your message has been sent.`);
+    form.reset();
+  });
+  const username = JSON.parse(localStorage.getItem('user')).name;
+  const toast = document.getElementById('toast');
+
+  if (username) {
+    // Show toast message
+    toast.textContent = `Welcome, ${username}! 🎉`;
+    toast.classList.add('show');
+
+    // Hide toast after 3 seconds
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 3000);
+  }
+</script>
+
+
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <div class="footer-logo">
+              <i class="fas fa-utensils"></i>
+              <span>ShareBite</span>
+            </div>
+            <p>
+              Making a difference, one meal at a time. Join us in the fight
+              against food waste and hunger.
+            </p>
+            <div class="social-links">
+              <a href="#"><i class="fab fa-facebook"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+              <a href="#"><i class="fab fa-linkedin"></i></a>
+            </div>
+          </div>
+           <div class="footer-section">
+            <h4>Quick Links</h4>
+            <ul>
+              <li><a href="#home">Home</a></li>
+              <li><a href="#features">How It Works</a></li>
+              <li><a href="foodlisting.html">Food Listings</a></li>
+              <li><a href="#about">About Us</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-section">
+            <h4>For Donors</h4>
+            <ul>
+              <li><a href="foodlisting.html">List Food</a></li>
+              <li><a href="donor-guidelines.html">Donor Guidelines</a></li>
+              <li><a href="track-impact.html">Track Impact</a></li>
+              <li><a href="support.html">Support</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-section">
+            <h4>For Collectors</h4>
+            <ul>
+              <li><a href="#">Find Food</a></li>
+              <li><a href="ngo-register.html">Register NGO</a></li>
+              <li><a href="vounteer_food.html">Volunteer</a></li>
+              <li><a href="#">Resources</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+          <p class="footer-credit">Made with 💚 by Angela Bera</p>
           <p>
             Making a difference, one meal at a time. Join us in the fight
             against food waste and hunger.
