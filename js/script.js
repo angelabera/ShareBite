@@ -1,5 +1,86 @@
 // ShareBite JavaScript - Interactive Food Waste Reduction Platform
 
+  
+ 
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const themeIcon = themeToggle.querySelector('i');
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                showToast('Dark mode enabled');
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                showToast('Light mode enabled');
+            }
+        });
+
+        // Notification Toggle
+        const notificationBell = document.getElementById('notificationBell');
+        const notificationPanel = document.getElementById('notificationPanel');
+
+        notificationBell.addEventListener('click', (e) => {
+            e.stopPropagation();
+            notificationPanel.classList.toggle('show');
+        });
+
+        // Close notification panel when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!notificationBell.contains(e.target)) {
+                notificationPanel.classList.remove('show');
+            }
+        });
+
+        // Clear Notifications
+        const clearNotifications = document.getElementById('clearNotifications');
+        const notificationList = document.getElementById('notificationList');
+        const notificationBadge = document.getElementById('notificationBadge');
+
+        clearNotifications.addEventListener('click', () => {
+            notificationList.innerHTML = '<div style="padding: 2rem; text-align: center; color: var(--text-secondary);">No notifications</div>';
+            notificationBadge.textContent = '0';
+            notificationBadge.style.display = 'none';
+            showToast('Notifications cleared');
+            notificationPanel.classList.remove('show');
+        });
+
+        // Role Switch
+        const roleSwitch = document.getElementById('roleSwitch');
+        const currentRole = document.getElementById('currentRole');
+
+        roleSwitch.addEventListener('click', () => {
+            if (currentRole.textContent === 'Donor') {
+                currentRole.textContent = 'Receiver';
+                showToast('Switched to Receiver mode');
+            } else {
+                currentRole.textContent = 'Donor';
+                showToast('Switched to Donor mode');
+            }
+        });
+
+        // Toast Function
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                navMenu.classList.remove('active');
+                menuToggle.classList.remove('active');
+            }
+        });
 class ShareBite {
     constructor() {
         this.currentRole = 'donor';
@@ -2134,6 +2215,24 @@ class TestimonialsCarousel {
         updateNumber();
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
     // Pause autoplay when user hovers over carousel
     pauseOnHover() {
         this.carousel.addEventListener('mouseenter', () => {
