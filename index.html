@@ -984,27 +984,153 @@
         </div>
 
         <!-- Footer Bottom -->
+      <footer class="footer">
         <div class="footer-bottom">
           <p class="footer-credit">Made with 💚 by Angela Bera</p>
           <p>
-            &copy; 2025 ShareBite. All rights reserved. <a href="License.html">License</a> 
+            &copy; 2025 ShareBite. All rights reserved.
+            <a href="License.html">License</a>
           </p>
         </div>
+      </footer>
+      
+      <!-- Loading Overlay -->
+      <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+          <div class="spinner"></div>
+          <p>Loading ShareBite...</p>
+        </div>
       </div>
-    </footer>
+      
+      <!-- Scroll to Top Button -->
+      <button id="scrollToTopBtn" title="Go to top">
+        <i class="fas fa-arrow-up"></i>
+      </button>
+      <style>
+        /* === Footer Styling === */
+.footer {
+  background: linear-gradient(135deg, #0b0b0b, #1a1a1a);
+  color: #f1f1f1;
+  padding: 1.5rem 1rem;
+  font-family: "Poppins", sans-serif;
+}
 
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-      <div class="loading-spinner">
-        <div class="spinner"></div>
-        <p>Loading ShareBite...</p>
-      </div>
-    </div>
+.footer-bottom {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
 
-    <!-- Scroll to Top Button -->
-<button id="scrollToTopBtn" title="Go to top">
-  <i class="fas fa-arrow-up"></i>
-</button>
+.footer-credit {
+  color: #00ff99;
+  font-weight: 500;
+}
+
+.footer-bottom a {
+  color: #00ff99;
+  text-decoration: none;
+  margin-left: 0.4rem;
+  font-weight: 500;
+}
+
+.footer-bottom a:hover {
+  text-decoration: underline;
+}
+
+/* === Loading Overlay === */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 1000;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.spinner {
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  border-top: 4px solid #00ff99;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* === Scroll To Top Button === */
+#scrollToTopBtn {
+  position: fixed;
+  bottom: 30px;
+  right: 25px;
+  z-index: 999;
+  background-color: #00ff99;
+  color: #111;
+  border: none;
+  outline: none;
+  padding: 12px 14px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: none;
+}
+
+#scrollToTopBtn:hover {
+  background-color: #00cc77;
+  transform: scale(1.1);
+}
+
+/* === Responsiveness === */
+@media (max-width: 768px) {
+  .footer-bottom {
+    font-size: 0.9rem;
+    padding: 1rem;
+  }
+
+  #scrollToTopBtn {
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 12px;
+    font-size: 16px;
+  }
+
+  .spinner {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-bottom {
+    font-size: 0.85rem;
+  }
+
+  .footer-credit {
+    font-size: 0.9rem;
+  }
+
+  #scrollToTopBtn {
+    padding: 9px 11px;
+    bottom: 15px;
+    right: 15px;
+  }
+}
+
+      </style>
 
 
     <script src="js/theme.js"></script>
