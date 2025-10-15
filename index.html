@@ -26,6 +26,256 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Enhanced styles for authentication selection popup -->
+    <style>
+        /* SweetAlert2 Custom Styling for ShareBite Theme */
+        .swal2-popup {
+            border-radius: 20px !important;
+            padding: 2rem 1.5rem !important;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+            font-family: 'Inter', 'Poppins', sans-serif !important;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+            border: 1px solid rgba(0, 0, 0, 0.05) !important;
+            backdrop-filter: blur(10px) !important;
+        }
+
+        .swal2-title {
+            font-size: 1.75rem !important;
+            font-weight: 700 !important;
+            color: #1f2937 !important;
+            margin-bottom: 0.5rem !important;
+            text-align: center !important;
+        }
+
+        .swal2-html-container {
+            font-size: 1rem !important;
+            color: #6b7280 !important;
+            margin: 1rem 0 2rem 0 !important;
+            line-height: 1.6 !important;
+            text-align: center !important;
+        }
+
+        .swal2-actions {
+            gap: 1rem !important;
+            margin-top: 1.5rem !important;
+            flex-direction: column !important;
+            width: 100% !important;
+        }
+        
+        .auth-user-btn {
+            background: linear-gradient(135deg, #4CAF50 0%, #81C784 100%) !important;
+            border: none !important;
+            color: white !important;
+            padding: 16px 32px !important;
+            border-radius: 12px !important;
+            font-weight: 600 !important;
+            font-size: 1rem !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3) !important;
+            width: 100% !important;
+            position: relative !important;
+            overflow: hidden !important;
+        }
+        
+        .auth-user-btn::before {
+            content: '' !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: -100% !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent) !important;
+            transition: left 0.5s !important;
+        }
+        
+        .auth-user-btn:hover {
+            background: linear-gradient(135deg, #45a049 0%, #66bb6a 100%) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4) !important;
+        }
+        
+        .auth-user-btn:hover::before {
+            left: 100% !important;
+        }
+        
+        .auth-ngo-btn {
+            background: linear-gradient(135deg, #FF6B35 0%, #FFC107 100%) !important;
+            border: none !important;
+            color: white !important;
+            padding: 16px 32px !important;
+            border-radius: 12px !important;
+            font-weight: 600 !important;
+            font-size: 1rem !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3) !important;
+            width: 100% !important;
+            position: relative !important;
+            overflow: hidden !important;
+        }
+        
+        .auth-ngo-btn::before {
+            content: '' !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: -100% !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent) !important;
+            transition: left 0.5s !important;
+        }
+        
+        .auth-ngo-btn:hover {
+            background: linear-gradient(135deg, #E65100 0%, #FF8F00 100%) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4) !important;
+        }
+        
+        .auth-ngo-btn:hover::before {
+            left: 100% !important;
+        }
+
+        .swal2-footer {
+            border-top: none !important;
+            margin-top: 1rem !important;
+            padding-top: 1rem !important;
+        }
+        
+        .auth-close-btn {
+            background: none !important;
+            border: none !important;
+            color: #9ca3af !important;
+            text-decoration: none !important;
+            cursor: pointer !important;
+            font-size: 0.875rem !important;
+            padding: 8px 16px !important;
+            border-radius: 6px !important;
+            transition: all 0.3s ease !important;
+            font-weight: 500 !important;
+        }
+        
+        .auth-close-btn:hover {
+            color: #6b7280 !important;
+            background: rgba(0, 0, 0, 0.05) !important;
+        }
+
+        /* Icon styling for the popup */
+        .swal2-icon.swal2-info {
+            border-color: #4CAF50 !important;
+            color: #4CAF50 !important;
+            background: rgba(76, 175, 80, 0.1) !important;
+            border-radius: 50% !important;
+        }
+
+        /* Enhanced backdrop */
+        .swal2-container {
+            backdrop-filter: blur(8px) !important;
+            background: rgba(0, 0, 0, 0.4) !important;
+        }
+
+        /* Animation for popup entrance */
+        .swal2-show {
+            animation: swal2-show 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+
+        .swal2-hide {
+            animation: swal2-hide 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+
+        @keyframes swal2-show {
+            0% {
+                transform: scale(0.8) translateY(30px);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes swal2-hide {
+            0% {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0.9) translateY(-20px);
+                opacity: 0;
+            }
+        }
+
+        /* Dark mode styles for the popup */
+        :root.dark .swal2-popup {
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: #f1f5f9 !important;
+        }
+
+        :root.dark .swal2-title {
+            color: #f1f5f9 !important;
+        }
+
+        :root.dark .swal2-html-container {
+            color: #d1d5db !important;
+        }
+
+        :root.dark .auth-close-btn {
+            color: #9ca3af !important;
+        }
+
+        :root.dark .auth-close-btn:hover {
+            color: #d1d5db !important;
+            background: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        :root.dark .swal2-icon.swal2-info {
+            background: rgba(76, 175, 80, 0.2) !important;
+        }
+
+        /* Button icons using ::after to avoid conflict with shimmer effect */
+        .auth-user-btn::after {
+            content: ' 👤' !important;
+            font-size: 1.1rem !important;
+            margin-left: 8px !important;
+            position: relative !important;
+            z-index: 2 !important;
+        }
+
+        .auth-ngo-btn::after {
+            content: ' 🏢' !important;
+            font-size: 1.1rem !important;
+            margin-left: 8px !important;
+            position: relative !important;
+            z-index: 2 !important;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            .swal2-popup {
+                margin: 1rem !important;
+                padding: 1.5rem 1rem !important;
+            }
+            
+            .auth-user-btn, .auth-ngo-btn {
+                padding: 14px 24px !important;
+                font-size: 0.9rem !important;
+            }
+
+            .swal2-title {
+                font-size: 1.5rem !important;
+            }
+        }
+
+        /* Accessibility improvements */
+        .auth-user-btn:focus, .auth-ngo-btn:focus {
+            outline: 2px solid rgba(76, 175, 80, 0.6) !important;
+            outline-offset: 2px !important;
+        }
+
+        :root.dark .auth-user-btn:focus, :root.dark .auth-ngo-btn:focus {
+            outline: 2px solid rgba(76, 175, 80, 0.8) !important;
+        }
+    </style>
   </head>
   <body>
     <!-- Navigation -->
@@ -40,7 +290,7 @@
             <ul class="nav-menu">
                 <li><a href="#home" class="nav-link">Home</a></li>
                 <li><a href="#features" class="nav-link">Features</a></li>
-                <li><a href="foodlisting.html" class="nav-link">Listings</a></li>
+                <li><a href="#" class="nav-link" id="navListingsLink">Listings</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
                 <li><a href="#contact-section" class="nav-link">Contact</a></li>
             </ul>
@@ -96,7 +346,7 @@
               <i class="fas fa-heart"></i>
               Donate Food
             </button>
-            <button class="btn btn-secondary" id="findFood" onclick="window.location.href='foodlisting.html'">
+            <button class="btn btn-secondary" id="findFood">
               <i class="fas fa-search"></i>
               Find Food
             </button>
@@ -242,7 +492,7 @@
           <!-- Sample listings will be generated by JavaScript -->
         </div>
         <div class="learn-more-container">
-          <a class="learn-more-btn" id="learnMoreBtn" href="foodlisting.html">
+          <a class="learn-more-btn" id="learnMoreBtn" href="#">
             Explore More
           </a>
         </div>
@@ -957,7 +1207,7 @@
             <ul>
               <li><a href="#home">Home</a></li>
               <li><a href="#features">How It Works</a></li>
-              <li><a href="foodlisting.html">Food Listings</a></li>
+              <li><a href="#" id="footerListingsLink">Food Listings</a></li>
               <li><a href="#about">About Us</a></li>
             </ul>
           </div>
@@ -965,7 +1215,7 @@
           <div class="footer-section">
             <h4>For Donors</h4>
             <ul>
-              <li><a href="foodlisting.html">List Food</a></li>
+              <li><a href="#" id="footerListFoodLink">List Food</a></li>
               <li><a href="donor-guidelines.html">Donor Guidelines</a></li>
               <li><a href="#">Track Impact</a></li>
               <li><a href="support.html">Support</a></li>
@@ -977,7 +1227,7 @@
             <ul>
               <li><a href="#">Find Food</a></li>
               <li><a href="ngo-register.html">Register NGO</a></li>
-              <li><a href="vounteer_food.html">Volunteer</a></li>
+              <li><a href="#" id="footerVolunteerLink">Volunteer</a></li>
               <li><a href="#">Resources</a></li>
             </ul>
           </div>

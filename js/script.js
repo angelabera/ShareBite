@@ -67,6 +67,12 @@ class ShareBite {
         // Form handling
         this.setupFormHandling();
         
+        // Learn More Button
+        this.setupLearnMoreButton();
+        
+        // Protected Navigation Links
+        this.setupProtectedNavLinks();
+        
         // Date input confirmation functionality
         this.setupDateInputConfirmation();
         
@@ -162,6 +168,12 @@ class ShareBite {
     this.totalSteps = 3;
 
     addListingBtn.addEventListener('click', () => {
+        // Check authentication first
+        if (window.sharebiteAuth && !window.sharebiteAuth.isLoggedIn()) {
+            window.sharebiteAuth.showLoginTypeSelection('add a food listing');
+            return;
+        }
+        
         modal.style.display = 'block';
         document.body.style.overflow = 'hidden';
         this.resetFormSteps();
@@ -787,6 +799,12 @@ handleFileSelect(file) {
         const findBtn = document.getElementById('findFood');
         
         donateBtn.addEventListener('click', () => {
+            // Check authentication first
+            if (window.sharebiteAuth && !window.sharebiteAuth.isLoggedIn()) {
+                window.sharebiteAuth.showLoginTypeSelection('donate food');
+                return;
+            }
+            
             if (this.currentRole === 'donor') {
                 document.getElementById('addListingModal').style.display = 'block';
                 document.body.style.overflow = 'hidden';
@@ -796,8 +814,103 @@ handleFileSelect(file) {
         });
         
         findBtn.addEventListener('click', () => {
-            document.getElementById('listings').scrollIntoView({ behavior: 'smooth' });
+            // Check authentication first  
+            if (window.sharebiteAuth && !window.sharebiteAuth.isLoggedIn()) {
+                window.sharebiteAuth.showLoginTypeSelection('browse food listings');
+                return;
+            }
+            
+            // If authenticated, redirect to food listing page
+            window.location.href = 'foodlisting.html';
         });
+    }
+
+    setupLearnMoreButton() {
+        const learnMoreBtn = document.getElementById('learnMoreBtn');
+        if (!learnMoreBtn) return;
+        
+        learnMoreBtn.addEventListener('click', (e) => {
+            e.preventDefault(); // Prevent default href navigation
+            
+            // Check authentication first
+            if (window.sharebiteAuth && !window.sharebiteAuth.isLoggedIn()) {
+                window.sharebiteAuth.showLoginTypeSelection('explore more food listings');
+                return;
+            }
+            
+            // If authenticated, redirect to food listing page
+            window.location.href = 'foodlisting.html';
+        });
+    }
+
+    setupProtectedNavLinks() {
+        // Navigation bar listings link
+        const navListingsLink = document.getElementById('navListingsLink');
+        if (navListingsLink) {
+            navListingsLink.addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent default href navigation
+                
+                // Check authentication first
+                if (window.sharebiteAuth && !window.sharebiteAuth.isLoggedIn()) {
+                    window.sharebiteAuth.showLoginTypeSelection('access food listings');
+                    return;
+                }
+                
+                // If authenticated, redirect to food listing page
+                window.location.href = 'foodlisting.html';
+            });
+        }
+
+        // Footer food listings link
+        const footerListingsLink = document.getElementById('footerListingsLink');
+        if (footerListingsLink) {
+            footerListingsLink.addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent default href navigation
+                
+                // Check authentication first
+                if (window.sharebiteAuth && !window.sharebiteAuth.isLoggedIn()) {
+                    window.sharebiteAuth.showLoginTypeSelection('access food listings');
+                    return;
+                }
+                
+                // If authenticated, redirect to food listing page
+                window.location.href = 'foodlisting.html';
+            });
+        }
+
+        // Footer list food link (for donors)
+        const footerListFoodLink = document.getElementById('footerListFoodLink');
+        if (footerListFoodLink) {
+            footerListFoodLink.addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent default href navigation
+                
+                // Check authentication first
+                if (window.sharebiteAuth && !window.sharebiteAuth.isLoggedIn()) {
+                    window.sharebiteAuth.showLoginTypeSelection('list food for donation');
+                    return;
+                }
+                
+                // If authenticated, redirect to food listing page
+                window.location.href = 'foodlisting.html';
+            });
+        }
+
+        // Footer volunteer link (for collectors)
+        const footerVolunteerLink = document.getElementById('footerVolunteerLink');
+        if (footerVolunteerLink) {
+            footerVolunteerLink.addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent default href navigation
+                
+                // Check authentication first
+                if (window.sharebiteAuth && !window.sharebiteAuth.isLoggedIn()) {
+                    window.sharebiteAuth.showLoginTypeSelection('access volunteer opportunities');
+                    return;
+                }
+                
+                // If authenticated, redirect to volunteer page
+                window.location.href = 'vounteer_food.html';
+            });
+        }
     }
 
     setupStatsAnimation() {
