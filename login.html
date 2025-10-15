@@ -363,7 +363,7 @@
       // --- Form Submission ---
       const loginForm = document.getElementById("loginForm");
 
-      loginForm.addEventListener("submit", (e) => {
+      loginForm.addEventListener("submit", (async function(e) {
         e.preventDefault();
 
         // Get form values
