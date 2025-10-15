@@ -52,6 +52,26 @@
             transition: background 0.4s, color 0.4s;
         }
 
+        /* back to home button */
+        a{
+            text-decoration: none;
+        }
+        .back-button {
+        background: none;
+        border: none;
+        color: var(--primary-green);
+        font-size: 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        transition: transform 0.2s ease, color 0.2s ease;
+        }
+
+        .back-button:hover {
+            transform: translateY(-3px);
+        }
+
         body.dark-mode {
             background: linear-gradient(135deg, var(--bg-gradient-start-dark), var(--bg-gradient-end-dark));
             color: var(--text-color-dark);
@@ -287,6 +307,10 @@
     <button id="theme-toggle" class="theme-toggle" title="Toggle dark mode">🌙</button>
 
     <div class="auth-container">
+        <!-- Back to home button -->
+       <a href="index.html">
+      <button id="back-btn" class="back-button">← Back</button>
+      </a>
         <h1>Welcome Back, NGO Partner!</h1>
         <p class="subtitle">Log in to access your NGO dashboard and manage contributions.</p>
         <form id="ngoLoginForm">
@@ -318,6 +342,11 @@
     <script src="js/auth.js"></script>
     <script>
 
+        // Back to home button
+        document.getElementById("home-btn").addEventListener("click", () => {
+        window.location.href = "/index.html";
+        });
+        
         // --- Password Visibility Toggle ---
         const togglePassword = document.getElementById('togglePassword');
         const passwordInput = document.getElementById('password');

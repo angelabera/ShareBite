@@ -113,6 +113,25 @@
         opacity: 0;
         transform: translateY(20px);
       }
+      /* back to home button */
+      a{
+        text-decoration: none;
+      }
+      .back-button {
+      background: none;
+      border: none;
+      color: var(--primary-green);
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: transform 0.2s ease, color 0.2s ease;
+      }
+
+      .back-button:hover {
+        transform: translateY(-3px);
+      }
 
       body.dark-mode .auth-container {
         background-color: var(--card-bg-dark);
@@ -287,6 +306,10 @@
     </button>
 
     <div class="auth-container">
+      <!-- Back to home button -->
+       <a href="index.html">
+      <button id="back-btn" class="back-button">← Back</button>
+      </a>
       <h1>Create Your ShareBite Account</h1>
       <p class="subtitle">
         Join our mission to reduce food waste and feed communities.
@@ -393,6 +416,11 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/theme.js"></script>
     <script>
+      // Back to home button
+      document.getElementById("home-btn").addEventListener("click", () => {
+      window.location.href = "/index.html";
+      });
+
       // --- Password Visibility Toggle ---
       const togglePassword = document.getElementById("togglePassword");
       const passwordInput = document.getElementById("password");
