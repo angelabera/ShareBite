@@ -2561,6 +2561,33 @@ html, body, .feature-card, .food-card, .navbar, .modal-content, .footer, .stats-
     }
 }
 
+/* Field Alert Animations */
+@keyframes slideDownAlert {
+    from {
+        transform: translateY(-10px);
+        opacity: 0;
+        max-height: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+        max-height: 50px;
+    }
+}
+
+@keyframes slideUpAlert {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+        max-height: 50px;
+    }
+    to {
+        transform: translateY(-10px);
+        opacity: 0;
+        max-height: 0;
+    }
+}
+
 .impact-item {
     opacity: 0;
     transform: translateX(-30px);
@@ -4295,6 +4322,71 @@ body.dark-mode .notification-bell:hover {
 .toast.show {
     opacity: 1;
     transform: translateY(0);
+}
+
+/* Inline field error styling */
+.field-error-text {
+    color: #e74c3c;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    display: block;
+    animation: slideDownError 0.3s ease-out;
+    line-height: 1.2;
+}
+
+.field-error-text.removing {
+    animation: slideUpError 0.2s ease-in forwards;
+}
+
+/* Input field error styling */
+.form-group input.error,
+.form-group select.error,
+.form-group textarea.error {
+    border-color: #e74c3c !important;
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1) !important;
+    background-color: rgba(231, 76, 60, 0.05);
+}
+
+.form-group input.error:focus,
+.form-group select.error:focus,
+.form-group textarea.error:focus {
+    border-color: #e74c3c !important;
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.15) !important;
+}
+
+/* File upload area error styling */
+.file-upload-area.error {
+    border-color: #e74c3c !important;
+    background-color: rgba(231, 76, 60, 0.05);
+    border-width: 2px;
+}
+
+/* Error animations */
+@keyframes slideDownError {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 30px;
+    }
+}
+
+@keyframes slideUpError {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 30px;
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+        max-height: 0;
+    }
 }
 
 /* Date Input Confirmation - Simple approach using native browser controls */

@@ -317,15 +317,6 @@
                 placeholder="Additional details about the food..."
               ></textarea>
             </div>
-            <div class="form-group">
-              <label>Dietary Information (optional)</label>
-              <div class="checkbox-group">
-                  <div><input type="checkbox" id="tag-vegetarian" name="dietary" value="vegetarian"><label for="tag-vegetarian">Vegetarian</label></div>
-                  <div><input type="checkbox" id="tag-vegan" name="dietary" value="vegan"><label for="tag-vegan">Vegan</label></div>
-                  <div><input type="checkbox" id="tag-gluten-free" name="dietary" value="gluten-free"><label for="tag-gluten-free">Gluten-Free</label></div>
-                  <div><input type="checkbox" id="tag-nut-free" name="dietary" value="nut-free"><label for="tag-nut-free">Nut-Free</label></div>
-              </div>
-            </div>
           </div>
 
           <!-- Step 2: Pickup Info -->
@@ -336,14 +327,14 @@
                 <label for="freshUntil">Fresh Until *</label>
                 <div class="input-container-relative">
                   <input type="datetime-local" id="freshUntil" class="datetime-input" required />
-                  <span class="checkmark-icon hidden">✓</span>
+                  <span class="checkmark-icon">✓</span>
                 </div>
               </div>
               <div class="form-group">
                 <label for="pickupTime">Preferred Pickup Time *</label>
                 <div class="input-container-relative">
-                  <input type="time" id="pickupTime" class="datetime-input" required />
-                  <span class="checkmark-icon-time hidden">✓</span>
+                  <input type="time" id="pickupTime" class="datetime-input" required min="06:00" max="23:00" />
+                  <span class="checkmark-icon-time">✓</span>
                 </div>
               </div>
             </div>
