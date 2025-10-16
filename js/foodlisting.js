@@ -1,7 +1,3 @@
-// ShareBite JavaScript - Interactive Food Waste Reduction Platform
-
-import foodData from '../data/foods.json' assert { type: 'json' };
-
 class ShareBiteFoodListing {
     constructor() {
         this.currentRole = 'donor';
@@ -15,10 +11,12 @@ class ShareBiteFoodListing {
         this.initTheme(); // add theme initialization after base init
     }
 
-    init() {
+    async init() {
         this.setupEventListeners();
-        this.generateSampleListings();
-        this.renderFoodListings();
+        await this.generateSampleListings();
+        setTimeout(() => {
+            this.renderFoodListings();
+        }, 500);
         this.setupNotificationSystem();
         this.updateNotificationDisplay();
         this.startAnimations();
@@ -702,8 +700,13 @@ handleFileSelect(file) {
     }
 
     generateSampleListings() {
-        this.foodListings = foodData.foods;
-        this.filteredListings = foodData.foods;
+        fetch("../data/foods.json")
+            .then(response => response.json())
+            .then(data => {
+                this.foodListings = data.foods;
+                this.filteredListings = data.foods;
+            })
+        .catch(err => console.error(err));
     }
 
     getRandomFutureDate() {
