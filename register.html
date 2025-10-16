@@ -308,8 +308,9 @@
             type="email"
             id="email"
             name="email"
-            placeholder="Enter your email"
+            placeholder="Enter your email (eg: user@example.com)"
             required
+            pattern="^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$"
           />
         </div>
         <div class="form-group">
@@ -343,6 +344,15 @@
               <circle cx="12" cy="12" r="3"></circle>
             </svg>
           </button>
+        </div>
+        <div id="password-strength" style="
+            display: none;
+            margin-top: -0.4rem;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-align: right;">
+          Strength: <span id="strength-text" style="color: red;">Weak</span>
         </div>
         <div class="form-group">
           <label for="confirmPassword">Confirm Password</label>
@@ -393,6 +403,39 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/theme.js"></script>
     <script>
+      // --- Password Strength Meter ---
+      const pwdInput = document.getElementById("password");
+      const strengthDiv = document.getElementById("password-strength");
+      const strengthText = document.getElementById("strength-text");
+
+      pwdInput.addEventListener("focus", () => {
+        strengthDiv.style.display = "block";
+        updateStrength(pwdInput.value);
+      });
+
+      pwdInput.addEventListener("input", () => {
+        updateStrength(pwdInput.value);
+      });
+
+      function updateStrength(password) {
+        let strength = 0;
+        if (password.length >= 6) strength++;
+        if (/[A-Z]/.test(password)) strength++;
+        if (/[0-9]/.test(password)) strength++;
+        if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+        if (strength <= 1) {
+          strengthText.textContent = "Weak";
+          strengthText.style.color = "red";
+        } else if (strength === 2 || strength === 3) {
+          strengthText.textContent = "Medium";
+          strengthText.style.color = "orange";
+        } else {
+          strengthText.textContent = "Strong";
+          strengthText.style.color = "green";
+        }
+      }
+
       // --- Password Visibility Toggle ---
       const togglePassword = document.getElementById("togglePassword");
       const passwordInput = document.getElementById("password");
@@ -433,15 +476,60 @@
       // --- Form Submission ---
       const registerForm = document.getElementById("registerForm");
 
-      registerForm.addEventListener("submit", (e) => {
+      registerForm.addEventListener("submit", (async function(e) {
         e.preventDefault();
 
         // Get form values
         const fullName = registerForm.name.value.trim();
-        const email = registerForm.email.value.trim();
+        const emailInput = registerForm.email; 
+        const email = emailInput.value.trim(); 
         const password = registerForm.password.value.trim();
         const confirmPassword = registerForm.confirmPassword.value.trim();
         const role = registerForm.role.value;
+
+        // Create container for error message
+        const emailError = document.createElement('div');
+        emailError.style.color = 'var(--secondary-orange)';
+        emailError.style.paddingTop = '0.3rem';
+        emailError.style.fontSize = '0.97rem';
+        emailError.style.display = 'none';
+        
+        const emailGroup = emailInput.closest('.form-group'); 
+        emailGroup.appendChild(emailError);
+
+        function validateEmail(email) {
+        const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return re.test(email);
+        }
+
+        emailInput.addEventListener('blur', function () {
+          if (!emailInput.value || validateEmail(emailInput.value)) {
+            emailError.style.display = 'none';
+            emailInput.style.borderColor = 'var(--input-border-light)';
+          } else {
+            emailError.textContent = 'Please enter a valid email address.';
+            emailError.style.display = 'block';
+            emailInput.style.borderColor = 'var(--secondary-orange)';
+          }
+        });
+
+        if (!fullName || !email || !password || !role) {
+          alert("Please fill in all fields before registering.");
+          return;
+        }
+
+        // Password match validation
+        if (password !== confirmPassword) {
+          alert("Passwords do not match. Please re-enter.");
+          return;
+        }
+
+        // Hash password using SHA-256
+        const encoder = new TextEncoder();
+        const data = encoder.encode(password);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashedPassword = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 
         // Missing field validation
         if (!fullName || !email || !password || !role) {
@@ -475,6 +563,7 @@
           JSON.stringify({
             name: fullName,
             email: email,
+            password: hashedPassword,
             role: role,
           })
         );
@@ -482,7 +571,7 @@
         // Success message
         Swal.fire({
           title: "Registration Successful 🎉",
-          text: "Your account has been created successfully!",
+          text: "Your account has been created successfully! Please log in to continue.",
           icon: "success",
           confirmButtonColor: "#28a745",
           background: "#f0fff4",
@@ -493,9 +582,9 @@
 
         // Redirect after short delay
         setTimeout(() => {
-          window.location.href = "index.html";
+          window.location.href = "login.html";
         }, 1500); // wait for the Swal to close
-      });
+      }));
 
       const password = document.getElementById("password");
       const show_pwd = document.getElementById("show-pwd");

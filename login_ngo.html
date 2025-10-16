@@ -313,7 +313,9 @@
         <a href="ngo-register.html" class="register-link">Don't have a registered NGO? Register</a>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
     <script>
 
         // --- Password Visibility Toggle ---
@@ -342,16 +344,44 @@
             const password = loginForm.password.value.trim();
 
             if (!email || !password) {
-                alert("Please fill in all fields before logging in.");
+                Swal.fire({
+                    title: "Missing Information ⚠️",
+                    text: "Please fill in all fields before logging in.",
+                    icon: "warning",
+                    confirmButtonColor: "#FF6B35"
+                });
                 return;
             }
 
-            alert("NGO logged in successfully!");
+            // Extract NGO name from email (before @) for display
+            const ngoName = email.split('@')[0].replace(/[._-]/g, ' ')
+                .split(' ')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                .join(' ') + ' NGO';
+
+            // Create NGO user data
+            const ngoData = {
+                name: ngoName,
+                email: email,
+                type: 'ngo'
+            };
+
+            // Use auth system to log in NGO
+            sharebiteAuth.login(ngoData);
+
+            Swal.fire({
+                title: "NGO Login Successful 🎉",
+                text: `Welcome back, ${ngoName}!`,
+                icon: "success",
+                confirmButtonColor: "#28a745",
+                timer: 1500,
+                showConfirmButton: false
+            });
 
             // Redirect after short delay
             setTimeout(() => {
                 window.location.href = "index.html"; // Further we can redirect to NGO dashboard with "ngo-dashboard.html"
-            }, 500);
+            }, 1500);
         });
     </script>
 

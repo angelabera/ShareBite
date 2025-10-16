@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MIT License - ShareBite</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
+    <style>
+        /* Reset and Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #4CAF50;
+            --primary-dark: #2E7D32;
+            --primary-light: #81C784;
+            --secondary-color: #FF6B35;
+            --accent-color: #FFC107;
+            --white: #FFFFFF;
+            --light-gray: #F5F7FA;
+            --medium-gray: #9E9E9E;
+            --dark-gray: #424242;
+            --black: #212121;
+            --card-bg: var(--white);
+            --primary-gradient: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+            --secondary-gradient: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+            --font-family: 'Poppins', sans-serif;
+            --border-radius: 12px;
+            --card-radius: 16px;
+            --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 5px 25px rgba(0, 0, 0, 0.15);
+            --shadow-heavy: 0 10px 40px rgba(0, 0, 0, 0.2);
+            --transition-medium: 0.3s ease;
+        }
+
+        body {
+            font-family: var(--font-family);
+            line-height: 1.6;
+            color: var(--black);
+            background: var(--light-gray);
+        }
+
+        /* Dark Mode */
+        :root.dark {
+            --white: #121212;
+            --light-gray: #1E1E1E;
+            --medium-gray: #B0B0B0;
+            --dark-gray: #E0E0E0;
+            --black: #FAFAFA;
+            --card-bg: #2E2E2E;
+            --shadow-light: 0 2px 10px rgba(0,0,0,0.6);
+            --shadow-medium: 0 5px 25px rgba(0,0,0,0.7);
+            --shadow-heavy: 0 10px 40px rgba(0,0,0,0.8);
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            transition: var(--transition-medium);
+        }
+
+        :root.dark .navbar {
+            background: rgba(18,18,18,0.95);
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .nav-logo i {
+            font-size: 1.8rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--black);
+            font-weight: 500;
+            transition: var(--transition-medium);
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        .theme-toggle {
+            background: var(--light-gray);
+            border: none;
+            padding: 0.6rem 0.8rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            transition: var(--transition-medium);
+        }
+
+        .theme-toggle:hover {
+            background: var(--primary-light);
+            color: #fff;
+        }
+
+        :root.dark .theme-toggle {
+            background: #2a2a2a;
+            color: var(--accent-color);
+        }
+
+        /* License Content */
+        .license-page {
+            min-height: 100vh;
+            padding-top: 100px;
+            padding-bottom: 4rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .license-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .license-header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .license-header p {
+            font-size: 1.2rem;
+            color: var(--medium-gray);
+        }
+
+        .license-card {
+            background: var(--card-bg);
+            border-radius: var(--card-radius);
+            padding: 3rem;
+            box-shadow: var(--shadow-medium);
+            margin-bottom: 2rem;
+        }
+
+        .license-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--primary-gradient);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-bottom: 2rem;
+        }
+
+        .license-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .license-section h2 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .license-section h3 {
+            font-size: 1.2rem;
+            color: var(--black);
+            margin-bottom: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .license-section p {
+            color: var(--medium-gray);
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .license-text {
+            background: var(--light-gray);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--primary-color);
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: var(--dark-gray);
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        .permissions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .permission-item {
+            background: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: start;
+            gap: 1rem;
+            transition: var(--transition-medium);
+        }
+
+        .permission-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .permission-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .permission-icon.warning {
+            background: var(--secondary-gradient);
+        }
+
+        .permission-icon.condition {
+            background: linear-gradient(135deg, var(--accent-color), #FF8F00);
+        }
+
+        .permission-content h4 {
+            font-size: 1rem;
+            color: var(--black);
+            margin-bottom: 0.5rem;
+        }
+
+        .permission-content p {
+            font-size: 0.9rem;
+            color: var(--medium-gray);
+            margin: 0;
+        }
+
+        .copyright-notice {
+            text-align: center;
+            padding: 2rem;
+            background: var(--primary-gradient);
+            color: white;
+            border-radius: var(--card-radius);
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--black);
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+
+        :root.dark .footer {
+            background: #0d0d0d;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            max-width: 1200px;
+            margin: 0 auto 2rem;
+            padding: 0 2rem;
+        }
+
+        .footer-section h4 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-light);
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--primary-light);
+        }
+
+        .footer-section p {
+            color: var(--medium-gray);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section ul li a {
+            color: var(--medium-gray);
+            text-decoration: none;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section ul li a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 0;
+            height: 2px;
+            background-color: #FF6B35;
+            transition: width 0.3s ease;
+        }
+
+        .footer-section ul li a:hover {
+            color: #FF6B35;
+        }
+
+        .footer-section ul li a:hover::after {
+            width: 100%;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--dark-gray);
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            transition: var(--transition-medium);
+        }
+
+        .social-links a:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--dark-gray);
+            padding-top: 2rem;
+            text-align: center;
+            color: var(--medium-gray);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+
+        .footer-credit {
+            color: var(--primary-light);
+            font-weight: 600;
+        }
+        .footer-bottom a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .footer-bottom a:hover {
+            color: var(--primary-light);
+        }
+
+        .footer-bottom a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-light);
+            transition: width 0.3s ease;
+        }
+
+        .footer-bottom a:hover::after {
+            width: 100%;
+        }
+
+        /* Dark mode support */
+        :root.dark .footer-bottom a {
+            color: var(--primary-light);
+        }
+
+        :root.dark .footer-bottom a:hover {
+            color: var(--accent-color);
+        }
+
+        :root.dark .footer-bottom a::after {
+            background-color: var(--accent-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .license-header h1 {
+                font-size: 2rem;
+            }
+
+            .license-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .permissions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <i class="fas fa-utensils"></i>
+                <span>ShareBite</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html#home" class="nav-link">Home</a></li>
+                <li><a href="index.html#features" class="nav-link">Features</a></li>
+                <li><a href="foodlisting.html" class="nav-link">Listings</a></li>
+                <li><a href="index.html#about" class="nav-link">About</a></li>
+                <li><a href="index.html#contact-section" class="nav-link">Contact</a></li>
+            </ul>
+            <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <script>
+        // Theme Toggle Functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggle = document.getElementById('themeToggle');
+            if (!themeToggle) return;
+
+            const root = document.documentElement;
+            const body = document.body;
+
+            const applyTheme = (theme) => {
+                if (theme === 'dark') {
+                    root.classList.add('dark');
+                    body.classList.add('dark-mode');
+                } else {
+                    root.classList.remove('dark');
+                    body.classList.remove('dark-mode');
+                }
+                updateIcon(theme);
+            };
+
+            const updateIcon = (theme) => {
+                const icon = themeToggle.querySelector('i');
+                if (icon) {
+                    if (theme === 'dark') {
+                        icon.classList.remove('fa-moon');
+                        icon.classList.add('fa-sun');
+                    } else {
+                        icon.classList.remove('fa-sun');
+                        icon.classList.add('fa-moon');
+                    }
+                }
+            };
+
+            const toggleTheme = () => {
+                const isDark = root.classList.contains('dark') || body.classList.contains('dark-mode');
+                const newTheme = isDark ? 'light' : 'dark';
+                localStorage.setItem('sharebite-theme', newTheme);
+                applyTheme(newTheme);
+            };
+
+            themeToggle.addEventListener('click', toggleTheme);
+
+            // Apply saved theme on load
+            const savedTheme = localStorage.getItem('sharebite-theme');
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            applyTheme(savedTheme || (prefersDark ? 'dark' : 'light'));
+        });
+    </script>
+
+    <!-- License Content -->
+    <main class="license-page">
+        <div class="container">
+            <div class="license-header">
+                <h1><i class="fas fa-balance-scale"></i> MIT License</h1>
+                <p>Open Source Software License for ShareBite</p>
+            </div>
+
+            <div class="license-card">
+                <div class="license-badge">
+                    <i class="fas fa-check-circle"></i>
+                    <span>MIT Licensed</span>
+                </div>
+
+                <div class="license-section">
+                    <h2><i class="fas fa-info-circle"></i> What is the MIT License?</h2>
+                    <p>
+                        The MIT License is a permissive free software license that allows you to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the software. It's one of the most popular open-source licenses due to its simplicity and permissiveness.
+                    </p>
+                </div>
+
+                <div class="license-section">
+                    <h2><i class="fas fa-key"></i> Key Permissions</h2>
+                    <div class="permissions-grid">
+                        <div class="permission-item">
+                            <div class="permission-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="permission-content">
+                                <h4>Commercial Use</h4>
+                                <p>You can use this software for commercial purposes</p>
+                            </div>
+                        </div>
+                        <div class="permission-item">
+                            <div class="permission-icon">
+                                <i class="fas fa-edit"></i>
+                            </div>
+                            <div class="permission-content">
+                                <h4>Modification</h4>
+                                <p>You can modify the source code as needed</p>
+                            </div>
+                        </div>
+                        <div class="permission-item">
+                            <div class="permission-icon">
+                                <i class="fas fa-share-alt"></i>
+                            </div>
+                            <div class="permission-content">
+                                <h4>Distribution</h4>
+                                <p>You can distribute copies of the software</p>
+                            </div>
+                        </div>
+                        <div class="permission-item">
+                            <div class="permission-icon">
+                                <i class="fas fa-lock-open"></i>
+                            </div>
+                            <div class="permission-content">
+                                <h4>Private Use</h4>
+                                <p>You can use the software privately</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="license-section">
+                    <h2><i class="fas fa-exclamation-triangle"></i> Limitations</h2>
+                    <div class="permissions-grid">
+                        <div class="permission-item">
+                            <div class="permission-icon warning">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="permission-content">
+                                <h4>No Liability</h4>
+                                <p>The software is provided "as is" without warranty</p>
+                            </div>
+                        </div>
+                        <div class="permission-item">
+                            <div class="permission-icon warning">
+                                <i class="fas fa-times-circle"></i>
+                            </div>
+                            <div class="permission-content">
+                                <h4>No Warranty</h4>
+                                <p>No warranty of any kind is provided</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="license-section">
+                    <h2><i class="fas fa-clipboard-list"></i> Conditions</h2>
+                    <div class="permissions-grid">
+                        <div class="permission-item">
+                            <div class="permission-icon condition">
+                                <i class="fas fa-file-contract"></i>
+                            </div>
+                            <div class="permission-content">
+                                <h4>License Inclusion</h4>
+                                <p>Include the license in all copies or substantial portions</p>
+                            </div>
+                        </div>
+                        <div class="permission-item">
+                            <div class="permission-icon condition">
+                                <i class="fas fa-copyright"></i>
+                            </div>
+                            <div class="permission-content">
+                                <h4>Copyright Notice</h4>
+                                <p>Include the copyright notice in all copies</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="license-section">
+                    <h2><i class="fas fa-scroll"></i> Full License Text</h2>
+                    <div class="license-text">MIT License
+
+Copyright (c) 2025 Angela Bera
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</div>
+                </div>
+
+                <div class="copyright-notice">
+                    <i class="fas fa-copyright"></i> Copyright (c) 2025 Angela Bera - All Rights Reserved
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-utensils"></i>
+                    <span>ShareBite</span>
+                </div>
+                <p>
+                    Making a difference, one meal at a time. Join us in the fight
+                    against food waste and hunger.
+                </p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html#home">Home</a></li>
+                    <li><a href="index.html#features">How It Works</a></li>
+                    <li><a href="foodlisting.html">Food Listings</a></li>
+                    <li><a href="index.html#about">About Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>For Donors</h4>
+                <ul>
+                    <li><a href="foodlisting.html">List Food</a></li>
+                    <li><a href="donor-guidelines.html">Donor Guidelines</a></li>
+                    <li><a href="#">Track Impact</a></li>
+                    <li><a href="support.html">Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>For Collectors</h4>
+                <ul>
+                    <li><a href="#">Find Food</a></li>
+                    <li><a href="ngo-register.html">Register NGO</a></li>
+                    <li><a href="vounteer_food.html">Volunteer</a></li>
+                    <li><a href="#">Resources</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p class="footer-credit">Made with 💚 by Angela Bera</p>
+            <p>&copy; 2025 ShareBite. All rights reserved. <a href="License.html">License</a></p>
+        </div>
+    </footer>
+</body>
+</html>
