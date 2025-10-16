@@ -4346,6 +4346,7 @@ body.dark-mode .notification-bell:hover {
     border-color: #e74c3c !important;
     box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1) !important;
     background-color: rgba(231, 76, 60, 0.05);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 .form-group input.error:focus,

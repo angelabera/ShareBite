@@ -980,45 +980,44 @@ handleFileSelect(file) {
         }, 300);
     }
 
-    // Setup real-time validation - clear errors only when field becomes valid
+    // Setup real-time validation - persistent red outline until input becomes valid
     setupRealTimeValidation() {
         const formInputs = document.querySelectorAll('#listingForm input, #listingForm select, #listingForm textarea');
         
         formInputs.forEach(input => {
-            // Validate and clear error only if field becomes valid
-            const validateAndClearError = () => {
-                if (input.classList.contains('error')) {
-                    const fieldError = this.validateSingleField(input);
-                    if (!fieldError) {
-                        // Field is now valid, clear the error
-                        this.clearFieldError(input);
-                    } else {
-                        // Field still has errors, update the error message
-                        this.showFieldError(input, fieldError);
-                    }
+            // Real-time validation that persists errors until fixed
+            const realTimeValidate = () => {
+                const fieldError = this.validateSingleField(input);
+                
+                if (fieldError) {
+                    // Field has error - show/maintain red outline and error text
+                    this.showFieldError(input, fieldError);
+                } else {
+                    // Field is valid - immediately clear red outline and error text
+                    this.clearFieldError(input);
                 }
             };
             
             // Remove any existing event listeners to avoid duplicates
-            input.removeEventListener('input', validateAndClearError);
-            input.removeEventListener('change', validateAndClearError);
-            input.removeEventListener('blur', validateAndClearError);
+            input.removeEventListener('input', realTimeValidate);
+            input.removeEventListener('change', realTimeValidate);
+            input.removeEventListener('blur', realTimeValidate);
             
-            // Add event listeners
-            input.addEventListener('input', validateAndClearError);
-            input.addEventListener('change', validateAndClearError);
-            input.addEventListener('blur', validateAndClearError);
+            // Add event listeners for immediate feedback
+            input.addEventListener('input', realTimeValidate);
+            input.addEventListener('change', realTimeValidate);
+            input.addEventListener('blur', realTimeValidate);
         });
         
         // Special handling for file upload
         const photoInput = document.getElementById('photo');
         if (photoInput) {
             photoInput.addEventListener('change', () => {
-                if (photoInput.classList.contains('error')) {
-                    const fieldError = this.validateSingleField(photoInput);
-                    if (!fieldError) {
-                        this.clearFieldError(photoInput);
-                    }
+                const fieldError = this.validateSingleField(photoInput);
+                if (fieldError) {
+                    this.showFieldError(photoInput, fieldError);
+                } else {
+                    this.clearFieldError(photoInput);
                 }
             });
         }

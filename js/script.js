@@ -161,14 +161,15 @@ class ShareBite {
     this.currentStep = 1;
     this.totalSteps = 3;
 
-    addListingBtn.addEventListener('click', () => {
-        modal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-        this.resetFormSteps();
-        this.clearAllFieldErrors(); // Clear any existing errors
-        this.setupRealTimeValidation(); // Setup real-time validation
-        this.setupSubmitButton(); // Ensure submit button works properly
-    });
+    // addListingBtn now redirects to foodlisting.html via onclick attribute
+    // addListingBtn.addEventListener('click', () => {
+    //     modal.style.display = 'block';
+    //     document.body.style.overflow = 'hidden';
+    //     this.resetFormSteps();
+    //     this.clearAllFieldErrors(); // Clear any existing errors
+    //     this.setupRealTimeValidation(); // Setup real-time validation
+    //     this.setupSubmitButton(); // Ensure submit button works properly
+    // });
 
     const closeModal = () => {
         modal.style.display = 'none';
@@ -614,45 +615,44 @@ clearAllFieldErrors() {
     }
 }
 
-// Setup real-time validation - clear errors only when field becomes valid
+// Setup real-time validation - persistent red outline until input becomes valid
 setupRealTimeValidation() {
     const formInputs = document.querySelectorAll('#listingForm input, #listingForm select, #listingForm textarea');
     
     formInputs.forEach(input => {
-        // Validate and clear error only if field becomes valid
-        const validateAndClearError = () => {
-            if (input.classList.contains('error')) {
-                const fieldError = this.validateSingleField(input);
-                if (!fieldError) {
-                    // Field is now valid, clear the error
-                    this.clearFieldError(input);
-                } else {
-                    // Field still has errors, update the error message
-                    this.showFieldError(input, fieldError);
-                }
+        // Real-time validation that persists errors until fixed
+        const realTimeValidate = () => {
+            const fieldError = this.validateSingleField(input);
+            
+            if (fieldError) {
+                // Field has error - show/maintain red outline and error text
+                this.showFieldError(input, fieldError);
+            } else {
+                // Field is valid - immediately clear red outline and error text
+                this.clearFieldError(input);
             }
         };
         
         // Remove any existing event listeners to avoid duplicates
-        input.removeEventListener('input', validateAndClearError);
-        input.removeEventListener('change', validateAndClearError);
-        input.removeEventListener('blur', validateAndClearError);
+        input.removeEventListener('input', realTimeValidate);
+        input.removeEventListener('change', realTimeValidate);
+        input.removeEventListener('blur', realTimeValidate);
         
-        // Add event listeners
-        input.addEventListener('input', validateAndClearError);
-        input.addEventListener('change', validateAndClearError);
-        input.addEventListener('blur', validateAndClearError);
+        // Add event listeners for immediate feedback
+        input.addEventListener('input', realTimeValidate);
+        input.addEventListener('change', realTimeValidate);
+        input.addEventListener('blur', realTimeValidate);
     });
     
     // Special handling for file upload
     const photoInput = document.getElementById('photo');
     if (photoInput) {
         photoInput.addEventListener('change', () => {
-            if (photoInput.classList.contains('error')) {
-                const fieldError = this.validateSingleField(photoInput);
-                if (!fieldError) {
-                    this.clearFieldError(photoInput);
-                }
+            const fieldError = this.validateSingleField(photoInput);
+            if (fieldError) {
+                this.showFieldError(photoInput, fieldError);
+            } else {
+                this.clearFieldError(photoInput);
             }
         });
     }
@@ -1255,21 +1255,22 @@ handleFileSelect(file) {
     }
 
     setupHeroButtons() {
-        const donateBtn = document.getElementById('donateFood');
-        const findBtn = document.getElementById('findFood');
+        // All buttons now redirect to foodlisting.html via onclick attributes
+        // const donateBtn = document.getElementById('donateFood');
+        // const findBtn = document.getElementById('findFood');
         
-        donateBtn.addEventListener('click', () => {
-            if (this.currentRole === 'donor') {
-                document.getElementById('addListingModal').style.display = 'block';
-                document.body.style.overflow = 'hidden';
-            } else {
-                document.getElementById('listings').scrollIntoView({ behavior: 'smooth' });
-            }
-        });
+        // donateBtn.addEventListener('click', () => {
+        //     if (this.currentRole === 'donor') {
+        //         document.getElementById('addListingModal').style.display = 'block';
+        //         document.body.style.overflow = 'hidden';
+        //     } else {
+        //         document.getElementById('listings').scrollIntoView({ behavior: 'smooth' });
+        //     }
+        // });
         
-        findBtn.addEventListener('click', () => {
-            document.getElementById('listings').scrollIntoView({ behavior: 'smooth' });
-        });
+        // findBtn.addEventListener('click', () => {
+        //     document.getElementById('listings').scrollIntoView({ behavior: 'smooth' });
+        // });
     }
 
     setupStatsAnimation() {
