@@ -61,11 +61,8 @@ class ShareBite {
         // Role switching
         this.setupRoleSwitch();
         
-        // Modal functionality
-        this.setupModal();
-        
-        // Form handling
-        this.setupFormHandling();
+        // Form handling (removed modal functionality as redirecting to foodlisting.html)
+        // this.setupFormHandling();
         
         // Date input confirmation functionality
         this.setupDateInputConfirmation();
@@ -123,24 +120,23 @@ class ShareBite {
     }
 
     updateUIForRole() {
-        const donateBtn = document.getElementById('donateFood');
+        // Note: Buttons now redirect to foodlisting.html, so no dynamic content changes needed
         const findBtn = document.getElementById('findFood');
-        const addListingBtn = document.getElementById('addListingBtn');
         const notificationBell = document.getElementById('notificationBell');
         
         if (this.currentRole === 'collector') {
-            donateBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
-            findBtn.innerHTML = '<i class="fas fa-heart"></i> Help Others';
-            addListingBtn.style.display = 'none';
+            if (findBtn) {
+                findBtn.innerHTML = '<i class="fas fa-heart"></i> Help Others';
+            }
             
             // Show notification bell for collectors
             if (notificationBell) {
                 notificationBell.style.display = 'block';
             }
         } else {
-            donateBtn.innerHTML = '<i class="fas fa-heart"></i> Donate Food';
-            findBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
-            addListingBtn.style.display = 'flex';
+            if (findBtn) {
+                findBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
+            }
             
             // Hide notification bell for donors (unless they have notifications)
             if (notificationBell && this.notifications.length === 0) {
@@ -152,165 +148,7 @@ class ShareBite {
         this.renderFoodListings();
     }
 
-   setupModal() {
-    const modal = document.getElementById('addListingModal');
-    const addListingBtn = document.getElementById('addListingBtn');
-    const closeModalBtn = document.querySelector('.close-modal');
-    const cancelBtn = document.getElementById('cancelForm');
-
-    this.currentStep = 1;
-    this.totalSteps = 3;
-
-    // addListingBtn now redirects to foodlisting.html via onclick attribute
-    // addListingBtn.addEventListener('click', () => {
-    //     modal.style.display = 'block';
-    //     document.body.style.overflow = 'hidden';
-    //     this.resetFormSteps();
-    //     this.clearAllFieldErrors(); // Clear any existing errors
-    //     this.setupRealTimeValidation(); // Setup real-time validation
-    //     this.setupSubmitButton(); // Ensure submit button works properly
-    // });
-
-    const closeModal = () => {
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-        this.resetForm();
-        this.resetFormSteps();
-    };
-
-    closeModalBtn.addEventListener('click', closeModal);
-    cancelBtn.addEventListener('click', closeModal);
-    
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeModal();
-        }
-    });
-
-    this.setupFileUpload();
-    this.setupFormNavigation();
-}
-
-setupFormNavigation() {
-    const nextBtn = document.getElementById('nextStep');
-    const prevBtn = document.getElementById('prevStep');
-    const submitBtn = document.getElementById('submitForm');
-
-    nextBtn.addEventListener('click', () => {
-        if (this.validateCurrentStep()) {
-            this.goToStep(this.currentStep + 1);
-        }
-    });
-
-    prevBtn.addEventListener('click', () => {
-        this.goToStep(this.currentStep - 1);
-    });
-}
-
-goToStep(stepNumber) {
-    if (stepNumber < 1 || stepNumber > this.totalSteps) return;
-
-    document.querySelectorAll('.form-step').forEach(step => {
-        step.classList.remove('active');
-    });
-
-    const newStep = document.querySelector(`.form-step[data-step="${stepNumber}"]`);
-    if (newStep) {
-        newStep.classList.add('active');
-    }
-
-    this.updateProgress(stepNumber);
-
-    this.updateNavigationButtons(stepNumber);
-
-    this.currentStep = stepNumber;
-}
-
-updateProgress(stepNumber) {
-    const steps = document.querySelectorAll('.progress-step');
-    
-    steps.forEach((step, index) => {
-        const stepNum = index + 1;
-        
-        if (stepNum < stepNumber) {
-            step.classList.add('completed');
-            step.classList.remove('active');
-        } else if (stepNum === stepNumber) {
-            step.classList.add('active');
-            step.classList.remove('completed');
-        } else {
-            step.classList.remove('active', 'completed');
-        }
-    });
-}
-
-updateNavigationButtons(stepNumber) {
-    const nextBtn = document.getElementById('nextStep');
-    const prevBtn = document.getElementById('prevStep');
-    const submitBtn = document.getElementById('submitForm');
-
-    prevBtn.style.display = stepNumber === 1 ? 'none' : 'flex';
-    nextBtn.style.display = stepNumber === this.totalSteps ? 'none' : 'flex';
-    submitBtn.style.display = stepNumber === this.totalSteps ? 'flex' : 'none';
-}
-
-validateCurrentStep() {
-    const currentStepEl = document.querySelector(`.form-step[data-step="${this.currentStep}"]`);
-    const requiredInputs = currentStepEl.querySelectorAll('[required]');
-    let hasErrors = false;
-    let firstErrorField = null;
-    
-    // Clear existing errors first
-    requiredInputs.forEach(input => this.clearFieldError(input));
-    
-    // Validate each required field in the current step
-    for (let input of requiredInputs) {
-        const fieldError = this.validateSingleField(input);
-        
-        if (fieldError) {
-            this.showFieldError(input, fieldError);
-            hasErrors = true;
-            
-            if (!firstErrorField) {
-                firstErrorField = input;
-            }
-        } else {
-            // Clear any existing error if validation passes
-            this.clearFieldError(input);
-            
-            // Optional: Also validate non-required fields with values
-            const optionalInputs = currentStepEl.querySelectorAll('input:not([required]), textarea:not([required]), select:not([required])');
-            for (let optionalInput of optionalInputs) {
-                if (optionalInput.value.trim()) {
-                    const fieldError = this.validateSingleField(optionalInput);
-                    if (fieldError) {
-                        this.showFieldError(optionalInput, fieldError);
-                        hasErrors = true;
-                        
-                        if (!firstErrorField) {
-                            firstErrorField = optionalInput;
-                        }
-                    } else {
-                        this.clearFieldError(optionalInput);
-                    }
-                }
-            }
-        }
-    }
-    
-    // Focus on the first field with an error
-    if (hasErrors && firstErrorField) {
-        firstErrorField.focus();
-        
-        // Scroll the field into view smoothly
-        firstErrorField.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'center' 
-        });
-    }
-    
-    return !hasErrors;
-}
+   // Modal functionality removed - users are now redirected to foodlisting.html
 
 // Comprehensive validation for individual fields
 validateSingleField(fieldElement) {
@@ -615,128 +453,73 @@ clearAllFieldErrors() {
     }
 }
 
-// Setup real-time validation - persistent red outline until input becomes valid
+// Setup real-time validation - clear errors only when field becomes valid
 setupRealTimeValidation() {
+    // Clear any existing validation handlers first
+    this.clearValidationHandlers();
+    
     const formInputs = document.querySelectorAll('#listingForm input, #listingForm select, #listingForm textarea');
     
+    // Store validation handlers for proper cleanup
+    if (!this.validationHandlers) {
+        this.validationHandlers = new Map();
+    }
+    
     formInputs.forEach(input => {
-        // Real-time validation that persists errors until fixed
-        const realTimeValidate = () => {
-            const fieldError = this.validateSingleField(input);
-            
-            if (fieldError) {
-                // Field has error - show/maintain red outline and error text
-                this.showFieldError(input, fieldError);
-            } else {
-                // Field is valid - immediately clear red outline and error text
-                this.clearFieldError(input);
+        // Validate and clear error only if field becomes valid
+        const validateAndClearError = () => {
+            if (input.classList.contains('error')) {
+                const fieldError = this.validateSingleField(input);
+                if (!fieldError) {
+                    // Field is now valid, clear the error
+                    this.clearFieldError(input);
+                } else {
+                    // Field still has errors, update the error message
+                    this.showFieldError(input, fieldError);
+                }
             }
         };
         
-        // Remove any existing event listeners to avoid duplicates
-        input.removeEventListener('input', realTimeValidate);
-        input.removeEventListener('change', realTimeValidate);
-        input.removeEventListener('blur', realTimeValidate);
+        // Store the handler for later cleanup
+        this.validationHandlers.set(input, validateAndClearError);
         
-        // Add event listeners for immediate feedback
-        input.addEventListener('input', realTimeValidate);
-        input.addEventListener('change', realTimeValidate);
-        input.addEventListener('blur', realTimeValidate);
+        // Add event listeners
+        input.addEventListener('input', validateAndClearError);
+        input.addEventListener('change', validateAndClearError);
+        input.addEventListener('blur', validateAndClearError);
     });
     
     // Special handling for file upload
     const photoInput = document.getElementById('photo');
     if (photoInput) {
-        photoInput.addEventListener('change', () => {
-            const fieldError = this.validateSingleField(photoInput);
-            if (fieldError) {
-                this.showFieldError(photoInput, fieldError);
-            } else {
-                this.clearFieldError(photoInput);
+        const photoValidateHandler = () => {
+            if (photoInput.classList.contains('error')) {
+                const fieldError = this.validateSingleField(photoInput);
+                if (!fieldError) {
+                    this.clearFieldError(photoInput);
+                }
             }
+        };
+        
+        this.validationHandlers.set(photoInput, photoValidateHandler);
+        photoInput.addEventListener('change', photoValidateHandler);
+    }
+}
+
+clearValidationHandlers() {
+    if (this.validationHandlers) {
+        this.validationHandlers.forEach((handler, input) => {
+            input.removeEventListener('input', handler);
+            input.removeEventListener('change', handler);
+            input.removeEventListener('blur', handler);
         });
+        this.validationHandlers.clear();
     }
 }
 
-resetFormSteps() {
-    this.currentStep = 1;
-    this.goToStep(1);
-}
 
-setupFileUpload() {
-    const fileInput = document.getElementById('photo');
-    const uploadArea = document.getElementById('photoUpload');
-    const imagePreview = document.getElementById('imagePreview');
 
-    uploadArea.addEventListener('click', () => {
-        fileInput.click();
-    });
 
-    uploadArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadArea.classList.add('drag-over');
-    });
-
-    uploadArea.addEventListener('dragleave', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('drag-over');
-    });
-
-    uploadArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('drag-over');
-        const files = e.dataTransfer.files;
-        if (files.length > 0 && files[0].type.startsWith('image/')) {
-            fileInput.files = files;
-            this.handleFileSelect(files[0]);
-        } else {
-            this.showFieldError(document.getElementById('photo'), 'Please upload a valid image file (JPG, PNG, GIF)');
-        }
-    });
-
-    fileInput.addEventListener('change', (e) => {
-        if (e.target.files.length > 0) {
-            this.handleFileSelect(e.target.files[0]);
-        }
-    });
-}
-
-handleFileSelect(file) {
-    const imagePreview = document.getElementById('imagePreview');
-    const uploadArea = document.getElementById('photoUpload');
-    
-    if (!file.type.startsWith('image/')) {
-        this.showFieldError(document.getElementById('photo'), 'Please select a valid image file (JPG, PNG, GIF)');
-        return;
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-        this.showFieldError(document.getElementById('photo'), 'Image size must be less than 5MB');
-        return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        imagePreview.innerHTML = `
-            <img src="${e.target.result}" alt="Food preview">
-            <button type="button" class="remove-image">
-                <i class="fas fa-times"></i>
-            </button>
-        `;
-        imagePreview.classList.add('active');
-        uploadArea.style.display = 'none';
-
-        // Add remove functionality
-        const removeBtn = imagePreview.querySelector('.remove-image');
-        removeBtn.addEventListener('click', () => {
-            imagePreview.innerHTML = '';
-            imagePreview.classList.remove('active');
-            uploadArea.style.display = 'block';
-            document.getElementById('photo').value = '';
-        });
-    };
-    reader.readAsDataURL(file);
-}
 
 
     setupFormHandling() {
@@ -830,43 +613,36 @@ handleFileSelect(file) {
         return true;
     }
 
-    // Validate all steps to ensure complete form validation
+    // Validate all form fields (modal step validation removed)
     validateAllSteps() {
         let allValid = true;
         let firstInvalidField = null;
         
-        // Check each step for errors
-        for (let step = 1; step <= this.totalSteps; step++) {
-            const stepEl = document.querySelector(`.form-step[data-step="${step}"]`);
-            if (stepEl) {
-                const inputs = stepEl.querySelectorAll('input, select, textarea');
-                inputs.forEach(input => {
-                    const error = this.validateSingleField(input);
-                    if (error) {
-                        this.showFieldError(input, error);
-                        allValid = false;
-                        if (!firstInvalidField) {
-                            firstInvalidField = input;
-                        }
+        // Check all form inputs since modal steps are removed
+        const form = document.getElementById('listingForm');
+        if (form) {
+            const inputs = form.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                const error = this.validateSingleField(input);
+                if (error) {
+                    this.showFieldError(input, error);
+                    allValid = false;
+                    if (!firstInvalidField) {
+                        firstInvalidField = input;
                     }
-                });
-            }
+                }
+            });
         }
         
-        // Focus first invalid field and go to its step
+        // Focus first invalid field (modal step navigation removed)
         if (!allValid && firstInvalidField) {
-            const errorStep = firstInvalidField.closest('.form-step');
-            if (errorStep) {
-                const stepNumber = parseInt(errorStep.getAttribute('data-step'));
-                this.goToStep(stepNumber);
-                firstInvalidField.focus();
-                
-                // Scroll the field into view smoothly
-                firstInvalidField.scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'center' 
-                });
-            }
+            firstInvalidField.focus();
+            
+            // Scroll the field into view smoothly
+            firstInvalidField.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center' 
+            });
         }
         
         return allValid;
@@ -935,9 +711,7 @@ handleFileSelect(file) {
         // Reset form (this also clears all errors)
         this.resetForm();
         
-        // Reset to first step
-        this.currentStep = 1;
-        this.goToStep(1);
+        // Modal step functionality removed
     }
 
     resetForm() {
@@ -1255,22 +1029,21 @@ handleFileSelect(file) {
     }
 
     setupHeroButtons() {
-        // All buttons now redirect to foodlisting.html via onclick attributes
-        // const donateBtn = document.getElementById('donateFood');
-        // const findBtn = document.getElementById('findFood');
+        const donateBtn = document.getElementById('donateFood');
+        const findBtn = document.getElementById('findFood');
         
-        // donateBtn.addEventListener('click', () => {
-        //     if (this.currentRole === 'donor') {
-        //         document.getElementById('addListingModal').style.display = 'block';
-        //         document.body.style.overflow = 'hidden';
-        //     } else {
-        //         document.getElementById('listings').scrollIntoView({ behavior: 'smooth' });
-        //     }
-        // });
+        donateBtn.addEventListener('click', () => {
+            if (this.currentRole === 'donor') {
+                document.getElementById('addListingModal').style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.getElementById('listings').scrollIntoView({ behavior: 'smooth' });
+            }
+        });
         
-        // findBtn.addEventListener('click', () => {
-        //     document.getElementById('listings').scrollIntoView({ behavior: 'smooth' });
-        // });
+        findBtn.addEventListener('click', () => {
+            document.getElementById('listings').scrollIntoView({ behavior: 'smooth' });
+        });
     }
 
     setupStatsAnimation() {

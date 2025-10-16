@@ -92,7 +92,7 @@
             waste.
           </p>
           <div class="hero-buttons">
-            <button class="btn btn-primary" id="donateFood" onclick="window.location.href='foodlisting.html'">
+            <button class="btn btn-primary" onclick="window.location.href='foodlisting.html'">
               <i class="fas fa-heart"></i>
               Donate Food
             </button>
@@ -231,7 +231,7 @@
             placeholder="Search by location or food type..."
         />
     </div>
-    <button class="add-listing-btn" id="addListingBtn" onclick="window.location.href='foodlisting.html'">
+    <button class="add-listing-btn" onclick="window.location.href='foodlisting.html'">
         <i class="fas fa-plus"></i>
         Add Listing
     </button>
@@ -249,162 +249,7 @@
       </div>
     </section>
 
-    <!-- Add Listing Modal -->
-    <div class="modal" id="addListingModal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>Add Food Listing</h3>
-          <button class="close-modal">&times;</button>
-        </div>
 
-        <!-- Progress Bar -->
-        <div class="form-progress">
-          <div class="progress-step active" data-step="1">
-            <div class="step-circle">1</div>
-            <span class="step-label">Food Details</span>
-          </div>
-          <div class="progress-line"></div>
-          <div class="progress-step" data-step="2">
-            <div class="step-circle">2</div>
-            <span class="step-label">Pickup Info</span>
-          </div>
-          <div class="progress-line"></div>
-          <div class="progress-step" data-step="3">
-            <div class="step-circle">3</div>
-            <span class="step-label">Photo & Review</span>
-          </div>
-        </div>
-
-        <form class="listing-form" id="listingForm">
-          <!-- Step 1: Food Details -->
-          <div class="form-step active" data-step="1">
-            <h4 class="step-title">Tell us about the food</h4>
-            <div class="form-group">
-              <label for="foodType">Food Type *</label>
-              <input
-                type="text"
-                id="foodType"
-                required
-                placeholder="e.g., Pizza, Sandwiches, Fruits"
-              />
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="quantity">Quantity *</label>
-                <input
-                  type="text"
-                  id="quantity"
-                  required
-                  placeholder="e.g., 10 portions"
-                />
-              </div>
-              <div class="form-group">
-                <label for="category">Category *</label>
-                <select id="category" required>
-                  <option value="">Select Category</option>
-                  <option value="restaurant">Restaurant</option>
-                  <option value="household">Household</option>
-                  <option value="bakery">Bakery</option>
-                  <option value="event">Event</option>
-                </select>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="description">Description</label>
-              <textarea
-                id="description"
-                rows="3"
-                placeholder="Additional details about the food..."
-              ></textarea>
-            </div>
-          </div>
-
-          <!-- Step 2: Pickup Info -->
-          <div class="form-step" data-step="2">
-            <h4 class="step-title">When and where to pick up?</h4>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="freshUntil">Fresh Until *</label>
-                <div class="input-container-relative">
-                  <input type="datetime-local" id="freshUntil" class="datetime-input" required />
-                  <span class="checkmark-icon">✓</span>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="pickupTime">Preferred Pickup Time *</label>
-                <div class="input-container-relative">
-                  <input type="time" id="pickupTime" class="datetime-input" required min="06:00" max="23:00" />
-                  <span class="checkmark-icon-time">✓</span>
-                </div>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="location">Pickup Location *</label>
-              <input
-                type="text"
-                id="location"
-                required
-                placeholder="Address or landmark"
-              />
-            </div>
-            <div class="form-group">
-              <label for="contact">Contact Information *</label>
-              <input
-                type="text"
-                id="contact"
-                required
-                placeholder="Phone number or email"
-              />
-            </div>
-          </div>
-
-          <!-- Step 3: Photo & Review -->
-          <div class="form-step" data-step="3">
-            <h4 class="step-title">Add a photo (optional)</h4>
-            <div class="form-group">
-              <label for="photo">Food Photo</label>
-              <input
-                type="file"
-                id="photo"
-                accept="image/*"
-                style="display: none"
-              />
-              <div class="file-upload-area" id="photoUpload">
-                <i class="fas fa-cloud-upload-alt"></i>
-                <span>Drag & drop your image here or click to browse</span>
-                <small>Supports: JPG, PNG, GIF (Max 5MB)</small>
-              </div>
-              <div id="imagePreview" class="image-preview"></div>
-            </div>
-          </div>
-
-          <div class="form-navigation">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              id="prevStep"
-              style="display: none"
-            >
-              <i class="fas fa-arrow-left"></i> Previous
-            </button>
-            <button type="button" class="btn btn-secondary" id="cancelForm">
-              Cancel
-            </button>
-            <button type="button" class="btn btn-primary" id="nextStep">
-              Next <i class="fas fa-arrow-right"></i>
-            </button>
-            <button
-              type="submit"
-              class="btn btn-primary"
-              id="submitForm"
-              style="display: none"
-            >
-              <i class="fas fa-check"></i> Add Listing
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
 
     <!-- About Section -->
     <section id="about" class="about">
@@ -966,7 +811,7 @@
           <div class="footer-section">
             <h4>For Collectors</h4>
             <ul>
-              <li><a href="foodlisting.html">Find Food</a></li>
+              <li><a href="#">Find Food</a></li>
               <li><a href="ngo-register.html">Register NGO</a></li>
               <li><a href="vounteer_food.html">Volunteer</a></li>
               <li><a href="#">Resources</a></li>
