@@ -461,14 +461,19 @@ handleFileSelect(file) {
     }
 
     showToast(message, type) {
+        // Remove any existing toasts to avoid multiple overlapping toasts
+        const existingToasts = document.querySelectorAll('.toast');
+        existingToasts.forEach(t => t.remove());
+
         const toast = document.createElement('div');
         toast.className = `toast toast-${type}`;
         toast.innerHTML = `
             <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
             <span>${message}</span>
         `;
-        
-        // Add toast styles
+
+        // Add toast styles (slower rollout/slide-in and longer visible duration)
+        // Visible duration: 6s total. Slide in (rollout): 0.8s, visible until 5.4s, fade out lasts 0.6s
         toast.style.cssText = `
             position: fixed;
             top: 100px;
@@ -481,17 +486,19 @@ handleFileSelect(file) {
             align-items: center;
             gap: 0.5rem;
             z-index: 3000;
-            animation: slideInRight 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+            /* rollout: slower and eased; fade starts near the end */
+            animation: slideInRight 0.8s cubic-bezier(.2,.9,.2,1), fadeOut 0.6s ease 5.4s forwards;
             box-shadow: var(--shadow-heavy);
         `;
-        
+
         document.body.appendChild(toast);
-        
+
+        // Remove after 6 seconds so user has ample time to read
         setTimeout(() => {
             if (toast.parentNode) {
                 toast.parentNode.removeChild(toast);
             }
-        }, 3000);
+        }, 6000);
     }
 
     closeModalAndReset() {
@@ -1026,6 +1033,9 @@ handleFileSelect(file) {
         const claimBtns = document.querySelectorAll('.claim-btn');
         claimBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
+                // Prevent this click from bubbling up to document-level handlers
+                e.stopPropagation();
+                e.preventDefault();
                 const listingId = parseInt(btn.getAttribute('data-id'));
                 this.handleClaimFood(listingId);
             });
@@ -1035,6 +1045,9 @@ handleFileSelect(file) {
         const contactBtns = document.querySelectorAll('.contact-btn');
         contactBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
+                // Prevent bubbling so other click handlers (document) don't toggle/close UI
+                e.stopPropagation();
+                e.preventDefault();
                 const contact = btn.getAttribute('data-contact');
                 this.handleContactDonor(contact);
             });
