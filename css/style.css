@@ -19,7 +19,7 @@
     --white: #FFFFFF;
     --light-gray: #F5F7FA;
     --medium-gray: #9E9E9E;
-    --dark-gray: #424242;
+   --text-dark: var(--dark-gray);
     --black: #212121;
     --card-bg: var(--white);
     /* Gradients */
@@ -53,6 +53,7 @@
 }
 /* FIX FOR AUTH PAGES IN DARK MODE */
 
+
 body {
     font-family: var(--font-family);
     line-height: 1.6;
@@ -66,6 +67,418 @@ body {
     padding: var(--container-padding);
 }
 
+/* ===== Navbar Base ===== */
+ /* Navbar Styles */
+       /* Navbar Styles */
+        .navbar {
+            background: var(--bg-white);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 0;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .nav-logo-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-logo-link i {
+            font-size: 1.8rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 0.5rem 0;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle,
+        .notification-bell,
+        .role-switch {
+            background: var(--bg-light);
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+            color: var(--text-dark);
+            position: relative;
+        }
+
+        .theme-toggle:hover,
+        .notification-bell:hover,
+        .role-switch:hover {
+            background: var(--border-color);
+            transform: translateY(-2px);
+        }
+
+        .notification-bell {
+            padding: 0.6rem 0.8rem;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff4444;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .notification-panel {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            width: 320px;
+            background: var(--bg-white);
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            display: none;
+            z-index: 1001;
+        }
+
+        .notification-panel.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 600;
+        }
+
+        .clear-notifications {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-size: 0.85rem;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .clear-notifications:hover {
+            background: var(--bg-light);
+        }
+
+        .notification-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .notification-item:hover {
+            background: var(--bg-light);
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-title {
+            font-weight: 500;
+            margin-bottom: 0.3rem;
+            color: var(--text-dark);
+        }
+
+        .notification-time {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .role-switch {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .login-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.3rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .login-btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: var(--text-dark);
+            transition: var(--transition);
+            border-radius: 3px;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--text-dark);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            display: none;
+            z-index: 2000;
+            animation: slideUp 0.3s ease;
+        }
+
+        .toast.show {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile Responsive Styles */
+        @media screen and (max-width: 1024px) {
+            .nav-container {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-menu {
+                gap: 1.5rem;
+            }
+
+            .user-actions {
+                gap: 0.8rem;
+            }
+
+            .login-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .nav-container {
+                padding: 1rem;
+                flex-wrap: wrap;
+            }
+
+            .hamburger {
+                display: flex;
+                order: 3;
+            }
+
+            .nav-logo {
+                order: 1;
+                flex: 1;
+            }
+
+            .user-actions {
+                order: 2;
+                gap: 0.5rem;
+            }
+
+            .user-actions .login-btn:last-child {
+                display: none;
+            }
+
+            .role-switch span {
+                display: none;
+            }
+
+            .nav-menu {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+              background: var(--bg-black) !important;
+                 color: white;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+                box-shadow: var(--shadow);
+            }
+
+            .nav-menu.active {
+                max-height: 400px;
+                padding: 1rem 0;
+            }
+
+            .nav-menu li {
+                width: 100%;
+            }
+
+            .nav-link {
+                display: block;
+                padding: 1rem 2rem;
+                width: 100%;
+                  color: white; /* links visible on dark bg */
+            }
+
+            .nav-link::after {
+                display: none;
+            }
+
+            .nav-link:hover {
+               background: var(--bg-light);
+        color: var(--text-dark);
+            }
+ .nav-link:hover::after {
+        content: '';
+        display: block;
+        height: 2px;
+        background: var(--primary-color);
+        width: 100%;
+        margin-top: 4px; /* space between text and underline */
+    }
+            .notification-panel {
+                right: -50px;
+                width: 280px;
+            }
+
+            .theme-toggle,
+            .notification-bell {
+                padding: 0.5rem 0.7rem;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .nav-logo-link span {
+                font-size: 1.2rem;
+            }
+
+            .nav-logo-link i {
+                font-size: 1.4rem;
+            }
+
+            .user-actions .login-btn {
+                display: none;
+            }
+
+            .notification-panel {
+                right: -80px;
+                width: 260px;
+            }
+
+            .toast {
+                right: 10px;
+                left: 10px;
+                text-align: center;
+            }
+        }
 /* Navigation */
 .navbar {
     position: fixed;
@@ -3635,6 +4048,7 @@ body.dark-mode .notification-bell:hover {
   position: absolute;
   border-radius: 50%;
   background: radial-gradient(circle at 30% 30%, rgba(76, 175, 80, 0.3), rgba(76, 175, 80, 0.05));
+  -webkit-backdrop-filter: blur(2px);
   backdrop-filter: blur(2px);
   border: 1px solid rgba(76, 175, 80, 0.2);
   animation: testimonialFloat 20s ease-in-out infinite;
@@ -4226,11 +4640,43 @@ body.dark-mode .notification-bell:hover {
 }
 
 /* ===== Scroll to Top Button ===== */
-#scrollToTopBtn {
+ /* Wrapper for scroll button + link */
+/* Wrapper */
+#scrollTopWrapper {
   position: fixed;
   bottom: 30px;
   right: 30px;
-  z-index: 99;
+  z-index: 9999; /* ensure it's above everything */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  gap: 10px; /* space between link and button */
+}
+
+/* Map Link */
+.scroll-link {
+  display: inline-block; /* make sure it takes space */
+  background-color: #4CAF50;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-size: 14px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+.scroll-link i {
+  margin-right: 6px; /* space between icon and text */
+}
+
+.scroll-link:hover {
+  background-color: #45a049;
+  transform: scale(1.05);
+}
+
+/* Scroll Button */
+#scrollToTopBtn {
   width: 45px;
   height: 45px;
   background-color: #4CAF50;
@@ -4239,7 +4685,7 @@ body.dark-mode .notification-bell:hover {
   border-radius: 50%;
   cursor: pointer;
   font-size: 18px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   outline: none;
   opacity: 0;
   visibility: hidden;
@@ -4247,18 +4693,12 @@ body.dark-mode .notification-bell:hover {
   transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
 }
 
-/* Show state (added by JS) */
 #scrollToTopBtn.show {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
 }
 
-/* Hover animation */
-#scrollToTopBtn:hover {
-  background-color: #45a049;
-  transform: scale(1.1);
-}
 
 
   .section-divider {
