@@ -76,11 +76,8 @@ class ShareBite {
         // Role switching
         this.setupRoleSwitch();
         
-        // Modal functionality
-        this.setupModal();
-        
-        // Form handling
-        this.setupFormHandling();
+        // Form handling (removed modal functionality as redirecting to foodlisting.html)
+        // this.setupFormHandling();
         
         // Date input confirmation functionality
         this.setupDateInputConfirmation();
@@ -138,24 +135,23 @@ class ShareBite {
     }
 
     updateUIForRole() {
-        const donateBtn = document.getElementById('donateFood');
+        // Note: Buttons now redirect to foodlisting.html, so no dynamic content changes needed
         const findBtn = document.getElementById('findFood');
-        const addListingBtn = document.getElementById('addListingBtn');
         const notificationBell = document.getElementById('notificationBell');
         
         if (this.currentRole === 'collector') {
-            donateBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
-            findBtn.innerHTML = '<i class="fas fa-heart"></i> Help Others';
-            addListingBtn.style.display = 'none';
+            if (findBtn) {
+                findBtn.innerHTML = '<i class="fas fa-heart"></i> Help Others';
+            }
             
             // Show notification bell for collectors
             if (notificationBell) {
                 notificationBell.style.display = 'block';
             }
         } else {
-            donateBtn.innerHTML = '<i class="fas fa-heart"></i> Donate Food';
-            findBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
-            addListingBtn.style.display = 'flex';
+            if (findBtn) {
+                findBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
+            }
             
             // Hide notification bell for donors (unless they have notifications)
             if (notificationBell && this.notifications.length === 0) {
@@ -167,198 +163,378 @@ class ShareBite {
         this.renderFoodListings();
     }
 
-   setupModal() {
-    const modal = document.getElementById('addListingModal');
-    const addListingBtn = document.getElementById('addListingBtn');
-    const closeModalBtn = document.querySelector('.close-modal');
-    const cancelBtn = document.getElementById('cancelForm');
+   // Modal functionality removed - users are now redirected to foodlisting.html
 
-    this.currentStep = 1;
-    this.totalSteps = 3;
-
-    addListingBtn.addEventListener('click', () => {
-        modal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-        this.resetFormSteps();
-    });
-
-    const closeModal = () => {
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-        this.resetForm();
-        this.resetFormSteps();
-    };
-
-    closeModalBtn.addEventListener('click', closeModal);
-    cancelBtn.addEventListener('click', closeModal);
+// Comprehensive validation for individual fields
+validateSingleField(fieldElement) {
+    const fieldId = fieldElement.id;
+    const value = fieldElement.value.trim();
     
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeModal();
-        }
-    });
-
-    this.setupFileUpload();
-    this.setupFormNavigation();
-}
-
-setupFormNavigation() {
-    const nextBtn = document.getElementById('nextStep');
-    const prevBtn = document.getElementById('prevStep');
-    const submitBtn = document.getElementById('submitForm');
-
-    nextBtn.addEventListener('click', () => {
-        if (this.validateCurrentStep()) {
-            this.goToStep(this.currentStep + 1);
-        }
-    });
-
-    prevBtn.addEventListener('click', () => {
-        this.goToStep(this.currentStep - 1);
-    });
-}
-
-goToStep(stepNumber) {
-    if (stepNumber < 1 || stepNumber > this.totalSteps) return;
-
-    document.querySelectorAll('.form-step').forEach(step => {
-        step.classList.remove('active');
-    });
-
-    const newStep = document.querySelector(`.form-step[data-step="${stepNumber}"]`);
-    if (newStep) {
-        newStep.classList.add('active');
+    // Check if field is required and empty
+    if (fieldElement.hasAttribute('required') && !value) {
+        const fieldName = this.getFieldDisplayName(fieldElement);
+        return `${fieldName} is required`;
     }
-
-    this.updateProgress(stepNumber);
-
-    this.updateNavigationButtons(stepNumber);
-
-    this.currentStep = stepNumber;
+    
+    // Field-specific validation rules
+    switch (fieldId) {
+        case 'foodType':
+            if (value && value.length < 2) {
+                return 'Food type must be at least 2 characters long';
+            }
+            if (value.length > 100) {
+                return 'Food type must be less than 100 characters';
+            }
+            // Check for invalid characters
+            if (value && !/^[a-zA-Z0-9\s\-,.'()&]+$/.test(value)) {
+                return 'Food type contains invalid characters';
+            }
+            break;
+            
+        case 'quantity':
+            if (value && value.length < 1) {
+                return 'Please specify the quantity';
+            }
+            if (value.length > 50) {
+                return 'Quantity description is too long';
+            }
+            // Basic quantity validation - should contain some indication of amount
+            if (value && !/\d/.test(value) && !/(few|several|many|some|lots|bunch)/i.test(value)) {
+                return 'Quantity should include an amount or number';
+            }
+            break;
+            
+        case 'category':
+            const validCategories = ['restaurant', 'household', 'bakery', 'event'];
+            if (value && !validCategories.includes(value)) {
+                return 'Please select a valid category';
+            }
+            break;
+            
+        case 'freshUntil':
+            if (value) {
+                const freshDate = new Date(value);
+                const now = new Date();
+                
+                if (isNaN(freshDate.getTime())) {
+                    return 'Please enter a valid date and time';
+                }
+                
+                // Must be at least 30 minutes in the future
+                const minFutureTime = new Date(now.getTime() + 30 * 60 * 1000);
+                if (freshDate <= minFutureTime) {
+                    return 'Fresh until must be at least 30 minutes from now';
+                }
+                
+                // Check if date is too far in the future (more than 30 days)
+                const maxDate = new Date();
+                maxDate.setDate(maxDate.getDate() + 30);
+                if (freshDate > maxDate) {
+                    return 'Fresh until date cannot be more than 30 days from now';
+                }
+            }
+            break;
+            
+        case 'pickupTime':
+            if (value) {
+                // Basic time format validation (24-hour format)
+                const timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
+                if (!timeRegex.test(value)) {
+                    return 'Please enter a valid time format (HH:MM)';
+                }
+                
+                // Parse time to check if it's within allowed range
+                const [hours, minutes] = value.split(':').map(Number);
+                const totalMinutes = hours * 60 + minutes;
+                
+                // Check if time is within allowed range (6 AM to 11 PM)
+                if (totalMinutes < 360) { // Before 6:00 AM
+                    return 'Pickup time must be between 6:00 AM and 11:00 PM';
+                }
+                if (totalMinutes > 1380) { // After 11:00 PM (23:00)
+                    return 'Pickup time must be between 6:00 AM and 11:00 PM';
+                }
+            }
+            break;
+            
+        case 'location':
+            if (value && value.length < 5) {
+                return 'Location must be at least 5 characters long';
+            }
+            if (value.length > 200) {
+                return 'Location description is too long';
+            }
+            // Check if location seems reasonable (contains letters)
+            if (value && !/[a-zA-Z]/.test(value)) {
+                return 'Please provide a valid location address';
+            }
+            break;
+            
+        case 'contact':
+            if (value && !this.validateContactInfo(value)) {
+                return 'Please enter a valid email address or phone number';
+            }
+            break;
+            
+        case 'description':
+            if (value.length > 500) {
+                return 'Description must be less than 500 characters';
+            }
+            break;
+            
+        case 'photo':
+            // File validation
+            if (fieldElement.files && fieldElement.files.length > 0) {
+                const file = fieldElement.files[0];
+                
+                if (!file.type.startsWith('image/')) {
+                    return 'Please select a valid image file (JPG, PNG, GIF)';
+                }
+                
+                if (file.size > 5 * 1024 * 1024) {
+                    return 'Image size must be less than 5MB';
+                }
+                
+                if (file.size < 1024) {
+                    return 'Image file seems too small - please check the file';
+                }
+            }
+            break;
+    }
+    
+    return null; // No errors
 }
 
-updateProgress(stepNumber) {
-    const steps = document.querySelectorAll('.progress-step');
+// Get user-friendly field name for error messages
+getFieldDisplayName(fieldElement) {
+    const fieldId = fieldElement.id;
+    const fieldNames = {
+        'foodType': 'Food type',
+        'quantity': 'Quantity',
+        'category': 'Category',
+        'description': 'Description',
+        'freshUntil': 'Fresh until date',
+        'pickupTime': 'Pickup time',
+        'location': 'Location',
+        'contact': 'Contact information',
+        'photo': 'Photo'
+    };
     
-    steps.forEach((step, index) => {
-        const stepNum = index + 1;
+    return fieldNames[fieldId] || fieldId;
+}
+
+// Validate contact information (email or phone number)
+validateContactInfo(contact) {
+    if (!contact || !contact.trim()) {
+        return false;
+    }
+    
+    const cleanContact = contact.trim();
+    
+    // Enhanced email regex pattern
+    const emailPattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+    
+    // Check if it's a valid email
+    if (emailPattern.test(cleanContact)) {
+        return true;
+    }
+    
+    // Enhanced phone number validation
+    // Remove all non-digit characters except + at the beginning
+    const cleanedPhone = cleanContact.replace(/[^\d+]/g, '');
+    const digitsOnly = cleanedPhone.replace(/[^0-9]/g, '');
+    
+    // Phone number patterns for different formats
+    const phonePatterns = [
+        /^\+?1?[2-9]\d{2}[2-9]\d{2}\d{4}$/, // US format: +1234567890, 1234567890, 234-567-8901
+        /^\+?[1-9]\d{1,14}$/, // International format: +country_code_number
+        /^\d{7,15}$/ // Basic format: 7-15 digits
+    ];
+    
+    // Check various phone formats
+    if (digitsOnly.length >= 7 && digitsOnly.length <= 15) {
+        // Additional validation for common patterns
+        const formattedPatterns = [
+            /^\(\d{3}\)\s?\d{3}-?\d{4}$/, // (123) 456-7890 or (123)456-7890
+            /^\d{3}[-.]?\d{3}[-.]?\d{4}$/, // 123-456-7890 or 123.456.7890
+            /^\d{10,15}$/ // Plain digits
+        ];
         
-        if (stepNum < stepNumber) {
-            step.classList.add('completed');
-            step.classList.remove('active');
-        } else if (stepNum === stepNumber) {
-            step.classList.add('active');
-            step.classList.remove('completed');
-        } else {
-            step.classList.remove('active', 'completed');
-        }
-    });
-}
-
-updateNavigationButtons(stepNumber) {
-    const nextBtn = document.getElementById('nextStep');
-    const prevBtn = document.getElementById('prevStep');
-    const submitBtn = document.getElementById('submitForm');
-
-    prevBtn.style.display = stepNumber === 1 ? 'none' : 'flex';
-    nextBtn.style.display = stepNumber === this.totalSteps ? 'none' : 'flex';
-    submitBtn.style.display = stepNumber === this.totalSteps ? 'flex' : 'none';
-}
-
-validateCurrentStep() {
-    const currentStepEl = document.querySelector(`.form-step[data-step="${this.currentStep}"]`);
-    const requiredInputs = currentStepEl.querySelectorAll('[required]');
+        return formattedPatterns.some(pattern => pattern.test(cleanContact)) || 
+               phonePatterns.some(pattern => pattern.test(cleanedPhone));
+    }
     
-    for (let input of requiredInputs) {
-        if (!input.value.trim()) {
-            input.focus();
-            this.showToast(`Please fill in the required field: ${input.previousElementSibling.textContent}`, 'error');
-            return false;
+    return false;
+}
+
+// Inline field error system - no popups, just red outline and error text
+showFieldError(fieldElement, message) {
+    // Find the form group container
+    const formGroup = fieldElement.closest('.form-group');
+    if (!formGroup) return;
+    
+    // Check if error already exists with same message
+    const existingError = formGroup.querySelector('.field-error-text');
+    if (existingError && existingError.textContent === message) {
+        // Same error already shown, no need to update
+        return existingError;
+    }
+    
+    // Clear any existing error for this field first (to replace with new message)
+    this.clearFieldError(fieldElement);
+    
+    // Add error styling to the field
+    fieldElement.classList.add('error');
+    
+    // Handle special case for file upload area
+    if (fieldElement.id === 'photo') {
+        const uploadArea = document.getElementById('photoUpload');
+        if (uploadArea) {
+            uploadArea.classList.add('error');
         }
     }
     
-    return true;
-}
-
-resetFormSteps() {
-    this.currentStep = 1;
-    this.goToStep(1);
-}
-
-setupFileUpload() {
-    const fileInput = document.getElementById('photo');
-    const uploadArea = document.getElementById('photoUpload');
-    const imagePreview = document.getElementById('imagePreview');
-
-    uploadArea.addEventListener('click', () => {
-        fileInput.click();
-    });
-
-    uploadArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadArea.classList.add('drag-over');
-    });
-
-    uploadArea.addEventListener('dragleave', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('drag-over');
-    });
-
-    uploadArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('drag-over');
-        const files = e.dataTransfer.files;
-        if (files.length > 0 && files[0].type.startsWith('image/')) {
-            fileInput.files = files;
-            this.handleFileSelect(files[0]);
-        } else {
-            this.showToast('Please upload a valid image file', 'error');
-        }
-    });
-
-    fileInput.addEventListener('change', (e) => {
-        if (e.target.files.length > 0) {
-            this.handleFileSelect(e.target.files[0]);
-        }
-    });
-}
-
-handleFileSelect(file) {
-    const imagePreview = document.getElementById('imagePreview');
-    const uploadArea = document.getElementById('photoUpload');
+    // Create error text element
+    const errorText = document.createElement('div');
+    errorText.className = 'field-error-text';
+    errorText.textContent = message;
     
-    if (!file.type.startsWith('image/')) {
-        this.showToast('Please select an image file', 'error');
-        return;
+    // Insert error text in the right position
+    const label = formGroup.querySelector('label');
+    if (label) {
+        // Insert error text after the label
+        label.insertAdjacentElement('afterend', errorText);
+    } else {
+        // If no label, insert at the beginning of form group
+        formGroup.insertBefore(errorText, formGroup.firstChild);
     }
+    
+    return errorText;
+}
 
-    if (file.size > 5 * 1024 * 1024) {
-        this.showToast('Image size should be less than 5MB', 'error');
-        return;
+clearFieldError(fieldElement) {
+    if (!fieldElement) return;
+    
+    // Remove error class from field
+    fieldElement.classList.remove('error');
+    
+    // Handle special case for file upload area
+    if (fieldElement.id === 'photo') {
+        const uploadArea = document.getElementById('photoUpload');
+        if (uploadArea) {
+            uploadArea.classList.remove('error');
+        }
     }
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        imagePreview.innerHTML = `
-            <img src="${e.target.result}" alt="Food preview">
-            <button type="button" class="remove-image">
-                <i class="fas fa-times"></i>
-            </button>
-        `;
-        imagePreview.classList.add('active');
-        uploadArea.style.display = 'none';
-
-        // Add remove functionality
-        const removeBtn = imagePreview.querySelector('.remove-image');
-        removeBtn.addEventListener('click', () => {
-            imagePreview.innerHTML = '';
-            imagePreview.classList.remove('active');
-            uploadArea.style.display = 'block';
-            document.getElementById('photo').value = '';
+    
+    // Find and remove error text with animation
+    const formGroup = fieldElement.closest('.form-group');
+    if (formGroup) {
+        const errorTexts = formGroup.querySelectorAll('.field-error-text');
+        errorTexts.forEach(errorText => {
+            if (!errorText.classList.contains('removing')) {
+                errorText.classList.add('removing');
+                setTimeout(() => {
+                    if (errorText.parentNode) {
+                        errorText.parentNode.removeChild(errorText);
+                    }
+                }, 200);
+            }
         });
-    };
-    reader.readAsDataURL(file);
+    }
 }
+
+clearAllFieldErrors() {
+    // Remove all error texts with animation
+    const allErrorTexts = document.querySelectorAll('.field-error-text');
+    allErrorTexts.forEach(errorText => {
+        errorText.classList.add('removing');
+        setTimeout(() => {
+            if (errorText.parentNode) {
+                errorText.parentNode.removeChild(errorText);
+            }
+        }, 200);
+    });
+
+    // Remove error classes from all fields
+    const allInputs = document.querySelectorAll('input.error, select.error, textarea.error');
+    allInputs.forEach(input => {
+        input.classList.remove('error');
+    });
+
+    // Remove error class from file upload area
+    const uploadArea = document.getElementById('photoUpload');
+    if (uploadArea) {
+        uploadArea.classList.remove('error');
+    }
+}
+
+// Setup real-time validation - clear errors only when field becomes valid
+setupRealTimeValidation() {
+    // Clear any existing validation handlers first
+    this.clearValidationHandlers();
+    
+    const formInputs = document.querySelectorAll('#listingForm input, #listingForm select, #listingForm textarea');
+    
+    // Store validation handlers for proper cleanup
+    if (!this.validationHandlers) {
+        this.validationHandlers = new Map();
+    }
+    
+    formInputs.forEach(input => {
+        // Validate and clear error only if field becomes valid
+        const validateAndClearError = () => {
+            if (input.classList.contains('error')) {
+                const fieldError = this.validateSingleField(input);
+                if (!fieldError) {
+                    // Field is now valid, clear the error
+                    this.clearFieldError(input);
+                } else {
+                    // Field still has errors, update the error message
+                    this.showFieldError(input, fieldError);
+                }
+            }
+        };
+        
+        // Store the handler for later cleanup
+        this.validationHandlers.set(input, validateAndClearError);
+        
+        // Add event listeners
+        input.addEventListener('input', validateAndClearError);
+        input.addEventListener('change', validateAndClearError);
+        input.addEventListener('blur', validateAndClearError);
+    });
+    
+    // Special handling for file upload
+    const photoInput = document.getElementById('photo');
+    if (photoInput) {
+        const photoValidateHandler = () => {
+            if (photoInput.classList.contains('error')) {
+                const fieldError = this.validateSingleField(photoInput);
+                if (!fieldError) {
+                    this.clearFieldError(photoInput);
+                }
+            }
+        };
+        
+        this.validationHandlers.set(photoInput, photoValidateHandler);
+        photoInput.addEventListener('change', photoValidateHandler);
+    }
+}
+
+clearValidationHandlers() {
+    if (this.validationHandlers) {
+        this.validationHandlers.forEach((handler, input) => {
+            input.removeEventListener('input', handler);
+            input.removeEventListener('change', handler);
+            input.removeEventListener('blur', handler);
+        });
+        this.validationHandlers.clear();
+    }
+}
+
+
+
+
 
 
     setupFormHandling() {
@@ -375,13 +551,38 @@ handleFileSelect(file) {
         freshUntilInput.min = now.toISOString().slice(0, 16);
     }
 
+    // Setup submit button handler - called after modal opens
+    setupSubmitButton() {
+        const submitBtn = document.getElementById('submitForm');
+        if (submitBtn) {
+            // Remove any existing event listeners
+            submitBtn.replaceWith(submitBtn.cloneNode(true));
+            const newSubmitBtn = document.getElementById('submitForm');
+            
+            // Add fresh click handler
+            newSubmitBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.handleFormSubmission();
+            });
+        }
+    }
+
     handleFormSubmission() {
-        const formData = this.getFormData();
-        
-        if (this.validateFormData(formData)) {
-            this.addNewListing(formData);
-            this.showSuccessMessage();
-            this.closeModalAndReset();
+        try {
+            const formData = this.getFormData();
+            
+            // Validate all fields across all steps
+            const isValid = this.validateAllSteps() && this.validateFormData(formData);
+            
+            if (isValid) {
+                this.addNewListing(formData);
+                this.closeModalAndReset();
+                // Modal closes immediately on successful submission - no popup needed
+            }
+            // If not valid, validation functions already focused the first error field
+        } catch (error) {
+            console.error('Error in form submission:', error);
         }
     }
 
@@ -427,6 +628,41 @@ handleFileSelect(file) {
         return true;
     }
 
+    // Validate all form fields (modal step validation removed)
+    validateAllSteps() {
+        let allValid = true;
+        let firstInvalidField = null;
+        
+        // Check all form inputs since modal steps are removed
+        const form = document.getElementById('listingForm');
+        if (form) {
+            const inputs = form.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                const error = this.validateSingleField(input);
+                if (error) {
+                    this.showFieldError(input, error);
+                    allValid = false;
+                    if (!firstInvalidField) {
+                        firstInvalidField = input;
+                    }
+                }
+            });
+        }
+        
+        // Focus first invalid field (modal step navigation removed)
+        if (!allValid && firstInvalidField) {
+            firstInvalidField.focus();
+            
+            // Scroll the field into view smoothly
+            firstInvalidField.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center' 
+            });
+        }
+        
+        return allValid;
+    }
+
     addNewListing(data) {
         this.foodListings.unshift(data);
         this.filterListings();
@@ -434,11 +670,13 @@ handleFileSelect(file) {
     }
 
     showSuccessMessage() {
-        this.showToast('Food listing added successfully!', 'success');
+        // No toast - silent success
+        console.log('Food listing added successfully');
     }
 
     showErrorMessage(message) {
-        this.showToast(message, 'error');
+        // No toast - errors shown inline
+        console.log('Form error:', message);
     }
 
     showToast(message, type) {
@@ -476,9 +714,19 @@ handleFileSelect(file) {
     }
 
     closeModalAndReset() {
-        document.getElementById('addListingModal').style.display = 'none';
+        // Hide the modal
+        const modal = document.getElementById('addListingModal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+        
+        // Restore body scroll
         document.body.style.overflow = 'auto';
+        
+        // Reset form (this also clears all errors)
         this.resetForm();
+        
+        // Modal step functionality removed
     }
 
     resetForm() {
@@ -543,8 +791,7 @@ handleFileSelect(file) {
                 // Hide the checkmark
                 checkmarkIcon.classList.add('hidden');
                 
-                // Show success toast
-                this.showToast('Date confirmed successfully!', 'success');
+                // Date confirmed - no toast needed
                 
                 // Move focus to next input field if available
                 const nextInput = freshUntilInput.closest('.form-group').parentElement.nextElementSibling?.querySelector('input');
@@ -640,8 +887,7 @@ handleFileSelect(file) {
                 // Hide the checkmark
                 checkmarkIcon.classList.add('hidden');
                 
-                // Show success toast
-                this.showToast('Time confirmed successfully!', 'success');
+                // Time confirmed - no toast needed
                 
                 // Move focus to next input field if available
                 const nextInput = pickupTimeInput.closest('.form-group').parentElement.nextElementSibling?.querySelector('input');
@@ -1207,14 +1453,12 @@ createFoodCard(listing) {
         
         // Check if already claimed
         if (this.claimedItems.includes(listingId)) {
-            this.showToast('This item has already been claimed!', 'error');
+            console.log('Item already claimed:', listingId);
             return;
         }
         
-        // Show confirmation dialog
-        const confirmed = confirm(`Claim "${listing.foodType}" from ${listing.donor}?\n\nPickup: ${listing.location}\nTime: ${this.formatTime(listing.pickupTime)}\nContact: ${listing.contact}`);
-        
-        if (confirmed) {
+        // Auto-claim without confirmation popup
+        {
             // Add to claimed items
             this.claimedItems.push(listingId);
             this.saveClaimedItems();
