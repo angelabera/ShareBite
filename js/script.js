@@ -156,10 +156,9 @@ class ShareBite {
             donateBtn.innerHTML = '<i class="fas fa-heart"></i> Donate Food';
             findBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
             addListingBtn.style.display = 'flex';
-            
-            // Hide notification bell for donors (unless they have notifications)
-            if (notificationBell && this.notifications.length === 0) {
-                notificationBell.style.display = 'none';
+            // Keep the notification bell visible on all roles and screen sizes; badge controls unread count
+            if (notificationBell) {
+                notificationBell.style.display = 'flex';
             }
         }
         
@@ -791,9 +790,73 @@ handleFileSelect(file) {
         const hamburger = document.querySelector('.hamburger');
         const navMenu = document.querySelector('.nav-menu');
         
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
-            navMenu.classList.toggle('active');
+        if (!hamburger || !navMenu) return;
+
+        // Accessibility attributes
+        hamburger.setAttribute('role', 'button');
+        hamburger.setAttribute('aria-label', 'Toggle navigation menu');
+        hamburger.setAttribute('aria-expanded', 'false');
+
+        const closeMenu = () => {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+            hamburger.setAttribute('aria-expanded', 'false');
+            // Remove injected login items if present
+            const injected = navMenu.querySelectorAll('.mobile-injected');
+            injected.forEach(n => n.remove());
+            // Reset notification bell z-index (back to default stacking)
+            const notificationBell = document.getElementById('notificationBell');
+            if (notificationBell) notificationBell.style.zIndex = '';
+        };
+
+        const openMenu = () => {
+            hamburger.classList.add('active');
+            navMenu.classList.add('active');
+            hamburger.setAttribute('aria-expanded', 'true');
+            // Ensure notification bell is visible when menu opens on mobile
+            const notificationBell = document.getElementById('notificationBell');
+            if (notificationBell) notificationBell.style.zIndex = '2100';
+
+            // Inject login buttons only on small screens to avoid duplication with desktop buttons
+            if (window.innerWidth <= 768) {
+                if (!navMenu.querySelector('.mobile-login-user')) {
+                    const liUser = document.createElement('li');
+                    liUser.className = 'mobile-injected mobile-login-user';
+                    liUser.innerHTML = `<a class="nav-link" href="login.html">Login as User</a>`;
+                    navMenu.appendChild(liUser);
+                }
+                if (!navMenu.querySelector('.mobile-login-ngo')) {
+                    const liNgo = document.createElement('li');
+                    liNgo.className = 'mobile-injected mobile-login-ngo';
+                    liNgo.innerHTML = `<a class="nav-link" href="login_ngo.html">Login as NGO</a>`;
+                    navMenu.appendChild(liNgo);
+                }
+            }
+        };
+
+        hamburger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (navMenu.classList.contains('active')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (!navMenu.contains(e.target) && !hamburger.contains(e.target)) {
+                closeMenu();
+            }
+        });
+
+        // Close menu when a nav link is clicked (useful for single page navigation)
+        navMenu.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    closeMenu();
+                }
+            });
         });
     }
 
@@ -1374,11 +1437,9 @@ createFoodCard(listing) {
         const notificationPanel = document.getElementById('notificationPanel');
         
         if (!notificationBell) return;
+    // Always show the notification bell; badge will show unread count if any
+    notificationBell.style.display = 'flex';
         
-        // Show notification bell when in collector mode or when there are notifications
-        if (this.currentRole === 'collector' || this.notifications.length > 0) {
-            notificationBell.style.display = 'block';
-        }
         
         // Toggle notification panel
         notificationBell.addEventListener('click', (e) => {
@@ -1447,10 +1508,8 @@ createFoodCard(listing) {
             notificationBadge.textContent = unreadCount > 99 ? '99+' : unreadCount.toString();
         } else {
             notificationBadge.style.display = 'none';
-            // Keep bell visible if in collector mode
-            if (this.currentRole !== 'collector') {
-                notificationBell.style.display = 'none';
-            }
+            // keep bell visible for all roles; hide only if explicitly needed by a parent
+            notificationBell.style.display = 'flex';
         }
         
         this.renderNotifications();
