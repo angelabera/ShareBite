@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404 — Page Not Found | ShareBite</title>
+    <meta name="robots" content="noindex, follow" />
+    <style>
+      :root {
+        --bg: #f7f8fb;
+        --text: #222;
+        --muted: #6b7280;
+        --primary: #0d6efd;
+        --primary-dark: #0b5ed7;
+        --green: #16a34a; /* food/eco accent */
+        --card: #ffffff;
+        --ring: rgba(13, 110, 253, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji",
+          "Segoe UI Emoji";
+        color: var(--text);
+        background: radial-gradient(
+            1200px 800px at 10% -10%,
+            #e8f7ea 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            1200px 800px at 110% 110%,
+            #fff6ea 0%,
+            transparent 60%
+          ),
+          var(--bg);
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+
+      .card {
+        width: 100%;
+        max-width: 780px;
+        background: var(--card);
+        border-radius: 16px;
+        box-shadow: 0 12px 34px rgba(16, 24, 40, 0.06),
+          0 2px 8px rgba(0, 0, 0, 0.04);
+        overflow: hidden;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+      }
+
+      .header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 16px 20px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        background: #fff;
+      }
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+        color: var(--text);
+        text-decoration: none;
+      }
+      .brand i {
+        color: var(--green);
+      }
+
+      .content {
+        padding: 32px 28px;
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 24px;
+        align-items: center;
+      }
+      @media (max-width: 720px) {
+        .content {
+          grid-template-columns: 1fr;
+          padding: 24px 20px;
+          gap: 18px;
+        }
+      }
+
+      .illustration {
+        display: grid;
+        place-items: center;
+        padding: 12px;
+        position: relative;
+      }
+
+      .blob {
+        width: 100%;
+        max-width: 320px;
+        aspect-ratio: 1/1;
+        border-radius: 50%;
+        background: conic-gradient(
+          from 180deg at 50% 50%,
+          #eafdf1,
+          #fff7ea,
+          #e6f2ff,
+          #eafdf1
+        );
+        filter: drop-shadow(0 14px 30px rgba(16, 185, 129, 0.06));
+        position: relative;
+        animation: float 6s ease-in-out infinite;
+        display: grid;
+        place-items: center;
+      }
+      .blob::after {
+        content: "404";
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        font-weight: 900;
+        font-size: clamp(64px, 12vw, 110px);
+        color: var(--green);
+        text-shadow: 0 8px 26px rgba(22, 163, 74, 0.08);
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-8px);
+        }
+      }
+
+      /* small food icon garnish around blob */
+      .food-garnish {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+
+      .food-garnish svg {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        opacity: 0.85;
+        transform-origin: center;
+      }
+
+      /* scattered and animated */
+      .g1 {
+        top: 5%;
+        left: 15%;
+        transform: rotate(-15deg);
+        animation: floatGarnish 5s ease-in-out infinite;
+      }
+      .g2 {
+        top: 20%;
+        right: 10%;
+        transform: rotate(10deg);
+        animation: floatGarnish 6s ease-in-out infinite reverse;
+      }
+      .g3 {
+        bottom: 15%;
+        left: 25%;
+        transform: rotate(-10deg);
+        animation: floatGarnish 5.5s ease-in-out infinite;
+      }
+      .g4 {
+        bottom: 10%;
+        right: 20%;
+        transform: rotate(12deg);
+        animation: floatGarnish 6.2s ease-in-out infinite reverse;
+      }
+
+      @keyframes floatGarnish {
+        0%,
+        100% {
+          transform: translate(var(--x, 0px), var(--y, 0px))
+            rotate(var(--r, 0deg));
+        }
+        50% {
+          transform: translate(var(--x, 4px), var(--y, -4px))
+            rotate(var(--r, 0deg));
+        }
+      }
+
+      .copy h1 {
+        margin: 0 0 8px;
+        font-size: clamp(22px, 3vw, 28px);
+        line-height: 1.15;
+      }
+      .copy p {
+        color: var(--muted);
+        margin: 0 0 12px;
+        font-size: 15px;
+      }
+      .tagline {
+        margin-top: 8px;
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        font-weight: 600;
+        color: var(--green);
+        font-size: 14px;
+      }
+      .hint {
+        font-size: 13px;
+        color: var(--muted);
+        margin-top: 12px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 14px;
+      }
+      .btn {
+        appearance: none;
+        border: 1px solid transparent;
+        background: linear-gradient(90deg, var(--green), #10b981 50%);
+        color: #fff;
+        padding: 10px 16px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        box-shadow: 0 10px 26px rgba(16, 185, 129, 0.08);
+        transition: transform 0.05s ease, box-shadow 0.18s ease,
+          filter 0.18s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+        filter: brightness(1.03);
+      }
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      .btn.secondary {
+        background: transparent;
+        color: var(--text);
+        border-color: rgba(0, 0, 0, 0.08);
+        box-shadow: none;
+      }
+      .btn.secondary:hover {
+        background: rgba(16, 185, 129, 0.06);
+      }
+
+      .footer {
+        padding: 14px 20px;
+        border-top: 1px solid rgba(0, 0, 0, 0.06);
+        font-size: 12px;
+        color: var(--muted);
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      kbd {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        background: #f0f3f9;
+        border: 1px solid #e3e7ef;
+        border-bottom-width: 2px;
+        border-radius: 6px;
+        padding: 1px 6px;
+      }
+
+      /* small responsive tweaks */
+      @media (max-width: 520px) {
+        .blob {
+          max-width: 260px;
+        }
+        .brand span {
+          font-size: 15px;
+        }
+      }
+    </style>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <main class="card" role="main" aria-labelledby="not-found-title">
+      <header class="header">
+        <a class="brand" href="index.html" aria-label="ShareBite Home">
+          <i class="fas fa-utensils" aria-hidden="true"></i>
+          <span>ShareBite</span>
+        </a>
+      </header>
+
+      <section class="content">
+        <div class="illustration" aria-hidden="true">
+          <div
+            class="blob"
+            role="img"
+            aria-label="Decorative plate showing 404"
+          >
+            <!-- garnish SVGs -->
+            <div class="food-garnish" aria-hidden="true">
+              <!-- apple -->
+              <svg class="g1" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M16 6c0-.9-.4-1.7-1-2.3-1 .1-2.2.6-3 1.4-.8.8-1.4 2-1.5 3 .9.1 2-.6 2.9-1.5.9-.9 1.6-1.2 2.6-1.6z"
+                  fill="#10B981"
+                />
+                <path
+                  d="M12 22s6-1.8 6-7.2c0-2.9-2.4-4.6-4.2-4.6-1.3 0-2.1.8-3.8.8-1.7 0-2.5-.8-3.8-.8C6.4 10.2 4 11.9 4 14.8 4 20.2 12 22 12 22z"
+                  fill="#34D399"
+                />
+              </svg>
+              <!-- loaf -->
+              <svg class="g2" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="9" width="18" height="8" rx="3" fill="#F59E0B" />
+                <path
+                  d="M6 11c2 0 2-3 6-3s4 3 6 3"
+                  stroke="#C2410C"
+                  stroke-width="0.6"
+                  stroke-linecap="round"
+                />
+              </svg>
+              <!-- leaf/green -->
+              <svg class="g3" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M4 20c6-6 12-12 16-12-2 6-8 12-16 12z"
+                  fill="#34D399"
+                />
+              </svg>
+              <!-- heart -->
+              <svg class="g4" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M12 20s-7-4.8-9-8.1C1.2 8.9 4.2 6 7.6 7.3 9 8 10 9.1 12 11.2 14 9.1 15 8 16.4 7.3 19.8 6 22.8 8.9 21 11.9 19 15.2 12 20 12 20z"
+                  fill="#EF4444"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="copy">
+          <h1 id="not-found-title">Page not found</h1>
+          <p>
+            "Oops! Looks like this page got eaten up 🍽️" We couldn’t find the
+            page you’re looking for — maybe it’s been served elsewhere, moved,
+            or the link got a little overcooked.
+          </p>
+
+          <div class="tagline" aria-hidden="true">
+            <i class="fas fa-seedling" style="width: 14px"></i>
+            <span>ShareBite — turning extra bites into bright smiles</span>
+          </div>
+
+          <div class="actions">
+            <a class="btn" href="index.html"><i class="fas fa-home"></i>Home</a>
+            <button class="btn secondary" type="button" id="goBackBtn">
+              <i class="fas fa-arrow-left"></i>Go Back
+            </button>
+            <br />
+            <a class="btn secondary" href="support.html"
+              ><i class="fas fa-hands-helping"></i>Support</a
+            >
+          </div>
+          <br />
+
+          <p class="hint">
+            Tip: Press <kbd>Alt</kbd> + <kbd>←</kbd> to go back, or hop to the
+            home page to keep helping reduce food waste.
+          </p>
+        </div>
+      </section>
+
+      <div class="footer">
+        <span>Error code: 404</span>
+        <span id="pathInfo" aria-live="polite"></span>
+      </div>
+    </main>
+
+    <script>
+      (function () {
+        const back = document.getElementById("goBackBtn");
+        if (back)
+          back.addEventListener("click", () => {
+            if (window.history.length > 1) {
+              window.history.back();
+            } else {
+              window.location.href = "index.html";
+            }
+          });
+
+        const pathEl = document.getElementById("pathInfo");
+        if (pathEl) {
+          const url = new URL(window.location.href);
+          pathEl.textContent = `Requested: ${url.pathname}${url.search}${url.hash}`;
+        }
+      })();
+    </script>
+  </body>
+</html>
