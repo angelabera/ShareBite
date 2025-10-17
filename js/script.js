@@ -362,18 +362,23 @@ handleFileSelect(file) {
 
 
     setupFormHandling() {
-        const form = document.getElementById('listingForm');
-        
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.handleFormSubmission();
-        });
+    const form = document.getElementById('listingForm');
+    
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.handleFormSubmission();
+    });
 
-        const freshUntilInput = document.getElementById('freshUntil');
-        const now = new Date();
-        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-        freshUntilInput.min = now.toISOString().slice(0, 16);
-    }
+    // Set minimum date to current local time
+    const freshUntilInput = document.getElementById('freshUntil');
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    freshUntilInput.min = `${year}-${month}-${day}T${hours}:${minutes}`;
+}
 
     handleFormSubmission() {
         const formData = this.getFormData();
@@ -493,200 +498,6 @@ handleFileSelect(file) {
         const now = new Date();
         now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
         freshUntilInput.min = now.toISOString().slice(0, 16);
-    }
-
-    // Date Input Confirmation functionality
-    setupDateInputConfirmation() {
-        const freshUntilInput = document.getElementById('freshUntil');
-        if (!freshUntilInput) return;
-
-        const container = freshUntilInput.parentNode;
-        const checkmarkIcon = container.querySelector('.checkmark-icon');
-
-        if (!checkmarkIcon) return;
-
-        let isDateConfirmed = false;
-        let previousValue = freshUntilInput.value;
-
-        // Helper function to show checkmark only after date selection
-        const handleDateChange = () => {
-            const currentValue = freshUntilInput.value;
-            
-            // If value has changed from previous, reset confirmation status
-            if (currentValue !== previousValue) {
-                isDateConfirmed = false;
-            }
-            
-            // Only show checkmark if:
-            // 1. There's a new value
-            // 2. The value has changed from previous
-            // 3. Date hasn't been confirmed yet
-            if (currentValue && currentValue !== previousValue && !isDateConfirmed) {
-                checkmarkIcon.classList.remove('hidden');
-            }
-            
-            // If value is cleared, reset everything
-            if (!currentValue) {
-                checkmarkIcon.classList.add('hidden');
-                isDateConfirmed = false;
-            }
-            
-            previousValue = currentValue;
-        };
-
-        // Helper function to confirm date and hide checkmark
-        const confirmDate = () => {
-            if (freshUntilInput.value && !isDateConfirmed) {
-                // Mark as confirmed
-                isDateConfirmed = true;
-                
-                // Hide the checkmark
-                checkmarkIcon.classList.add('hidden');
-                
-                // Show success toast
-                this.showToast('Date confirmed successfully!', 'success');
-                
-                // Move focus to next input field if available
-                const nextInput = freshUntilInput.closest('.form-group').parentElement.nextElementSibling?.querySelector('input');
-                if (nextInput) {
-                    setTimeout(() => nextInput.focus(), 200);
-                } else {
-                    freshUntilInput.blur(); // Remove focus from current input
-                }
-            }
-        };
-
-        // Initially hide checkmark
-        checkmarkIcon.classList.add('hidden');
-
-        // Listen for date selection changes
-        freshUntilInput.addEventListener('change', handleDateChange);
-        freshUntilInput.addEventListener('input', handleDateChange);
-
-        // Checkmark click handler - confirm the date and hide checkmark
-        checkmarkIcon.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent event bubbling
-            confirmDate();
-        });
-
-        // Click outside handler - hide checkmark when clicking outside
-        document.addEventListener('click', (e) => {
-            // Check if checkmark is currently visible
-            if (!checkmarkIcon.classList.contains('hidden')) {
-                // Check if click is outside the input container and not on the checkmark
-                if (!container.contains(e.target)) {
-                    // User clicked outside - confirm the date and hide checkmark
-                    confirmDate();
-                }
-            }
-        });
-
-        // Also hide checkmark when input loses focus (blur event)
-        freshUntilInput.addEventListener('blur', (e) => {
-            // Small delay to allow checkmark click to register first
-            setTimeout(() => {
-                if (!checkmarkIcon.classList.contains('hidden') && freshUntilInput.value) {
-                    confirmDate();
-                }
-            }, 100);
-        });
-    }
-
-    // Time Input Confirmation functionality
-    setupTimeInputConfirmation() {
-        const pickupTimeInput = document.getElementById('pickupTime');
-        if (!pickupTimeInput) return;
-
-        const container = pickupTimeInput.parentNode;
-        const checkmarkIcon = container.querySelector('.checkmark-icon-time');
-
-        if (!checkmarkIcon) return;
-
-        let isTimeConfirmed = false;
-        let previousValue = pickupTimeInput.value;
-
-        // Helper function to show checkmark only after time selection
-        const handleTimeChange = () => {
-            const currentValue = pickupTimeInput.value;
-            
-            // If value has changed from previous, reset confirmation status
-            if (currentValue !== previousValue) {
-                isTimeConfirmed = false;
-            }
-            
-            // Only show checkmark if:
-            // 1. There's a new value
-            // 2. The value has changed from previous
-            // 3. Time hasn't been confirmed yet
-            if (currentValue && currentValue !== previousValue && !isTimeConfirmed) {
-                checkmarkIcon.classList.remove('hidden');
-            }
-            
-            // If value is cleared, reset everything
-            if (!currentValue) {
-                checkmarkIcon.classList.add('hidden');
-                isTimeConfirmed = false;
-            }
-            
-            previousValue = currentValue;
-        };
-
-        // Helper function to confirm time and hide checkmark
-        const confirmTime = () => {
-            if (pickupTimeInput.value && !isTimeConfirmed) {
-                // Mark as confirmed
-                isTimeConfirmed = true;
-                
-                // Hide the checkmark
-                checkmarkIcon.classList.add('hidden');
-                
-                // Show success toast
-                this.showToast('Time confirmed successfully!', 'success');
-                
-                // Move focus to next input field if available
-                const nextInput = pickupTimeInput.closest('.form-group').parentElement.nextElementSibling?.querySelector('input');
-                if (nextInput) {
-                    setTimeout(() => nextInput.focus(), 200);
-                } else {
-                    pickupTimeInput.blur(); // Remove focus from current input
-                }
-            }
-        };
-
-        // Initially hide checkmark
-        checkmarkIcon.classList.add('hidden');
-
-        // Listen for time selection changes
-        pickupTimeInput.addEventListener('change', handleTimeChange);
-        pickupTimeInput.addEventListener('input', handleTimeChange);
-
-        // Checkmark click handler - confirm the time and hide checkmark
-        checkmarkIcon.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent event bubbling
-            confirmTime();
-        });
-
-        // Click outside handler - hide checkmark when clicking outside
-        document.addEventListener('click', (e) => {
-            // Check if checkmark is currently visible
-            if (!checkmarkIcon.classList.contains('hidden')) {
-                // Check if click is outside the input container and not on the checkmark
-                if (!container.contains(e.target)) {
-                    // User clicked outside - confirm the time and hide checkmark
-                    confirmTime();
-                }
-            }
-        });
-
-        // Also hide checkmark when input loses focus (blur event)
-        pickupTimeInput.addEventListener('blur', (e) => {
-            // Small delay to allow checkmark click to register first
-            setTimeout(() => {
-                if (!checkmarkIcon.classList.contains('hidden') && pickupTimeInput.value) {
-                    confirmTime();
-                }
-            }, 100);
-        });
     }
 
     setupFilteringAndSearch() {
@@ -993,21 +804,6 @@ handleFileSelect(file) {
                 photoUrl: "https://i0.wp.com/smittenkitchen.com/wp-content/uploads/2019/05/exceptional-grilled-chicken-scaled.jpg?fit=1200%2C800&ssl=1",
             },
             {
-                id: 5,
-                foodType: "Fruit & Vegetable Box",
-                quantity: "1 large box",
-                category: "restaurant",
-                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "17:00",
-                location: "Green Garden Restaurant",
-                contact: "+1 234-567-8903",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant",
-                dietaryTags: ["vegan"],
-                photoUrl: "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
-            },
-            {
                 id: 7,
                 foodType: "Fruit & Vegetable Box",
                 quantity: "1 large box",
@@ -1037,9 +833,36 @@ handleFileSelect(file) {
                 dietaryTags: ["vegan"],
                 photoUrl: "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
             },
-            
+            {
+                id: 9,
+                foodType: "Fruit & Vegetable Box",
+                quantity: "1 large box",
+                category: "restaurant",
+                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
+                freshUntil: this.getRandomFutureDate(),
+                pickupTime: "17:00",
+                location: "Green Garden Restaurant",
+                contact: "+1 234-567-8903",
+                createdAt: new Date(Date.now() - 5400000),
+                donor: "Green Garden Restaurant",
+                dietaryTags: ["vegan"]
+            },
+            {
+                id: 10,
+                foodType: "Grilled Chicken Meals",
+                quantity: "12 complete meals",
+                category: "restaurant",
+                description: "Grilled chicken with rice and vegetables. Prepared for cancelled catering order.",
+                freshUntil: this.getRandomFutureDate(),
+                pickupTime: "18:30",
+                location: "Healthy Eats Cafe, Market Square",
+                contact: "+1 234-567-8904",
+                createdAt: new Date(Date.now() - 2700000),
+                donor: "Healthy Eats Cafe",
+                dietaryTags: ["non-vegetarian", "dairy-free"]
+            }
         ];
-        
+
         this.foodListings = sampleListings;
         this.filteredListings = sampleListings;
     }
