@@ -310,7 +310,7 @@
             
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="Enter email address" required>
+                <input type="email" id="email" name="email" placeholder="Enter email address" required pattern="^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$" title="Please enter a valid email (eg:user@example.com)">
             </div>
             
             <div class="form-group">
@@ -321,7 +321,7 @@
             
             <div class="form-group">
                 <label for="phone">Phone</label>
-                <input type="tel" id="phone" name="phone" placeholder="Enter phone number" required>
+                <input type="tel" id="phone" name="phone" placeholder="Enter phone number" required pattern="^\d{10}$" title="Please enter a valid 10-digit phone number">
             </div>
             
             <div class="form-group">
@@ -331,14 +331,23 @@
             
             <div class="form-group" id="password-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password" required>
-                <button type="button" id="togglePassword" class="toggle-password" title="Show Password">
+                <input type="password" id="password" name="password" placeholder="Enter your password" required minlength="6">
+                <button type="button" id="togglePassword" class="toggle-password" title="Show Password" style="padding-top: 5%">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                         <circle cx="12" cy="12" r="3"></circle>
                     </svg>
                 </button>
+            </div>
+            <div id="password-strength" style="
+            display: none;
+            margin-top: -0.1rem;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-align: right;">
+          Strength: <span id="strength-text" style="color: red;">Weak</span>
             </div>
             <div class="form-group" id="confirm-password-group">
                 <label for="confirmPassword">Confirm Password</label>
@@ -354,6 +363,7 @@
                     id="toggleConfirmPassword"
                     class="toggle-password"
                     title="Show Password"
+                    style="padding-top: 5%"
                 >
                     <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -394,7 +404,38 @@
 
     <script src="js/theme.js"></script>
     <script>
-        
+        // --- Password Strength Meter ---
+      const pwdInput = document.getElementById("password");
+      const strengthDiv = document.getElementById("password-strength");
+      const strengthText = document.getElementById("strength-text");
+
+      pwdInput.addEventListener("focus", () => {
+        strengthDiv.style.display = "block";
+        updateStrength(pwdInput.value);
+      });
+
+      pwdInput.addEventListener("input", () => {
+        updateStrength(pwdInput.value);
+      });
+
+      function updateStrength(password) {
+        let strength = 0;
+        if (password.length >= 6) strength++;
+        if (/[A-Z]/.test(password)) strength++;
+        if (/[0-9]/.test(password)) strength++;
+        if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+        if (strength <= 1) {
+          strengthText.textContent = "Weak";
+          strengthText.style.color = "red";
+        } else if (strength === 2 || strength === 3) {
+          strengthText.textContent = "Medium";
+          strengthText.style.color = "orange";
+        } else {
+          strengthText.textContent = "Strong";
+          strengthText.style.color = "green";
+        }
+      }
         // --- Password Visibility Toggle (Existing Logic) ---
         const togglePassword = document.getElementById('togglePassword');
         const passwordInput = document.getElementById('password');
@@ -476,6 +517,7 @@
                 registerSubtitle.innerHTML = 'Join ShareBite and help us reduce food waste by volunteering in your community.';
                 contactPersonLabel.textContent = 'Nickname (Optional)';
                 contactPersonInput.placeholder = "Enter a nickname (optional)";
+                contactPersonInput.required = false;
                 
                 // Show/Hide fields
                 ngoFields.forEach(field => field.style.display = 'none');
@@ -500,12 +542,37 @@
             e.preventDefault();
 
             const type = registerForm.registerType.value;
-            const email = registerForm.email.value.trim();
+            const emailInput = registerForm.email; 
+            const email = emailInput.value.trim();
             const password = registerForm.password.value;
             const confirmPassword = registerForm.confirmPassword.value;
             const phone = registerForm.phone.value.trim();
             const address = registerForm.address.value.trim();
+            // Create container for error message
+            const emailError = document.createElement('div');
+            emailError.style.color = 'var(--secondary-orange)';
+            emailError.style.paddingTop = '0.3rem';
+            emailError.style.fontSize = '0.97rem';
+            emailError.style.display = 'none';
             
+            const emailGroup = emailInput.closest('.form-group'); 
+            emailGroup.appendChild(emailError);
+
+            function validateEmail(email) {
+            const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            return re.test(email);
+            }
+
+            emailInput.addEventListener('blur', function () {
+            if (!emailInput.value || validateEmail(emailInput.value)) {
+                emailError.style.display = 'none';
+                emailInput.style.borderColor = 'var(--input-border-light)';
+            } else {
+                emailError.textContent = 'Please enter a valid email address.';
+                emailError.style.display = 'block';
+                emailInput.style.borderColor = 'var(--secondary-orange)';
+            }
+            });
             // Basic required fields check (Email, Password, Phone, Address are always required)
             if (!email || !password || !phone || !address) {
                  alert("Please fill in all required fields (Email, Password, Phone, Address).");
