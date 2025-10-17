@@ -2,6 +2,7 @@
 
 class ShareBite {
     constructor() {
+        this.contactEmail = 'sharebite@support.com.ng';
         this.currentRole = 'donor';
         this.foodListings = [];
         this.filteredListings = [];
@@ -15,12 +16,26 @@ class ShareBite {
 
     init() {
         this.setupEventListeners();
+        this.updateContactInfo();
         this.generateSampleListings();
         this.renderFoodListings();
         this.setupNotificationSystem();
         this.updateNotificationDisplay();
         this.startAnimations();
         this.hideLoadingOverlay();
+    }
+
+    updateContactInfo() {
+        const emailAddressElement = document.getElementById('contact-email-address');
+        const emailLinkElement = document.getElementById('contact-email-link');
+
+        if (emailAddressElement) {
+            emailAddressElement.textContent = this.contactEmail;
+        }
+
+        if (emailLinkElement) {
+            emailLinkElement.href = `mailto:${this.contactEmail}`;
+        }
     }
 
     initTheme() {
@@ -1700,17 +1715,17 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Service Worker registration for PWA capabilities (optional)
-// if ('serviceWorker' in navigator) {
-//     window.addEventListener('load', () => {
-//         navigator.serviceWorker.register('/sw.js')
-//             .then(registration => {
-//                 console.log('SW registered: ', registration);
-//             })
-//             .catch(registrationError => {
-//                 console.log('SW registration failed: ', registrationError);
-//             });
-//     });
-// }
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+            .then(registration => {
+                console.log('SW registered: ', registration);
+            })
+            .catch(registrationError => {
+                console.log('SW registration failed: ', registrationError);
+            });
+    });
+}
 
 // Export for potential testing or external use
 window.ShareBite = ShareBite;
