@@ -10,6 +10,30 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
     <style>
+        /* Toast styles */
+        .custom-toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) scale(0.95);
+            background: var(--primary-green);
+            color: #fff;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+            font-size: 1rem;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 9999;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .custom-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+            pointer-events: auto;
+        }
+
         :root {
             --primary-green: #4CAF50;
             --secondary-orange: #FF6B35;
@@ -344,45 +368,43 @@
             const password = loginForm.password.value.trim();
 
             if (!email || !password) {
-                Swal.fire({
-                    title: "Missing Information ⚠️",
-                    text: "Please fill in all fields before logging in.",
-                    icon: "warning",
-                    confirmButtonColor: "#FF6B35"
-                });
+                showToast("Please fill in all fields before logging in.");
                 return;
             }
 
-            // Extract NGO name from email (before @) for display
-            const ngoName = email.split('@')[0].replace(/[._-]/g, ' ')
-                .split(' ')
-                .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-                .join(' ') + ' NGO';
-
-            // Create NGO user data
-            const ngoData = {
-                name: ngoName,
-                email: email,
-                type: 'ngo'
-            };
-
-            // Use auth system to log in NGO
-            sharebiteAuth.login(ngoData);
-
-            Swal.fire({
-                title: "NGO Login Successful 🎉",
-                text: `Welcome back, ${ngoName}!`,
-                icon: "success",
-                confirmButtonColor: "#28a745",
-                timer: 1500,
-                showConfirmButton: false
-            });
+            showToast("NGO logged in successfully!");
 
             // Redirect after short delay
             setTimeout(() => {
                 window.location.href = "index.html"; // Further we can redirect to NGO dashboard with "ngo-dashboard.html"
-            }, 1500);
+            }, 1200);
+
         });
+
+        // Toast notification implementation
+        function showToast(message) {
+            let toast = document.createElement('div');
+            toast.className = 'custom-toast';
+            toast.innerText = message;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 100);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => document.body.removeChild(toast), 500);
+            }, 2500);
+        }
+        const password = document.getElementById("password");
+        const show_pwd = document.getElementById("show-pwd");
+        function passwordToggle() {
+            if (show_pwd.checked) {
+                password.type = "text";
+            } else {
+                password.type = "password";
+            }
+        }
+        show_pwd.addEventListener("change", passwordToggle);
     </script>
 
 </body>
