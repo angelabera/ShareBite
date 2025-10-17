@@ -339,6 +339,83 @@ class ShareBiteAuth {
         }
         return true;
     }
+
+    // Method to show login type selection for action buttons
+    showLoginTypeSelection(actionType = 'access this feature') {
+        if (this.isLoggedIn()) {
+            return true; // User is already logged in
+        }
+
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                title: 'Welcome to ShareBite! 🍽️',
+                html: `
+                    <div style="margin: 1rem 0;">
+                        <p style="font-size: 1.1rem; margin-bottom: 0.5rem;">Ready to ${actionType}?</p>
+                        <p style="color: #6b7280; font-size: 0.9rem;">Choose your account type to get started</p>
+                    </div>
+                `,
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Individual User',
+                cancelButtonText: 'NGO / Organization',
+                allowOutsideClick: true,
+                allowEscapeKey: true,
+                reverseButtons: false,
+                buttonsStyling: false,
+                customClass: {
+                    popup: 'sharebite-auth-popup',
+                    title: 'sharebite-auth-title',
+                    htmlContainer: 'sharebite-auth-content',
+                    actions: 'sharebite-auth-actions',
+                    confirmButton: 'auth-user-btn',
+                    cancelButton: 'auth-ngo-btn'
+                },
+                footer: '<button class="auth-close-btn" onclick="Swal.close()">✕ Maybe Later</button>',
+                showClass: {
+                    popup: 'swal2-show',
+                    backdrop: 'swal2-backdrop-show'
+                },
+                hideClass: {
+                    popup: 'swal2-hide',
+                    backdrop: 'swal2-backdrop-hide'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // User login selected
+                    window.location.href = 'login.html';
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    // NGO login selected  
+                    window.location.href = 'login_ngo.html';
+                }
+                // If dismissed any other way, do nothing (stay on page)
+            });
+        } else {
+            // Fallback for when SweetAlert is not available
+            const userChoice = confirm('Please select login type:\n\nClick OK for User Login\nClick Cancel for NGO Login');
+            if (userChoice) {
+                window.location.href = 'login.html';
+            } else {
+                window.location.href = 'login_ngo.html';
+            }
+        }
+        
+        return false; // User is not logged in
+    }
+
+    // Check authentication for specific actions with custom messaging
+    checkAuthForAction(actionType, redirectUrl = null) {
+        if (this.isLoggedIn()) {
+            if (redirectUrl) {
+                window.location.href = redirectUrl;
+            }
+            return true;
+        }
+        
+        // Show login type selection with action-specific message
+        this.showLoginTypeSelection(actionType);
+        return false;
+    }
 }
 
 // Initialize authentication system (only if not already initialized)
