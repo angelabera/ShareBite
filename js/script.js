@@ -2,6 +2,7 @@
 
 class ShareBite {
     constructor() {
+        this.contactEmail = 'sharebite@support.com.ng';
         this.currentRole = 'donor';
         this.foodListings = [];
         this.filteredListings = [];
@@ -15,12 +16,26 @@ class ShareBite {
 
     init() {
         this.setupEventListeners();
+        this.updateContactInfo();
         this.generateSampleListings();
         this.renderFoodListings();
         this.setupNotificationSystem();
         this.updateNotificationDisplay();
         this.startAnimations();
         this.hideLoadingOverlay();
+    }
+
+    updateContactInfo() {
+        const emailAddressElement = document.getElementById('contact-email-address');
+        const emailLinkElement = document.getElementById('contact-email-link');
+
+        if (emailAddressElement) {
+            emailAddressElement.textContent = this.contactEmail;
+        }
+
+        if (emailLinkElement) {
+            emailLinkElement.href = `mailto:${this.contactEmail}`;
+        }
     }
 
     initTheme() {
@@ -66,6 +81,12 @@ class ShareBite {
         
         // Form handling
         this.setupFormHandling();
+        
+        // Date input confirmation functionality
+        this.setupDateInputConfirmation();
+        
+        // Time input confirmation functionality
+        this.setupTimeInputConfirmation();
         
         // Filtering and search
         this.setupFilteringAndSearch();
@@ -466,34 +487,18 @@ handleFileSelect(file) {
     }
 
     resetForm() {
-    const form = document.getElementById('listingForm');
-    const photoUpload = document.getElementById('photoUpload');
-    const imagePreview = document.getElementById('imagePreview');
-    const freshUntilInput = document.getElementById('freshUntil');
-    
-    // Reset form
-    form.reset();
-    
-    // Reset photo upload area
-    photoUpload.innerHTML = `
-        <i class="fas fa-cloud-upload-alt"></i>
-        <span>Click to upload or drag and drop</span>
-    `;
-    photoUpload.style.display = 'block';
-    
-    // Clear image preview
-    imagePreview.innerHTML = '';
-    imagePreview.classList.remove('active');
-    
-    // Reset minimum date to current local time
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    freshUntilInput.min = `${year}-${month}-${day}T${hours}:${minutes}`;
-}
+        document.getElementById('listingForm').reset();
+        document.getElementById('photoUpload').innerHTML = `
+            <i class="fas fa-cloud-upload-alt"></i>
+            <span>Click to upload or drag and drop</span>
+        `;
+        
+        // Reset minimum date
+        const freshUntilInput = document.getElementById('freshUntil');
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        freshUntilInput.min = now.toISOString().slice(0, 16);
+    }
 
     setupFilteringAndSearch() {
     // --- Existing Category Filter Logic ---
@@ -719,7 +724,8 @@ handleFileSelect(file) {
                 contact: "+1 234-567-8900",
                 createdAt: new Date(Date.now() - 3600000),
                 donor: "Mario's Pizzeria",
-                dietaryTags: ["vegetarian"]
+                dietaryTags: ["vegetarian"],
+                photoUrl: "https://www.allrecipes.com/thmb/2rQA_OlnLbhidei70glz6HCCYAs=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/1453815-authentic-pizza-margherita-Cynthia-Ross-4x3-1-7410c69552274163a9049342b60c22ff.jpg",
             },
             {
                 id: 2,
@@ -733,7 +739,9 @@ handleFileSelect(file) {
                 contact: "events@conference.com",
                 createdAt: new Date(Date.now() - 7200000),
                 donor: "Conference Center",
-                dietaryTags: ["non-vegetarian"]
+                dietaryTags: ["non-vegetarian"],
+                photoUrl: "https://bangkok.mandarinorientalshop.com/cdn/shop/files/078-_3729_2048x.jpg?v=1690709512",
+
             },
             {
                 id: 3,
@@ -747,7 +755,8 @@ handleFileSelect(file) {
                 contact: "+1 234-567-8901",
                 createdAt: new Date(Date.now() - 1800000),
                 donor: "Sunrise Bakery",
-                dietaryTags: ["dairy-free"]
+                dietaryTags: ["dairy-free"],
+                photoUrl: "https://media.istockphoto.com/id/507021914/photo/assorted-croissand-and-bread.jpg?s=612x612&w=0&k=20&c=ruHrARluyF_yR1-hmrurOyz4sLPNeohj1zKKv8fHa8U=",
             },
             {
                 id: 4,
@@ -761,7 +770,8 @@ handleFileSelect(file) {
                 contact: "+1 234-567-8902",
                 createdAt: new Date(Date.now() - 900000),
                 donor: "Local Family",
-                dietaryTags: ["vegetarian", "gluten-free"]
+                dietaryTags: ["vegetarian", "gluten-free"],
+                photoUrl: "https://www.tasteofhome.com/wp-content/uploads/2019/04/shutterstock_610126394.jpg",
             },
             {
                 id: 5,
@@ -775,7 +785,23 @@ handleFileSelect(file) {
                 contact: "+1 234-567-8903",
                 createdAt: new Date(Date.now() - 5400000),
                 donor: "Green Garden Restaurant",
-                dietaryTags: ["vegan"]
+                dietaryTags: ["vegan"],
+                photoUrl: "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
+            },
+            {
+                id: 6,
+                foodType: "Grilled Chicken Meals",
+                quantity: "12 complete meals",
+                category: "restaurant",
+                description: "Grilled chicken with rice and vegetables. Prepared for cancelled catering order.",
+                freshUntil: this.getRandomFutureDate(),
+                pickupTime: "18:30",
+                location: "Healthy Eats Cafe, Market Square",
+                contact: "+1 234-567-8904",
+                createdAt: new Date(Date.now() - 2700000),
+                donor: "Healthy Eats Cafe",
+                dietaryTags: ["non-vegetarian", "dairy-free"],
+                photoUrl: "https://i0.wp.com/smittenkitchen.com/wp-content/uploads/2019/05/exceptional-grilled-chicken-scaled.jpg?fit=1200%2C800&ssl=1",
             },
             {
                 id: 6,
@@ -789,7 +815,8 @@ handleFileSelect(file) {
                 contact: "+1 234-567-8903",
                 createdAt: new Date(Date.now() - 5400000),
                 donor: "Green Garden Restaurant",
-                dietaryTags: ["vegan"]
+                dietaryTags: ["vegan"],
+                photoUrl: "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
             },
             {
                 id: 7,
@@ -803,7 +830,8 @@ handleFileSelect(file) {
                 contact: "+1 234-567-8903",
                 createdAt: new Date(Date.now() - 5400000),
                 donor: "Green Garden Restaurant",
-                dietaryTags: ["vegan"]
+                dietaryTags: ["vegan"],
+                photoUrl: "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
             },
             {
                 id: 8,
@@ -820,7 +848,7 @@ handleFileSelect(file) {
                 dietaryTags: ["vegan"]
             },
             {
-                id: 9,
+                id: 6,
                 foodType: "Grilled Chicken Meals",
                 quantity: "12 complete meals",
                 category: "restaurant",
@@ -873,80 +901,108 @@ handleFileSelect(file) {
     createClaimButton(listing) {
         const isClaimed = this.claimedItems.includes(listing.id);
         const isCollector = this.currentRole === 'collector';
+        const username = JSON.parse(localStorage.getItem('user'))?.name;
         
-        if (isClaimed) {
+        if(username) {
+            if (isClaimed) {
             return `
                 <button class="claim-btn claimed" disabled>
                     <i class="fas fa-check-circle"></i> Claimed
                 </button>
             `;
-        } else if (isCollector) {
-            return `
-                <button class="claim-btn" data-id="${listing.id}">
-                    <i class="fas fa-hand-paper"></i> Claim Food
-                </button>
-            `;
+            } else if (isCollector) {
+                return `
+                    <button class="claim-btn" data-id="${listing.id}">
+                        <i class="fas fa-hand-paper"></i> Claim Food
+                    </button>
+                `;
+            } else {
+                return `
+                    <button class="claim-btn" style="opacity: 0.5; cursor: not-allowed;" disabled>
+                        <i class="fas fa-hand-paper"></i> Switch to Collector
+                    </button>
+                `;
+            }
         } else {
             return `
                 <button class="claim-btn" style="opacity: 0.5; cursor: not-allowed;" disabled>
-                    <i class="fas fa-hand-paper"></i> Switch to Collector
+                    <i class="fas fa-hand-paper"></i> Login to Claim
                 </button>
             `;
         }
     }
 
-   createFoodCard(listing) {
-        const timeAgo = this.getTimeAgo(listing.createdAt);
-        const freshUntil = this.formatDateTime(listing.freshUntil);
-        const isClaimed = this.claimedItems.includes(listing.id);
+createFoodCard(listing) {
+    const timeAgo = this.getTimeAgo(listing.createdAt);
+    const freshUntil = this.formatDateTime(listing.freshUntil);
+    const isClaimed = this.claimedItems.includes(listing.id);
 
-        // This logic generates the HTML for the tags
-        let tagsHTML = '';
-        if (listing.dietaryTags && listing.dietaryTags.length > 0) {
-            tagsHTML = `<div class="food-tags">` +
-                listing.dietaryTags.map(tag => `<span class="tag tag-${tag}">${tag}</span>`).join('') +
-            `</div>`;
-        }
-        
-        // The return statement now correctly includes the tagsHTML
-        return `
-            <div class="food-card ${isClaimed ? 'claimed' : ''}" 
-                 data-id="${listing.id}" 
-                 data-tags="${listing.dietaryTags ? listing.dietaryTags.join(',') : ''}">
-                <div class="food-image">
-                    ${listing.photo ? `<img src="${URL.createObjectURL(listing.photo)}" alt="${listing.foodType}">` : `<i class="fas fa-${this.getFoodIcon(listing.category)}"></i>`}
-                    <div class="food-category">${this.capitalizeFirst(listing.category)}</div>
+    // *** MODIFIED LOGIC START ***
+    let imgSource = '';
+
+    if (listing.photoUrl) {
+        // 1. Use external/sample URL if provided
+        imgSource = listing.photoUrl;
+    } else if (listing.photo && typeof listing.photo === 'object' && listing.photo instanceof File) {
+        // 2. Use temporary URL for newly uploaded file objects
+        imgSource = URL.createObjectURL(listing.photo);
+    } 
+    // If neither photoUrl nor a valid File object exists, imgSource remains empty.
+    
+    // Create the image/icon HTML based on the determined source
+    const imageHTML = imgSource 
+        ? `<img src="${imgSource}" alt="${listing.foodType}">` 
+        : `<i class="fas fa-${this.getFoodIcon(listing.category)}"></i>`;
+    // *** MODIFIED LOGIC END ***
+
+    // This logic generates the HTML for the tags
+    let tagsHTML = '';
+    if (listing.dietaryTags && listing.dietaryTags.length > 0) {
+        tagsHTML = `<div class="food-tags">` +
+            listing.dietaryTags.map(tag => `<span class="tag tag-${tag}">${tag}</span>`).join('') +
+        `</div>`;
+    }
+    
+    // The main HTML template now uses the correctly generated imageHTML
+    return `
+        <div class="food-card ${isClaimed ? 'claimed' : ''}" 
+             data-id="${listing.id}" 
+             data-tags="${listing.dietaryTags ? listing.dietaryTags.join(',') : ''}">
+            <div class="food-image">
+                ${imageHTML}
+                <div class="food-category">${this.capitalizeFirst(listing.category)}</div>
+            </div>
+            <div class="food-details">
+                <h3 class="food-title">${listing.foodType}</h3>
+                ${tagsHTML} 
+                <p class="food-description">${listing.description}</p>
+                <div class="food-meta">
+                    <span class="quantity"><i class="fas fa-utensils"></i> ${listing.quantity}</span>
+                    <span class="freshness"><i class="fas fa-clock"></i> ${freshUntil}</span>
                 </div>
-                <div class="food-details">
-                    <h3 class="food-title">${listing.foodType}</h3>
-                    ${tagsHTML} 
-                    <p class="food-description">${listing.description}</p>
-                    <div class="food-meta">
-                        <span class="quantity"><i class="fas fa-utensils"></i> ${listing.quantity}</span>
-                        <span class="freshness"><i class="fas fa-clock"></i> ${freshUntil}</span>
-                    </div>
-                    <div class="food-location">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span>${listing.location}</span>
-                    </div>
-                    <div class="food-meta" style="margin-bottom: 1rem;">
-                        <span style="color: var(--medium-gray); font-size: 0.9rem;">
-                            <i class="fas fa-user"></i> ${listing.donor}
-                        </span>
-                        <span style="color: var(--medium-gray); font-size: 0.9rem;">
-                            <i class="fas fa-clock"></i> ${timeAgo}
-                        </span>
-                    </div>
-                    <div class="food-actions">
-                        ${this.createClaimButton(listing)}
-                        <button class="contact-btn" data-contact="${listing.contact}">
-                            <i class="fas fa-phone"></i>
-                        </button>
-                    </div>
+                <div class="food-location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>${listing.location}</span>
+                </div>
+                <div class="food-meta" style="margin-bottom: 1rem;">
+                    <span style="color: var(--medium-gray); font-size: 0.9rem;">
+                        <i class="fas fa-user"></i> ${listing.donor}
+                    </span>
+                    <span style="color: var(--medium-gray); font-size: 0.9rem;">
+                        <i class="fas fa-clock"></i> ${timeAgo}
+                    </span>
+                </div>
+                <div class="food-actions">
+                    ${this.createClaimButton(listing)}
+                    <button class="contact-btn" data-contact="${listing.contact}">
+                        <i class="fas fa-phone"></i>
+                    </button>
                 </div>
             </div>
-        `;
-    }
+        </div>
+    `;
+}
+
 
     setupFoodCardInteractions() {
         // Claim buttons
@@ -1423,17 +1479,17 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Service Worker registration for PWA capabilities (optional)
-// if ('serviceWorker' in navigator) {
-//     window.addEventListener('load', () => {
-//         navigator.serviceWorker.register('/sw.js')
-//             .then(registration => {
-//                 console.log('SW registered: ', registration);
-//             })
-//             .catch(registrationError => {
-//                 console.log('SW registration failed: ', registrationError);
-//             });
-//     });
-// }
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+            .then(registration => {
+                console.log('SW registered: ', registration);
+            })
+            .catch(registrationError => {
+                console.log('SW registration failed: ', registrationError);
+            });
+    });
+}
 
 // Export for potential testing or external use
 window.ShareBite = ShareBite;

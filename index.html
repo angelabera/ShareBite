@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
   <body>
     <!-- Navigation -->
@@ -333,11 +334,17 @@
             <div class="form-row">
               <div class="form-group">
                 <label for="freshUntil">Fresh Until *</label>
-                <input type="datetime-local" id="freshUntil" required />
+                <div class="input-container-relative">
+                  <input type="datetime-local" id="freshUntil" class="datetime-input" required />
+                  <span class="checkmark-icon hidden">✓</span>
+                </div>
               </div>
               <div class="form-group">
                 <label for="pickupTime">Preferred Pickup Time *</label>
-                <input type="time" id="pickupTime" required />
+                <div class="input-container-relative">
+                  <input type="time" id="pickupTime" class="datetime-input" required />
+                  <span class="checkmark-icon-time hidden">✓</span>
+                </div>
               </div>
             </div>
             <div class="form-group">
@@ -872,7 +879,7 @@
             <i class="fa-solid fa-envelope"></i>
             <div>
               <strong>Email:</strong>
-              <p>sharebite@support.com.ng</p>
+              <p id="contact-email-address"></p>
             </div>
           </div>
         </div>
@@ -881,7 +888,7 @@
           <a href="#"><i class="fa-brands fa-github"></i></a>
           <a href="#"><i class="fa-brands fa-linkedin"></i></a>
           <a href="tel:+234812387000000"><i class="fa-solid fa-phone"></i></a>
-          <a href="mailto:amrng@support.com.ng"><i class="fa-solid fa-envelope"></i></a>
+          <a id="contact-email-link" href="#"><i class="fa-solid fa-envelope"></i></a>
         </div>
       </div>
     </div>
@@ -959,8 +966,8 @@
             <h4>For Donors</h4>
             <ul>
               <li><a href="foodlisting.html">List Food</a></li>
-              <li><a href="#">Donor Guidelines</a></li>
-              <li><a href="#">Track Impact</a></li>
+              <li><a href="donor-guidelines.html">Donor Guidelines</a></li>
+              <li><a href="track-impact.html">Track Impact</a></li>
               <li><a href="support.html">Support</a></li>
             </ul>
           </div>
@@ -980,7 +987,7 @@
         <div class="footer-bottom">
           <p class="footer-credit">Made with 💚 by Angela Bera</p>
           <p>
-            &copy; 2025 ShareBite. All rights reserved. 
+            &copy; 2025 ShareBite. All rights reserved. <a href="License.html">License</a> 
           </p>
         </div>
       </div>
@@ -1001,6 +1008,7 @@
 
 
     <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
     <script src="js/script.js"></script>
    
   </body>
