@@ -66,17 +66,17 @@ body {
     padding: var(--container-padding);
 }
 
-/* Navigation */
-.navbar {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    z-index: 1000;
-    transition: var(--transition-medium);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
+    /* ---------- Navbar ---------- */
+    .navbar {
+      width: 100%;
+      background: var(--bg-color);
+      box-shadow: 0 2px 10px var(--shadow-color);
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      transition: all 0.4s ease;
+      /* overflow: hidden; */
+    }
 
 /* Navbar state when scrolled (light mode) */
 .navbar.scrolled {
@@ -144,10 +144,31 @@ body {
     background: var(--primary-gradient);
     transition: var(--transition-medium);
 }
+    
 
-.nav-link:hover::after {
-    width: 100%;
-}
+    /* Mobile */
+    @media (max-width: 1064px) {
+      .nav-container {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .user-actions {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        opacity: 0;
+        max-height: 0;
+        transition: all 0.4s ease;
+        background: transparent;
+      }
+
+      .navbar.expanded,
+      .navbar.expanded .user-actions {
+        opacity: 1;
+        max-height: 600px;
+        padding: 1rem 0;
+      }
 
 .user-actions {
     display: flex;
@@ -437,6 +458,65 @@ body.dark .profile-menu-item:hover {
     transition: var(--transition-medium);
 }
 
+      .hamburger.active span:nth-child(3) {
+        transform: rotate(-45deg) translateY(-8px);
+      }
+    }
+
+    /* Media query to handle smaller screens */
+@media (max-width: 710px) {
+    /* * 1. Target the notification-panel 
+     * We'll position it absolutely relative to the viewport/document 
+     * (since its closest positioned ancestor is likely the body or the navbar) 
+     */
+    .notification-panel {
+        /* Set position and ensure it's on top of everything */
+        position: absolute;
+        z-index: 1000; 
+        
+        /* Anchor it to the right edge of the viewport */
+        right: 1.5rem; /* Matches the nav-container padding for alignment */
+        
+        /* Position it below the notification bell icon. 
+           Adjust 'top' based on the final height of your header. */
+        top: 100%; 
+        
+        /* Set fixed dimensions and style for visibility */
+        width: 280px; /* A fixed width is often best for pop-ups */
+        max-width: calc(100% - 3rem); /* Ensures it fits even on tiny screens */
+        background-color: var(--bg-color-secondary, white); /* Ensure it has a background */
+        border: 1px solid var(--border-color);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        /* Start with it hidden (assuming your JavaScript toggles a class for visibility) */
+        display: none; 
+    }
+
+    /* * 2. Adjust the notification-bell container 
+     * This is needed to ensure the notification-panel can position itself
+     * relative to the bell icon or be styled correctly in the column layout.
+     */
+    .notification-bell {
+        /* On mobile, this element is a full-width item in the column.
+           We'll keep it centered but ensure the panel is anchored right. */
+        width: 100%;
+        display: flex !important; /* Override the inline style 'display: none;' for testing/open state */
+        justify-content: center;
+        position: relative; /* Make it the positioning context for the panel */
+    }
+
+    /* * 3. Adjust the .nav-link to make sure the clickable area is large 
+     */
+    
+
+    /* * You'll likely need to target the active/visible state of the panel with JavaScript, 
+     * for example, by adding a class like '.open' to the .notification-panel.
+     * * .notification-panel.open {
+     * display: block; 
+     * }
+     */
+}
+ 
 /* Hero Section */
 .hero {
     min-height: 100vh;
@@ -444,7 +524,6 @@ body.dark .profile-menu-item:hover {
     display: flex;
     align-items: center;
     position: relative;
-    overflow: hidden;
     padding-top: 80px;
 }
 
