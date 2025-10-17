@@ -88,9 +88,14 @@ class ShareBiteFoodListing {
 
     setupNavigation() {
         const navLinks = document.querySelectorAll('.nav-link');
+        
+        // Set initial active state for current page
+        this.setInitialActiveNavLink();
+        
         navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 const href = link.getAttribute('href');
+                
                 // If it's an anchor for current page, scroll smoothly
                 if (href && href.startsWith('#')) {
                     e.preventDefault();
@@ -98,15 +103,50 @@ class ShareBiteFoodListing {
                     const targetElement = document.getElementById(targetId);
                     if (targetElement) {
                         targetElement.scrollIntoView({ behavior: 'smooth' });
+                        setTimeout(() => this.setActiveNavLink(targetId), 500);
                     }
                 } else if (href && href.includes('.html#')) {
                     // If it's index.html#features or similar, navigate normally
                     // (let browser handle navigation)
                 } else if (href && href.endsWith('.html')) {
-                    // If it's a plain .html link, let browser handle navigation
+                    // If it's a plain .html link, set active state before navigation
+                    this.setActiveNavLink(href);
                 }
             });
         });
+    }
+
+    setInitialActiveNavLink() {
+        // Check if we're on the foodlisting page
+        if (window.location.pathname.includes('foodlisting.html')) {
+            this.setActiveNavLink('foodlisting.html');
+        } else if (window.location.pathname.includes('index.html') || window.location.pathname === '/') {
+            // Default to home for the main page
+            this.setActiveNavLink('home');
+        }
+    }
+
+    setActiveNavLink(targetId) {
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        // Remove active class from all links first
+        navLinks.forEach(link => link.classList.remove('active'));
+        
+        // Handle different types of links
+        let targetLink;
+        if (targetId === 'home' || targetId === 'index.html') {
+            targetLink = document.querySelector('.nav-link[href="index.html"]');
+        } else if (targetId === 'foodlisting.html') {
+            targetLink = document.querySelector('.nav-link[href="foodlisting.html"]');
+        } else if (targetId.startsWith('#')) {
+            targetLink = document.querySelector(`.nav-link[href="${targetId}"]`);
+        } else {
+            targetLink = document.querySelector(`.nav-link[href="#${targetId}"]`);
+        }
+        
+        if (targetLink) {
+            targetLink.classList.add('active');
+        }
     }
 
     setupRoleSwitch() {
