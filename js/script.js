@@ -112,7 +112,8 @@ class ShareBite {
             addListingBtn.style.display = 'flex';
             
             // Hide notification bell for donors (unless they have notifications)
-            if (notificationBell && this.notifications.length === 0) {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (notificationBell && !user && this.notifications.length === 0) {
                 notificationBell.style.display = 'none';
             }
         }
@@ -1330,7 +1331,10 @@ createFoodCard(listing) {
         if (!notificationBell) return;
         
         // Show notification bell when in collector mode or when there are notifications
-        if (this.currentRole === 'collector' || this.notifications.length > 0) {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            notificationBell.style.display = 'block';
+        } else if (this.currentRole === 'collector' || this.notifications.length > 0) {
             notificationBell.style.display = 'block';
         }
         
