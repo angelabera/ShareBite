@@ -285,11 +285,10 @@ body {
             white-space: nowrap;
         }
 
-        .login-btn:hover {
-            background: var(--secondary-color);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
-        }
+.login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+}
 
         .hamburger {
             display: none;
@@ -768,7 +767,7 @@ body {
     transform: translateY(-50%);
     width: 20px;
     height: 20px;
-    border-radius: 50%;
+    border-radius: 4px;
     border: 2px solid var(--medium-gray);
     background-color: transparent;
     transition: all 0.2s ease;
@@ -776,15 +775,19 @@ body {
 
 /* Create the inner circle (the 'check') */
 .checkbox-group label::after {
-    content: '';
+    content: '✔';
+    color: var(--secondary-orange);
     position: absolute;
-    left: 5px;
+    left: 0;
     top: 50%;
-    transform: translateY(-50%) scale(0); /* Hidden by default */
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: var(--secondary-orange);
+    font-size: 14px;
+    text-align: center;
+    line-height: 20px;
+    width: 20px;
+    height: 20px;
+    background-color: transparent;
+    border-radius: 4px;
+    transform: translateY(-50%) scale(0);
     transition: all 0.2s ease;
 }
 
@@ -1521,6 +1524,26 @@ body {
     
     .progress-line {
         margin: 0 -0.5rem;
+    }
+    
+    /* Profile dropdown mobile styles */
+    .profile-btn {
+        min-width: 120px;
+        padding: 0.6rem 0.8rem;
+        font-size: 0.9rem;
+    }
+    
+    .profile-btn .user-name {
+        max-width: 80px;
+    }
+    
+    .profile-menu {
+        right: -10px;
+        min-width: 200px;
+    }
+    
+    .user-actions {
+        gap: 0.5rem;
     }
 }
 
@@ -4324,7 +4347,7 @@ body.dark-mode .notification-bell:hover {
   }
 .toast {
     position: fixed;
-    bottom: 30px;
+    bottom: 20px;
     right: 30px;
     background-color: #4CAF50;
     color: white;
