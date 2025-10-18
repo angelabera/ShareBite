@@ -45,31 +45,6 @@ A beautiful, responsive web platform connecting restaurants and households with 
 - **Tablet**: Optimized layout with touch-friendly interactions
 - **Mobile**: Mobile-first responsive design with hamburger menu
 
-## 🔧 File Structure
-
-```
-📂 ShareBite/
-├─ 🎨 css/
-│  └─ 📄 style.css
-├─ ⚙ js/
-│  ├─ 🍔 foodlisting.js
-│  ├─ 🧠 script.js
-│  └─ 🌗 theme.js
-├─ 🖼 logo/
-│  └─ 🪪 logo.svg
-├─ 📜 CODE_OF_CONDUCT.md
-├─ 🧩 CONTRIBUTING.md
-├─ 🍱 foodlisting.html
-├─ 🔑 forgotpassword.html
-├─ 🏠 index.html
-├─ ⚖ License.md
-├─ ❤ login_ngo.html
-├─ 🔐 login.html
-├─ 🏢 ngo-register.html
-├─ 📘 README.md
-├─ 📝 register.html
-└─ 🔄 sw.js
-```
 
 ## 🎯 Key Components
 

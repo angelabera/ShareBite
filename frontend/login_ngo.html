@@ -315,6 +315,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/theme.js"></script>
+    <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
     <script>
 
@@ -337,7 +338,7 @@
         // --- Form Submission ---
         const loginForm = document.getElementById('ngoLoginForm');
 
-        loginForm.addEventListener('submit', (e) => {
+        loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const email = loginForm.email.value.trim();
@@ -353,35 +354,37 @@
                 return;
             }
 
-            // Extract NGO name from email (before @) for display
-            const ngoName = email.split('@')[0].replace(/[._-]/g, ' ')
-                .split(' ')
-                .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-                .join(' ') + ' NGO';
+            try {
+                // Call backend API
+                const response = await loginNGO({ email, password });
+                
+                // Store token
+                localStorage.setItem('sharebite_token', response.token);
+                
+                // Use auth system to log in NGO
+                sharebiteAuth.login({ ...response.ngo, type: 'ngo' });
 
-            // Create NGO user data
-            const ngoData = {
-                name: ngoName,
-                email: email,
-                type: 'ngo'
-            };
+                Swal.fire({
+                    title: "NGO Login Successful 🎉",
+                    text: `Welcome back, ${response.ngo.name}!`,
+                    icon: "success",
+                    confirmButtonColor: "#28a745",
+                    timer: 1500,
+                    showConfirmButton: false
+                });
 
-            // Use auth system to log in NGO
-            sharebiteAuth.login(ngoData);
-
-            Swal.fire({
-                title: "NGO Login Successful 🎉",
-                text: `Welcome back, ${ngoName}!`,
-                icon: "success",
-                confirmButtonColor: "#28a745",
-                timer: 1500,
-                showConfirmButton: false
-            });
-
-            // Redirect after short delay
-            setTimeout(() => {
-                window.location.href = "index.html"; // Further we can redirect to NGO dashboard with "ngo-dashboard.html"
-            }, 1500);
+                // Redirect after short delay
+                setTimeout(() => {
+                    window.location.href = "index.html";
+                }, 1500);
+            } catch (error) {
+                Swal.fire({
+                    title: "Login Failed ❌",
+                    text: error.message || "Invalid credentials. Please try again.",
+                    icon: "error",
+                    confirmButtonColor: "#FF6B35"
+                });
+            }
         });
     </script>
 
