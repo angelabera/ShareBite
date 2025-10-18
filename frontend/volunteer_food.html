@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Volunteer Food | ShareBite</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
+
+<!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!-- CSS -->
+  <style>
+    :root {
+        --primary-color: #4CAF50;
+        --primary-light: #81C784;
+        --secondary-color: #FF6B35;
+        --white: #FFFFFF;
+        --light-navbar: #eeeff4;
+        --gray: #F5F7FA;
+        --medium-gray: #9E9E9E;
+        --black: #212121;
+        --primary-gradient: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+        --card-radius: 16px;
+        --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.1);
+        --shadow-medium: 0 5px 25px rgba(0, 0, 0, 0.15);
+        --shadow-heavy: 0 10px 40px rgba(0, 0, 0, 0.2); /* Key for form shadow */
+        --transition-fast: 0.2s ease;
+        --transition-medium: 0.3s ease;
+    }
+    
+    /* Dark Mode Variables Overrides  */
+    :root.dark {
+        --body-bg-dark: #0f172a;
+        --text-color-dark: #f8fafc;
+        --footer-bg-dark: #0d0d0d;
+        --light-gray: #1E1E1E;
+        --medium-gray: #B0B0B0;
+        --dark-gray: #E0E0E0;
+        --black: #FAFAFA;
+        --card-bg: #2E2E2E;
+        --darkest-gray: #121212;
+        --shadow-heavy: 0 10px 40px rgba(0, 0, 0, 0.6); /* Dark mode shadow adjustment */
+    }
+
+    /* Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: var(--light-gray);
+      color: var(--white);
+      line-height: 1.6;
+      transition: 0.3s;
+    }
+
+    a { text-decoration: none; }
+    
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+    .contact-wrapper {
+    background: var(--darkest-gray);
+    padding: 3rem;
+    border-radius: 1.5rem;
+    box-shadow: var(--shadow-heavy);
+    max-width: 1200px;
+    width: 100%;
+    }
+
+/* -- Navbar-- */
+    .navbar {
+      background: var(--footer-bg-dark);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 3rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .navbar .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+    .nav-links a {
+      color: var(--white);
+      font-weight: 500;
+      transition: 0.3s;
+    }
+    .nav-links a:hover {
+      color: var(--primary-color);
+    }
+    .btn-nav {
+      background: var(--primary-color);
+      color: var(--white);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+
+/* -- Dark Mode Button -- */
+    .dark-toggle {
+      margin-left: 1rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      background: var(--secondary-color);
+      color: var(--white);
+      transition: 0.3s;
+    }
+    .dark-toggle:hover {
+      background: var(--secondary-dark);
+    }
+
+/*-- Hero --*/
+    .hero {
+      text-align: center;
+      padding: 4rem 2rem;
+      max-width: 900px;
+      margin: auto;
+    }
+    .hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+    .hero span {
+      color: var(--secondary-color);
+    }
+    .hero p {
+      margin-bottom: 2rem;
+      color: var(--white);
+      font-size: 1.1rem;
+    }
+    .btn-primary {
+      background: var(--secondary-color);
+      color: var(--white);
+      padding: 0.8rem 1.5rem;
+      border-radius: 10px;
+      font-weight: 600;
+      margin: 0.5rem;
+      display: inline-block;
+    }
+    .btn-outline {
+      border: 2px solid var(--secondary-color);
+      color: var(--secondary-color);
+      padding: 0.8rem 1.5rem;
+      border-radius: 10px;
+      font-weight: 600;
+      margin: 0.5rem;
+      display: inline-block;
+    }
+    .btn-outline:hover {
+      background: var(--secondary-color);
+      color: var(--white);
+    }
+
+/* -- Info Section -- */
+    .info {
+      padding: 3rem 2rem;
+      text-align: center;
+      max-width: 1000px;
+      margin: auto;
+    }
+    .info h2 {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .card {
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      transition: 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    .card h3 {
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+    }
+
+    /* --- Volunteer Form  --- */
+    .form-section {
+      padding: 3rem 3rem; 
+      background: var(--white);
+      border-radius: 1.5rem; 
+      box-shadow: var(--shadow-heavy); 
+      max-width: 700px;
+      margin: 3rem auto;
+      color: var(--black); 
+    }
+    .form-section h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      text-align: center;
+      background: var(--primary-gradient);
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 2rem;
+    }
+    .form-section form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem; 
+    }
+    .form-section label {
+      text-align: left;
+      font-weight: 600;
+      color: var(--black);
+      margin-bottom: 0.5rem;
+    }
+    .form-section input, 
+    .form-section select {
+      padding: 0.9rem 1rem;
+      border-radius: 0.6rem;
+      border: 1.5px solid var(--medium-gray);
+      font-size: 1rem;
+      color: var(--black);
+      background: var(--light-gray);
+      transition: 0.3s ease;
+    }
+    .form-section button[type="submit"] {
+      background: var(--primary-gradient);
+      color: var(--white);
+      font-weight: 600;
+      font-size: 1.1rem;
+      padding: 0.9rem 0;
+      border: none;
+      border-radius: 0.6rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 1rem;
+    }
+    .form-section button[type="submit"]:hover {
+      transform: translateY(-2px);
+    }
+
+/* Footer bottom section */
+.footer-bottom {
+    background: var(--footer-bg-dark);
+    padding-top: 2rem;
+    text-align: center;
+    color: var(--medium-gray);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0 auto;
+}
+
+/* Ensure the "Made with ❤️ by Angela Bera" is bold and green */
+    .footer-bottom .footer-credit,
+    .footer-bottom .footer-credit a {
+        color: var(--primary-color);
+        font-weight: bold;
+    }
+
+/* Light Mode Overrides */
+    .light-mode {
+      background: var(--white);
+      color: var(--darkest-gray);
+    }
+    .light-mode .navbar {
+      background: var(--light-navbar);
+    }
+    .light-mode .nav-links a {
+      color: var(--black);
+    }
+    .light-mode .hero p {
+      color: var(--darkest-gray);
+    }
+    .light-mode .card {
+        background: var(--gray)
+    }
+
+    .light-mode .contact-wrapper {
+        background: var(--white);
+    }
+    .light-mode .footer-bottom {
+        background: var(--black);
+    }
+
+/* Light mode form section adjustment */
+    .light-mode .form-section {
+      background: var(--white); 
+      color: var(--black);
+    }
+    .light-mode .form-section input, 
+    .light-mode .form-section select {
+      background: var(--light-gray); 
+      color: var(--black);
+    }
+    .light-mode .form-section label {
+        color: var(--black);
+    }
+
+/* Dark Mode Overrides for Form Section */
+    :root.dark .form-section {
+        background: var(--darkest-gray); 
+        color: var(--black);
+    }
+  </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">
+      <i class="fas fa-utensils"></i>
+      <span>ShareBite</span>
+    </div>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="index.html#features">Features</a>
+      <a href="foodlisting.html">Listings</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#contact-section">Contact</a>
+    </div>
+    <div>
+      <a href="donor.html" class="btn-nav">Become a Donor</a>
+      <button class="dark-toggle" onclick="toggleDarkMode()">🌙</button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Join as a <span>Volunteer</span> & Help Feed Communities</h1>
+    <p>Volunteers are the backbone of ShareBite. Help us deliver surplus food from restaurants and households to NGOs, shelters, and communities in need.</p>
+    <a href="#signup" class="btn-primary">Sign Up Now</a>
+    <a href="#info" class="btn-outline">Learn More</a>
+  </section>
+
+   <!-- Info Section -->
+  <section class="info" id="info">
+    <h2>Why Volunteer with Us?</h2>
+    <div class="card-grid">
+      <div class="card">
+        <h3>🤝 Community Impact</h3>
+        <p>Every hour you spend volunteering helps feed families and reduce food waste in your city.</p>
+      </div>
+      <div class="card">
+        <h3>📅 Flexible Schedule</h3>
+        <p>Choose volunteering times that fit your lifestyle - weekends, weekdays, or both.</p>
+      </div>
+      <div class="card">
+        <h3>🌍 Network & Growth</h3>
+        <p>Meet like-minded people, NGOs, and organizations working together for a better tomorrow.</p>
+      </div>
+    </div>
+  </section>
+
+    <!-- Volunteer Form -->
+  <section class="form-section" id="signup">
+    <div class="contact-wrapper">
+    <h2> Volunteer Sign Up</h2>
+    <form onsubmit="return handleForm(event)">
+      <label for="name">Full Name:</label>
+      <input type="text" id="name" placeholder="Enter your full name" required>
+
+      <label for="email">Email Address:</label>
+      <input type="email" id="email" placeholder="Enter your email" required>
+
+      <label for="phone">Phone Number:</label>
+      <input type="tel" id="phone" placeholder="Enter your phone number" required>
+
+      <label for="availability">Availability</label>
+      <select id="availability" required>
+        <option value="">-- Select --</option>
+        <option value="weekdays">Weekdays</option>
+        <option value="weekends">Weekends</option>
+        <option value="both">Both</option>
+      </select>
+
+      <button type="submit">Submit</button>
+    </form>
+    </div>
+</section>
+
+    <!-- Footer Bottom -->
+    <footer>
+        <div class="footer-bottom">
+          <p class="footer-credit">Made with 💚 by Angela Bera</p>
+          <p>
+            &copy; 2025 ShareBite. All rights reserved. License
+          </p>
+          <p></p>
+        </div>
+    </footer>
+
+<!-- JavaScript -->
+  <script>
+    function handleForm(event) {
+      event.preventDefault();
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      alert("✅ Thank you, " + name + "! We’ll contact you at " + email + " soon.");
+      event.target.reset();
+      return false;
+    }
+
+    function toggleDarkMode() {
+      const isLightMode = document.body.classList.toggle("light-mode");
+      const btn = document.querySelector(".dark-toggle");
+      
+      if (isLightMode) {
+        btn.textContent = "🌞";
+        document.documentElement.classList.remove('dark');
+      } else {
+        btn.textContent = "🌙";
+        document.documentElement.classList.add('dark');
+      }
+    }
+    
+    // Initialize dark mode check on load
+    document.addEventListener('DOMContentLoaded', () => {
+        if (!document.body.classList.contains("light-mode")) {
+            document.documentElement.classList.add('dark');
+            document.querySelector(".dark-toggle").textContent = "🌙";
+        } else {
+            document.querySelector(".dark-toggle").textContent = "🌞";
+            document.documentElement.classList.remove('dark');
+        }
+    });
+  </script>
+</body>
+</html>
