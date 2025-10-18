@@ -165,11 +165,15 @@ class ShareBiteFoodListing {
         modal.style.display = 'block';
         document.body.style.overflow = 'hidden';
         this.resetFormSteps();
+        this.clearAllFieldErrors(); // Clear any existing errors
+        this.setupRealTimeValidation(); // Setup real-time validation
+        this.setupSubmitButton(); // Ensure submit button works properly
     });
 
     const closeModal = () => {
         modal.style.display = 'none';
         document.body.style.overflow = 'auto';
+        this.clearValidationHandlers(); // Clean up validation handlers
         this.resetForm();
         this.resetFormSteps();
     };
@@ -253,25 +257,59 @@ updateNavigationButtons(stepNumber) {
 validateCurrentStep() {
     const currentStepEl = document.querySelector(`.form-step[data-step="${this.currentStep}"]`);
     const requiredInputs = currentStepEl.querySelectorAll('[required]');
+    let hasErrors = false;
+    let firstErrorField = null;
     
+    // Clear existing errors first
+    requiredInputs.forEach(input => this.clearFieldError(input));
+    
+    // Validate each required field in the current step
     for (let input of requiredInputs) {
-        if (!input.value.trim()) {
-            input.focus();
-            this.showToast(`Please fill in the required field: ${input.previousElementSibling.textContent}`, 'error');
-            return false;
-        }
+        const fieldError = this.validateSingleField(input);
         
-        // Special validation for contact information
-        if (input.id === 'contact') {
-            if (!this.validateContactInfo(input.value.trim())) {
-                input.focus();
-                this.showToast('Please enter a valid email address or phone number', 'error');
-                return false;
+        if (fieldError) {
+            this.showFieldError(input, fieldError);
+            hasErrors = true;
+            
+            if (!firstErrorField) {
+                firstErrorField = input;
+            }
+        } else {
+            // Clear any existing error if validation passes
+            this.clearFieldError(input);
+            
+            // Optional: Also validate non-required fields with values
+            const optionalInputs = currentStepEl.querySelectorAll('input:not([required]), textarea:not([required]), select:not([required])');
+            for (let optionalInput of optionalInputs) {
+                if (optionalInput.value.trim()) {
+                    const fieldError = this.validateSingleField(optionalInput);
+                    if (fieldError) {
+                        this.showFieldError(optionalInput, fieldError);
+                        hasErrors = true;
+                        
+                        if (!firstErrorField) {
+                            firstErrorField = optionalInput;
+                        }
+                    } else {
+                        this.clearFieldError(optionalInput);
+                    }
+                }
             }
         }
     }
     
-    return true;
+    // Focus on the first field with an error
+    if (hasErrors && firstErrorField) {
+        firstErrorField.focus();
+        
+        // Scroll the field into view smoothly
+        firstErrorField.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
+        });
+    }
+    
+    return !hasErrors;
 }
 
 // Validate contact information (email or phone number)
@@ -296,6 +334,247 @@ validateContactInfo(contact) {
     }
     
     return false;
+}
+
+// Field validation methods with inline error display
+
+// Show error message above the field
+showFieldError(fieldElement, message) {
+    // Remove any existing error message for this field
+    this.clearFieldError(fieldElement);
+    
+    // Create error message element
+    const errorElement = document.createElement('div');
+    errorElement.className = 'field-error';
+    errorElement.textContent = message;
+    errorElement.style.cssText = `
+        color: var(--secondary-color);
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+        padding: 0.5rem;
+        background-color: rgba(220, 53, 69, 0.1);
+        border: 1px solid rgba(220, 53, 69, 0.3);
+        border-radius: var(--border-radius);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    `;
+    
+    // Add icon
+    const icon = document.createElement('i');
+    icon.className = 'fas fa-exclamation-triangle';
+    errorElement.insertBefore(icon, errorElement.firstChild);
+    
+    // Add red outline to the field
+    fieldElement.style.borderColor = 'var(--secondary-color)';
+    fieldElement.style.boxShadow = '0 0 0 2px rgba(220, 53, 69, 0.2)';
+    
+    // Insert error message above the field
+    fieldElement.parentNode.insertBefore(errorElement, fieldElement);
+}
+
+// Clear error message for a field
+clearFieldError(fieldElement) {
+    // Remove error message
+    const existingError = fieldElement.parentNode.querySelector('.field-error');
+    if (existingError) {
+        existingError.remove();
+    }
+    
+    // Reset field styling
+    fieldElement.style.borderColor = '';
+    fieldElement.style.boxShadow = '';
+}
+
+// Clear all field errors
+clearAllFieldErrors() {
+    const allErrors = document.querySelectorAll('.field-error');
+    allErrors.forEach(error => error.remove());
+    
+    const allInputs = document.querySelectorAll('#listingForm input, #listingForm select, #listingForm textarea');
+    allInputs.forEach(input => {
+        input.style.borderColor = '';
+        input.style.boxShadow = '';
+    });
+}
+
+// Get display name for a field
+getFieldDisplayName(fieldElement) {
+    const label = fieldElement.parentNode.querySelector('label');
+    if (label) {
+        return label.textContent.replace('*', '').trim();
+    }
+    
+    const fieldNames = {
+        'foodType': 'Food Type',
+        'quantity': 'Quantity',
+        'category': 'Category',
+        'description': 'Description',
+        'freshUntil': 'Fresh Until',
+        'pickupTime': 'Pickup Time',
+        'location': 'Location',
+        'contact': 'Contact Information'
+    };
+    
+    return fieldNames[fieldElement.id] || fieldElement.name || 'Field';
+}
+
+// Comprehensive validation for individual fields
+validateSingleField(fieldElement) {
+    const fieldId = fieldElement.id;
+    const value = fieldElement.value.trim();
+    
+    // Check if field is required and empty
+    if (fieldElement.hasAttribute('required') && !value) {
+        const fieldName = this.getFieldDisplayName(fieldElement);
+        return `${fieldName} is required`;
+    }
+    
+    // Field-specific validation rules
+    switch (fieldId) {
+        case 'foodType':
+            if (value && value.length < 2) {
+                return 'Food type must be at least 2 characters long';
+            }
+            if (value.length > 100) {
+                return 'Food type must be less than 100 characters';
+            }
+            // Check for invalid characters
+            if (value && !/^[a-zA-Z0-9\s\-,.'()&]+$/.test(value)) {
+                return 'Food type contains invalid characters';
+            }
+            break;
+            
+        case 'quantity':
+            if (value && value.length < 1) {
+                return 'Please specify the quantity';
+            }
+            if (value.length > 50) {
+                return 'Quantity description is too long';
+            }
+            // Basic quantity validation - should contain some indication of amount
+            if (value && !/\d/.test(value) && !/(few|several|many|some|lots|bunch)/i.test(value)) {
+                return 'Quantity should include an amount or number';
+            }
+            break;
+            
+        case 'category':
+            const validCategories = ['restaurant', 'household', 'bakery', 'event'];
+            if (value && !validCategories.includes(value)) {
+                return 'Please select a valid category';
+            }
+            break;
+            
+        case 'description':
+            if (value.length > 500) {
+                return 'Description must be less than 500 characters';
+            }
+            break;
+            
+        case 'freshUntil':
+            if (value) {
+                const selectedDate = new Date(value);
+                const now = new Date();
+                if (selectedDate <= now) {
+                    return 'Fresh until date must be in the future';
+                }
+                
+                // Check if date is too far in the future (more than 30 days)
+                const thirtyDaysFromNow = new Date();
+                thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+                if (selectedDate > thirtyDaysFromNow) {
+                    return 'Fresh until date cannot be more than 30 days from now';
+                }
+            }
+            break;
+            
+        case 'pickupTime':
+            if (value) {
+                const [hours, minutes] = value.split(':').map(Number);
+                if (hours < 6 || hours > 23) {
+                    return 'Pickup time must be between 6:00 AM and 11:00 PM';
+                }
+            }
+            break;
+            
+        case 'location':
+            if (value && value.length < 5) {
+                return 'Location must be at least 5 characters long';
+            }
+            if (value.length > 200) {
+                return 'Location must be less than 200 characters';
+            }
+            break;
+            
+        case 'contact':
+            if (value && !this.validateContactInfo(value)) {
+                return 'Please enter a valid email address or phone number';
+            }
+            break;
+    }
+    
+    return null; // No error
+}
+
+// Setup real-time validation
+setupRealTimeValidation() {
+    // Remove existing event listeners to prevent duplicates
+    this.clearValidationHandlers();
+    
+    const form = document.getElementById('listingForm');
+    const inputs = form.querySelectorAll('input, select, textarea');
+    
+    // Store validation handlers for cleanup
+    this.validationHandlers = this.validationHandlers || {};
+    
+    inputs.forEach(input => {
+        const validateAndClearError = () => {
+            const error = this.validateSingleField(input);
+            if (error) {
+                this.showFieldError(input, error);
+            } else {
+                this.clearFieldError(input);
+            }
+        };
+        
+        // Store the handler for cleanup
+        this.validationHandlers[input.id] = validateAndClearError;
+        
+        // Add event listeners
+        input.addEventListener('blur', validateAndClearError);
+        input.addEventListener('input', validateAndClearError);
+        input.addEventListener('change', validateAndClearError);
+    });
+}
+
+// Clear validation handlers to prevent memory leaks
+clearValidationHandlers() {
+    if (this.validationHandlers) {
+        const form = document.getElementById('listingForm');
+        if (form) {
+            const inputs = form.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                const handler = this.validationHandlers[input.id];
+                if (handler) {
+                    input.removeEventListener('blur', handler);
+                    input.removeEventListener('input', handler);
+                    input.removeEventListener('change', handler);
+                }
+            });
+        }
+        this.validationHandlers = {};
+    }
+}
+
+// Setup submit button validation
+setupSubmitButton() {
+    const submitBtn = document.getElementById('submitForm');
+    if (submitBtn) {
+        submitBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            this.handleFormSubmission();
+        });
+    }
 }
 
 resetFormSteps() {
@@ -330,7 +609,7 @@ setupFileUpload() {
             fileInput.files = files;
             this.handleFileSelect(files[0]);
         } else {
-            this.showToast('Please upload a valid image file', 'error');
+            this.showFieldError(document.getElementById('photo'), 'Please upload a valid image file (JPG, PNG, GIF)');
         }
     });
 
@@ -344,16 +623,20 @@ setupFileUpload() {
 handleFileSelect(file) {
     const imagePreview = document.getElementById('imagePreview');
     const uploadArea = document.getElementById('photoUpload');
+    const photoInput = document.getElementById('photo');
     
     if (!file.type.startsWith('image/')) {
-        this.showToast('Please select an image file', 'error');
+        this.showFieldError(photoInput, 'Please select a valid image file (JPG, PNG, GIF)');
         return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-        this.showToast('Image size should be less than 5MB', 'error');
+        this.showFieldError(photoInput, 'Image size must be less than 5MB');
         return;
     }
+
+    // Clear any existing error since file is valid
+    this.clearFieldError(photoInput);
 
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -422,28 +705,46 @@ handleFileSelect(file) {
     }
 
     validateFormData(data) {
-        const requiredFields = ['foodType', 'quantity', 'category', 'freshUntil', 'pickupTime', 'location', 'contact'];
+        let hasErrors = false;
+        let firstErrorField = null;
         
-        for (let field of requiredFields) {
-            if (!data[field] || data[field].trim() === '') {
-                this.showErrorMessage(`Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}.`);
-                return false;
+        // Clear all existing errors
+        this.clearAllFieldErrors();
+        
+        // Get all form fields for validation
+        const form = document.getElementById('listingForm');
+        const fieldMap = {
+            'foodType': form.querySelector('#foodType'),
+            'quantity': form.querySelector('#quantity'),
+            'category': form.querySelector('#category'),
+            'freshUntil': form.querySelector('#freshUntil'),
+            'pickupTime': form.querySelector('#pickupTime'),
+            'location': form.querySelector('#location'),
+            'contact': form.querySelector('#contact')
+        };
+        
+        // Validate all fields using the comprehensive validation
+        Object.keys(fieldMap).forEach(fieldName => {
+            const fieldElement = fieldMap[fieldName];
+            if (fieldElement) {
+                const error = this.validateSingleField(fieldElement);
+                if (error) {
+                    this.showFieldError(fieldElement, error);
+                    hasErrors = true;
+                    if (!firstErrorField) {
+                        firstErrorField = fieldElement;
+                    }
+                }
             }
+        });
+        
+        // Focus on first error field if any
+        if (hasErrors && firstErrorField) {
+            firstErrorField.focus();
+            firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
         
-        const freshDate = new Date(data.freshUntil);
-        if (freshDate <= new Date()) {
-            this.showErrorMessage('Fresh until date must be in the future.');
-            return false;
-        }
-        
-        // Validate contact information
-        if (!this.validateContactInfo(data.contact)) {
-            this.showErrorMessage('Please enter a valid email address or phone number for contact information.');
-            return false;
-        }
-        
-        return true;
+        return !hasErrors;
     }
 
     addNewListing(data) {
@@ -453,45 +754,101 @@ handleFileSelect(file) {
     }
 
     showSuccessMessage() {
-        this.showToast('Food listing added successfully!', 'success');
+        this.showToast('Food listing added successfully! 🎉', 'success', 6000);
     }
 
     showErrorMessage(message) {
-        this.showToast(message, 'error');
+        this.showToast(message, 'error', 7000);
     }
 
-    showToast(message, type) {
+    showToast(message, type = 'success', duration = 5000) {
+        // Remove any existing toasts to prevent stacking
+        const existingToasts = document.querySelectorAll('.toast');
+        existingToasts.forEach(toast => {
+            if (toast.parentNode) {
+                toast.classList.add('toast-hiding');
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 400);
+            }
+        });
+
+        // Create new toast
         const toast = document.createElement('div');
         toast.className = `toast toast-${type}`;
+        
+        // Enhanced icon mapping
+        const iconMap = {
+            success: 'check-circle',
+            error: 'exclamation-triangle',
+            warning: 'exclamation-circle',
+            info: 'info-circle'
+        };
+        
         toast.innerHTML = `
-            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+            <i class="fas fa-${iconMap[type] || 'check-circle'}"></i>
             <span>${message}</span>
         `;
         
-        // Add toast styles
+        // Add enhanced styling with better responsive behavior
         toast.style.cssText = `
             position: fixed;
-            top: 100px;
+            top: 20px;
             right: 20px;
-            background: ${type === 'success' ? 'var(--primary-color)' : 'var(--secondary-color)'};
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: var(--border-radius);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
             z-index: 3000;
-            animation: slideInRight 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
-            box-shadow: var(--shadow-heavy);
+            max-width: min(400px, calc(100vw - 40px));
+            min-width: min(280px, calc(100vw - 40px));
+            word-wrap: break-word;
+            pointer-events: auto;
+            cursor: pointer;
         `;
+        
+        // Add click to dismiss functionality
+        toast.addEventListener('click', () => {
+            toast.classList.add('toast-hiding');
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.parentNode.removeChild(toast);
+                }
+            }, 400);
+        });
+        
+        // Add hover pause functionality
+        let timeoutId;
+        let remainingTime = duration;
+        let startTime = Date.now();
+        
+        const startTimer = () => {
+            startTime = Date.now();
+            timeoutId = setTimeout(() => {
+                toast.classList.add('toast-hiding');
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 400);
+            }, remainingTime);
+        };
+        
+        const pauseTimer = () => {
+            clearTimeout(timeoutId);
+            remainingTime -= Date.now() - startTime;
+        };
+        
+        toast.addEventListener('mouseenter', pauseTimer);
+        toast.addEventListener('mouseleave', startTimer);
         
         document.body.appendChild(toast);
         
-        setTimeout(() => {
-            if (toast.parentNode) {
-                toast.parentNode.removeChild(toast);
-            }
-        }, 3000);
+        // Start the timer
+        startTimer();
+        
+        // Add subtle pulse animation on important messages
+        if (type === 'error' || message.includes('successfully')) {
+            toast.style.animation += ', toastPulse 2s ease-in-out infinite';
+        }
     }
 
     closeModalAndReset() {
@@ -1047,7 +1404,6 @@ handleFileSelect(file) {
         
         // Check if already claimed
         if (this.claimedItems.includes(listingId)) {
-            this.showToast('This item has already been claimed!', 'error');
             return;
         }
         
@@ -1084,7 +1440,7 @@ handleFileSelect(file) {
             }
             
             // Show success message
-            this.showToast(`Successfully claimed "${listing.foodType}"! Check notifications for pickup details.`, 'success');
+            this.showToast(`Successfully claimed "${listing.foodType}"! 🍽️ Check notifications for pickup details.`, 'success', 8000);
             
             // Update notification display
             this.updateNotificationDisplay();
@@ -1094,7 +1450,7 @@ handleFileSelect(file) {
     handleContactDonor(contact) {
         // Copy contact to clipboard
         navigator.clipboard.writeText(contact).then(() => {
-            this.showToast('Contact information copied to clipboard!', 'success');
+            this.showToast('Contact information copied to clipboard! 📋', 'info', 4000);
         }).catch(() => {
             // Fallback for older browsers
             const textArea = document.createElement('textarea');
@@ -1103,7 +1459,7 @@ handleFileSelect(file) {
             textArea.select();
             document.execCommand('copy');
             document.body.removeChild(textArea);
-            this.showToast('Contact information copied to clipboard!', 'success');
+            this.showToast('Contact information copied to clipboard! 📋', 'info', 4000);
         });
     }
 
@@ -1443,9 +1799,6 @@ Contact information has been copied to clipboard.
                 // Hide the checkmark
                 checkmarkIcon.classList.add('hidden');
                 
-                // Show success toast
-                this.showToast('Date confirmed successfully!', 'success');
-                
                 // Move focus to next input field if available
                 const nextInput = freshUntilInput.closest('.form-group').parentElement.nextElementSibling?.querySelector('input');
                 if (nextInput) {
@@ -1539,9 +1892,6 @@ Contact information has been copied to clipboard.
                 
                 // Hide the checkmark
                 checkmarkIcon.classList.add('hidden');
-                
-                // Show success toast
-                this.showToast('Time confirmed successfully!', 'success');
                 
                 // Move focus to next input field if available
                 const nextInput = pickupTimeInput.closest('.form-group').parentElement.nextElementSibling?.querySelector('input');

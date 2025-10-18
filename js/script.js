@@ -61,10 +61,7 @@ class ShareBite {
         // Role switching
         this.setupRoleSwitch();
         
-        // Modal functionality
-        this.setupModal();
-        
-        // Form handling
+        // Form handling (modal functionality removed - buttons now redirect to foodlisting.html)
         this.setupFormHandling();
         
         // Date input confirmation functionality
@@ -125,22 +122,20 @@ class ShareBite {
     updateUIForRole() {
         const donateBtn = document.getElementById('donateFood');
         const findBtn = document.getElementById('findFood');
-        const addListingBtn = document.getElementById('addListingBtn');
         const notificationBell = document.getElementById('notificationBell');
         
+        // Update button text based on role (buttons redirect to foodlisting.html regardless)
         if (this.currentRole === 'collector') {
-            donateBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
-            findBtn.innerHTML = '<i class="fas fa-heart"></i> Help Others';
-            addListingBtn.style.display = 'none';
+            if (donateBtn) donateBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
+            if (findBtn) findBtn.innerHTML = '<i class="fas fa-heart"></i> Help Others';
             
             // Show notification bell for collectors
             if (notificationBell) {
                 notificationBell.style.display = 'block';
             }
         } else {
-            donateBtn.innerHTML = '<i class="fas fa-heart"></i> Donate Food';
-            findBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
-            addListingBtn.style.display = 'flex';
+            if (donateBtn) donateBtn.innerHTML = '<i class="fas fa-heart"></i> Donate Food';
+            if (findBtn) findBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
             
             // Hide notification bell for donors (unless they have notifications)
             if (notificationBell && this.notifications.length === 0) {
@@ -152,202 +147,12 @@ class ShareBite {
         this.renderFoodListings();
     }
 
-   setupModal() {
-    const modal = document.getElementById('addListingModal');
-    const addListingBtn = document.getElementById('addListingBtn');
-    const closeModalBtn = document.querySelector('.close-modal');
-    const cancelBtn = document.getElementById('cancelForm');
-
-    this.currentStep = 1;
-    this.totalSteps = 3;
-
-    addListingBtn.addEventListener('click', () => {
-        modal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-        this.resetFormSteps();
-    });
-
-    const closeModal = () => {
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-        this.resetForm();
-        this.resetFormSteps();
-    };
-
-    closeModalBtn.addEventListener('click', closeModal);
-    cancelBtn.addEventListener('click', closeModal);
-    
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeModal();
-        }
-    });
-
-    this.setupFileUpload();
-    this.setupFormNavigation();
-}
-
-setupFormNavigation() {
-    const nextBtn = document.getElementById('nextStep');
-    const prevBtn = document.getElementById('prevStep');
-    const submitBtn = document.getElementById('submitForm');
-
-    nextBtn.addEventListener('click', () => {
-        if (this.validateCurrentStep()) {
-            this.goToStep(this.currentStep + 1);
-        }
-    });
-
-    prevBtn.addEventListener('click', () => {
-        this.goToStep(this.currentStep - 1);
-    });
-}
-
-goToStep(stepNumber) {
-    if (stepNumber < 1 || stepNumber > this.totalSteps) return;
-
-    document.querySelectorAll('.form-step').forEach(step => {
-        step.classList.remove('active');
-    });
-
-    const newStep = document.querySelector(`.form-step[data-step="${stepNumber}"]`);
-    if (newStep) {
-        newStep.classList.add('active');
-    }
-
-    this.updateProgress(stepNumber);
-
-    this.updateNavigationButtons(stepNumber);
-
-    this.currentStep = stepNumber;
-}
-
-updateProgress(stepNumber) {
-    const steps = document.querySelectorAll('.progress-step');
-    
-    steps.forEach((step, index) => {
-        const stepNum = index + 1;
-        
-        if (stepNum < stepNumber) {
-            step.classList.add('completed');
-            step.classList.remove('active');
-        } else if (stepNum === stepNumber) {
-            step.classList.add('active');
-            step.classList.remove('completed');
-        } else {
-            step.classList.remove('active', 'completed');
-        }
-    });
-}
-
-updateNavigationButtons(stepNumber) {
-    const nextBtn = document.getElementById('nextStep');
-    const prevBtn = document.getElementById('prevStep');
-    const submitBtn = document.getElementById('submitForm');
-
-    prevBtn.style.display = stepNumber === 1 ? 'none' : 'flex';
-    nextBtn.style.display = stepNumber === this.totalSteps ? 'none' : 'flex';
-    submitBtn.style.display = stepNumber === this.totalSteps ? 'flex' : 'none';
-}
-
-validateCurrentStep() {
-    const currentStepEl = document.querySelector(`.form-step[data-step="${this.currentStep}"]`);
-    const requiredInputs = currentStepEl.querySelectorAll('[required]');
-    
-    for (let input of requiredInputs) {
-        if (!input.value.trim()) {
-            input.focus();
-            this.showToast(`Please fill in the required field: ${input.previousElementSibling.textContent}`, 'error');
-            return false;
-        }
-    }
-    
-    return true;
-}
-
-resetFormSteps() {
-    this.currentStep = 1;
-    this.goToStep(1);
-}
-
-setupFileUpload() {
-    const fileInput = document.getElementById('photo');
-    const uploadArea = document.getElementById('photoUpload');
-    const imagePreview = document.getElementById('imagePreview');
-
-    uploadArea.addEventListener('click', () => {
-        fileInput.click();
-    });
-
-    uploadArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadArea.classList.add('drag-over');
-    });
-
-    uploadArea.addEventListener('dragleave', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('drag-over');
-    });
-
-    uploadArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('drag-over');
-        const files = e.dataTransfer.files;
-        if (files.length > 0 && files[0].type.startsWith('image/')) {
-            fileInput.files = files;
-            this.handleFileSelect(files[0]);
-        } else {
-            this.showToast('Please upload a valid image file', 'error');
-        }
-    });
-
-    fileInput.addEventListener('change', (e) => {
-        if (e.target.files.length > 0) {
-            this.handleFileSelect(e.target.files[0]);
-        }
-    });
-}
-
-handleFileSelect(file) {
-    const imagePreview = document.getElementById('imagePreview');
-    const uploadArea = document.getElementById('photoUpload');
-    
-    if (!file.type.startsWith('image/')) {
-        this.showToast('Please select an image file', 'error');
-        return;
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-        this.showToast('Image size should be less than 5MB', 'error');
-        return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        imagePreview.innerHTML = `
-            <img src="${e.target.result}" alt="Food preview">
-            <button type="button" class="remove-image">
-                <i class="fas fa-times"></i>
-            </button>
-        `;
-        imagePreview.classList.add('active');
-        uploadArea.style.display = 'none';
-
-        // Add remove functionality
-        const removeBtn = imagePreview.querySelector('.remove-image');
-        removeBtn.addEventListener('click', () => {
-            imagePreview.innerHTML = '';
-            imagePreview.classList.remove('active');
-            uploadArea.style.display = 'block';
-            document.getElementById('photo').value = '';
-        });
-    };
-    reader.readAsDataURL(file);
-}
+    // Modal functionality removed - buttons now redirect to foodlisting.html
 
 
     setupFormHandling() {
         const form = document.getElementById('listingForm');
+        if (!form) return; // Only setup form handling if form exists (e.g., on foodlisting.html)
         
         form.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -355,9 +160,11 @@ handleFileSelect(file) {
         });
 
         const freshUntilInput = document.getElementById('freshUntil');
-        const now = new Date();
-        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-        freshUntilInput.min = now.toISOString().slice(0, 16);
+        if (freshUntilInput) {
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            freshUntilInput.min = now.toISOString().slice(0, 16);
+        }
     }
 
     handleFormSubmission() {
@@ -366,7 +173,7 @@ handleFileSelect(file) {
         if (this.validateFormData(formData)) {
             this.addNewListing(formData);
             this.showSuccessMessage();
-            this.closeModalAndReset();
+            // Modal functionality removed - form handling moved to foodlisting.html
         }
     }
 
@@ -419,66 +226,104 @@ handleFileSelect(file) {
     }
 
     showSuccessMessage() {
-        this.showToast('Food listing added successfully!', 'success');
+        this.showToast('Food listing added successfully! 🎉', 'success', 6000);
     }
 
     showErrorMessage(message) {
-        this.showToast(message, 'error');
+        this.showToast(message, 'error', 7000);
     }
 
-    showToast(message, type) {
+    showToast(message, type = 'success', duration = 5000) {
+        // Remove any existing toasts to prevent stacking
+        const existingToasts = document.querySelectorAll('.toast');
+        existingToasts.forEach(toast => {
+            if (toast.parentNode) {
+                toast.classList.add('toast-hiding');
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 400);
+            }
+        });
+
+        // Create new toast
         const toast = document.createElement('div');
         toast.className = `toast toast-${type}`;
+        
+        // Enhanced icon mapping
+        const iconMap = {
+            success: 'check-circle',
+            error: 'exclamation-triangle',
+            warning: 'exclamation-circle',
+            info: 'info-circle'
+        };
+        
         toast.innerHTML = `
-            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+            <i class="fas fa-${iconMap[type] || 'check-circle'}"></i>
             <span>${message}</span>
         `;
         
-        // Add toast styles
+        // Add enhanced styling with better responsive behavior
         toast.style.cssText = `
             position: fixed;
-            top: 100px;
+            top: 20px;
             right: 20px;
-            background: ${type === 'success' ? 'var(--primary-color)' : 'var(--secondary-color)'};
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: var(--border-radius);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
             z-index: 3000;
-            animation: slideInRight 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
-            box-shadow: var(--shadow-heavy);
+            max-width: min(400px, calc(100vw - 40px));
+            min-width: min(280px, calc(100vw - 40px));
+            word-wrap: break-word;
+            pointer-events: auto;
+            cursor: pointer;
         `;
+        
+        // Add click to dismiss functionality
+        toast.addEventListener('click', () => {
+            toast.classList.add('toast-hiding');
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.parentNode.removeChild(toast);
+                }
+            }, 400);
+        });
+        
+        // Add hover pause functionality
+        let timeoutId;
+        let remainingTime = duration;
+        let startTime = Date.now();
+        
+        const startTimer = () => {
+            startTime = Date.now();
+            timeoutId = setTimeout(() => {
+                toast.classList.add('toast-hiding');
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 400);
+            }, remainingTime);
+        };
+        
+        const pauseTimer = () => {
+            clearTimeout(timeoutId);
+            remainingTime -= Date.now() - startTime;
+        };
+        
+        toast.addEventListener('mouseenter', pauseTimer);
+        toast.addEventListener('mouseleave', startTimer);
         
         document.body.appendChild(toast);
         
-        setTimeout(() => {
-            if (toast.parentNode) {
-                toast.parentNode.removeChild(toast);
-            }
-        }, 3000);
-    }
-
-    closeModalAndReset() {
-        document.getElementById('addListingModal').style.display = 'none';
-        document.body.style.overflow = 'auto';
-        this.resetForm();
-    }
-
-    resetForm() {
-        document.getElementById('listingForm').reset();
-        document.getElementById('photoUpload').innerHTML = `
-            <i class="fas fa-cloud-upload-alt"></i>
-            <span>Click to upload or drag and drop</span>
-        `;
+        // Start the timer
+        startTimer();
         
-        // Reset minimum date
-        const freshUntilInput = document.getElementById('freshUntil');
-        const now = new Date();
-        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-        freshUntilInput.min = now.toISOString().slice(0, 16);
+        // Add subtle pulse animation on important messages
+        if (type === 'error' || message.includes('successfully')) {
+            toast.style.animation += ', toastPulse 2s ease-in-out infinite';
+        }
     }
+
+    // Modal methods removed - functionality moved to foodlisting.html
 
     // Date Input Confirmation functionality
     setupDateInputConfirmation() {
@@ -527,9 +372,6 @@ handleFileSelect(file) {
                 
                 // Hide the checkmark
                 checkmarkIcon.classList.add('hidden');
-                
-                // Show success toast
-                this.showToast('Date confirmed successfully!', 'success');
                 
                 // Move focus to next input field if available
                 const nextInput = freshUntilInput.closest('.form-group').parentElement.nextElementSibling?.querySelector('input');
@@ -624,9 +466,6 @@ handleFileSelect(file) {
                 
                 // Hide the checkmark
                 checkmarkIcon.classList.add('hidden');
-                
-                // Show success toast
-                this.showToast('Time confirmed successfully!', 'success');
                 
                 // Move focus to next input field if available
                 const nextInput = pickupTimeInput.closest('.form-group').parentElement.nextElementSibling?.querySelector('input');
@@ -786,18 +625,18 @@ handleFileSelect(file) {
         const donateBtn = document.getElementById('donateFood');
         const findBtn = document.getElementById('findFood');
         
-        donateBtn.addEventListener('click', () => {
-            if (this.currentRole === 'donor') {
-                document.getElementById('addListingModal').style.display = 'block';
-                document.body.style.overflow = 'hidden';
-            } else {
-                document.getElementById('listings').scrollIntoView({ behavior: 'smooth' });
-            }
-        });
+        // Both buttons now redirect to foodlisting.html instead of showing modal
+        if (donateBtn) {
+            donateBtn.addEventListener('click', () => {
+                window.location.href = 'foodlisting.html';
+            });
+        }
         
-        findBtn.addEventListener('click', () => {
-            document.getElementById('listings').scrollIntoView({ behavior: 'smooth' });
-        });
+        if (findBtn) {
+            findBtn.addEventListener('click', () => {
+                window.location.href = 'foodlisting.html';
+            });
+        }
     }
 
     setupStatsAnimation() {
@@ -1075,7 +914,7 @@ handleFileSelect(file) {
             } else if (isCollector) {
                 return `
                     <button class="claim-btn" data-id="${listing.id}">
-                        <i class="fas fa-hand-paper"></i> Claim Food
+                        <i class="fas fa-hand-paper"></i> View & Claim
                     </button>
                 `;
             } else {
@@ -1167,12 +1006,13 @@ createFoodCard(listing) {
 
 
     setupFoodCardInteractions() {
-        // Claim buttons
+        // Claim buttons - redirect to foodlisting.html for claiming
         const claimBtns = document.querySelectorAll('.claim-btn');
         claimBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const listingId = parseInt(btn.getAttribute('data-id'));
-                this.handleClaimFood(listingId);
+                // Redirect to foodlisting.html with the listing ID as a parameter
+                window.location.href = `foodlisting.html?claim=${listingId}`;
             });
         });
         
@@ -1186,13 +1026,14 @@ createFoodCard(listing) {
         });
     }
 
+    // handleClaimFood moved to foodlisting.html - claiming now happens there
+    /* 
     handleClaimFood(listingId) {
         const listing = this.foodListings.find(l => l.id === listingId);
         if (!listing) return;
         
         // Check if already claimed
         if (this.claimedItems.includes(listingId)) {
-            this.showToast('This item has already been claimed!', 'error');
             return;
         }
         
@@ -1234,17 +1075,18 @@ createFoodCard(listing) {
             }
             
             // Show success message
-            this.showToast(`Successfully claimed "${listing.foodType}"! Check notifications for pickup details.`, 'success');
+            this.showToast(`Successfully claimed "${listing.foodType}"! 🍽️ Check notifications for pickup details.`, 'success', 8000);
             
             // Update notification display
             this.updateNotificationDisplay();
         }
     }
+    */
 
     handleContactDonor(contact) {
         // Copy contact to clipboard
         navigator.clipboard.writeText(contact).then(() => {
-            this.showToast('Contact information copied to clipboard!', 'success');
+            this.showToast('Contact information copied to clipboard! 📋', 'info', 4000);
         }).catch(() => {
             // Fallback for older browsers
             const textArea = document.createElement('textarea');
@@ -1253,7 +1095,7 @@ createFoodCard(listing) {
             textArea.select();
             document.execCommand('copy');
             document.body.removeChild(textArea);
-            this.showToast('Contact information copied to clipboard!', 'success');
+            this.showToast('Contact information copied to clipboard! 📋', 'info', 4000);
         });
     }
 
