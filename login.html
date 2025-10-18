@@ -447,7 +447,11 @@
         }
       }));
 
-      // ## THIS BROKEN SECTION HAS BEEN REMOVED ##
+        // Redirect to index.html after short delay (so alert can be seen)
+        setTimeout(() => {
+            window.location.href = "index.html";
+        }, 500); // 0.5 second delay
+    });
     </script>
   </body>
 </html>
