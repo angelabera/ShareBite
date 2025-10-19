@@ -69,7 +69,6 @@
                 <button class="login-btn" onclick="window.location.href='login.html'">Login as User</button>
                  <button class="login-btn" onclick="window.location.href='login_ngo.html'">Login as NGO</button>
             </div>
-            <div id="toast" class="toast"></div>
             <div class="hamburger">
                 <span></span>
                 <span></span>
@@ -749,18 +748,55 @@
     alert(`✅ Thank you, ${name}! Your message has been sent.`);
     form.reset();
   });
-  const username = JSON.parse(localStorage.getItem('user')).name;
-  const toast = document.getElementById('toast');
+  const username = JSON.parse(localStorage.getItem('user'))?.name;
 
   if (username) {
-    // Show toast message
-    toast.textContent = `Welcome, ${username}! 🎉`;
-    toast.classList.add('show');
-
-    // Hide toast after 3 seconds
-    setTimeout(() => {
-      toast.classList.remove('show');
-    }, 3000);
+    // Use the enhanced toast system
+    if (window.shareBite && typeof window.shareBite.showToast === 'function') {
+      window.shareBite.showToast(`Welcome, ${username}! 🎉`, 'success', 4000);
+    } else {
+      // Fallback for enhanced toast system
+      const toast = document.createElement('div');
+      toast.className = 'toast toast-success';
+      toast.innerHTML = `
+        <i class="fas fa-check-circle"></i>
+        <span>Welcome, ${username}! 🎉</span>
+      `;
+      
+      toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 3000;
+        max-width: min(400px, calc(100vw - 40px));
+        min-width: min(280px, calc(100vw - 40px));
+        word-wrap: break-word;
+        pointer-events: auto;
+        cursor: pointer;
+      `;
+      
+      document.body.appendChild(toast);
+      
+      // Auto remove after 4 seconds
+      setTimeout(() => {
+        toast.classList.add('toast-hiding');
+        setTimeout(() => {
+          if (toast.parentNode) {
+            toast.parentNode.removeChild(toast);
+          }
+        }, 400);
+      }, 4000);
+      
+      // Click to dismiss
+      toast.addEventListener('click', () => {
+        toast.classList.add('toast-hiding');
+        setTimeout(() => {
+          if (toast.parentNode) {
+            toast.parentNode.removeChild(toast);
+          }
+        }, 400);
+      });
+    }
   }
 </script>
 
