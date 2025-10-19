@@ -467,11 +467,11 @@ body.dark .profile-menu-item:hover {
     cursor: pointer;
     gap: 4px;
 }
-=========
+
         .clear-notifications:hover {
             background: var(--bg-light);
         }
->>>>>>>>> Temporary merge branch 2
+
 
         .notification-list {
             max-height: 300px;
@@ -722,6 +722,7 @@ body.dark .profile-menu-item:hover {
     top: 0;
     width: 100%;
     background: rgba(255, 255, 255, 0.95);
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     z-index: 1000;
     transition: var(--transition-medium);
