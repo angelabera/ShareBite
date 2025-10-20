@@ -76,10 +76,7 @@ class ShareBite {
         // Role switching
         this.setupRoleSwitch();
         
-        // Modal functionality
-        this.setupModal();
-        
-        // Form handling
+    // Form handling (modal functionality removed - buttons now redirect to foodlisting.html)
         this.setupFormHandling();
         
         // Date input confirmation functionality
@@ -127,11 +124,13 @@ class ShareBite {
     setupRoleSwitch() {
         const roleSwitch = document.getElementById('roleSwitch');
         const currentRoleSpan = document.getElementById('currentRole');
-        
+        if (!roleSwitch) return;
+
         roleSwitch.addEventListener('click', () => {
             this.currentRole = this.currentRole === 'donor' ? 'collector' : 'donor';
-            currentRoleSpan.textContent = this.currentRole.charAt(0).toUpperCase() + this.currentRole.slice(1);
-            
+            if (currentRoleSpan) {
+                currentRoleSpan.textContent = this.currentRole.charAt(0).toUpperCase() + this.currentRole.slice(1);
+            }
             // Update UI based on role
             this.updateUIForRole();
         });
@@ -140,27 +139,15 @@ class ShareBite {
     updateUIForRole() {
         const donateBtn = document.getElementById('donateFood');
         const findBtn = document.getElementById('findFood');
-        const addListingBtn = document.getElementById('addListingBtn');
         const notificationBell = document.getElementById('notificationBell');
         
+        // Update button text based on role (buttons redirect to foodlisting.html regardless)
         if (this.currentRole === 'collector') {
-            donateBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
-            findBtn.innerHTML = '<i class="fas fa-heart"></i> Help Others';
-            addListingBtn.style.display = 'none';
-            
-            // Show notification bell for collectors
-            if (notificationBell) {
-                notificationBell.style.display = 'block';
-            }
+            if (donateBtn) donateBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
+            if (findBtn) findBtn.innerHTML = '<i class="fas fa-heart"></i> Help Others';
         } else {
-            donateBtn.innerHTML = '<i class="fas fa-heart"></i> Donate Food';
-            findBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
-            addListingBtn.style.display = 'flex';
-            
-            // Hide notification bell for donors (unless they have notifications)
-            if (notificationBell && this.notifications.length === 0) {
-                notificationBell.style.display = 'none';
-            }
+            if (donateBtn) donateBtn.innerHTML = '<i class="fas fa-heart"></i> Donate Food';
+            if (findBtn) findBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
         }
         
         // Re-render food listings to update claim button states
@@ -363,16 +350,22 @@ handleFileSelect(file) {
 
     setupFormHandling() {
         const form = document.getElementById('listingForm');
-        
+        if (!form) {
+            // No listing form on this page (e.g., index.html). Skip wiring handlers.
+            return;
+        }
+
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             this.handleFormSubmission();
         });
 
         const freshUntilInput = document.getElementById('freshUntil');
-        const now = new Date();
-        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-        freshUntilInput.min = now.toISOString().slice(0, 16);
+        if (freshUntilInput) {
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            freshUntilInput.min = now.toISOString().slice(0, 16);
+        }
     }
 
     handleFormSubmission() {
@@ -781,16 +774,19 @@ handleFileSelect(file) {
 
     setupSmoothScrolling() {
         const scrollIndicator = document.querySelector('.scroll-indicator');
-        
+        if (!scrollIndicator) return;
+
         scrollIndicator.addEventListener('click', () => {
-            document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+            const featuresEl = document.getElementById('features');
+            if (featuresEl) featuresEl.scrollIntoView({ behavior: 'smooth' });
         });
     }
 
     setupResponsiveNav() {
         const hamburger = document.querySelector('.hamburger');
         const navMenu = document.querySelector('.nav-menu');
-        
+        if (!hamburger || !navMenu) return;
+
         hamburger.addEventListener('click', () => {
             hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
@@ -801,18 +797,27 @@ handleFileSelect(file) {
         const donateBtn = document.getElementById('donateFood');
         const findBtn = document.getElementById('findFood');
         
-        donateBtn.addEventListener('click', () => {
-            if (this.currentRole === 'donor') {
-                document.getElementById('addListingModal').style.display = 'block';
-                document.body.style.overflow = 'hidden';
-            } else {
-                document.getElementById('listings').scrollIntoView({ behavior: 'smooth' });
-            }
-        });
-        
-        findBtn.addEventListener('click', () => {
-            document.getElementById('listings').scrollIntoView({ behavior: 'smooth' });
-        });
+        // If buttons are missing, do nothing
+        if (donateBtn) {
+            donateBtn.addEventListener('click', (e) => {
+                // If an add listing modal exists, open it; otherwise redirect to foodlisting page
+                const modal = document.getElementById('addListingModal');
+                if (modal) {
+                    modal.style.display = 'block';
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    // Redirect to the food listings page
+                    window.location.href = 'foodlisting.html';
+                }
+            });
+        }
+
+        if (findBtn) {
+            findBtn.addEventListener('click', (e) => {
+                // Redirect to the food listings page (consistent behavior)
+                window.location.href = 'foodlisting.html';
+            });
+        }
     }
 
     setupStatsAnimation() {
@@ -1370,15 +1375,17 @@ createFoodCard(listing) {
 
     // Notification System Methods
     setupNotificationSystem() {
-        const notificationBell = document.getElementById('notificationBell');
-        const notificationPanel = document.getElementById('notificationPanel');
-        
-        if (!notificationBell) return;
-        
-        // Show notification bell when in collector mode or when there are notifications
-        if (this.currentRole === 'collector' || this.notifications.length > 0) {
+            const notificationBell = document.getElementById('notificationBell');
+            const notificationBadge = document.getElementById('notificationBadge');
+            const notificationPanel = document.getElementById('notificationPanel');
+
+            if (!notificationBell) return;
+
+            // Ensure the bell is available in the UI; badge will indicate unread count
             notificationBell.style.display = 'block';
-        }
+            if (notificationBadge && this.notifications.length === 0) {
+                notificationBadge.style.display = 'none';
+            }
         
         // Toggle notification panel
         notificationBell.addEventListener('click', (e) => {
@@ -1436,21 +1443,18 @@ createFoodCard(listing) {
     updateNotificationDisplay() {
         const notificationBell = document.getElementById('notificationBell');
         const notificationBadge = document.getElementById('notificationBadge');
-        
+
         if (!notificationBell || !notificationBadge) return;
-        
+
         const unreadCount = this.notifications.length;
-        
+
+        // Keep bell visible; only toggle the badge based on unread count
+        notificationBell.style.display = 'block';
         if (unreadCount > 0) {
-            notificationBell.style.display = 'block';
             notificationBadge.style.display = 'flex';
             notificationBadge.textContent = unreadCount > 99 ? '99+' : unreadCount.toString();
         } else {
             notificationBadge.style.display = 'none';
-            // Keep bell visible if in collector mode
-            if (this.currentRole !== 'collector') {
-                notificationBell.style.display = 'none';
-            }
         }
         
         this.renderNotifications();
