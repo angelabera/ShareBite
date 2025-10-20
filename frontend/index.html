@@ -48,6 +48,11 @@
                 <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
                     <i class="fas fa-moon"></i>
                 </button>
+<<<<<<< HEAD
+=======
+                
+                <!-- Notification Bell -->
+>>>>>>> backup/my-add-listing-work
                 <div class="notification-bell" id="notificationBell">
                     <i class="fas fa-bell"></i>
                     <span class="notification-badge" id="notificationBadge">3</span>
@@ -79,7 +84,12 @@
                 <button class="login-btn" onclick="window.location.href='login.html'">Login as User</button>
                 <button class="login-btn" onclick="window.location.href='login_ngo.html'">Login as NGO</button>
             </div>
+<<<<<<< HEAD
             <div class="hamburger" id="menuToggle">
+=======
+            
+            <div class="hamburger">
+>>>>>>> backup/my-add-listing-work
                 <span></span>
                 <span></span>
                 <span></span>
@@ -106,11 +116,11 @@
             waste.
           </p>
           <div class="hero-buttons">
-            <button class="btn btn-primary" id="donateFood">
+            <button class="btn btn-primary" onclick="window.location.href='foodlisting.html'">
               <i class="fas fa-heart"></i>
               Donate Food
             </button>
-            <button class="btn btn-secondary" id="findFood" onclick="window.location.href='foodlisting.html'">
+            <button class="btn btn-secondary" onclick="window.location.href='foodlisting.html'">
               <i class="fas fa-search"></i>
               Find Food
             </button>
@@ -245,7 +255,7 @@
             placeholder="Search by location or food type..."
         />
     </div>
-    <button class="add-listing-btn" id="addListingBtn">
+  <button class="add-listing-btn" onclick="window.location.href='foodlisting.html'">
         <i class="fas fa-plus"></i>
         Add Listing
     </button>
@@ -263,171 +273,6 @@
       </div>
     </section>
 
-    <!-- Add Listing Modal -->
-    <div class="modal" id="addListingModal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>Add Food Listing</h3>
-          <button class="close-modal">&times;</button>
-        </div>
-
-        <!-- Progress Bar -->
-        <div class="form-progress">
-          <div class="progress-step active" data-step="1">
-            <div class="step-circle">1</div>
-            <span class="step-label">Food Details</span>
-          </div>
-          <div class="progress-line"></div>
-          <div class="progress-step" data-step="2">
-            <div class="step-circle">2</div>
-            <span class="step-label">Pickup Info</span>
-          </div>
-          <div class="progress-line"></div>
-          <div class="progress-step" data-step="3">
-            <div class="step-circle">3</div>
-            <span class="step-label">Photo & Review</span>
-          </div>
-        </div>
-
-        <form class="listing-form" id="listingForm">
-          <!-- Step 1: Food Details -->
-          <div class="form-step active" data-step="1">
-            <h4 class="step-title">Tell us about the food</h4>
-            <div class="form-group">
-              <label for="foodType">Food Type *</label>
-              <input
-                type="text"
-                id="foodType"
-                required
-                placeholder="e.g., Pizza, Sandwiches, Fruits"
-              />
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="quantity">Quantity *</label>
-                <input
-                  type="text"
-                  id="quantity"
-                  required
-                  placeholder="e.g., 10 portions"
-                />
-              </div>
-              <div class="form-group">
-                <label for="category">Category *</label>
-                <select id="category" required>
-                  <option value="">Select Category</option>
-                  <option value="restaurant">Restaurant</option>
-                  <option value="household">Household</option>
-                  <option value="bakery">Bakery</option>
-                  <option value="event">Event</option>
-                </select>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="description">Description</label>
-              <textarea
-                id="description"
-                rows="3"
-                placeholder="Additional details about the food..."
-              ></textarea>
-            </div>
-            <div class="form-group">
-              <label>Dietary Information (optional)</label>
-              <div class="checkbox-group">
-                  <div><input type="checkbox" id="tag-vegetarian" name="dietary" value="vegetarian"><label for="tag-vegetarian">Vegetarian</label></div>
-                  <div><input type="checkbox" id="tag-vegan" name="dietary" value="vegan"><label for="tag-vegan">Vegan</label></div>
-                  <div><input type="checkbox" id="tag-gluten-free" name="dietary" value="gluten-free"><label for="tag-gluten-free">Gluten-Free</label></div>
-                  <div><input type="checkbox" id="tag-nut-free" name="dietary" value="nut-free"><label for="tag-nut-free">Nut-Free</label></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Step 2: Pickup Info -->
-          <div class="form-step" data-step="2">
-            <h4 class="step-title">When and where to pick up?</h4>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="freshUntil">Fresh Until *</label>
-                <div class="input-container-relative">
-                  <input type="datetime-local" id="freshUntil" class="datetime-input" required />
-                  <span class="checkmark-icon hidden">✓</span>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="pickupTime">Preferred Pickup Time *</label>
-                <div class="input-container-relative">
-                  <input type="time" id="pickupTime" class="datetime-input" required />
-                  <span class="checkmark-icon-time hidden">✓</span>
-                </div>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="location">Pickup Location *</label>
-              <input
-                type="text"
-                id="location"
-                required
-                placeholder="Address or landmark"
-              />
-            </div>
-            <div class="form-group">
-              <label for="contact">Contact Information *</label>
-              <input
-                type="text"
-                id="contact"
-                required
-                placeholder="Phone number or email"
-              />
-            </div>
-          </div>
-
-          <!-- Step 3: Photo & Review -->
-          <div class="form-step" data-step="3">
-            <h4 class="step-title">Add a photo (optional)</h4>
-            <div class="form-group">
-              <label for="photo">Food Photo</label>
-              <input
-                type="file"
-                id="photo"
-                accept="image/*"
-                style="display: none"
-              />
-              <div class="file-upload-area" id="photoUpload">
-                <i class="fas fa-cloud-upload-alt"></i>
-                <span>Drag & drop your image here or click to browse</span>
-                <small>Supports: JPG, PNG, GIF (Max 5MB)</small>
-              </div>
-              <div id="imagePreview" class="image-preview"></div>
-            </div>
-          </div>
-
-          <div class="form-navigation">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              id="prevStep"
-              style="display: none"
-            >
-              <i class="fas fa-arrow-left"></i> Previous
-            </button>
-            <button type="button" class="btn btn-secondary" id="cancelForm">
-              Cancel
-            </button>
-            <button type="button" class="btn btn-primary" id="nextStep">
-              Next <i class="fas fa-arrow-right"></i>
-            </button>
-            <button
-              type="submit"
-              class="btn btn-primary"
-              id="submitForm"
-              style="display: none"
-            >
-              <i class="fas fa-check"></i> Add Listing
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
 
     <!-- About Section -->
     <section id="about" class="about">
@@ -933,18 +778,36 @@
     alert(`✅ Thank you, ${name}! Your message has been sent.`);
     form.reset();
   });
-  const username = JSON.parse(localStorage.getItem('user')).name;
-  const toast = document.getElementById('toast');
+  // Safely read user from localStorage
+  const rawUser = localStorage.getItem('user');
+  const user = rawUser ? JSON.parse(rawUser) : null;
+  const username = user?.name;
 
   if (username) {
-    // Show toast message
-    toast.textContent = `Welcome, ${username}! 🎉`;
-    toast.classList.add('show');
+    // If a global enhanced toast API exists, use it
+    if (window.shareBite && typeof window.shareBite.showToast === 'function') {
+      window.shareBite.showToast(`Welcome, ${username}! 🎉`, 'success', 4000);
+    } else {
+      // Fallback: create a transient toast element
+      const toastEl = document.createElement('div');
+      toastEl.className = 'toast toast-success';
+      toastEl.innerHTML = `
+        <i class="fas fa-check-circle"></i>
+        <span>Welcome, ${username}! 🎉</span>
+      `;
+      document.body.appendChild(toastEl);
 
-    // Hide toast after 3 seconds
-    setTimeout(() => {
-      toast.classList.remove('show');
-    }, 3000);
+      // Auto remove after 4s with hide animation
+      setTimeout(() => {
+        toastEl.classList.add('toast-hiding');
+        setTimeout(() => toastEl.remove(), 400);
+      }, 4000);
+
+      toastEl.addEventListener('click', () => {
+        toastEl.classList.add('toast-hiding');
+        setTimeout(() => toastEl.remove(), 400);
+      });
+    }
   }
 </script>
 
@@ -1030,7 +893,6 @@
     <i class="fas fa-arrow-up"></i>
   </button>
 </div>
-
 
 
 
