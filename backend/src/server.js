@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const rateLimit = require('express-rate-limit');
+
 // Load environment variables from src/.env explicitly
 require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 const connectDB = require('./config/db');
@@ -13,6 +15,34 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Load rate limiter configuration from environment variables
+const RATE_LIMIT_WINDOW_MS = parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000; // Default: 15 minutes
+const RATE_LIMIT_MAX = parseInt(process.env.RATE_LIMIT_MAX) || 100; // Default: 100 requests per window
+const AUTH_RATE_LIMIT_MAX = parseInt(process.env.AUTH_RATE_LIMIT_MAX) || 5; // Default: 5 requests per window
+
+// Global API rate limiter
+const apiLimiter = rateLimit({
+  windowMs: RATE_LIMIT_WINDOW_MS,
+  max: RATE_LIMIT_MAX,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Auth-specific rate limiter
+const authLimiter = rateLimit({
+  windowMs: RATE_LIMIT_WINDOW_MS,
+  max: AUTH_RATE_LIMIT_MAX,
+  message: { error: 'Too many requests, please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Apply global rate limiter to all API routes
+app.use('/api', apiLimiter);
+
+// Apply auth-specific rate limiter to auth routes
+app.use('/api/auth', authLimiter);
 
 // Example route
 app.get('/', (req, res) => {
