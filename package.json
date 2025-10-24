@@ -1,0 +1,30 @@
+{
+  "name": "sharebite",
+  "version": "1.0.0",
+  "description": "A beautiful, responsive web platform connecting restaurants and households with NGOs and volunteers to reduce food waste while fighting hunger in communities.",
+  "main": "sw.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kaushikkanduri/ShareBite.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kaushikkanduri/ShareBite/issues"
+  },
+  "homepage": "https://github.com/kaushikkanduri/ShareBite#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-async-handler": "^1.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.19.1",
+    "nodemon": "^3.1.10"
+  }
+}
