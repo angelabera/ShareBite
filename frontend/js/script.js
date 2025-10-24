@@ -83,7 +83,6 @@
         });
 class ShareBite {
     constructor() {
-        this.contactEmail = 'sharebite@support.com.ng';
         this.currentRole = 'donor';
         this.foodListings = [];
         this.filteredListings = [];
@@ -92,62 +91,17 @@ class ShareBite {
         this.notifications = this.loadNotifications();
         
         this.init();
-        this.initTheme(); // add theme initialization after base init
+        // Theme is now handled by theme.js - removed duplicate initTheme()
     }
 
     init() {
         this.setupEventListeners();
-        this.updateContactInfo();
         this.generateSampleListings();
         this.renderFoodListings();
         this.setupNotificationSystem();
         this.updateNotificationDisplay();
         this.startAnimations();
         this.hideLoadingOverlay();
-    }
-
-    updateContactInfo() {
-        const emailAddressElement = document.getElementById('contact-email-address');
-        const emailLinkElement = document.getElementById('contact-email-link');
-
-        if (emailAddressElement) {
-            emailAddressElement.textContent = this.contactEmail;
-        }
-
-        if (emailLinkElement) {
-            emailLinkElement.href = `mailto:${this.contactEmail}`;
-        }
-    }
-
-    initTheme() {
-        const stored = localStorage.getItem('sharebite-theme');
-        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const theme = stored || (prefersDark ? 'dark' : 'light');
-        this.applyTheme(theme);
-        this.setupThemeToggle();
-    }
-
-    setupThemeToggle() {
-        const btn = document.getElementById('themeToggle');
-        if (!btn) return;
-        btn.addEventListener('click', () => {
-            const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
-            this.applyTheme(newTheme);
-            localStorage.setItem('sharebite-theme', newTheme);
-        });
-    }
-
-    applyTheme(theme) {
-        const root = document.documentElement;
-        if (theme === 'dark') {
-            root.classList.add('dark');
-            const icon = document.querySelector('#themeToggle i');
-            if (icon) { icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); }
-        } else {
-            root.classList.remove('dark');
-            const icon = document.querySelector('#themeToggle i');
-            if (icon) { icon.classList.remove('fa-sun'); icon.classList.add('fa-moon'); }
-        }
     }
 
     setupEventListeners() {
@@ -239,7 +193,8 @@ class ShareBite {
             addListingBtn.style.display = 'flex';
             
             // Hide notification bell for donors (unless they have notifications)
-            if (notificationBell && this.notifications.length === 0) {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (notificationBell && !user && this.notifications.length === 0) {
                 notificationBell.style.display = 'none';
             }
         }
@@ -1457,7 +1412,10 @@ createFoodCard(listing) {
         if (!notificationBell) return;
         
         // Show notification bell when in collector mode or when there are notifications
-        if (this.currentRole === 'collector' || this.notifications.length > 0) {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            notificationBell.style.display = 'block';
+        } else if (this.currentRole === 'collector' || this.notifications.length > 0) {
             notificationBell.style.display = 'block';
         }
         
@@ -1737,17 +1695,17 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Service Worker registration for PWA capabilities (optional)
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-            .then(registration => {
-                console.log('SW registered: ', registration);
-            })
-            .catch(registrationError => {
-                console.log('SW registration failed: ', registrationError);
-            });
-    });
-}
+// if ('serviceWorker' in navigator) {
+//     window.addEventListener('load', () => {
+//         navigator.serviceWorker.register('/sw.js')
+//             .then(registration => {
+//                 console.log('SW registered: ', registration);
+//             })
+//             .catch(registrationError => {
+//                 console.log('SW registration failed: ', registrationError);
+//             });
+//     });
+// }
 
 // Export for potential testing or external use
 window.ShareBite = ShareBite;

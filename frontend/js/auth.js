@@ -178,6 +178,13 @@ class ShareBiteAuth {
 
         // Setup profile dropdown functionality
         this.setupProfileDropdown();
+        
+        // Show notification bell when user is logged in
+        const notificationBell = document.getElementById('notificationBell');
+        if (notificationBell) {
+            notificationBell.style.display = 'block';
+            console.log('Notification bell shown for logged in user');
+        }
     }
 
     // Update navigation UI when user is logged out
@@ -211,6 +218,13 @@ class ShareBiteAuth {
                     userActionsContainer.insertAdjacentHTML('beforeend', loginButtonsHTML);
                 }
             }
+        }
+        
+        // Hide notification bell when user is logged out
+        const notificationBell = document.getElementById('notificationBell');
+        if (notificationBell) {
+            notificationBell.style.display = 'none';
+            console.log('Notification bell hidden for logged out user');
         }
     }
 

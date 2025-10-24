@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Find the toggle button, accommodating both IDs used in the project
-    const themeToggle = document.getElementById('theme-toggle')  ;
+    const themeToggle = document.getElementById('theme-toggle') || document.getElementById('themeToggle');
     if (!themeToggle) return;
 
     const root = document.documentElement; // The <html> element
