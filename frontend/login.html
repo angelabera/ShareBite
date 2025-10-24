@@ -323,9 +323,10 @@
             type="password"
             id="password"
             name="password"
-            placeholder="Enter your password"
+            placeholder="Enter your password.."
             required
           />
+          
           <button
             type="button"
             id="togglePassword"
@@ -385,7 +386,7 @@
       // --- Form Submission ---
       const loginForm = document.getElementById("loginForm");
 
-      loginForm.addEventListener("submit", (async function(e) {
+      loginForm.addEventListener("submit", async function (e) {
         e.preventDefault();
 
         // Get form values
@@ -408,10 +409,10 @@
         try {
           // Call backend API
           const response = await loginUser({ email, password });
-          
+
           // Store token and user data
-          localStorage.setItem('sharebite_token', response.token);
-          
+          localStorage.setItem("sharebite_token", response.token);
+
           // Use the auth system to log in
           sharebiteAuth.login(response.user);
 
@@ -427,7 +428,7 @@
             showConfirmButton: false,
           });
 
-          // Redirect after short delay 
+          // Redirect after short delay
           setTimeout(() => {
             window.location.href = "index.html";
           }, 1500);
@@ -441,7 +442,7 @@
             color: "#333",
           });
         }
-      }));
+      });
     </script>
   </body>
 </html>
