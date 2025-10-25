@@ -27,3 +27,18 @@ coverage/
 
 # VSCode
 .vscode/
+
+# Ignore node_modules in subfolders explicitly
+/backend/node_modules/
+/frontend/node_modules/
+
+# Environment files - ignore any .env files and variants
+.env*
+# Explicitly ignore backend local env too (we created backend/src/.env during testing)
+/backend/src/.env
+
+# Editor/OS temp files
+.idea/
+.venv/
+*.tmp
+*.temp
