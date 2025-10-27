@@ -2134,7 +2134,13 @@ body.dark .profile-menu-item:hover {
 .form-navigation .btn {
     min-width: 120px;
 }
-
+/* button color */
+button#prevStep, button#cancelForm {
+    background: var(--accent-dark);
+}
+button#prevStep:hover, button#cancelForm:hover {
+    color: white;
+}
 @media (max-width: 768px) {
     .form-progress {
         padding: 1.5rem 1rem;
@@ -3212,7 +3218,7 @@ html, body, .feature-card, .food-card, .navbar, .modal-content, .footer, .stats-
 
 @keyframes slideInRight {
     from {
-        transform: translateX(400px);
+        transform: translateX(200px);
         opacity: 0;
     }
     to {
@@ -3227,7 +3233,7 @@ html, body, .feature-card, .food-card, .navbar, .modal-content, .footer, .stats-
     }
     to {
         opacity: 0;
-        transform: translateX(400px);
+        transform: translateX(200px);
     }
 }
 
