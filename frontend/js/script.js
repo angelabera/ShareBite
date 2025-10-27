@@ -71,7 +71,7 @@
             toast.classList.add('show');
             setTimeout(() => {
                 toast.classList.remove('show');
-            }, 3000);
+            }, 3800);
         }
 
         // Handle window resize
