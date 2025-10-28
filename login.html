@@ -306,6 +306,7 @@
     <div class="auth-container">
       <h1>Welcome Back to ShareBite</h1>
       <p class="subtitle">Log in to continue your journey with us.</p>
+      <a href="index.html" class="register-link">← Back to Home</a>
       <form id="loginForm">
         <div class="form-group">
           <label for="email">Email</label>
@@ -384,14 +385,12 @@
       // --- Form Submission ---
       const loginForm = document.getElementById("loginForm");
 
-      loginForm.addEventListener("submit", (async function(e) {
+      loginForm.addEventListener("submit", async function (e) {
         e.preventDefault();
 
-        // Get form values
         const email = loginForm.email.value.trim();
         const password = loginForm.password.value.trim();
 
-        // Validation for empty fields
         if (!email || !password) {
           Swal.fire({
             title: "Missing Information ⚠️",
@@ -405,53 +404,47 @@
         }
 
         const storedUser = JSON.parse(localStorage.getItem("user"));
-        const emailInput = document.getElementById("email").value;
-        const passwordInput = document.getElementById("password").value;
 
-        // Hash entered password
+        // Hash the entered password
         const encoder = new TextEncoder();
-        const data = encoder.encode(passwordInput);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const data = encoder.encode(password);
+        const hashBuffer = await crypto.subtle.digest("SHA-256", data);
         const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashedPassword = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        const hashedPassword = hashArray
+          .map((b) => b.toString(16).padStart(2, "0"))
+          .join("");
 
         if (!storedUser) {
-            alert("No user registered on this browser.");
-        } else if (storedUser.email === emailInput && storedUser.password === hashedPassword) {
-            // Success message
-            Swal.fire({
-              title: "Login Successful 🎉",
-              text: "You have logged in successfully!",
-              icon: "success",
-              confirmButtonColor: "#28a745",
-              background: "#f0fff4",
-              color: "#333",
-              timer: 1500,
-              showConfirmButton: false,
-            });
-
-            // Redirect after short delay 
-            setTimeout(() => {
-              window.location.href = "index.html";
-            }, 1500); // 1.5 second delay
-        } else {
-            Swal.fire({
-              title: "No credentials found ❌",
-              text: "Please enter correct credentials or register if you don't have an account.",
-              icon: "warning",
-              confirmButtonColor: "#FF6B35",
-              background: "#fff8f0",
-              color: "#333",
-            });
-            return;
-        }
-      }));
-
-        // Redirect to index.html after short delay (so alert can be seen)
-        setTimeout(() => {
+          Swal.fire({
+            title: "No User Found ❌",
+            text: "Please register before logging in.",
+            icon: "error",
+            confirmButtonColor: "#FF6B35",
+          });
+        } else if (
+          storedUser.email === email &&
+          storedUser.password === hashedPassword
+        ) {
+          Swal.fire({
+            title: "Login Successful 🎉",
+            text: "You have logged in successfully!",
+            icon: "success",
+            confirmButtonColor: "#28a745",
+            timer: 1500,
+            showConfirmButton: false,
+          });
+          setTimeout(() => {
             window.location.href = "index.html";
-        }, 500); // 0.5 second delay
-    });
+          }, 1500);
+        } else {
+          Swal.fire({
+            title: "Invalid Credentials ❌",
+            text: "Incorrect email or password. Please try again.",
+            icon: "error",
+            confirmButtonColor: "#FF6B35",
+          });
+        }
+      });
     </script>
   </body>
 </html>

@@ -270,6 +270,47 @@
         color: var(--secondary-orange);
       }
 
+      .auth-footer { 
+        margin-top: 1rem; 
+        text-align: center;
+      }
+      .home-link {
+        color: var(--subtext-color-light);
+        text-decoration: none;
+        font-weight: 500;
+      }
+      .home-link:hover {
+        color: var(--primary-green);
+        text-decoration: underline;
+      }
+      body.dark-mode .home-link {
+        color: var(--subtext-color-dark);
+      }
+
+      .home-chip {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        padding: 8px 12px;
+        border-radius: 12px;
+        background-color: var(--card-bg-light);
+        color: var(--text-color-light);
+        border: 1px solid var(--input-border-light);
+        text-decoration: none;
+        font-weight: 500;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      }
+      .home-chip:hover {
+        border-color: var(--primary-green);
+        color: var(--primary-green);
+      }
+      body.dark-mode .home-chip {
+        background-color: var(--card-bg-dark);
+        color: var(--text-color-dark);
+        border: 1px solid var(--input-border-dark);
+        box-shadow: 0 2px 12px rgba(0,0,0,0.35);
+      }
+
       /* Responsive Design */
       @media (max-width: 520px) {
         .auth-container {
@@ -285,6 +326,8 @@
     <button id="theme-toggle" class="theme-toggle" title="Toggle dark mode">
       🌙
     </button>
+
+    <a href="index.html" class="home-chip">← Back to Home</a>
 
     <div class="auth-container">
       <h1>Create Your ShareBite Account</h1>
@@ -400,6 +443,7 @@
         >Already have a User account? Login</a
       >
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/theme.js"></script>
     <script>
