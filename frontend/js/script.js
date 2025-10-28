@@ -71,7 +71,7 @@
             toast.classList.add('show');
             setTimeout(() => {
                 toast.classList.remove('show');
-            }, 3000);
+            }, 3800);
         }
 
         // Handle window resize
@@ -534,7 +534,9 @@ handleFileSelect(file) {
         toast.style.cssText = `
             position: fixed;
             top: 100px;
-            right: 20px;
+            right: 80px;
+            max-width: 400px;
+            height: 300px;
             background: ${type === 'success' ? 'var(--primary-color)' : 'var(--secondary-color)'};
             color: white;
             padding: 1rem 1.5rem;
@@ -543,7 +545,7 @@ handleFileSelect(file) {
             align-items: center;
             gap: 0.5rem;
             z-index: 3000;
-            animation: slideInRight 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+            animation: slideInRight 0.8s ease, fadeOut 0.8s ease 3s forwards;
             box-shadow: var(--shadow-heavy);
         `;
         
