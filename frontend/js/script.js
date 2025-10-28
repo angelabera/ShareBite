@@ -2303,3 +2303,184 @@ class TestimonialsCarousel {
 if (document.querySelector('.testimonials-section')) {
     new TestimonialsCarousel();
 }
+
+// ===== Lazy-load ShareBot Chatbot Launcher =====
+(function setupChatbotLauncher() {
+    // Only run on pages where DOM exists
+    if (!document.body) return;
+    const LAUNCHER_ID = 'chatbot-launcher';
+    if (document.getElementById(LAUNCHER_ID)) return;
+
+    // Create launcher button
+    const btn = document.createElement('button');
+    btn.id = LAUNCHER_ID;
+    btn.type = 'button';
+    btn.title = 'Open ShareBot chat';
+    btn.setAttribute('aria-label', 'Open ShareBot chat');
+    btn.innerHTML = '<i class="fas fa-comment-dots"></i>';
+
+    // Basic styles (keeps visual consistent with widget bubble)
+    Object.assign(btn.style, {
+        position: 'fixed',
+        right: 'auto', // computed below to align with map icon
+        bottom: 'auto', // computed below to sit above the map icon
+        width: '56px',
+        height: '56px',
+        borderRadius: '50%',
+        background: 'linear-gradient(135deg,#4caf50,#2e7d32)',
+        color: '#fff',
+        border: 'none',
+        cursor: 'pointer',
+        zIndex: '99999',
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        boxShadow: '0 6px 18px rgba(0,0,0,0.18)'
+    });
+
+    // Spinner styles injected once
+    if (!document.getElementById('chatbot-launcher-styles')) {
+        const s = document.createElement('style');
+        s.id = 'chatbot-launcher-styles';
+        s.textContent = `
+            .chatbot-launcher-spinner{display:inline-block;width:18px;height:18px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:chatbot-launcher-spin .8s linear infinite}
+            @keyframes chatbot-launcher-spin{to{transform:rotate(360deg)}}
+        `;
+        document.head.appendChild(s);
+    }
+
+    document.body.appendChild(btn);
+
+    // Position the launcher directly above the map icon (#scrollTopWrapper) with a small gap.
+    function positionLauncher() {
+        const wrapper = document.getElementById('scrollTopWrapper');
+        const gap = 12; // px gap between wrapper and launcher
+        // default fallback values
+    let leftPx = null;
+    let bottomPx = 140;
+
+        if (wrapper) {
+            // Try to align to the map icon specifically (anchor with class .scroll-link)
+            const mapEl = wrapper.querySelector('.scroll-link');
+            let targetRect;
+
+            if (mapEl) {
+                targetRect = mapEl.getBoundingClientRect();
+            } else {
+                targetRect = wrapper.getBoundingClientRect();
+            }
+
+            const btnWidth = btn.offsetWidth || 56; // measured width of launcher
+            // compute left so the launcher's left aligns to place its center on the target center
+            const targetCenterX = targetRect.left + targetRect.width / 2;
+            leftPx = Math.round(targetCenterX - btnWidth / 2);
+
+            // compute bottom so the launcher's bottom sits just above targetRect.top minus gap
+            bottomPx = Math.round(window.innerHeight - targetRect.top + gap);
+
+            // keep sensible minimums and ensure it doesn't overflow
+            if (leftPx < 8) leftPx = 8;
+            if (leftPx + btnWidth > window.innerWidth - 8) leftPx = Math.max(8, window.innerWidth - btnWidth - 8);
+            if (bottomPx < 12) bottomPx = 12;
+        }
+
+        // Prefer left positioning for pixel-accurate alignment above the target
+        if (leftPx !== null) {
+            btn.style.left = leftPx + 'px';
+            btn.style.right = 'auto';
+        } else {
+            // fallback to right positioning
+            btn.style.right = '24px';
+            btn.style.left = 'auto';
+        }
+        btn.style.bottom = bottomPx + 'px';
+    }
+
+    // initial position and update on resize/scroll (throttle lightly)
+    positionLauncher();
+    let posTimer = null;
+    ['resize', 'scroll'].forEach(evt => {
+        window.addEventListener(evt, () => {
+            if (posTimer) clearTimeout(posTimer);
+            posTimer = setTimeout(() => positionLauncher(), 80);
+        }, { passive: true });
+    });
+
+    let loaded = false;
+    let loading = false;
+    let isOpen = false;
+
+    async function loadAndOpen() {
+        if (loaded) {
+            // toggle open/close
+            if (window.ShareBot && typeof window.ShareBot.open === 'function' && typeof window.ShareBot.close === 'function') {
+                if (isOpen) {
+                    window.ShareBot.close();
+                    isOpen = false;
+                    btn.classList.remove('active');
+                } else {
+                    window.ShareBot.open();
+                    isOpen = true;
+                    btn.classList.add('active');
+                }
+            }
+            return;
+        }
+
+        if (loading) return;
+        loading = true;
+        btn.disabled = true;
+        const prev = btn.innerHTML;
+        btn.innerHTML = '<span class="chatbot-launcher-spinner" aria-hidden="true"></span>';
+        try {
+            // dynamic import: resolve a URL relative to the current page to be robust
+            const resolved = new URL('../src/chatbot/ChatbotWidget.js', window.location.href).href;
+            try {
+                await import(resolved);
+            } catch (innerErr) {
+                // fallback to absolute path (server root)
+                const alt = new URL('/src/chatbot/ChatbotWidget.js', window.location.origin).href;
+                if (alt !== resolved) {
+                    await import(alt);
+                } else {
+                    throw innerErr;
+                }
+            }
+            loaded = true;
+            // open after small delay so widget finishes setup
+            setTimeout(() => {
+                if (window.ShareBot && typeof window.ShareBot.open === 'function') {
+                    window.ShareBot.open();
+                    isOpen = true;
+                    btn.classList.add('active');
+                }
+            }, 250);
+            // replace icon with chat icon
+            btn.innerHTML = '<i class="fas fa-comment"></i>';
+            // small user feedback using existing toast area if available
+            if (typeof showToast === 'function') showToast('ShareBot loaded');
+        } catch (err) {
+            console.error('Failed to load ShareBot', err);
+            // show error to user with more context
+            const message = err && err.message ? `Failed to load chat: ${err.message}` : 'Failed to load chat';
+            if (typeof showToast === 'function') showToast(message, 'error');
+            // keep icon so user can retry
+            btn.innerHTML = prev;
+        } finally {
+            loading = false;
+            btn.disabled = false;
+        }
+    }
+
+    btn.addEventListener('click', loadAndOpen);
+    btn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            loadAndOpen();
+        }
+    });
+
+    // If ShareBot loads itself or another script opens the widget, keep state in sync
+    // (optional) listen for user interactions on the injected widget to update launcher state
+    // No-op: the module exposes window.ShareBot.open/close which we call above
+})();

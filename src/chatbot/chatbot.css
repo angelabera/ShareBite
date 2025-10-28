@@ -3,8 +3,8 @@
 /* Container */
 #sharebot-container {
   position: fixed;
-  right: 95px;
-  bottom: 85px;
+  right: 20px;
+  bottom: 20px;
   z-index: 99999;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
     Arial, sans-serif;
