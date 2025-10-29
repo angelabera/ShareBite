@@ -1,25 +1,66 @@
 // ShareBite JavaScript - Interactive Food Waste Reduction Platform
-
-  
- 
-
-        // Theme Toggle
-        const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
-        const themeIcon = themeToggle.querySelector('i');
 
-        themeToggle.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
-            if (body.classList.contains('dark-mode')) {
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
-                showToast('Dark mode enabled');
+        const THEME_KEY = 'sharebite-theme';
+        const THEME_TTL_MS = 365 * 24 * 60 * 60 * 1000; // 1 year
+
+        function readStoredTheme() {
+            try {
+                const raw = localStorage.getItem(THEME_KEY);
+                if (!raw) return null;
+                try {
+                    const parsed = JSON.parse(raw);
+                    if (typeof parsed === 'string') return parsed === 'dark' || parsed === 'light' ? parsed : null;
+                    if (parsed && (parsed.value === 'dark' || parsed.value === 'light')) {
+                        if (!parsed.ts) return parsed.value;
+                        if ((Date.now() - parsed.ts) <= THEME_TTL_MS) return parsed.value;
+                        localStorage.removeItem(THEME_KEY);
+                        return null;
+                    }
+                } catch (e) {
+                    if (raw === 'dark' || raw === 'light') return raw;
+                }
+            } catch (e) { console.warn('readStoredTheme', e); }
+            return null;
+        }
+
+        function saveStoredTheme(theme) {
+            try { localStorage.setItem(THEME_KEY, JSON.stringify({ value: theme, ts: Date.now() })); }
+            catch (e) { console.warn('saveStoredTheme', e); }
+        }
+
+        function clearStoredTheme() { try { localStorage.removeItem(THEME_KEY); } catch (e) { console.warn('clearStoredTheme', e); } }
+
+        function applyThemeImmediate(theme) {
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                body && body.classList.add('dark-mode');
             } else {
-                themeIcon.classList.remove('fa-sun');
-                themeIcon.classList.add('fa-moon');
-                showToast('Light mode enabled');
+                document.documentElement.classList.remove('dark');
+                body && body.classList.remove('dark-mode');
             }
-        });
+            const icon = document.querySelector('#themeToggle i, #theme-toggle i');
+            if (icon) {
+                if (theme === 'dark') { icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); }
+                else { icon.classList.remove('fa-sun'); icon.classList.add('fa-moon'); }
+            }
+        }
+
+        (function initSystemThemeImmediate() {
+            try {
+                const stored = readStoredTheme();
+                const mql = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+                const prefersDark = mql ? mql.matches : false;
+                const theme = stored || (prefersDark ? 'dark' : 'light');
+                applyThemeImmediate(theme);
+
+                if (!stored && mql) {
+                    const handleChange = (e) => applyThemeImmediate(e.matches ? 'dark' : 'light');
+                    if (mql.addEventListener) mql.addEventListener('change', handleChange);
+                    else if (mql.addListener) mql.addListener(handleChange);
+                }
+            } catch (e) { console.warn('initSystemThemeImmediate', e); }
+        })();
 
         // Notification Toggle
         const notificationBell = document.getElementById('notificationBell');
@@ -92,7 +133,8 @@ class ShareBite {
         this.notifications = this.loadNotifications();
         
         this.init();
-        this.initTheme(); // add theme initialization after base init
+    this.initTheme(); // Initialize theme settings
+    this.setupThemeToggle(); // Setup theme toggle functionality
     }
 
     init() {
@@ -120,11 +162,11 @@ class ShareBite {
     }
 
     initTheme() {
-        const stored = localStorage.getItem('sharebite-theme');
-        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const stored = (typeof readStoredTheme === 'function') ? readStoredTheme() : null;
+        const mql = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+        const prefersDark = mql ? mql.matches : false;
         const theme = stored || (prefersDark ? 'dark' : 'light');
         this.applyTheme(theme);
-        this.setupThemeToggle();
     }
 
     setupThemeToggle() {
@@ -133,7 +175,7 @@ class ShareBite {
         btn.addEventListener('click', () => {
             const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
             this.applyTheme(newTheme);
-            localStorage.setItem('sharebite-theme', newTheme);
+            try { saveStoredTheme(newTheme); } catch (e) { }
         });
     }
 
@@ -141,11 +183,13 @@ class ShareBite {
         const root = document.documentElement;
         if (theme === 'dark') {
             root.classList.add('dark');
-            const icon = document.querySelector('#themeToggle i');
+            document.body && document.body.classList.add('dark-mode');
+            const icon = document.querySelector('#themeToggle i, #theme-toggle i');
             if (icon) { icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); }
         } else {
             root.classList.remove('dark');
-            const icon = document.querySelector('#themeToggle i');
+            document.body && document.body.classList.remove('dark-mode');
+            const icon = document.querySelector('#themeToggle i, #theme-toggle i');
             if (icon) { icon.classList.remove('fa-sun'); icon.classList.add('fa-moon'); }
         }
     }
