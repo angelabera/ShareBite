@@ -35,50 +35,83 @@
   <!-- Navigation -->
   <nav class="navbar">
     <div class="nav-container">
+      <!-- Logo -->
       <div class="nav-logo">
         <a href="#home" class="nav-logo-link">
           <i class="fas fa-utensils"></i>
           <span>ShareBite</span>
         </a>
       </div>
+
+      <!-- Hamburger (mobile only) -->
+      <div class="hamburger">
+        <span></span><span></span><span></span>
+      </div>
+
+      <!-- Nav Menu – links + actions -->
       <ul class="nav-menu">
         <li><a href="#home" class="nav-link">Home</a></li>
         <li><a href="#features" class="nav-link">Features</a></li>
         <li><a href="foodlisting.html" class="nav-link">Listings</a></li>
         <li><a href="#about" class="nav-link">About</a></li>
         <li><a href="#contact-section" class="nav-link">Contact</a></li>
-      </ul>
-      <div class="user-actions">
-        <!-- Added dark mode toggle -->
-        <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
-          <i class="fas fa-moon"></i>
-        </button>
 
-        <!-- Notification Bell -->
-        <div class="notification-bell" id="notificationBell" style="display: none;">
-          <i class="fas fa-bell"></i>
-          <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
-          <div class="notification-panel" id="notificationPanel">
-            <div class="notification-header">Claimed Food Items</div>
-            <div id="notificationList">
-              <div class="no-notifications">No claimed items yet</div>
+        <!-- USER ACTIONS (desktop only – hidden on mobile) -->
+        <div class="user-actions-desktop">
+          <!-- Dark-mode toggle -->
+          <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+            <i class="fas fa-moon"></i>
+          </button>
+
+          <!-- Notification bell -->
+          <div class="notification-bell" id="notificationBell" style="display:none;">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge" id="notificationBadge" style="display:none;">0</span>
+            <div class="notification-panel" id="notificationPanel">
+              <div class="notification-header">Claimed Food Items</div>
+              <div id="notificationList">
+                <div class="no-notifications">No claimed items yet</div>
+              </div>
             </div>
           </div>
+
+          <!-- Role switch -->
+          <button class="role-switch" id="roleSwitch">
+            <i class="fas fa-exchange-alt"></i>
+            <span id="currentRole">Donor</span>
+          </button>
+
+          <!-- Login buttons -->
+          <button class="login-btn" onclick="window.location.href='login.html'">Login as User</button>
+          <button class="login-btn" onclick="window.location.href='login_ngo.html'">Login as NGO</button>
         </div>
 
-        <button class="role-switch" id="roleSwitch">
-          <i class="fas fa-exchange-alt"></i>
-          <span id="currentRole">Donor</span>
-        </button>
-        <button class="login-btn" onclick="window.location.href='login.html'">Login as User</button>
-        <button class="login-btn" onclick="window.location.href='login_ngo.html'">Login as NGO</button>
-      </div>
-      <div id="toast" class="toast"></div>
-      <div class="hamburger">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
+        <!-- USER ACTIONS (mobile only – inside the slide-in menu) -->
+        <div class="user-actions-mobile">
+          <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+            <i class="fas fa-moon"></i>
+          </button>
+
+          <div class="notification-bell" id="notificationBellMobile" style="display:none;">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge" id="notificationBadgeMobile" style="display:none;">0</span>
+            <div class="notification-panel" id="notificationPanelMobile">
+              <div class="notification-header">Claimed Food Items</div>
+              <div id="notificationListMobile">
+                <div class="no-notifications">No claimed items yet</div>
+              </div>
+            </div>
+          </div>
+
+          <button class="role-switch" id="roleSwitchMobile">
+            <i class="fas fa-exchange-alt"></i>
+            <span id="currentRoleMobile">Donor</span>
+          </button>
+
+          <button class="login-btn" onclick="window.location.href='login.html'">Login as User</button>
+          <button class="login-btn" onclick="window.location.href='login_ngo.html'">Login as NGO</button>
+        </div>
+      </ul>
     </div>
   </nav>
 
