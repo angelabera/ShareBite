@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Cache Control for Development -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>Feedback - ShareBite</title>
+    <meta name="sharebite-build" content="v-gallery-update-2">
+    <meta name="sharebite-build" content="v-darkmode-fix-1">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=darkmode-fix-1">
+
+    <!-- CSS with timestamp cache busting -->
+    <script>
+      // Dynamic cache busting
+      document.write('<link rel="stylesheet" href="css/style.css?v=' + Date.now() + '">');
+    </script>
+    <noscript>
+      <link rel="stylesheet" href="css/style.css?v=gallery-update-2">
+    </noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html" class="nav-logo-link">
+                    <i class="fas fa-utensils"></i>
+                    <span>ShareBite</span>
+                </a>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html#home" class="nav-link">Home</a></li>
+                <li><a href="index.html#features" class="nav-link">Features</a></li>
+                <li><a href="foodlisting.html" class="nav-link">Listings</a></li>
+                <li><a href="index.html#about" class="nav-link">About</a></li>
+                <li><a href="index.html#contact-section" class="nav-link">Contact</a></li>
+                <li><a href="feedback.html" class="nav-link active">Feedback</a></li>
+            </ul>
+            <div class="user-actions">
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="role-switch" id="roleSwitch">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span id="currentRole">Donor</span>
+                </button>
+                <div class="login-dropdown-container">
+                    <select class="login-dropdown" id="loginDropdown" onchange="handleLoginSelection(this.value)">
+                        <option value="" selected disabled>Login</option>
+                        <option value="login.html">Login as User</option>
+                        <option value="login_ngo.html">Login as NGO</option>
+                    </select>
+                </div>
+            </div>
+            <div class="hamburger" id="menuToggle">
+                <span></span>
+            </div>
+        </div>
+    </nav>
+    
+    <div id="toast" class="toast"></div>
+
+    <!-- Feedback Section -->
+    <section id="feedback-section" class="contact">
+        <div class="container">
+            <h1 class="main-title" style="margin-top: 150px !important; margin-bottom: 40px !important; display: block !important; font-size: 2.5rem; font-weight: 700; text-align: center; background: linear-gradient(135deg, #4CAF50, #1B5E20); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">💬 Share Your Feedback</h1>
+        </div>
+        <div class="contact-wrapper">
+            <div class="contact-container">
+                <!-- Left: Form -->
+                <div class="contact-left">
+                    <h2 class="contact-title">📝 We Value Your Opinion</h2>
+                    <p class="contact-subtitle">Help us improve ShareBite with your suggestions and feedback</p>
+
+                    <form id="feedback-form">
+                        <label for="feedback-name">Full Name:</label>
+                        <input type="text" id="feedback-name" placeholder="Enter your full name" required />
+
+                        <label for="feedback-email">Email:</label>
+                        <input type="email" id="feedback-email" placeholder="Enter your email" required />
+
+                        <label for="feedback-type">Feedback Type:</label>
+                        <select id="feedback-type" required>
+                            <option value="">Select feedback type</option>
+                            <option value="suggestion">💡 Suggestion</option>
+                            <option value="issue">🐛 Issue/Bug Report</option>
+                            <option value="improvement">⚡ Improvement Idea</option>
+                            <option value="feature">✨ Feature Request</option>
+                            <option value="general">💭 General Feedback</option>
+                        </select>
+
+                        <label for="feedback-subject">Subject:</label>
+                        <input type="text" id="feedback-subject" placeholder="Brief summary of your feedback" required />
+
+                        <label for="feedback-message">Detailed Feedback:</label>
+                        <textarea id="feedback-message" rows="6" placeholder="Please provide detailed information about your feedback..." required></textarea>
+
+                        <button type="submit">Submit Feedback</button>
+                    </form>
+                </div>
+
+                <!-- Right: Info -->
+                <div class="contact-right">
+                    <h3>Why Your Feedback Matters</h3>
+                    <p>Your insights help us make ShareBite better for everyone. We carefully review every piece of feedback to improve our platform.</p>
+
+                    <div class="contact-info">
+                        <div class="info-item">
+                            <i class="fa-solid fa-lightbulb"></i>
+                            <div>
+                                <strong>Suggestions:</strong>
+                                <p>Share your ideas for new features or enhancements</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <i class="fa-solid fa-bug"></i>
+                            <div>
+                                <strong>Report Issues:</strong>
+                                <p>Let us know about any bugs or problems you encounter</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <i class="fa-solid fa-rocket"></i>
+                            <div>
+                                <strong>Improvements:</strong>
+                                <p>Tell us how we can make your experience even better</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="feedback-stats">
+                        <div class="stat-box">
+                            <i class="fas fa-comments"></i>
+                            <h4>500+</h4>
+                            <p>Feedback Received</p>
+                        </div>
+                        <div class="stat-box">
+                            <i class="fas fa-check-circle"></i>
+                            <h4>85%</h4>
+                            <p>Implemented</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-utensils"></i>
+                        <span>ShareBite</span>
+                    </div>
+                    <p>
+                        Making a difference, one meal at a time. Join us in the fight
+                        against food waste and hunger.
+                    </p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-x-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html#home">Home</a></li>
+                        <li><a href="index.html#features">How It Works</a></li>
+                        <li><a href="foodlisting.html">Food Listings</a></li>
+                        <li><a href="index.html#about">About Us</a></li>
+                        <li><a href="feedback.html">Feedback</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>For Donors</h4>
+                    <ul>
+                        <li><a href="foodlisting.html">List Food</a></li>
+                        <li><a href="donor-guidelines.html">Donor Guidelines</a></li>
+                        <li><a href="track-impact.html">Track Impact</a></li>
+                        <li><a href="support.html">Support</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>For Collectors</h4>
+                    <ul>
+                        <li><a href="#">Find Food</a></li>
+                        <li><a href="ngo-register.html">Register NGO</a></li>
+                        <li><a href="volunteer_food.html">Volunteer</a></li>
+                        <li><a href="feedback.html">Give Feedback</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <p class="footer-credit">Made with 💚 by Angela Bera</p>
+                <p>
+                    &copy; 2025 ShareBite. All rights reserved. <a href="License.html">License</a> 
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <div id="scrollTopWrapper">
+        <a href="map.html" class="scroll-link">
+            <i class="fas fa-map-marker-alt"></i> 
+        </a>
+        <button id="scrollToTopBtn" title="Go to top">
+            <i class="fas fa-arrow-up"></i>
+        </button>
+    </div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/feedback.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
+

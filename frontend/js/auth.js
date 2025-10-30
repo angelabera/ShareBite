@@ -102,10 +102,15 @@ class ShareBiteAuth {
             return;
         }
 
-        // Find and remove existing login buttons
+        // Find and remove existing login buttons and dropdown
         const loginButtons = userActionsContainer.querySelectorAll('.login-btn');
         console.log('Removing', loginButtons.length, 'login buttons');
         loginButtons.forEach(btn => btn.remove());
+        
+        const loginDropdown = userActionsContainer.querySelector('.login-dropdown-container');
+        if (loginDropdown) {
+            loginDropdown.remove();
+        }
 
         // Check if profile section already exists
         let profileSection = userActionsContainer.querySelector('.user-profile');
@@ -191,24 +196,29 @@ class ShareBiteAuth {
             profileSection.remove();
         }
 
-        // Check if login buttons already exist
-        const existingLoginBtns = userActionsContainer.querySelectorAll('.login-btn');
-        if (existingLoginBtns.length === 0) {
-            // Re-add login buttons
+        // Check if login dropdown already exists
+        const existingLoginDropdown = userActionsContainer.querySelector('.login-dropdown-container');
+        if (!existingLoginDropdown) {
+            // Re-add login dropdown
             const roleSwitch = userActionsContainer.querySelector('.role-switch');
-            const loginButtonsHTML = `
-                <button class="login-btn" onclick="window.location.href='login.html'">Login as User</button>
-                <button class="login-btn" onclick="window.location.href='login_ngo.html'">Login as NGO</button>
+            const loginDropdownHTML = `
+                <div class="login-dropdown-container">
+                    <select class="login-dropdown" id="loginDropdown" onchange="handleLoginSelection(this.value)">
+                        <option value="" selected disabled>Login</option>
+                        <option value="login.html">User</option>
+                        <option value="login_ngo.html">NGO</option>
+                    </select>
+                </div>
             `;
             
             if (roleSwitch) {
-                roleSwitch.insertAdjacentHTML('afterend', loginButtonsHTML);
+                roleSwitch.insertAdjacentHTML('afterend', loginDropdownHTML);
             } else {
                 const hamburger = userActionsContainer.querySelector('.hamburger');
                 if (hamburger) {
-                    hamburger.insertAdjacentHTML('beforebegin', loginButtonsHTML);
+                    hamburger.insertAdjacentHTML('beforebegin', loginDropdownHTML);
                 } else {
-                    userActionsContainer.insertAdjacentHTML('beforeend', loginButtonsHTML);
+                    userActionsContainer.insertAdjacentHTML('beforeend', loginDropdownHTML);
                 }
             }
         }

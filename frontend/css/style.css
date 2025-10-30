@@ -85,7 +85,7 @@ body {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 2rem;
+            padding: 1rem 2rem 1rem 0;
         }
 
         .nav-logo-link {
@@ -107,6 +107,7 @@ body {
             list-style: none;
             gap: 2rem;
             align-items: center;
+            margin-left: 3rem;
         }
 
         .nav-link {
@@ -461,6 +462,17 @@ body.dark .profile-menu-item:hover {
     color: #ffffff !important;
 }
 
+/* Dark Mode - Login Dropdown */
+body.dark .login-dropdown {
+    background: var(--primary-gradient);
+    color: #ffffff;
+}
+
+body.dark .login-dropdown option {
+    background: #2e2e2e;
+    color: #ffffff;
+}
+
 .hamburger {
     display: none;
     flex-direction: column;
@@ -560,6 +572,65 @@ body.dark .profile-menu-item:hover {
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
         }
         
+        /* Login Dropdown Styles */
+        .login-dropdown-container {
+            position: relative;
+            display: inline-block;
+            margin-left: 17rem;
+        }
+
+        .login-dropdown {
+            position: relative;
+            overflow: hidden;
+            padding: 10px 26px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 40px;
+            letter-spacing: 0.5px;
+            background: var(--primary-gradient);
+            background-size: 200%;
+            transition: background-position 0.4s ease, box-shadow 0.4s ease, transform 0.3s ease;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            padding-right: 40px;
+            min-width: 150px;
+            text-align: left;
+        }
+
+        .login-dropdown:hover {
+            background-position: right;
+            box-shadow: 0 0 12px rgba(147, 51, 234, 0.8), 0 0 25px rgba(59, 130, 246, 0.6);
+            transform: scale(1.07);
+        }
+
+        .login-dropdown:focus {
+            outline: 2px solid rgba(147, 51, 234, 0.5);
+            outline-offset: 2px;
+        }
+
+        .login-dropdown option {
+            background: #1a1a2e;
+            color: #fff;
+            padding: 10px;
+        }
+
+        /* Custom dropdown arrow */
+        .login-dropdown-container::after {
+            content: '\f078';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #fff;
+            pointer-events: none;
+            font-size: 0.8rem;
+        }
 
         .hamburger {
             display: none;
@@ -635,11 +706,21 @@ body.dark .profile-menu-item:hover {
                 padding: 0.6rem 1rem;
                 font-size: 0.9rem;
             }
+
+            .login-dropdown {
+                padding: 0.6rem 1.5rem 0.6rem 1rem;
+                font-size: 0.9rem;
+                min-width: 130px;
+            }
+
+            .login-dropdown-container::after {
+                right: 10px;
+            }
         }
 
         @media screen and (max-width: 768px) {
             .nav-container {
-                padding: 1rem;
+                padding: 1rem 1rem 1rem 0;
                 flex-wrap: wrap;
             }
 
@@ -650,7 +731,9 @@ body.dark .profile-menu-item:hover {
 
             .nav-logo {
                 order: 1;
-                flex: 1;
+                flex: 0 0 auto;
+                margin-left: -0.5rem;
+                padding-left: 0;
             }
 
             .user-actions {
@@ -660,6 +743,16 @@ body.dark .profile-menu-item:hover {
 
             .user-actions .login-btn:last-child {
                 display: none;
+            }
+
+            .login-dropdown-container {
+                display: inline-block;
+            }
+
+            .login-dropdown {
+                padding: 0.5rem 1.5rem 0.5rem 0.8rem;
+                font-size: 0.85rem;
+                min-width: 120px;
             }
 
             .role-switch span {
@@ -738,6 +831,20 @@ body.dark .profile-menu-item:hover {
                 display: none;
             }
 
+            .login-dropdown-container {
+                display: inline-block;
+            }
+
+            .login-dropdown {
+                padding: 0.45rem 1.3rem 0.45rem 0.7rem;
+                font-size: 0.8rem;
+                min-width: 100px;
+            }
+
+            .login-dropdown-container::after {
+                right: 8px;
+            }
+
             .notification-panel {
                 right: -80px;
                 width: 260px;
@@ -771,7 +878,7 @@ body.dark .profile-menu-item:hover {
 .nav-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 1rem 2rem;
+    padding: 1rem 2rem 1rem 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -784,7 +891,9 @@ body.dark .profile-menu-item:hover {
     font-weight: 700;
     color: var(--primary-color);
     gap: 0.5rem;
-    margin-right: 1rem;
+    margin-right: auto;
+    margin-left: -10rem;
+    padding-left: 0;
 }
 
 .nav-logo-link{
@@ -805,7 +914,7 @@ body.dark .profile-menu-item:hover {
     display: flex;
     list-style: none;
     gap: 2rem;
-    margin-left: 0;
+    margin-left: 20rem;
 }
 
 .nav-link {
@@ -839,6 +948,21 @@ body.dark .profile-menu-item:hover {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    flex: 1;
+    justify-content: flex-end;
+}
+
+/* Place theme toggle on the complete right */
+.user-actions .theme-toggle {
+    order: 999;
+}
+
+/* Ensure all other user-actions elements come before theme toggle */
+.user-actions .notification-bell,
+.user-actions .role-switch,
+.user-actions .login-btn,
+.user-actions .profile-btn {
+    order: 1;
 }
 
 .role-switch {
@@ -1091,6 +1215,17 @@ body.dark .profile-menu-item {
 body.dark .profile-menu-item:hover {
     background-color: #555555 !important;
     color: #ffffff !important;
+}
+
+/* Dark Mode - Login Dropdown */
+body.dark .login-dropdown {
+    background: var(--primary-gradient);
+    color: #ffffff;
+}
+
+body.dark .login-dropdown option {
+    background: #2e2e2e;
+    color: #ffffff;
 }
 
 .hamburger {
@@ -2674,7 +2809,12 @@ button#prevStep:hover, button#cancelForm:hover {
     }
     
     .nav-container {
-        padding: 1rem;
+        padding: 1rem 1rem 1rem 0;
+    }
+    
+    .nav-logo {
+        margin-left: -0.5rem;
+        padding-left: 0;
     }
     
     .hero {
@@ -2799,8 +2939,98 @@ button#prevStep:hover, button#cancelForm:hover {
 
 :root.dark .footer-bottom { border-top: 1px solid #222; }
 
+/* Dark mode for Feedback/Contact Section */
+:root.dark .contact {
+    background: #0d0d0d;
+}
+
+:root.dark .main-title {
+    color: #FAFAFA;
+}
+
+:root.dark .contact-wrapper {
+    background: #1E1E1E;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+:root.dark .contact-left,
+:root.dark .contact-right {
+    background: #2E2E2E;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.7);
+}
+
+:root.dark .contact-title {
+    color: #FAFAFA;
+}
+
+:root.dark .contact-subtitle {
+    color: var(--medium-gray);
+}
+
+:root.dark .contact-right h3 {
+    color: #FAFAFA;
+}
+
+:root.dark .contact-right p {
+    color: var(--medium-gray);
+}
+
+:root.dark .contact form label {
+    color: #E0E0E0;
+}
+
+:root.dark .contact form input,
+:root.dark .contact form textarea,
+:root.dark .contact form select {
+    background: #1c1c1c;
+    color: #FAFAFA;
+    border-color: #444;
+}
+
+:root.dark .contact form input::placeholder,
+:root.dark .contact form textarea::placeholder {
+    color: #666;
+}
+
+:root.dark .contact form input:focus,
+:root.dark .contact form textarea:focus,
+:root.dark .contact form select:focus {
+    border-color: var(--primary-color);
+    background: #252525;
+    box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2);
+}
+
+:root.dark .info-item i {
+    color: var(--primary-color);
+}
+
+:root.dark .info-item strong {
+    color: #FAFAFA;
+}
+
+:root.dark .info-item p {
+    color: var(--medium-gray);
+}
+
+:root.dark .stat-box {
+    background: #1c1c1c;
+    border: 1px solid #333;
+}
+
+:root.dark .stat-box i {
+    color: var(--primary-color);
+}
+
+:root.dark .stat-box h4 {
+    color: #FAFAFA;
+}
+
+:root.dark .stat-box p {
+    color: var(--medium-gray);
+}
+
 /* Transition for theme switch */
-html, body, .feature-card, .food-card, .navbar, .modal-content, .footer, .stats-circle, .search-box input {
+html, body, .feature-card, .food-card, .navbar, .modal-content, .footer, .stats-circle, .search-box input, .contact, .contact-wrapper, .contact-left, .contact-right, .contact form input, .contact form textarea, .contact form select, .stat-box {
     transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
 }
 
@@ -3499,14 +3729,9 @@ html, body, .feature-card, .food-card, .navbar, .modal-content, .footer, .stats-
     50% { transform: translateY(-5px); }
 }
 
-
-
-
-/* ..................................................................................... */
-
 /* --- Contact Section --- */
 .contact {
-  padding: 5rem 2rem;
+  padding: 2rem 2rem 5rem 2rem;
   background: var(--light-gray);
   display: flex;
   flex-direction: column;
@@ -3523,7 +3748,18 @@ html, body, .feature-card, .food-card, .navbar, .modal-content, .footer, .stats-
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
+  margin-top: 7rem;
   margin-bottom: 3rem;
+}
+
+/* Feedback page specific title positioning */
+#feedback-section {
+  padding-top: 0 !important;
+  margin-top: -2rem !important;
+}
+
+#feedback-section .main-title {
+  margin-top: 0 !important;
 }
 
 /* Outer Wrapper */
@@ -3634,18 +3870,18 @@ html, body, .feature-card, .food-card, .navbar, .modal-content, .footer, .stats-
 .contact-right h3 {
   color: var(--black);
   font-size: 1.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .contact-right p {
   color: var(--medium-gray);
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.8rem;
 }
 
 .contact-info {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 0.8rem;
 }
 
 .info-item {
@@ -3667,7 +3903,7 @@ html, body, .feature-card, .food-card, .navbar, .modal-content, .footer, .stats-
 }
 
 .info-item p {
-  margin: 0.2rem 0 0;
+  margin: 0;
   color: var(--medium-gray);
 }
 
@@ -3693,6 +3929,163 @@ html, body, .feature-card, .food-card, .navbar, .modal-content, .footer, .stats-
 
 .social-links a:hover {
   transform: translateY(-3px);
+}
+
+/* Feedback Form Specific Styles */
+.contact form select {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border-radius: 0.6rem;
+  border: 1.5px solid var(--medium-gray);
+  font-size: 1rem;
+  color: var(--black);
+  background: var(--light-gray);
+  transition: 0.3s ease;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+}
+
+.contact form select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 4px rgba(0, 128, 255, 0.15);
+  outline: none;
+}
+
+.contact form select option {
+  padding: 0.5rem;
+}
+
+/* Feedback Stats */
+.feedback-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.stat-box {
+  background: var(--light-gray);
+  padding: 1.5rem;
+  border-radius: 0.8rem;
+  text-align: center;
+  transition: 0.3s ease;
+  border: 1.5px solid transparent;
+}
+
+.stat-box:hover {
+  border-color: var(--primary-color);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 128, 255, 0.2);
+}
+
+.stat-box i {
+  font-size: 2rem;
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem;
+}
+
+.stat-box h4 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--black);
+  margin: 0.5rem 0;
+}
+
+.stat-box p {
+  color: var(--medium-gray);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* Dark mode support for feedback/contact elements */
+body.dark-mode .contact {
+  background: var(--bg-dark);
+}
+
+body.dark-mode .contact-wrapper {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .contact-left,
+body.dark-mode .contact-right {
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .contact-title,
+body.dark-mode .main-title {
+  color: var(--text-dark);
+  -webkit-text-fill-color: transparent;
+}
+
+body.dark-mode .contact-subtitle,
+body.dark-mode .contact-right p {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+body.dark-mode .contact-right h3 {
+  color: var(--text-dark);
+}
+
+body.dark-mode .contact form label {
+  color: var(--text-dark);
+}
+
+body.dark-mode .contact form input,
+body.dark-mode .contact form textarea,
+body.dark-mode .contact form select {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-dark);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+body.dark-mode .contact form input:focus,
+body.dark-mode .contact form textarea:focus,
+body.dark-mode .contact form select:focus {
+  border-color: var(--primary-color);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+body.dark-mode .contact form input::placeholder,
+body.dark-mode .contact form textarea::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+body.dark-mode .info-item strong {
+  color: var(--text-dark);
+}
+
+body.dark-mode .info-item p {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+body.dark-mode .stat-box {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .stat-box:hover {
+  border-color: var(--primary-color);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+body.dark-mode .stat-box h4 {
+  color: var(--text-dark);
+}
+
+body.dark-mode .stat-box p {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Responsive adjustments for feedback */
+@media screen and (max-width: 768px) {
+  .feedback-stats {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Section Divider */

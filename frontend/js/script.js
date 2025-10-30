@@ -1,25 +1,15 @@
 // ShareBite JavaScript - Interactive Food Waste Reduction Platform
 
-  
- 
+// Handle Login Dropdown Selection
+function handleLoginSelection(value) {
+    if (value) {
+        window.location.href = value;
+    }
+}
 
-        // Theme Toggle
-        const themeToggle = document.getElementById('themeToggle');
-        const body = document.body;
-        const themeIcon = themeToggle.querySelector('i');
-
-        themeToggle.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
-            if (body.classList.contains('dark-mode')) {
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
-                showToast('Dark mode enabled');
-            } else {
-                themeIcon.classList.remove('fa-sun');
-                themeIcon.classList.add('fa-moon');
-                showToast('Light mode enabled');
-            }
-        });
+        // Theme Toggle - Handled by theme.js
+        // This code is kept for compatibility but theme.js handles the actual toggle
+        // Removed duplicate theme toggle to prevent conflicts with theme.js
 
         // Notification Toggle
         const notificationBell = document.getElementById('notificationBell');
@@ -92,7 +82,7 @@ class ShareBite {
         this.notifications = this.loadNotifications();
         
         this.init();
-        this.initTheme(); // add theme initialization after base init
+        // this.initTheme(); // Disabled - theme.js now handles all theme functionality
     }
 
     init() {
@@ -120,34 +110,20 @@ class ShareBite {
     }
 
     initTheme() {
-        const stored = localStorage.getItem('sharebite-theme');
-        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const theme = stored || (prefersDark ? 'dark' : 'light');
-        this.applyTheme(theme);
-        this.setupThemeToggle();
+        // Theme handling is now managed by theme.js to prevent conflicts
+        // Removed duplicate theme initialization
+        console.log('ShareBite: Theme initialization skipped (handled by theme.js)');
     }
 
     setupThemeToggle() {
-        const btn = document.getElementById('themeToggle');
-        if (!btn) return;
-        btn.addEventListener('click', () => {
-            const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
-            this.applyTheme(newTheme);
-            localStorage.setItem('sharebite-theme', newTheme);
-        });
+        // Theme toggle is now managed by theme.js to prevent conflicts
+        // Removed duplicate theme toggle setup
     }
 
     applyTheme(theme) {
-        const root = document.documentElement;
-        if (theme === 'dark') {
-            root.classList.add('dark');
-            const icon = document.querySelector('#themeToggle i');
-            if (icon) { icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); }
-        } else {
-            root.classList.remove('dark');
-            const icon = document.querySelector('#themeToggle i');
-            if (icon) { icon.classList.remove('fa-sun'); icon.classList.add('fa-moon'); }
-        }
+        // Theme application is now managed by theme.js to prevent conflicts
+        // Removed duplicate theme application
+        console.log('ShareBite.applyTheme: Disabled (theme.js handles this now)');
     }
 
     setupEventListeners() {

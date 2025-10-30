@@ -943,8 +943,8 @@ handleFileSelect(file) {
             }
         } else {
             return `
-                <button class="claim-btn" style="opacity: 0.5; cursor: not-allowed;" disabled>
-                    <i class="fas fa-hand-paper"></i> Login to Claim
+                <button class="claim-btn login-to-claim-btn" onclick="window.location.href='login.html'">
+                    <i class="fas fa-sign-in-alt"></i> Login to Claim
                 </button>
             `;
         }

@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <title>ShareBite - Donor Guidelines</title>
     <!-- Fonts and Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -153,6 +156,75 @@
         
         .donor-btn:hover, .login-btn:hover {
             background-color: var(--primary-green-dark);
+        }
+
+        /* Login Dropdown Styles */
+        .login-dropdown-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .login-dropdown {
+            position: relative;
+            overflow: hidden;
+            padding: 10px 40px 10px 26px;
+            font-size: 0.95rem;
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 40px;
+            letter-spacing: 0.5px;
+            background: linear-gradient(90deg, #3b82f6, #9333ea);
+            background-size: 200%;
+            transition: background-position 0.4s ease, box-shadow 0.4s ease, transform 0.3s ease;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            min-width: 130px;
+            text-align: left;
+        }
+
+        .login-dropdown:hover {
+            background-position: right;
+            box-shadow: 0 0 12px rgba(147, 51, 234, 0.8), 0 0 25px rgba(59, 130, 246, 0.6);
+            transform: scale(1.07);
+        }
+
+        .login-dropdown:focus {
+            outline: 2px solid rgba(147, 51, 234, 0.5);
+            outline-offset: 2px;
+        }
+
+        .login-dropdown option {
+            background: #1a1a2e;
+            color: #fff;
+            padding: 10px;
+        }
+
+        /* Custom dropdown arrow */
+        .login-dropdown-container::after {
+            content: '\f078';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #fff;
+            pointer-events: none;
+            font-size: 0.75rem;
+        }
+
+        /* Dark Mode - Login Dropdown */
+        body.dark .login-dropdown {
+            background: linear-gradient(90deg, #2563eb, #7c3aed);
+            color: #ffffff;
+        }
+
+        body.dark .login-dropdown option {
+            background: #2e2e2e;
+            color: #ffffff;
         }
 
         .hamburger { display: none; }
@@ -450,12 +522,13 @@
                 </a>
             </div>
             <ul class="nav-menu">
-                <li><a href="#" class="nav-link">Home</a></li>
-                <li><a href="#" class="nav-link">Features</a></li>
-                <li><a href="#" class="nav-link">Listings</a></li>
-                <li><a href="#" class="nav-link">About</a></li>
-                <li><a href="#" class="nav-link">Contact</a></li>
-                <li><a href="#" class="nav-link active">Guidelines</a></li>
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="index.html#features" class="nav-link">Features</a></li>
+                <li><a href="foodlisting.html" class="nav-link">Listings</a></li>
+                <li><a href="index.html#about" class="nav-link">About</a></li>
+                <li><a href="index.html#contact-section" class="nav-link">Contact</a></li>
+                <li><a href="feedback.html" class="nav-link">Feedback</a></li>
+                <li><a href="donor-guidelines.html" class="nav-link active">Guidelines</a></li>
             </ul>
             <div class="user-actions">
                 <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
@@ -464,10 +537,13 @@
                 <button class="donor-btn">
                     Donor
                 </button>
-                <button class="login-btn">
-                    <span>Login</span>
-                    <i class="fas fa-arrow-right"></i>
-                </button>
+                <div class="login-dropdown-container">
+                    <select class="login-dropdown" id="loginDropdown" onchange="handleLoginSelection(this.value)">
+                        <option value="" selected disabled>Login</option>
+                        <option value="login.html">User</option>
+                        <option value="login_ngo.html">NGO</option>
+                    </select>
+                </div>
             </div>
             <div class="hamburger">
                 <span></span>
@@ -544,10 +620,11 @@
                 <div class="footer-section">
                     <h4>Quick Links</h4>
                     <ul>
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">How It Works</a></li>
-                        <li><a href="#">Food Listings</a></li>
-                        <li><a href="#">About Us</a></li>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html#features">How It Works</a></li>
+                        <li><a href="foodlisting.html">Food Listings</a></li>
+                        <li><a href="index.html#about">About Us</a></li>
+                        <li><a href="feedback.html">Feedback</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -563,9 +640,9 @@
                     <h4>For Collectors</h4>
                     <ul>
                         <li><a href="#">Find Food</a></li>
-                        <li><a href="#">Register NGO</a></li>
-                        <li><a href="#">Volunteer</a></li>
-                        <li><a href="#">Resources</a></li>
+                        <li><a href="ngo-register.html">Register NGO</a></li>
+                        <li><a href="volunteer_food.html">Volunteer</a></li>
+                        <li><a href="feedback.html">Give Feedback</a></li>
                     </ul>
                 </div>
             </div>
@@ -619,6 +696,13 @@
             scrollToTopBtn.addEventListener('click', () => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
+
+            // Handle Login Dropdown Selection
+            window.handleLoginSelection = function(value) {
+                if (value) {
+                    window.location.href = value;
+                }
+            };
         });
     </script>
 </body>
