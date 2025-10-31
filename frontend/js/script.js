@@ -1295,7 +1295,11 @@ createFoodCard(listing) {
         }
         
         // Show confirmation dialog
-        const confirmed = confirm(`Claim "${listing.foodType}" from ${listing.donor}?\n\nPickup: ${listing.location}\nTime: ${this.formatTime(listing.pickupTime)}\nContact: ${listing.contact}`);
+        const confirmed = confirm(`Claim "${listing.foodType}" from ${listing.donor}?
+
+Pickup: ${listing.location}
+Time: ${this.formatTime(listing.pickupTime)}
+Contact: ${listing.contact}`);
         
         if (confirmed) {
             // Add to claimed items
@@ -1768,23 +1772,7 @@ window.clearShareBiteCaches = async function() {
 };
 
 // ===== Scroll to Top Button =====
-const scrollToTopBtn = document.getElementById("scrollToTopBtn");
-
-window.addEventListener("scroll", () => {
-  const scrollPosition = document.documentElement.scrollTop || document.body.scrollTop;
-  if (scrollPosition > 200) {
-    scrollToTopBtn.classList.add("show");
-  } else {
-    scrollToTopBtn.classList.remove("show");
-  }
-});
-
-scrollToTopBtn.addEventListener("click", () => {
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth",
-  });
-});
+// Using reusable ScrollToTop component from scrollToTop.js
 
 // ===== Gallery Animation and Interactivity =====
 class GalleryManager {

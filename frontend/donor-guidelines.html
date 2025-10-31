@@ -576,9 +576,6 @@
         </div>
     </footer>
 
-    <!-- Scroll to Top Button -->
-    <button id="scrollToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
-
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Theme Toggle
@@ -606,21 +603,11 @@
                 localStorage.setItem('theme', newTheme);
                 applyTheme(newTheme);
             });
-
-            // Scroll to Top Button
-            const scrollToTopBtn = document.getElementById('scrollToTopBtn');
-            window.onscroll = () => {
-                if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-                    scrollToTopBtn.style.display = "block";
-                } else {
-                    scrollToTopBtn.style.display = "none";
-                }
-            };
-            scrollToTopBtn.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
         });
     </script>
+    
+    <!-- Scroll To Top -->
+    <script src="js/scrollToTop.js"></script>
 </body>
 </html>
 
