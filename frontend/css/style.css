@@ -4982,24 +4982,54 @@ body.dark-mode .notification-bell:hover {
 #scrollToTopBtn {
   width: 45px;
   height: 45px;
-  background-color: #4CAF50;
+  background: linear-gradient(135deg, #4CAF50, #2E7D32);
   color: #fff;
   border: none;
   border-radius: 50%;
   cursor: pointer;
   font-size: 18px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
   outline: none;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(20px);
-  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+  transform: translateY(20px) scale(0.9);
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+#scrollToTopBtn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#scrollToTopBtn:hover {
+  transform: translateY(0) scale(1.1);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+}
+
+#scrollToTopBtn:hover::before {
+  opacity: 1;
 }
 
 #scrollToTopBtn.show {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
+}
+
+#scrollToTopBtn:active {
+  transform: translateY(0) scale(0.95);
 }
 
 
