@@ -26,6 +26,218 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Food Safety Styles -->
+    <style>
+      /* ==========================================
+         FOOD SAFETY SECTION STYLING
+         ========================================== */
+
+      .safety-banner {
+        background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+        color: white;
+        padding: 16px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+      }
+
+      .safety-banner i {
+        font-size: 24px;
+        flex-shrink: 0;
+      }
+
+      .safety-banner strong {
+        display: block;
+        font-size: 16px;
+        margin-bottom: 4px;
+      }
+
+      .safety-banner p {
+        font-size: 13px;
+        margin: 0;
+        opacity: 0.95;
+      }
+
+      .food-safety-section {
+        background: #f8f9fc;
+        border: 2px solid #e3f2fd;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 20px 0;
+      }
+
+      .safety-section-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1976d2;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .safety-section-title i {
+        color: #ff9800;
+      }
+
+      .field-hint {
+        display: block;
+        font-size: 12px;
+        color: #666;
+        margin-top: 4px;
+        font-style: italic;
+      }
+
+      .form-group label i {
+        margin-right: 6px;
+        color: #1976d2;
+        font-size: 14px;
+      }
+
+      /* Allergen Checkboxes Grid */
+      .allergen-checkboxes {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-top: 12px;
+      }
+
+      .allergen-checkbox {
+        display: flex;
+        align-items: center;
+        padding: 12px;
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .allergen-checkbox:hover {
+        border-color: #4CAF50;
+        background: #f1f8f4;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .allergen-checkbox input[type="checkbox"] {
+        margin-right: 10px;
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: #4CAF50;
+      }
+
+      .allergen-checkbox input[type="checkbox"]:checked + .allergen-label {
+        color: #4CAF50;
+        font-weight: 600;
+      }
+
+      .allergen-label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: #333;
+        transition: all 0.3s ease;
+      }
+
+      .allergen-label i {
+        font-size: 16px;
+        color: #666;
+      }
+
+      /* Date and Time Inputs Enhancement */
+      input[type="date"],
+      input[type="time"] {
+        position: relative;
+        padding-right: 40px;
+      }
+
+      input[type="date"]::-webkit-calendar-picker-indicator,
+      input[type="time"]::-webkit-calendar-picker-indicator {
+        cursor: pointer;
+        padding: 8px;
+        opacity: 0.6;
+        transition: opacity 0.3s;
+      }
+
+      input[type="date"]::-webkit-calendar-picker-indicator:hover,
+      input[type="time"]::-webkit-calendar-picker-indicator:hover {
+        opacity: 1;
+      }
+
+      /* Validation States */
+      .form-group input:invalid:not(:placeholder-shown),
+      .form-group select:invalid:not(:placeholder-shown) {
+        border-color: #f44336;
+        background-color: #ffebee;
+      }
+
+      .form-group input:valid,
+      .form-group select:valid {
+        border-color: #4CAF50;
+      }
+
+      /* Responsive Design for Allergen Grid */
+      @media (max-width: 768px) {
+        .allergen-checkboxes {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 10px;
+        }
+
+        .safety-banner {
+          padding: 12px;
+        }
+
+        .safety-banner i {
+          font-size: 20px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .allergen-checkboxes {
+          grid-template-columns: 1fr;
+        }
+
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Dark Mode Support */
+      [data-theme="dark"] .food-safety-section {
+        background: #1e293b;
+        border-color: #334155;
+      }
+
+      [data-theme="dark"] .safety-section-title {
+        color: #60a5fa;
+      }
+
+      [data-theme="dark"] .allergen-checkbox {
+        background: #0f172a;
+        border-color: #334155;
+        color: #e2e8f0;
+      }
+
+      [data-theme="dark"] .allergen-checkbox:hover {
+        border-color: #4CAF50;
+        background: #1e3a2e;
+      }
+
+      [data-theme="dark"] .field-hint {
+        color: #94a3b8;
+      }
+
+      [data-theme="dark"] .allergen-label {
+        color: #e2e8f0;
+      }
+    </style>
   </head>
   <body>
      <!-- Navigation -->
@@ -88,9 +300,6 @@
     </nav>
     
     <div id="toast" class="toast"></div>
-
-
-
 
     <!----hero section---->
     <section id="home" class="hero">
@@ -293,6 +502,16 @@
           <!-- Step 1: Food Details -->
           <div class="form-step active" data-step="1">
             <h4 class="step-title">Tell us about the food</h4>
+            
+            <!-- Food Safety Warning Banner -->
+            <div class="safety-banner">
+              <i class="fas fa-shield-alt"></i>
+              <div>
+                <strong>Food Safety Required</strong>
+                <p>Please provide all safety information to protect recipients</p>
+              </div>
+            </div>
+
             <div class="form-group">
               <label for="foodType">Food Type *</label>
               <input
@@ -302,6 +521,7 @@
                 placeholder="e.g., Pizza, Sandwiches, Fruits"
               />
             </div>
+            
             <div class="form-row">
               <div class="form-group">
                 <label for="quantity">Quantity *</label>
@@ -323,6 +543,7 @@
                 </select>
               </div>
             </div>
+
             <div class="form-group">
               <label for="description">Description</label>
               <textarea
@@ -331,13 +552,151 @@
                 placeholder="Additional details about the food..."
               ></textarea>
             </div>
+
+            <!-- FOOD SAFETY SECTION -->
+            <div class="food-safety-section">
+              <h5 class="safety-section-title">
+                <i class="fas fa-exclamation-triangle"></i>
+                Food Safety Information
+              </h5>
+
+              <!-- Preparation Date & Time -->
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="preparedDate">
+                    <i class="fas fa-calendar"></i> Preparation Date *
+                  </label>
+                  <input
+                    type="date"
+                    id="preparedDate"
+                    required
+                  />
+                  <small class="field-hint">When was this food prepared?</small>
+                </div>
+                <div class="form-group">
+                  <label for="preparedTime">
+                    <i class="fas fa-clock"></i> Preparation Time *
+                  </label>
+                  <input
+                    type="time"
+                    id="preparedTime"
+                    required
+                  />
+                </div>
+              </div>
+
+              <!-- Expiry Date & Time -->
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="expiryDate">
+                    <i class="fas fa-hourglass-end"></i> Expiry Date *
+                  </label>
+                  <input
+                    type="date"
+                    id="expiryDate"
+                    required
+                  />
+                  <small class="field-hint">When will this food expire?</small>
+                </div>
+                <div class="form-group">
+                  <label for="expiryTime">
+                    <i class="fas fa-clock"></i> Expiry Time *
+                  </label>
+                  <input
+                    type="time"
+                    id="expiryTime"
+                    required
+                  />
+                </div>
+              </div>
+
+              <!-- Storage Condition -->
+              <div class="form-group">
+                <label for="storageCondition">
+                  <i class="fas fa-temperature-low"></i> Current Storage Condition *
+                </label>
+                <select id="storageCondition" required>
+                  <option value="">Select storage condition</option>
+                  <option value="refrigerated">Refrigerated (0-4°C)</option>
+                  <option value="frozen">Frozen (-18°C or below)</option>
+                  <option value="room_temp">Room Temperature</option>
+                  <option value="hot_holding">Hot Holding (above 60°C)</option>
+                </select>
+                <small class="field-hint">How is the food currently stored?</small>
+              </div>
+
+              <!-- Allergen Information -->
+              <div class="form-group">
+                <label>
+                  <i class="fas fa-allergies"></i> Contains Allergens *
+                </label>
+                <small class="field-hint">Select all that apply. If none, leave unchecked.</small>
+                <div class="allergen-checkboxes">
+                  <label class="allergen-checkbox">
+                    <input type="checkbox" name="allergens" value="milk">
+                    <span class="allergen-label">
+                      <i class="fas fa-cheese"></i> Milk/Dairy
+                    </span>
+                  </label>
+                  <label class="allergen-checkbox">
+                    <input type="checkbox" name="allergens" value="eggs">
+                    <span class="allergen-label">
+                      <i class="fas fa-egg"></i> Eggs
+                    </span>
+                  </label>
+                  <label class="allergen-checkbox">
+                    <input type="checkbox" name="allergens" value="peanuts">
+                    <span class="allergen-label">
+                      <i class="fas fa-seedling"></i> Peanuts
+                    </span>
+                  </label>
+                  <label class="allergen-checkbox">
+                    <input type="checkbox" name="allergens" value="tree_nuts">
+                    <span class="allergen-label">
+                      <i class="fas fa-tree"></i> Tree Nuts
+                    </span>
+                  </label>
+                  <label class="allergen-checkbox">
+                    <input type="checkbox" name="allergens" value="soy">
+                    <span class="allergen-label">
+                      <i class="fas fa-leaf"></i> Soy
+                    </span>
+                  </label>
+                  <label class="allergen-checkbox">
+                    <input type="checkbox" name="allergens" value="wheat">
+                    <span class="allergen-label">
+                      <i class="fas fa-bread-slice"></i> Wheat/Gluten
+                    </span>
+                  </label>
+                  <label class="allergen-checkbox">
+                    <input type="checkbox" name="allergens" value="fish">
+                    <span class="allergen-label">
+                      <i class="fas fa-fish"></i> Fish
+                    </span>
+                  </label>
+                  <label class="allergen-checkbox">
+                    <input type="checkbox" name="allergens" value="shellfish">
+                    <span class="allergen-label">
+                      <i class="fas fa-shrimp"></i> Shellfish
+                    </span>
+                  </label>
+                  <label class="allergen-checkbox">
+                    <input type="checkbox" name="allergens" value="sesame">
+                    <span class="allergen-label">
+                      <i class="fas fa-cookie"></i> Sesame
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
             <div class="form-group">
               <label>Dietary Information (optional)</label>
               <div class="checkbox-group">
-                  <div><input type="checkbox" id="tag-vegetarian" name="dietary" value="vegetarian"><label for="tag-vegetarian">Vegetarian</label></div>
-                  <div><input type="checkbox" id="tag-vegan" name="dietary" value="vegan"><label for="tag-vegan">Vegan</label></div>
-                  <div><input type="checkbox" id="tag-gluten-free" name="dietary" value="gluten-free"><label for="tag-gluten-free">Gluten-Free</label></div>
-                  <div><input type="checkbox" id="tag-nut-free" name="dietary" value="nut-free"><label for="tag-nut-free">Nut-Free</label></div>
+                <div><input type="checkbox" id="tag-vegetarian" name="dietary" value="vegetarian"><label for="tag-vegetarian">Vegetarian</label></div>
+                <div><input type="checkbox" id="tag-vegan" name="dietary" value="vegan"><label for="tag-vegan">Vegan</label></div>
+                <div><input type="checkbox" id="tag-gluten-free" name="dietary" value="gluten-free"><label for="tag-gluten-free">Gluten-Free</label></div>
+                <div><input type="checkbox" id="tag-nut-free" name="dietary" value="nut-free"><label for="tag-nut-free">Nut-Free</label></div>
               </div>
             </div>
           </div>
@@ -910,7 +1269,7 @@
 </section>
 
 <!-- Font Awesome -->
-<script src="https://kit.fontawesome.com/a2e0e9c5b2.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <!-- ✅ Alert Script (keep this) -->
 <script>
@@ -929,18 +1288,22 @@
     alert(`✅ Thank you, ${name}! Your message has been sent.`);
     form.reset();
   });
-  const username = JSON.parse(localStorage.getItem('user')).name;
-  const toast = document.getElementById('toast');
+  
+  const user = localStorage.getItem('user');
+  if (user) {
+    const username = JSON.parse(user).name;
+    const toast = document.getElementById('toast');
 
-  if (username) {
-    // Show toast message
-    toast.textContent = `Welcome, ${username}! 🎉`;
-    toast.classList.add('show');
+    if (username) {
+      // Show toast message
+      toast.textContent = `Welcome, ${username}! 🎉`;
+      toast.classList.add('show');
 
-    // Hide toast after 3 seconds
-    setTimeout(() => {
-      toast.classList.remove('show');
-    }, 3000);
+      // Hide toast after 3 seconds
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
   }
 </script>
 
@@ -1027,8 +1390,226 @@
   </button>
 </div>
 
+    <!-- Food Safety Validation Script -->
+    <script>
+      // Food Safety Validation and Setup
+      document.addEventListener('DOMContentLoaded', function() {
+        // Set max date for preparation (today) and min date for expiry
+        const today = new Date().toISOString().split('T')[0];
+        const prepDateInput = document.getElementById('preparedDate');
+        const expiryDateInput = document.getElementById('expiryDate');
+        
+        if (prepDateInput) {
+          prepDateInput.setAttribute('max', today);
+        }
+        
+        if (expiryDateInput) {
+          expiryDateInput.setAttribute('min', today);
+        }
 
+        // Real-time validation feedback
+        if (prepDateInput && expiryDateInput) {
+          prepDateInput.addEventListener('change', validateDateRange);
+          expiryDateInput.addEventListener('change', validateDateRange);
+          document.getElementById('preparedTime')?.addEventListener('change', validateDateRange);
+          document.getElementById('expiryTime')?.addEventListener('change', validateDateRange);
+        }
 
+        // Validate food safety on form step progression
+        const nextStepBtn = document.getElementById('nextStep');
+        if (nextStepBtn) {
+          nextStepBtn.addEventListener('click', function(e) {
+            const currentStep = document.querySelector('.form-step.active');
+            if (currentStep && currentStep.dataset.step === '1') {
+              if (!validateFoodSafety()) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                return false;
+              }
+            }
+          });
+        }
+
+        // Final validation on form submission
+        const listingForm = document.getElementById('listingForm');
+        if (listingForm) {
+          listingForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!validateFoodSafety()) {
+              Swal.fire({
+                icon: 'error',
+                title: 'Food Safety Information Required',
+                html: '<p>Please fill all required food safety fields to ensure recipient safety.</p><small>All fields marked with * are mandatory.</small>',
+                confirmButtonColor: '#4CAF50'
+              });
+              return false;
+            }
+
+            // If validation passes, collect data and proceed
+            const foodSafetyData = getFoodSafetyData();
+            console.log('Food Safety Data:', foodSafetyData);
+            
+            // Show success message
+            Swal.fire({
+              icon: 'success',
+              title: 'Listing Added Successfully!',
+              html: '<p>Your food listing has been created with all safety information.</p>',
+              confirmButtonColor: '#4CAF50'
+            }).then(() => {
+              // Reset form or redirect as needed
+              listingForm.reset();
+              document.getElementById('addListingModal').style.display = 'none';
+            });
+          });
+        }
+      });
+
+      function validateDateRange() {
+        const preparedDate = document.getElementById('preparedDate')?.value;
+        const preparedTime = document.getElementById('preparedTime')?.value;
+        const expiryDate = document.getElementById('expiryDate')?.value;
+        const expiryTime = document.getElementById('expiryTime')?.value;
+
+        if (preparedDate && preparedTime && expiryDate && expiryTime) {
+          const prepared = new Date(`${preparedDate}T${preparedTime}`);
+          const expiry = new Date(`${expiryDate}T${expiryTime}`);
+          const now = new Date();
+
+          // Visual feedback for valid dates
+          const expiryDateInput = document.getElementById('expiryDate');
+          const prepDateInput = document.getElementById('preparedDate');
+
+          if (prepared > now) {
+            prepDateInput.style.borderColor = '#f44336';
+          } else {
+            prepDateInput.style.borderColor = '#4CAF50';
+          }
+
+          if (expiry <= prepared || expiry <= now) {
+            expiryDateInput.style.borderColor = '#f44336';
+          } else {
+            expiryDateInput.style.borderColor = '#4CAF50';
+          }
+        }
+      }
+
+      function validateFoodSafety() {
+        const preparedDate = document.getElementById('preparedDate')?.value;
+        const preparedTime = document.getElementById('preparedTime')?.value;
+        const expiryDate = document.getElementById('expiryDate')?.value;
+        const expiryTime = document.getElementById('expiryTime')?.value;
+        const storageCondition = document.getElementById('storageCondition')?.value;
+
+        // Check all required fields
+        if (!preparedDate || !preparedTime || !expiryDate || !expiryTime || !storageCondition) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Missing Information',
+            text: 'Please fill all required food safety fields.',
+            confirmButtonColor: '#4CAF50'
+          });
+          return false;
+        }
+
+        // Validate dates
+        const prepared = new Date(`${preparedDate}T${preparedTime}`);
+        const expiry = new Date(`${expiryDate}T${expiryTime}`);
+        const now = new Date();
+
+        if (prepared > now) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Invalid Preparation Date',
+            text: 'Preparation date cannot be in the future.',
+            confirmButtonColor: '#4CAF50'
+          });
+          return false;
+        }
+
+        if (expiry <= prepared) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Invalid Expiry Date',
+            text: 'Expiry date must be after preparation time.',
+            confirmButtonColor: '#4CAF50'
+          });
+          return false;
+        }
+
+        if (expiry <= now) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Food Already Expired',
+            text: 'Cannot list food that has already expired.',
+            confirmButtonColor: '#4CAF50'
+          });
+          return false;
+        }
+
+        // Calculate time until expiry
+        const hoursUntilExpiry = (expiry - now) / (1000 * 60 * 60);
+        if (hoursUntilExpiry < 2) {
+          return Swal.fire({
+            icon: 'warning',
+            title: 'Limited Time',
+            text: 'This food expires in less than 2 hours. Are you sure you want to list it?',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, list it',
+            cancelButtonText: 'Cancel',
+            confirmButtonColor: '#4CAF50',
+            cancelButtonColor: '#f44336'
+          }).then((result) => {
+            return result.isConfirmed;
+          });
+        }
+
+        return true;
+      }
+
+      // Get allergen data when form is submitted
+      function getFoodSafetyData() {
+        const allergenCheckboxes = document.querySelectorAll('input[name="allergens"]:checked');
+        const allergens = Array.from(allergenCheckboxes).map(cb => cb.value);
+
+        const prepDate = document.getElementById('preparedDate')?.value;
+        const prepTime = document.getElementById('preparedTime')?.value;
+        const expDate = document.getElementById('expiryDate')?.value;
+        const expTime = document.getElementById('expiryTime')?.value;
+
+        return {
+          preparedDate: prepDate,
+          preparedTime: prepTime,
+          expiryDate: expDate,
+          expiryTime: expTime,
+          storageCondition: document.getElementById('storageCondition')?.value,
+          allergens: allergens,
+          preparedDateTime: `${prepDate} ${prepTime}`,
+          expiryDateTime: `${expDate} ${expTime}`,
+          foodType: document.getElementById('foodType')?.value,
+          quantity: document.getElementById('quantity')?.value,
+          category: document.getElementById('category')?.value,
+          description: document.getElementById('description')?.value
+        };
+      }
+
+      // Allergen checkbox visual feedback
+      document.addEventListener('DOMContentLoaded', function() {
+        const allergenCheckboxes = document.querySelectorAll('.allergen-checkbox input[type="checkbox"]');
+        allergenCheckboxes.forEach(checkbox => {
+          checkbox.addEventListener('change', function() {
+            const label = this.closest('.allergen-checkbox');
+            if (this.checked) {
+              label.style.borderColor = '#4CAF50';
+              label.style.backgroundColor = '#f1f8f4';
+            } else {
+              label.style.borderColor = '#e0e0e0';
+              label.style.backgroundColor = 'white';
+            }
+          });
+        });
+      });
+    </script>
 
     <script src="js/theme.js"></script>
     <script src="js/auth.js"></script>

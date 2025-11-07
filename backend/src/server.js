@@ -15,6 +15,7 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use('/api/food', foodListingRoutes);
 
 // Load rate limiter configuration from environment variables
 const RATE_LIMIT_WINDOW_MS = parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000; // Default: 15 minutes
