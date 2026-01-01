@@ -53,6 +53,39 @@
 }
 /* FIX FOR AUTH PAGES IN DARK MODE */
 
+/* Cursor trail variables */
+:root {
+  --trail-color: #4CAF50; /* Explicit green */
+  --trail-size: 6px; /* Slightly smaller */
+}
+.dark {
+  --trail-color: #81C784; /* Softer green in dark mode */
+}
+
+/* Cursor trail styles */
+.cursor-trail {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: var(--trail-size);
+  height: var(--trail-size);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%) scale(1);
+  background: var(--trail-color);
+  opacity: 0.95;
+  mix-blend-mode: screen;
+  animation: sb-trail 650ms forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes sb-trail {
+  to {
+    transform: translate(-50%, -50%) scale(2.2);
+    opacity: 0;
+  }
+}
 
 body {
     font-family: var(--font-family);
@@ -2501,6 +2534,64 @@ button#prevStep:hover, button#cancelForm:hover {
     }
 }
 
+/* Footer settings toggle */
+.footer-settings {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0.35rem 0;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #ccc;
+  transition: 0.18s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background: white;
+  transition: 0.18s;
+  border-radius: 50%;
+}
+
+.switch input:checked + .slider {
+  background: var(--primary-color);
+}
+
+.switch input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+.settings-label {
+  font-size: 0.95rem;
+  color: var(--medium-gray);
+}
+
 /* Loading Overlay */
 .loading-overlay {
     position: fixed;
@@ -3654,12 +3745,22 @@ html, body, .feature-card, .food-card, .navbar, .modal-content, .footer, .stats-
   gap: 1rem;
 }
 
-.info-item i {
+.info-item a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 50%;
+}
+
+.info-item a i {
   background: var(--primary-gradient);
   color: white;
-  padding: 0.8rem;
+  padding: 0.6rem;
   border-radius: 50%;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
+  cursor: pointer;
 }
 
 .info-item strong {
