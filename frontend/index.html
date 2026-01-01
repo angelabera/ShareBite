@@ -38,13 +38,25 @@
                 </a>
             </div>
             <ul class="nav-menu" id="navMenu">
-                <li><a href="#home" class="nav-link">Home</a></li>
-                <li><a href="#features" class="nav-link">Features</a></li>
-                <li><a href="foodlisting.html" class="nav-link">Listings</a></li>
-                <li><a href="#about" class="nav-link">About</a></li>
-                <li><a href="#contact-section" class="nav-link">Contact</a></li>
+                <li><a href="#home" class="nav-link" data-i18n="nav.home">Home</a></li>
+                <li><a href="#features" class="nav-link" data-i18n="nav.features">Features</a></li>
+                <li><a href="foodlisting.html" class="nav-link" data-i18n="nav.listings">Listings</a></li>
+                <li><a href="#about" class="nav-link" data-i18n="nav.about">About</a></li>
+                <li><a href="#contact-section" class="nav-link" data-i18n="nav.contact">Contact</a></li>
             </ul>
             <div class="user-actions">
+                <div class="lang-selector" aria-hidden="false">
+                  <label for="languageSelect" class="sr-only">Language</label>
+                  <select id="languageSelect" aria-label="Select language">
+                    <option value="en">English</option>
+                    <option value="hi">हिन्दी</option>
+                    <option value="fr">Français</option>
+                    <option value="es">Español</option>
+                    <option value="zh">中文</option>
+                    <option value="pt">Português</option>
+                    <option value="ar">العربية</option>
+                  </select>
+                </div>
                 <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
                     <i class="fas fa-moon"></i>
                 </button>
@@ -74,7 +86,7 @@
                 </div>
                 <button class="role-switch" id="roleSwitch">
                     <i class="fas fa-exchange-alt"></i>
-                    <span id="currentRole">Donor</span>
+                    <span id="currentRole" data-i18n="role.donor">Donor</span>
                 </button>
                 <button class="login-btn" onclick="window.location.href='login.html'">Login as User</button>
                 <button class="login-btn" onclick="window.location.href='login_ngo.html'">Login as NGO</button>
@@ -97,10 +109,10 @@
       <div class="hero-container">
         <div class="hero-content">
           <h1 class="hero-title">
-            Reduce Food Waste,<br />
-            <span class="gradient-text">Feed Communities</span>
+            <span data-i18n="hero.line1">Reduce Food Waste,</span><br />
+            <span class="gradient-text" data-i18n="hero.line2">Feed Communities</span>
           </h1>
-          <p class="hero-description">
+          <p class="hero-description" data-i18n="hero.description">
             Connect restaurants and households with NGOs and volunteers to
             redistribute fresh leftover food and fight hunger while reducing
             waste.
@@ -108,11 +120,11 @@
           <div class="hero-buttons">
             <button class="btn btn-primary" id="donateFood">
               <i class="fas fa-heart"></i>
-              Donate Food
+              <span class="btn-text" data-i18n="hero.donate">Donate Food</span>
             </button>
             <button class="btn btn-secondary" id="findFood" onclick="window.location.href='foodlisting.html'">
               <i class="fas fa-search"></i>
-              Find Food
+              <span class="btn-text" data-i18n="hero.find">Find Food</span>
             </button>
           </div>
           <div class="hero-stats">
@@ -845,55 +857,55 @@
 
     
  <section id="contact-section" class="contact">
-  <h1 class="main-title">📞 Contact Us</h1>
+  <h1 class="main-title" data-i18n="contact.title">📞 Contact Us</h1>
   <div class="contact-wrapper">
     <div class="contact-container">
       <!-- Left: Form -->
       <div class="contact-left">
-        <h2 class="contact-title">💬 Do You Have a Question?</h2>
-        <p class="contact-subtitle">Fill out the form below to get started</p>
+        <h2 class="contact-title" data-i18n="contact.question">💬 Do You Have a Question?</h2>
+        <p class="contact-subtitle" data-i18n="contact.fillForm">Fill out the form below to get started</p>
 
         <form id="contact-form">
-          <label for="contact-name">Full Name:</label>
-          <input type="text" id="contact-name" placeholder="Enter your full name" />
+          <label for="contact-name" data-i18n="contact.form.name">Full Name:</label>
+          <input type="text" id="contact-name" placeholder="Enter your full name" data-i18n-attr="placeholder" data-i18n="contact.form.name_placeholder" />
 
-          <label for="contact-email">Email:</label>
-          <input type="email" id="contact-email" placeholder="Enter your email" />
+          <label for="contact-email" data-i18n="contact.form.email">Email:</label>
+          <input type="email" id="contact-email" placeholder="Enter your email" data-i18n-attr="placeholder" data-i18n="contact.form.email_placeholder" />
 
-          <label for="contact-msg">Message:</label>
-          <textarea id="contact-msg" placeholder="Type in your Message"></textarea>
+          <label for="contact-msg" data-i18n="contact.form.message">Message:</label>
+          <textarea id="contact-msg" placeholder="Type in your Message" data-i18n-attr="placeholder" data-i18n="contact.form.message_placeholder"></textarea>
 
-          <button type="submit">Submit</button>
+          <button type="submit" data-i18n="contact.form.submit">Submit</button>
         </form>
       </div>
 
       <!-- Right: Info -->
       <div class="contact-right">
-        <h3>Get In Touch</h3>
-        <p>We love to hear from you. Our team is always here to answer your questions.</p>
+        <h3 data-i18n="contact.getInTouch">Get In Touch</h3>
+        <p data-i18n="contact.getInTouchText">We love to hear from you. Our team is always here to answer your questions.</p>
 
         <div class="contact-info">
           <div class="info-item">
             <i class="fa-solid fa-house"></i>
             <div>
-              <strong>Address:</strong>
-              <p>ShareBite Building, Noida, India </p>
+              <strong data-i18n="contact.address">Address:</strong>
+              <p data-i18n="contact.address_value">ShareBite Building, Noida, India </p>
             </div>
           </div>
 
           <div class="info-item">
             <a id="contact-phone-link" href="tel:+918888889999" target="_blank" rel="noopener noreferrer" aria-label="Call +91 8888889999" title="Call +91 8888889999"><i class="fa-solid fa-phone" aria-hidden="true"></i></a>
             <div>
-              <strong>Phone No.:</strong>
-              <p>+91 8888889999</p>
+              <strong data-i18n="contact.phone_label">Phone No.:</strong>
+              <p data-i18n="contact.phone_value">+91 8888889999</p>
             </div>
           </div>
 
           <div class="info-item">
             <a id="contact-email-link" href="mailto:sharebite@support.com.ng" target="_blank" rel="noopener noreferrer" aria-label="Email sharebite@support.com.ng" title="Email sharebite@support.com.ng"><i class="fa-solid fa-envelope" aria-hidden="true"></i></a>
             <div>
-              <strong>Email:</strong>
-              <p id="contact-email-address"></p>
+              <strong data-i18n="contact.email_label">Email:</strong>
+              <p id="contact-email-address" data-i18n="contact.email_value"></p>
             </div>
           </div>
         </div>
@@ -929,12 +941,14 @@
     alert(`✅ Thank you, ${name}! Your message has been sent.`);
     form.reset();
   });
-  const username = JSON.parse(localStorage.getItem('user')).name;
+  const userData = JSON.parse(localStorage.getItem('user') || 'null');
+  const username = userData && userData.name;
   const toast = document.getElementById('toast');
 
   if (username) {
-    // Show toast message
-    toast.textContent = `Welcome, ${username}! 🎉`;
+    // Show toast message (i18n-aware)
+    const welcome = (window.i18n && window.i18n.t) ? window.i18n.t('toast.welcome', { name: username }) : `Welcome, ${username}! 🎉`;
+    toast.textContent = welcome;
     toast.classList.add('show');
 
     // Hide toast after 3 seconds
@@ -955,7 +969,7 @@
               <i class="fas fa-utensils"></i>
               <span>ShareBite</span>
             </div>
-            <p>
+            <p data-i18n="footer.description">
               Making a difference, one meal at a time. Join us in the fight
               against food waste and hunger.
             </p>
@@ -999,16 +1013,16 @@
 
         <!-- Footer Bottom -->
         <div class="footer-bottom">
-          <p class="footer-credit">Made with 💚 by Angela Bera</p>
+          <p class="footer-credit" data-i18n="footer.madeBy">Made with 💚 by Angela Bera</p>
           <div class="footer-settings">
             <label class="switch">
               <input type="checkbox" id="cursorTrailToggle" aria-label="Toggle cursor trail">
               <span class="slider"></span>
             </label>
-            <span class="settings-label">Cursor trail</span>
+            <span class="settings-label" data-i18n="footer.cursorTrailLabel">Cursor trail</span>
           </div>
           <p>
-            &copy; 2025 ShareBite. All rights reserved. <a href="License.html">License</a> 
+            <span data-i18n="footer.copyright">&copy; 2025 ShareBite. All rights reserved.</span> <a href="License.html" data-i18n="footer.license">License</a>
           </p>
         </div>
       </div>
@@ -1038,6 +1052,7 @@
 
 
     <script src="js/theme.js"></script>
+    <script src="js/i18n.js"></script>
     <script src="js/cursorTrail.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/script.js"></script>

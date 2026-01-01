@@ -1,0 +1,34 @@
+{
+  "contact": {
+    "title": "📞 联系我们",
+    "question": "💬 您有问题吗？",
+    "fillForm": "填写下面的表格以开始",
+    "form": {
+      "name": "全名:",
+      "name_placeholder": "输入您的全名",
+      "email": "电子邮件:",
+      "email_placeholder": "输入您的电子邮件",
+      "message": "留言:",
+      "message_placeholder": "输入您的留言",
+      "submit": "发送"
+    },
+    "getInTouch": "联系我们",
+    "getInTouchText": "我们很乐意听到您的消息。我们的团队随时为您解答疑问。",
+    "address": "地址:",
+    "address_value": "ShareBite 大楼，诺伊达，印度",
+    "phone_label": "电话:",
+    "phone_value": "+91 8888889999",
+    "email_label": "电子邮件:",
+    "email_value": "sharebite@support.com.ng"
+  },
+  "footer": {
+    "description": "一点一滴改变世界，加入我们共同对抗食物浪费与饥饿。",
+    "madeBy": "由 Angela Bera 用 💚 制作",
+    "cursorTrailLabel": "光标轨迹",
+    "copyright": "© 2025 ShareBite。版权所有。",
+    "license": "许可证"
+  },
+  "toast": {
+    "welcome": "欢迎, {name}! 🎉"
+  }
+}

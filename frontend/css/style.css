@@ -176,10 +176,32 @@ body {
             gap: 1rem;
         }
 
-        .theme-toggle,
-        .notification-bell,
-        .role-switch {
-            background: var(--bg-light);
+/* Language selector styling */
+.lang-selector select {
+  background: var(--white);
+  color: var(--text-dark);
+  padding: 0.35rem 0.6rem;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.08);
+  font-size: 0.95rem;
+}
+
+.lang-selector select:focus {
+  outline: 2px solid rgba(76,175,80,0.15);
+  outline-offset: 2px;
+}
+
+.sr-only { 
+  position: absolute !important;
+  width: 1px; 
+  height: 1px; 
+  padding: 0; 
+  margin: -1px; 
+  overflow: hidden; 
+  clip: rect(0, 0, 0, 0); 
+  white-space: nowrap; 
+  border: 0;
+}
             border: none;
             padding: 0.6rem 1rem;
             border-radius: 8px;
@@ -2540,6 +2562,19 @@ button#prevStep:hover, button#cancelForm:hover {
   align-items: center;
   gap: 0.6rem;
   margin: 0.35rem 0;
+}
+
+/* RTL tweaks */
+.rtl {
+  direction: rtl;
+}
+
+.rtl .nav-menu {
+  direction: rtl;
+}
+
+.rtl .user-actions {
+  direction: rtl;
 }
 
 .switch {
