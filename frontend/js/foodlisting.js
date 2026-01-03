@@ -279,23 +279,27 @@ validateContactInfo(contact) {
     // Email regex pattern
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     
-    // Phone number regex pattern (supports various formats)
-    const phonePattern = /^[\+]?[1-9]?[\d\s\-\(\)]{7,15}$/;
-    
-    // Remove spaces and common characters for phone validation
-    const cleanedContact = contact.replace(/[\s\-\(\)]/g, '');
-    
     // Check if it's a valid email
     if (emailPattern.test(contact)) {
         return true;
     }
-    
+
+    // Phone number regex pattern (Checks)
+    const phonePattern = /^\+?\d+$/;
+
     // Check if it's a valid phone number
-    if (phonePattern.test(contact) && cleanedContact.length >= 7 && cleanedContact.length <= 15) {
-        return true;
+    if (!phonePattern.test(contact)) {
+        return false;
     }
-    
-    return false;
+
+    // If phone number starts with '+', total digits (excluding '+') must be between 11 and 13
+    if (contact.startsWith('+')) {
+        const digitCount = contact.length - 1; // exclude '+'
+        return digitCount >= 11 && digitCount <= 13;
+    }
+
+    // If phone number does not contain country code, then check only for length
+    return contact.length === 10;
 }
 
 resetFormSteps() {
