@@ -871,14 +871,29 @@ handleFileSelect(file) {
     }
 
     setupResponsiveNav() {
-        const hamburger = document.querySelector('.hamburger');
-        const navMenu = document.querySelector('.nav-menu');
-        
-        hamburger.addEventListener('click', () => {
+    const hamburger = document.getElementById('menuToggle');
+    const navMenu = document.getElementById('navMenu');
+    
+    if (hamburger && navMenu) {
+        // Use a named function to prevent duplicate listeners
+        const toggleMenu = (e) => {
+            e.stopPropagation(); // Stops the click from reaching the "body" listener
             hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
+        };
+
+        hamburger.removeEventListener('click', toggleMenu); // Clean up
+        hamburger.addEventListener('click', toggleMenu);
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
         });
     }
+}
 
     setupHeroButtons() {
         const donateBtn = document.getElementById('donateFood');
