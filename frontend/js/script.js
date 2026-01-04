@@ -90,6 +90,7 @@ class ShareBite {
         this.currentFilter = 'all';
         this.claimedItems = this.loadClaimedItems();
         this.notifications = this.loadNotifications();
+        this.api = window;
         
         this.init();
         this.initTheme(); // add theme initialization after base init
@@ -98,7 +99,8 @@ class ShareBite {
     init() {
         this.setupEventListeners();
         this.updateContactInfo();
-        this.generateSampleListings();
+        // this.generateSampleListings();
+        this.fetchListings();
         this.renderFoodListings();
         this.setupNotificationSystem();
         this.updateNotificationDisplay();
@@ -494,9 +496,40 @@ handleFileSelect(file) {
         const formData = this.getFormData();
         
         if (this.validateFormData(formData)) {
-            this.addNewListing(formData);
+            try {
+            const backendData = {
+                foodType: formData.foodType,
+                quantity: formData.quantity,
+                category: formData.category,
+                description: formData.description,
+                freshUntil: formData.freshUntil,
+                pickupTime: formData.pickupTime,
+                pickupLocation: formData.location, 
+                contactInfo: formData.contact,
+                dietaryTags: formData.dietaryTags,
+                
+                // Handle Photo: Ideally use Multer. For now, we send an empty array 
+                // or the   Base64 string if you implemented the FileReader logic in getFormData
+                photos: [] 
+            };
+
+            const newListing = this.api.createFoodListing(backendData);
+            this.foodListings.unshift(newListing);
+            this.filterListings();
+            this.renderFoodListings();
             this.showSuccessMessage();
             this.closeModalAndReset();
+
+            } catch (error) {
+            console.error('Error creating listing:', error);
+            // Handle auth errors specifically
+            if(error.status === 401) {
+                this.showToast('You must be logged in to add a listing', 'error');
+            } else {
+                this.showToast(error.message || 'Failed to create listing', 'error');
+            }
+        }
+
         }
     }
 
@@ -507,7 +540,6 @@ handleFileSelect(file) {
         });
 
         return {
-            id: Date.now(),
             foodType: document.getElementById('foodType').value,
             quantity: document.getElementById('quantity').value,
             category: document.getElementById('category').value,
@@ -517,8 +549,6 @@ handleFileSelect(file) {
             location: document.getElementById('location').value,
             contact: document.getElementById('contact').value,
             photo: document.getElementById('photo').files[0],
-            createdAt: new Date(),
-            donor: 'Current User',
             dietaryTags: selectedTags 
         };
     }
@@ -542,11 +572,6 @@ handleFileSelect(file) {
         return true;
     }
 
-    addNewListing(data) {
-        this.foodListings.unshift(data);
-        this.filterListings();
-        this.renderFoodListings();
-    }
 
     showSuccessMessage() {
         this.showToast('Food listing added successfully!', 'success');
@@ -1031,150 +1056,20 @@ handleFileSelect(file) {
         });
     }
 
-    generateSampleListings() {
-        const sampleListings = [
-            {
-                id: 1,
-                foodType: "Fresh Pizza Margherita",
-                quantity: "8 slices",
-                category: "restaurant",
-                description: "Freshly made pizza with mozzarella, tomato sauce, and basil. Perfect condition, just from lunch service.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "18:00",
-                location: "Mario's Pizzeria, 123 Main Street",
-                contact: "+1 234-567-8900",
-                createdAt: new Date(Date.now() - 3600000),
-                donor: "Mario's Pizzeria",
-                dietaryTags: ["vegetarian"],
-                photoUrl: "https://www.allrecipes.com/thmb/2rQA_OlnLbhidei70glz6HCCYAs=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/1453815-authentic-pizza-margherita-Cynthia-Ross-4x3-1-7410c69552274163a9049342b60c22ff.jpg",
-            },
-            {
-                id: 2,
-                foodType: "Assorted Sandwiches",
-                quantity: "15 sandwiches",
-                category: "event",
-                description: "Various sandwiches including turkey, ham, and vegetarian options from corporate catering event.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "16:30",
-                location: "Downtown Conference Center",
-                contact: "events@conference.com",
-                createdAt: new Date(Date.now() - 7200000),
-                donor: "Conference Center",
-                dietaryTags: ["non-vegetarian"],
-                photoUrl: "https://bangkok.mandarinorientalshop.com/cdn/shop/files/078-_3729_2048x.jpg?v=1690709512",
-
-            },
-            {
-                id: 3,
-                foodType: "Fresh Bread & Pastries",
-                quantity: "20+ items",
-                category: "bakery",
-                description: "End-of-day fresh bread, croissants, and pastries. All baked today and still perfectly fresh.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "20:00",
-                location: "Sunrise Bakery, Oak Avenue",
-                contact: "+1 234-567-8901",
-                createdAt: new Date(Date.now() - 1800000),
-                donor: "Sunrise Bakery",
-                dietaryTags: ["dairy-free"],
-                photoUrl: "https://media.istockphoto.com/id/507021914/photo/assorted-croissand-and-bread.jpg?s=612x612&w=0&k=20&c=ruHrARluyF_yR1-hmrurOyz4sLPNeohj1zKKv8fHa8U=",
-            },
-            {
-                id: 4,
-                foodType: "Home-cooked Curry",
-                quantity: "4-6 portions",
-                category: "household",
-                description: "Vegetarian curry with rice, made too much for family dinner. Spice level: medium.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "19:00",
-                location: "Residential Area, Pine Street",
-                contact: "+1 234-567-8902",
-                createdAt: new Date(Date.now() - 900000),
-                donor: "Local Family",
-                dietaryTags: ["vegetarian", "gluten-free"],
-                photoUrl: "https://www.tasteofhome.com/wp-content/uploads/2019/04/shutterstock_610126394.jpg",
-            },
-            {
-                id: 5,
-                foodType: "Fruit & Vegetable Box",
-                quantity: "1 large box",
-                category: "restaurant",
-                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "17:00",
-                location: "Green Garden Restaurant",
-                contact: "+1 234-567-8903",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant",
-                dietaryTags: ["vegan"],
-                photoUrl: "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
-            },
-            {
-                id: 6,
-                foodType: "Grilled Chicken Meals",
-                quantity: "12 complete meals",
-                category: "restaurant",
-                description: "Grilled chicken with rice and vegetables. Prepared for cancelled catering order.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "18:30",
-                location: "Healthy Eats Cafe, Market Square",
-                contact: "+1 234-567-8904",
-                createdAt: new Date(Date.now() - 2700000),
-                donor: "Healthy Eats Cafe",
-                dietaryTags: ["non-vegetarian", "dairy-free"],
-                photoUrl: "https://i0.wp.com/smittenkitchen.com/wp-content/uploads/2019/05/exceptional-grilled-chicken-scaled.jpg?fit=1200%2C800&ssl=1",
-            },
-            {
-                id: 5,
-                foodType: "Fruit & Vegetable Box",
-                quantity: "1 large box",
-                category: "restaurant",
-                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "17:00",
-                location: "Green Garden Restaurant",
-                contact: "+1 234-567-8903",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant",
-                dietaryTags: ["vegan"],
-                photoUrl: "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
-            },
-            {
-                id: 7,
-                foodType: "Fruit & Vegetable Box",
-                quantity: "1 large box",
-                category: "restaurant",
-                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "17:00",
-                location: "Green Garden Restaurant",
-                contact: "+1 234-567-8903",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant",
-                dietaryTags: ["vegan"],
-                photoUrl: "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
-            },
-            {
-                id: 8,
-                foodType: "Fruit & Vegetable Box",
-                quantity: "1 large box",
-                category: "restaurant",
-                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "17:00",
-                location: "Green Garden Restaurant",
-                contact: "+1 234-567-8903",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant",
-                dietaryTags: ["vegan"],
-                photoUrl: "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
-            },
-            
-        ];
-        
-        this.foodListings = sampleListings;
-        this.filteredListings = sampleListings;
+      async fetchListings() {
+    try {
+        const response = await this.api.getAllFoodListings();
+        // The controller returns the array directly
+        this.foodListings = response; 
+        this.filteredListings = this.foodListings;
+        this.renderFoodListings();
+        this.hideLoadingOverlay();
+    } catch (error) {
+        console.error('Failed to fetch listings:', error);
+        this.showToast('Failed to load food listings. Please try again.', 'error');
+        this.hideLoadingOverlay();
     }
+}
 
     getRandomFutureDate() {
         const now = new Date();
@@ -1242,6 +1137,9 @@ handleFileSelect(file) {
     }
 
 createFoodCard(listing) {
+    const listingId = listing._id || listing.id;
+    const location = listing.pickupLocation || listing.location || 'Unknown Location';
+    const contact = listing.contactInfo || listing.contact;
     const timeAgo = this.getTimeAgo(listing.createdAt);
     const freshUntil = this.formatDateTime(listing.freshUntil);
     const isClaimed = this.claimedItems.includes(listing.id);
@@ -1347,6 +1245,7 @@ createFoodCard(listing) {
         const confirmed = confirm(`Claim "${listing.foodType}" from ${listing.donor}?\n\nPickup: ${listing.location}\nTime: ${this.formatTime(listing.pickupTime)}\nContact: ${listing.contact}`);
         
         if (confirmed) {
+            this.api.deleteFoodListing(listingId);
             // Add to claimed items
             this.claimedItems.push(listingId);
             this.saveClaimedItems();
@@ -1405,16 +1304,18 @@ createFoodCard(listing) {
     }
 
     getFoodIcon(category) {
+        if (!category) return 'utensils';
         const icons = {
             restaurant: 'store',
             household: 'home',
             bakery: 'bread-slice',
             event: 'calendar-alt'
         };
-        return icons[category] || 'utensils';
+        return icons[category.toLowerCase()] || 'utensils';
     }
 
     capitalizeFirst(str) {
+        if (!str) return '';
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
