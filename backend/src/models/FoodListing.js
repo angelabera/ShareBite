@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const foodListingSchema = new mongoose.Schema(
   {
+    dietaryTags: [{ type: String }],
     foodType: { type: String, required: true, trim: true },
     quantity: { type: String, required: true, trim: true },
     category: { type: String, required: true, trim: true },

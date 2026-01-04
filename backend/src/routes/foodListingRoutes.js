@@ -20,8 +20,10 @@ router.post(
     body('category').notEmpty().withMessage('Category is required'),
     body('freshUntil').isISO8601().withMessage('Valid fresh until date is required'),
     body('pickupTime').notEmpty().withMessage('Pickup time is required'),
+    body('description').optional().isString().trim(),
     body('pickupLocation').notEmpty().withMessage('Pickup location is required'),
     body('contactInfo').notEmpty().withMessage('Contact info is required'),
+    body('dietaryTags').optional().isArray().withMessage('Dietary tags must be an array'),
     body('photos').optional().isArray(),
   ],
   createListing
