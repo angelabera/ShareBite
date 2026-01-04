@@ -46,21 +46,29 @@
             align-items: center;
             min-height: 100vh;
             padding: 1rem;
-            background: linear-gradient(135deg, var(--bg-gradient-start-light), var(--bg-gradient-end-light));
+            background: linear-gradient(
+              135deg,
+              #667eea 0%,
+              #764ba2 50%,
+              #f093fb 100%
+            );
             color: var(--text-color-light);
             transition: background 0.4s, color 0.4s;
+            padding-top: 40px; /* Reduced padding for simple nav */
         }
 
         body.dark-mode {
-            background: linear-gradient(135deg, var(--bg-gradient-start-dark), var(--bg-gradient-end-dark));
+            background: linear-gradient(
+              135deg,
+              #2c3e50 0%,
+              #34495e 50%,
+              #9b59b6 100%
+            );
             color: var(--text-color-dark);
         }
 
         .theme-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
+        position: relative;
             border: 1px solid var(--input-border-light);
             color: var(--text-color-light);
             width: 40px;
@@ -81,6 +89,114 @@
 
         .theme-toggle:hover {
             transform: scale(1.1) rotate(15deg);
+        }
+
+        .home-btn {
+            position: relative;
+            overflow: hidden;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 40px;
+            letter-spacing: 0.5px;
+            background: linear-gradient(90deg, #3b82f6, #9333ea, #f43f5e);
+            background-size: 300%;
+            transition: background-position 0.4s ease, box-shadow 0.4s ease, transform 0.3s ease;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+
+        .home-btn:hover {
+            background-position: right;
+            box-shadow: 0 0 12px rgba(147, 51, 234, 0.8), 0 0 25px rgba(59, 130, 246, 0.6);
+            transform: scale(1.07);
+        }
+
+        .home-btn::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(0);
+            border-radius: inherit;
+            transition: transform 0.4s ease;
+            z-index: 0;
+        }
+
+        .home-btn:hover::before {
+            transform: scale(2.5);
+        }
+
+        .home-btn:active {
+            animation: pulse 0.4s ease;
+        }
+
+        /* Simple Navigation */
+        .simple-nav {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        /* Navigation Styles */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 50%, rgba(240, 147, 251, 0.95) 100%);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: background 0.4s, color 0.4s;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        body.dark-mode .navbar {
+            background: linear-gradient(135deg, rgba(44, 62, 80, 0.95) 0%, rgba(52, 73, 94, 0.95) 50%, rgba(155, 89, 182, 0.95) 100%);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            gap: 0.5rem;
+        }
+
+        .nav-logo-link {
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+        }
+
+        .nav-logo-link:hover {
+            opacity: 0.85;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .auth-container {
@@ -112,6 +228,30 @@
             margin-bottom: 0.75rem;
             font-weight: 600;
             font-size: 1.8rem;
+        }
+
+        .logo {
+            width: 80px;
+            height: auto;
+            margin-bottom: 1rem;
+            animation: bounceIn 0.8s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
         .auth-container p.subtitle {
@@ -228,7 +368,7 @@
         .form-group textarea:focus {
             outline: none;
             border-color: var(--primary-green);
-            box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2);
+            box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2), 0 0 10px rgba(255, 107, 53, 0.3);
         }
 
         .btn {
@@ -244,12 +384,12 @@
         }
 
         .btn-primary {
-            background-color: var(--primary-green);
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-orange) 100%);
             color: #fff;
         }
 
         .btn-primary:hover {
-            background-color: #45a049;
+            background: linear-gradient(135deg, #45a049 0%, #e65100 100%);
             transform: translateY(-3px);
             box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
         }
@@ -285,9 +425,17 @@
 
 <body>
 
-    <button id="theme-toggle" class="theme-toggle" title="Toggle dark mode">🌙</button>
+    <!-- Simple Navigation -->
+    <div class="simple-nav">
+        <button onclick="window.location.href='index.html'" class="home-btn" aria-label="Go to Home">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </button>
+        <button id="theme-toggle" class="theme-toggle" title="Toggle dark mode">🌙</button>
+    </div>
 
     <div class="auth-container">
+        <img src="logo/sharebite_logo.png" alt="ShareBite Logo" class="logo" />
         <h1 id="registerTitle">Register Your NGO</h1>
         <p class="subtitle" id="registerSubtitle">Join ShareBite and help us reduce food waste by registering your NGO.</p>
         
