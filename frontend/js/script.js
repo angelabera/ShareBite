@@ -356,9 +356,43 @@ validateCurrentStep() {
             this.showToast(`Please fill in the required field: ${input.previousElementSibling.textContent}`, 'error');
             return false;
         }
+        // Special validation for contact information
+        if (input.id === 'contact') {
+            if (!this.validateContactInfo(input.value.trim())) {
+                input.focus();
+                this.showToast('Please enter a valid email address or phone number', 'error');
+                return false;
+            }
+        }
     }
-    
     return true;
+}
+
+validateContactInfo(contact) {
+    // Email regex
+    if(!contact) return false;
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    // Email check
+    if (emailPattern.test(contact)) {
+        return true;
+    }
+
+    // Phone structure: optional '+' followed by digits only
+    const phonePattern = /^\+?\d+$/;
+
+    if (!phonePattern.test(contact)) {
+        return false;
+    }
+
+    // With country code
+    if (contact.startsWith('+')) {
+        const digitCount = contact.length - 1; // exclude '+'
+        return digitCount >= 11 && digitCount <= 13;
+    }
+
+    // Without country code
+    return contact.length === 10;
 }
 
 resetFormSteps() {
