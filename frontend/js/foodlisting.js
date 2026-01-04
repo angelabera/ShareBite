@@ -194,6 +194,12 @@ setupFormNavigation() {
     const prevBtn = document.getElementById('prevStep');
     const submitBtn = document.getElementById('submitForm');
 
+    // If the main `script.js` ShareBite class is present on the page,
+    // duplicate listeners that can bypass validation logic.
+    if (window.ShareBite) {
+        return;
+    }
+
     nextBtn.addEventListener('click', () => {
         if (this.validateCurrentStep()) {
             this.goToStep(this.currentStep + 1);
