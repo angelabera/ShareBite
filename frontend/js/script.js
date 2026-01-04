@@ -1525,10 +1525,26 @@ createFoodCard(listing) {
     }
     
     addNotification(notification) {
+        notification.read = false; // Mark new notifications as unread
         this.notifications.unshift(notification);
         this.saveNotifications();
         this.updateNotificationDisplay();
         this.renderNotifications();
+    }
+
+    markNotificationAsRead(notificationId) {
+        const notification = this.notifications.find(n => n.id === notificationId);
+        if (notification && !notification.read) {
+            notification.read = true;
+            this.saveNotifications();
+            this.updateNotificationDisplay();
+        }
+    }
+
+    markAllNotificationsAsRead() {
+        this.notifications.forEach(n => n.read = true);
+        this.saveNotifications();
+        this.updateNotificationDisplay();
     }
     
     updateNotificationDisplay() {
@@ -1537,7 +1553,7 @@ createFoodCard(listing) {
         
         if (!notificationBell || !notificationBadge) return;
         
-        const unreadCount = this.notifications.length;
+        const unreadCount = this.notifications.filter(n => !n.read).length;
         
         if (unreadCount > 0) {
             notificationBell.style.display = 'block';
@@ -1581,9 +1597,10 @@ createFoodCard(listing) {
     
     createNotificationItem(notification) {
         const timeAgo = this.getTimeAgo(notification.claimedAt);
+        const unreadClass = notification.read ? '' : 'unread';
         
         return `
-            <div class="notification-item" data-id="${notification.id}">
+            <div class="notification-item ${unreadClass}" data-id="${notification.id}">
                 <div class="notification-item-header">
                     <div class="notification-item-icon">
                         <i class="fas fa-utensils"></i>
@@ -1630,6 +1647,9 @@ createFoodCard(listing) {
     viewNotificationDetails(notificationId) {
         const notification = this.notifications.find(n => n.id === notificationId);
         if (!notification) return;
+        
+        // Mark as read when viewed
+        this.markNotificationAsRead(notificationId);
         
         const details = `
 Food: ${notification.foodType}
