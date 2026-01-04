@@ -2404,6 +2404,24 @@ button#prevStep:hover, button#cancelForm:hover {
     background: var(--black);
     color: white;
     padding: 3rem 0 1rem;
+    background: #0f172a;
+    color: #cbd5e1;
+    padding: 4rem 1rem 2rem;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2.5rem;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #22c55e;
 }
 
 /* Main Footer Layout */
@@ -2558,6 +2576,79 @@ button#prevStep:hover, button#cancelForm:hover {
     .footer-bottom {
         text-align: center;
     }
+}
+
+.footer-brand p {
+  margin: 1rem 0;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.footer-links h4 {
+  color: #f8fafc;
+  margin-bottom: 1rem;
+  font-size: 1.05rem;
+}
+
+.footer-links ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links li {
+  margin-bottom: 0.6rem;
+}
+
+.footer-links a {
+  color: #cbd5e1;
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
+  color: var(--primary-color);
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.footer-links a:hover {
+  color: #22c55e;
+}
+
+.social-links {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.social-links a {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1e293b;
+  border-radius: 50%;
+  color: #e5e7eb;
+  transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+  background: #22c55e;
+  color: #0f172a;
+}
+
+.footer-bottom {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #1e293b;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.footer-bottom a {
+  color: #22c55e;
+  color: #cbd5e1;
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
 }
 
 /* Loading Overlay */

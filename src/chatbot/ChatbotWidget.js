@@ -1,19 +1,24 @@
 // ChatbotWidget.js
 // Vanilla JS module that injects a floating chatbot into the page.
-// Loads a small internal knowledge base and provides a friendly chat UI.
+// Improved version: better matching, UX, accessibility, persistence.
 
 // Immediately-invoked async function to allow use of await at top level
 (async function () {
-  // Load CSS
+  /* ===============================
+     Load CSS
+  =============================== */
   const cssUrl = new URL("./chatbot.css", import.meta.url);
   const link = document.createElement("link");
   link.rel = "stylesheet";
   link.href = cssUrl.href;
   document.head.appendChild(link);
 
-  // Load knowledge base (JSON) next to this module
+  /* ===============================
+     Load Knowledge Base
+  =============================== */
   const kbUrl = new URL("./ChatbotKnowledgeBase.json", import.meta.url);
   let KB = null;
+
   try {
     const res = await fetch(kbUrl.href, { cache: "default" });
     KB = await res.json();
@@ -21,6 +26,7 @@
     console.error("ShareBot: failed to load knowledge base", e);
     KB = {
       greeting: "Hi! I'm ShareBot.",
+      shortIntro: "How can I help you today?",
       faqs: [],
       helpTopics: [],
       fallback:
@@ -28,20 +34,26 @@
     };
   }
 
-  // Create container root
+  /* ===============================
+     Root Container
+  =============================== */
   const container = document.createElement("div");
   container.id = "sharebot-container";
   container.setAttribute("aria-live", "polite");
   document.body.appendChild(container);
 
-  // Floating bubble button
+  /* ===============================
+     Floating Bubble Button
+  =============================== */
   const bubble = document.createElement("button");
   bubble.id = "sharebot-bubble";
   bubble.title = "Open ShareBot chat";
   bubble.innerHTML = '<span class="sharebot-emoji">🍽️</span>';
   container.appendChild(bubble);
 
-  // Chat window (hidden by default)
+  /* ===============================
+     Chat Widget
+  =============================== */
   const widget = document.createElement("div");
   widget.id = "sharebot-widget";
   widget.setAttribute("hidden", "");
@@ -53,12 +65,20 @@
       </div>
       <button class="sharebot-close" aria-label="Close chat">✕</button>
     </header>
+
     <main class="sharebot-main">
       <div class="sharebot-messages" id="sharebot-messages" role="log" aria-live="polite"></div>
       <div class="sharebot-quick" id="sharebot-quick"></div>
     </main>
+
     <form class="sharebot-input-area" id="sharebot-form">
-      <input type="text" id="sharebot-input" placeholder="Type a question or choose a topic..." aria-label="Message" autocomplete="off" />
+      <input
+        type="text"
+        id="sharebot-input"
+        placeholder="Type a question or choose a topic..."
+        aria-label="Message"
+        autocomplete="off"
+      />
       <button type="submit" id="sharebot-send">Send</button>
     </form>
   `;
@@ -70,107 +90,16 @@
   const input = widget.querySelector("#sharebot-input");
   const closeBtn = widget.querySelector(".sharebot-close");
 
-  // State
+  /* ===============================
+     State
+  =============================== */
   let isOpen = false;
   let hasGreeted = false;
+  const STORAGE_KEY = "sharebot-session";
 
-  // Utilities
-  function appendMessage(role, html) {
-    const wrapper = document.createElement("div");
-    wrapper.className = `sharebot-message sharebot-${role}`;
-    wrapper.innerHTML = `<div class="sharebot-bubble">${html}</div>`;
-    messagesEl.appendChild(wrapper);
-    messagesEl.scrollTop = messagesEl.scrollHeight;
-  }
-
-  function formatAnswer(text) {
-    // Allow HTML from KB (includes <b>, <i>, <a> tags and line breaks)
-    // Convert \n to <br> for proper line breaks
-    return text.replace(/\n/g, "<br>");
-  }
-
-  // Simple matching: check keywords in lowercase query
-  function findAnswer(query) {
-    if (!query || !KB || !Array.isArray(KB.faqs)) return null;
-    const q = query.toLowerCase().trim();
-
-    // Exact/keyword matching
-    for (const faq of KB.faqs) {
-      if (faq.question && q.includes(faq.question.toLowerCase()))
-        return faq.answer;
-      if (Array.isArray(faq.keywords)) {
-        for (const kw of faq.keywords) {
-          if (kw && q.includes(kw.toLowerCase())) return faq.answer;
-        }
-      }
-    }
-
-    // Additional intent shortcuts for better matching
-    if (q.includes("donate") || q.includes("donation") || q.includes("give")) {
-      return KB.faqs.find((f) => f.id === "how_to_donate")?.answer || null;
-    }
-    if (q.includes("find") || q.includes("claim") || q.includes("get food")) {
-      return KB.faqs.find((f) => f.id === "how_to_find")?.answer || null;
-    }
-    if (
-      q.includes("register") ||
-      q.includes("join") ||
-      q.includes("sign up") ||
-      q.includes("signup")
-    ) {
-      return KB.faqs.find((f) => f.id === "join_donor_ngo")?.answer || null;
-    }
-    if (
-      q.includes("login") ||
-      q.includes("auth") ||
-      q.includes("sign in") ||
-      q.includes("signin")
-    ) {
-      return KB.faqs.find((f) => f.id === "login_system")?.answer || null;
-    }
-    if (q.includes("list") || q.includes("listing") || q.includes("browse")) {
-      return KB.faqs.find((f) => f.id === "see_listings")?.answer || null;
-    }
-    if (
-      q.includes("feature") ||
-      q.includes("capability") ||
-      q.includes("what can")
-    ) {
-      return KB.faqs.find((f) => f.id === "features")?.answer || null;
-    }
-    if (q.includes("work") || q.includes("process") || q.includes("step")) {
-      return KB.faqs.find((f) => f.id === "system_steps")?.answer || null;
-    }
-    if (q.includes("what is") || q.includes("about")) {
-      return KB.faqs.find((f) => f.id === "about_sharebite")?.answer || null;
-    }
-
-    return null;
-  }
-
-  // Send user message and generate bot reply
-  function handleQuery(text) {
-    const trimmed = (text || "").trim();
-    if (!trimmed) return;
-
-    appendMessage("user", escapeHtml(trimmed));
-    input.value = "";
-
-    // Attempt to find answer
-    const answer = findAnswer(trimmed);
-    if (answer) {
-      // If response contains an anchor, allow it (from KB)
-      appendMessage("bot", formatAnswer(answer));
-    } else {
-      // Fallback reply
-      const fallback =
-        KB.fallback ||
-        "That's a great question! I'm still learning. Please check our About or Contact page for more details.";
-      appendMessage("bot", escapeHtml(fallback));
-    }
-  }
-
-  // Escape HTML for user-supplied content only
+  /* ===============================
+     Utilities
+  =============================== */
   function escapeHtml(str) {
     return String(str)
       .replace(/&/g, "&amp;")
@@ -180,33 +109,136 @@
       .replace(/'/g, "&#039;");
   }
 
-  // Populate quick replies based on KB.helpTopics
-  function renderQuickReplies() {
-    quickEl.innerHTML = "";
-    if (Array.isArray(KB.helpTopics) && KB.helpTopics.length) {
-      const label = document.createElement("div");
-      label.className = "sharebot-quick-label";
-      label.textContent = "Help Topics";
-      quickEl.appendChild(label);
-
-      const list = document.createElement("div");
-      list.className = "sharebot-quick-list";
-      for (const topic of KB.helpTopics) {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "sharebot-quick-item";
-        btn.textContent = topic;
-        btn.addEventListener("click", () => {
-          // When clicked, send topic text as query
-          handleQuery(topic);
-        });
-        list.appendChild(btn);
-      }
-      quickEl.appendChild(list);
-    }
+  function formatAnswer(text) {
+    return String(text).replace(/\n/g, "<br>");
   }
 
-  // Toggle widget visibility
+  function normalize(text) {
+    return String(text)
+      .toLowerCase()
+      .replace(/[^\w\s]/g, "")
+      .trim();
+  }
+
+  function appendMessage(role, html, save = true) {
+    const wrapper = document.createElement("div");
+    wrapper.className = `sharebot-message sharebot-${role}`;
+    wrapper.innerHTML = `<div class="sharebot-bubble">${html}</div>`;
+    messagesEl.appendChild(wrapper);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+
+    if (save) saveSession();
+  }
+
+  function appendTyping() {
+    const typing = document.createElement("div");
+    typing.className = "sharebot-message sharebot-bot sharebot-typing";
+    typing.innerHTML = `<div class="sharebot-bubble">Typing…</div>`;
+    messagesEl.appendChild(typing);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    return typing;
+  }
+
+  /* ===============================
+     FAQ Matching Logic
+  =============================== */
+  function findAnswer(query) {
+    if (!query || !Array.isArray(KB.faqs)) return null;
+
+    const q = normalize(query);
+
+    for (const faq of KB.faqs) {
+      if (!faq) continue;
+
+      if (faq.question && q.includes(normalize(faq.question)))
+        return faq.answer;
+
+      if (Array.isArray(faq.keywords)) {
+        for (const kw of faq.keywords) {
+          if (kw && q.includes(normalize(kw))) return faq.answer;
+        }
+      }
+    }
+
+    // Intent shortcuts
+    const intents = [
+      { keys: ["donate", "donation", "give"], id: "how_to_donate" },
+      { keys: ["find", "claim", "get food"], id: "how_to_find" },
+      { keys: ["register", "join", "signup"], id: "join_donor_ngo" },
+      { keys: ["login", "signin", "auth"], id: "login_system" },
+      { keys: ["list", "browse"], id: "see_listings" },
+      { keys: ["feature", "capability"], id: "features" },
+      { keys: ["work", "process", "step"], id: "system_steps" },
+      { keys: ["what is", "about"], id: "about_sharebite" },
+    ];
+
+    for (const intent of intents) {
+      if (intent.keys.some((k) => q.includes(k))) {
+        return KB.faqs.find((f) => f.id === intent.id)?.answer || null;
+      }
+    }
+
+    return null;
+  }
+
+  /* ===============================
+     Handle User Query
+  =============================== */
+  function handleQuery(text) {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+
+    appendMessage("user", escapeHtml(trimmed));
+    input.value = "";
+
+    const typingNode = appendTyping();
+
+    setTimeout(() => {
+      typingNode.remove();
+
+      const answer = findAnswer(trimmed);
+      if (answer) {
+        appendMessage("bot", formatAnswer(answer));
+      } else {
+        appendMessage(
+          "bot",
+          escapeHtml(KB.fallback || "I'm still learning. Please check our Help pages.")
+        );
+      }
+    }, 500);
+  }
+
+  /* ===============================
+     Quick Replies
+  =============================== */
+  function renderQuickReplies() {
+    quickEl.innerHTML = "";
+
+    if (!Array.isArray(KB.helpTopics) || !KB.helpTopics.length) return;
+
+    const label = document.createElement("div");
+    label.className = "sharebot-quick-label";
+    label.textContent = "Help Topics";
+    quickEl.appendChild(label);
+
+    const list = document.createElement("div");
+    list.className = "sharebot-quick-list";
+
+    for (const topic of KB.helpTopics) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "sharebot-quick-item";
+      btn.textContent = topic;
+      btn.onclick = () => handleQuery(topic);
+      list.appendChild(btn);
+    }
+
+    quickEl.appendChild(list);
+  }
+
+  /* ===============================
+     Open / Close Widget
+  =============================== */
   function openWidget() {
     if (isOpen) return;
     isOpen = true;
@@ -215,7 +247,6 @@
     bubble.classList.add("hidden");
     input.focus();
 
-    // Greet when opened (only once per session)
     if (!hasGreeted) {
       hasGreeted = true;
       setTimeout(() => {
@@ -224,7 +255,7 @@
           setTimeout(() => {
             appendMessage("bot", escapeHtml(KB.shortIntro));
             renderQuickReplies();
-          }, 600);
+          }, 500);
         } else {
           renderQuickReplies();
         }
@@ -238,45 +269,51 @@
     bubble.classList.remove("hidden");
   }
 
-  // Events
+  /* ===============================
+     Session Persistence
+  =============================== */
+  function saveSession() {
+    sessionStorage.setItem(STORAGE_KEY, messagesEl.innerHTML);
+  }
+
+  function restoreSession() {
+    const saved = sessionStorage.getItem(STORAGE_KEY);
+    if (saved) messagesEl.innerHTML = saved;
+  }
+
+  restoreSession();
+
+  /* ===============================
+     Events
+  =============================== */
   bubble.addEventListener("click", openWidget);
   closeBtn.addEventListener("click", closeWidget);
 
-  form.addEventListener("submit", (ev) => {
-    ev.preventDefault();
-    const text = input.value || "";
-    handleQuery(text);
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    handleQuery(input.value);
   });
 
-  // Keyboard: Esc to close
-  widget.addEventListener("keydown", (ev) => {
-    if (ev.key === "Escape") {
-      closeWidget();
-    }
+  widget.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeWidget();
   });
 
-  // Initial accessible hint
   bubble.setAttribute(
     "aria-label",
     "Open ShareBot chat to get help with ShareBite"
   );
 
-  // Allow clicking links in bot answers to open safely
-  messagesEl.addEventListener("click", (ev) => {
-    const a = ev.target.closest("a");
-    if (a && a.href) {
-      // Let default behavior happen; anchors in KB include target="_blank" where desired
-    }
-  });
-
-  // Small improvement: support direct programmatic open via window.ShareBot.open()
-  window.ShareBot = window.ShareBot || {};
-  window.ShareBot.open = openWidget;
-  window.ShareBot.close = closeWidget;
-  window.ShareBot.sendMessage = (msg) => {
-    openWidget();
-    setTimeout(() => handleQuery(msg), 400);
+  /* ===============================
+     Public API
+  =============================== */
+  window.ShareBot = {
+    open: openWidget,
+    close: closeWidget,
+    sendMessage(msg) {
+      openWidget();
+      setTimeout(() => handleQuery(msg), 400);
+    },
   };
 
-  console.log("✅ ShareBot initialized and ready!");
+  console.log("✅ ShareBot initialized successfully!");
 })();
