@@ -358,6 +358,17 @@ validateCurrentStep() {
             this.showToast(`Please fill in the required field: ${input.previousElementSibling.textContent}`, 'error');
             return false;
         }
+
+        //Special validation for quantity
+        if (input.id === 'quantity') {
+            const quantity = parseInt(input.value.trim());
+            if (isNaN(quantity) || quantity <= 0) {
+                input.focus();
+                this.showToast('Please enter a valid quantity greater than 0', 'error');
+                return false;
+            }
+        }
+        
         // Special validation for contact information
         if (input.id === 'contact') {
             if (!this.validateContactInfo(input.value.trim())) {
