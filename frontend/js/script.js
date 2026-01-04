@@ -211,7 +211,9 @@ class ShareBite {
         
         roleSwitch.addEventListener('click', () => {
             this.currentRole = this.currentRole === 'donor' ? 'collector' : 'donor';
-            currentRoleSpan.textContent = this.currentRole.charAt(0).toUpperCase() + this.currentRole.slice(1);
+            // update role label using i18n keys so it stays localized
+            currentRoleSpan.setAttribute('data-i18n', `role.${this.currentRole}`);
+            if (window.i18n && typeof window.i18n.apply === 'function') window.i18n.apply();
             
             // Update UI based on role
             this.updateUIForRole();
@@ -225,17 +227,35 @@ class ShareBite {
         const notificationBell = document.getElementById('notificationBell');
         
         if (this.currentRole === 'collector') {
-            donateBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
-            findBtn.innerHTML = '<i class="fas fa-heart"></i> Help Others';
+            // set icons
+            const donateIcon = donateBtn.querySelector('i');
+            const findIcon = findBtn.querySelector('i');
+            if (donateIcon) donateIcon.className = 'fas fa-search';
+            if (findIcon) findIcon.className = 'fas fa-heart';
+
+            // set text keys (localized via i18n.apply())
+            const donateText = donateBtn.querySelector('.btn-text');
+            const findText = findBtn.querySelector('.btn-text');
+            if (donateText) donateText.setAttribute('data-i18n', 'hero.find');
+            if (findText) findText.setAttribute('data-i18n', 'hero.help');
+
             addListingBtn.style.display = 'none';
-            
+
             // Show notification bell for collectors
             if (notificationBell) {
                 notificationBell.style.display = 'block';
             }
         } else {
-            donateBtn.innerHTML = '<i class="fas fa-heart"></i> Donate Food';
-            findBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
+            const donateIcon = donateBtn.querySelector('i');
+            const findIcon = findBtn.querySelector('i');
+            if (donateIcon) donateIcon.className = 'fas fa-heart';
+            if (findIcon) findIcon.className = 'fas fa-search';
+
+            const donateText = donateBtn.querySelector('.btn-text');
+            const findText = findBtn.querySelector('.btn-text');
+            if (donateText) donateText.setAttribute('data-i18n', 'hero.donate');
+            if (findText) findText.setAttribute('data-i18n', 'hero.find');
+
             addListingBtn.style.display = 'flex';
             
             // Hide notification bell for donors (unless they have notifications)
@@ -243,6 +263,9 @@ class ShareBite {
                 notificationBell.style.display = 'none';
             }
         }
+
+        // re-apply translations after changing keys
+        if (window.i18n && typeof window.i18n.apply === 'function') window.i18n.apply();
         
         // Re-render food listings to update claim button states
         this.renderFoodListings();

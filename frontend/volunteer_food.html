@@ -350,27 +350,31 @@
 
   <!-- Hero Section -->
   <section class="hero">
-    <h1>Join as a <span>Volunteer</span> & Help Feed Communities</h1>
-    <p>Volunteers are the backbone of ShareBite. Help us deliver surplus food from restaurants and households to NGOs, shelters, and communities in need.</p>
-    <a href="#signup" class="btn-primary">Sign Up Now</a>
-    <a href="#info" class="btn-outline">Learn More</a>
+    <h1>
+      <span data-i18n="volunteer.title_prefix">Join as a</span>
+      <span data-i18n="volunteer.title_role">Volunteer</span>
+      <span data-i18n="volunteer.title_suffix">& Help Feed Communities</span>
+    </h1>
+    <p data-i18n="volunteer.subtitle">Volunteers are the backbone of ShareBite. Help us deliver surplus food from restaurants and households to NGOs, shelters, and communities in need.</p>
+    <a href="#signup" class="btn-primary" data-i18n="volunteer.cta_signup">Sign Up Now</a>
+    <a href="#info" class="btn-outline" data-i18n="volunteer.cta_learn">Learn More</a>
   </section>
 
    <!-- Info Section -->
   <section class="info" id="info">
-    <h2>Why Volunteer with Us?</h2>
+    <h2 data-i18n="volunteer.why_title">Why Volunteer with Us?</h2>
     <div class="card-grid">
       <div class="card">
-        <h3>🤝 Community Impact</h3>
-        <p>Every hour you spend volunteering helps feed families and reduce food waste in your city.</p>
+        <h3 data-i18n="volunteer.card1.title">🤝 Community Impact</h3>
+        <p data-i18n="volunteer.card1.text">Every hour you spend volunteering helps feed families and reduce food waste in your city.</p>
       </div>
       <div class="card">
-        <h3>📅 Flexible Schedule</h3>
-        <p>Choose volunteering times that fit your lifestyle - weekends, weekdays, or both.</p>
+        <h3 data-i18n="volunteer.card2.title">📅 Flexible Schedule</h3>
+        <p data-i18n="volunteer.card2.text">Choose volunteering times that fit your lifestyle - weekends, weekdays, or both.</p>
       </div>
       <div class="card">
-        <h3>🌍 Network & Growth</h3>
-        <p>Meet like-minded people, NGOs, and organizations working together for a better tomorrow.</p>
+        <h3 data-i18n="volunteer.card3.title">🌍 Network & Growth</h3>
+        <p data-i18n="volunteer.card3.text">Meet like-minded people, NGOs, and organizations working together for a better tomorrow.</p>
       </div>
     </div>
   </section>
@@ -378,26 +382,26 @@
     <!-- Volunteer Form -->
   <section class="form-section" id="signup">
     <div class="contact-wrapper">
-    <h2> Volunteer Sign Up</h2>
+    <h2 data-i18n="volunteer.signup_title">Volunteer Sign Up</h2>
     <form onsubmit="return handleForm(event)">
-      <label for="name">Full Name:</label>
-      <input type="text" id="name" placeholder="Enter your full name" required>
+      <label for="name" data-i18n="volunteer.form.name">Full Name:</label>
+      <input type="text" id="name" placeholder="Enter your full name" data-i18n-attr="placeholder" data-i18n="volunteer.form.name_placeholder" required>
 
-      <label for="email">Email Address:</label>
-      <input type="email" id="email" placeholder="Enter your email" required>
+      <label for="email" data-i18n="volunteer.form.email">Email Address:</label>
+      <input type="email" id="email" placeholder="Enter your email" data-i18n-attr="placeholder" data-i18n="volunteer.form.email_placeholder" required>
 
-      <label for="phone">Phone Number:</label>
-      <input type="tel" id="phone" placeholder="Enter your phone number" required>
+      <label for="phone" data-i18n="volunteer.form.phone">Phone Number:</label>
+      <input type="tel" id="phone" placeholder="Enter your phone number" data-i18n-attr="placeholder" data-i18n="volunteer.form.phone_placeholder" required>
 
-      <label for="availability">Availability</label>
+      <label for="availability" data-i18n="volunteer.form.availability">Availability</label>
       <select id="availability" required>
-        <option value="">-- Select --</option>
-        <option value="weekdays">Weekdays</option>
-        <option value="weekends">Weekends</option>
-        <option value="both">Both</option>
+        <option value="" data-i18n="volunteer.form.select">-- Select --</option>
+        <option value="weekdays" data-i18n="volunteer.form.weekdays">Weekdays</option>
+        <option value="weekends" data-i18n="volunteer.form.weekends">Weekends</option>
+        <option value="both" data-i18n="volunteer.form.both">Both</option>
       </select>
 
-      <button type="submit">Submit</button>
+      <button type="submit" data-i18n="volunteer.form.submit">Submit</button>
     </form>
     </div>
 </section>
@@ -405,9 +409,9 @@
     <!-- Footer Bottom -->
     <footer>
         <div class="footer-bottom">
-          <p class="footer-credit">Made with 💚 by Angela Bera</p>
+          <p class="footer-credit" data-i18n="footer.madeBy">Made with 💚 by Angela Bera</p>
           <p>
-            &copy; 2025 ShareBite. All rights reserved. License
+            <span data-i18n="footer.copyright">&copy; 2025 ShareBite. All rights reserved.</span> <a href="License.html" data-i18n="footer.license">License</a>
           </p>
           <p></p>
         </div>
