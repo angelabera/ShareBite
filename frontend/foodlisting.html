@@ -25,11 +25,11 @@
                 <span>ShareBite</span>
             </div>
             <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="index.html#features" class="nav-link">Features</a></li>
-                <li><a href="foodlisting.html" class="nav-link">Listings</a></li>
-                <li><a href="index.html#about" class="nav-link">About</a></li>
-                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                <li><a href="index.html" class="nav-link" data-i18n="nav.home">Home</a></li>
+                <li><a href="index.html#features" class="nav-link" data-i18n="nav.features">Features</a></li>
+                <li><a href="foodlisting.html" class="nav-link" data-i18n="nav.listings">Listings</a></li>
+                <li><a href="index.html#about" class="nav-link" data-i18n="nav.about">About</a></li>
+                <li><a href="index.html#contact" class="nav-link" data-i18n="nav.contact">Contact</a></li>
             </ul>
             <div class="user-actions">
                 <!-- Added dark mode toggle -->
@@ -42,16 +42,16 @@
                     <i class="fas fa-bell"></i>
                     <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
                     <div class="notification-panel" id="notificationPanel">
-                        <div class="notification-header">Claimed Food Items</div>
+                        <div class="notification-header" data-i18n="listings.notification.header">Claimed Food Items</div>
                         <div id="notificationList">
-                             <div class="no-notifications">No claimed items yet</div>
+                             <div class="no-notifications" data-i18n="listings.notification.no_items">No claimed items yet</div>
                         </div>
                     </div>
                 </div>
 
                 <button class="role-switch" id="roleSwitch">
                     <i class="fas fa-exchange-alt"></i>
-                    <span id="currentRole">Donor</span>
+                    <span id="currentRole" data-i18n="role.donor">Donor</span>
                 </button>
                 <button class="login-btn" onclick="window.location.href='login.html'">Login as User</button>
                 <button class="login-btn" onclick="window.location.href='login_ngo.html'">Login as NGO</button>
@@ -68,42 +68,38 @@
     <section id="listings" class="listings">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Food Listings</h2>
-                <p class="section-subtitle">Available food waiting to be collected</p>
+                <h2 class="section-title" data-i18n="listings.title">Food Listings</h2>
+                <p class="section-subtitle" data-i18n="listings.subtitle">Available food waiting to be collected</p>
             </div>
 
             <!-- Filter Bar -->
             <div class="filter-bar">
                 <div class="filter-group">
-                    <button class="filter-btn active" data-filter="all">All</button>
-                    <button class="filter-btn" data-filter="restaurant">
-                        Restaurant
-                    </button>
-                    <button class="filter-btn" data-filter="household">
-                        Household
-                    </button>
-                    <button class="filter-btn" data-filter="bakery">Bakery</button>
+                    <button class="filter-btn active" data-filter="all" data-i18n="listings.filter.all">All</button>
+                    <button class="filter-btn" data-filter="restaurant" data-i18n="listings.filter.restaurant">Restaurant</button>
+                    <button class="filter-btn" data-filter="household" data-i18n="listings.filter.household">Household</button>
+                    <button class="filter-btn" data-filter="bakery" data-i18n="listings.filter.bakery">Bakery</button>
                 </div>
                 <div class="dropdown-check-container">
                     <button class="dropdown-btn" id="dietary-filter-btn">
-                        <span>Dietary Filters</span>
+                        <span data-i18n="listings.dietaryFilters">Dietary Filters</span>
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="dropdown-content" id="dietary-dropdown">
-                        <label><input type="checkbox" name="dietary-filter" value="vegetarian"> Vegetarian</label>
-                        <label><input type="checkbox" name="dietary-filter" value="vegan"> Vegan</label>
-                        <label><input type="checkbox" name="dietary-filter" value="gluten-free"> Gluten-Free</label>
-                        <label><input type="checkbox" name="dietary-filter" value="dairy-free"> Dairy-Free</label>
-                        <label><input type="checkbox" name="dietary-filter" value="non-vegetarian"> Non-Vegetarian</label>
+                        <label><input type="checkbox" name="dietary-filter" value="vegetarian"> <span data-i18n="listings.dietary.vegetarian">Vegetarian</span></label>
+                        <label><input type="checkbox" name="dietary-filter" value="vegan"> <span data-i18n="listings.dietary.vegan">Vegan</span></label>
+                        <label><input type="checkbox" name="dietary-filter" value="gluten-free"> <span data-i18n="listings.dietary.gluten-free">Gluten-Free</span></label>
+                        <label><input type="checkbox" name="dietary-filter" value="dairy-free"> <span data-i18n="listings.dietary.dairy-free">Dairy-Free</span></label>
+                        <label><input type="checkbox" name="dietary-filter" value="non-vegetarian"> <span data-i18n="listings.dietary.non-vegetarian">Non-Vegetarian</span></label>
                     </div>
                 </div>
                 <div class="search-box">
                     <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search by location or food type..." />
+                    <input type="text" data-i18n-attr="placeholder" data-i18n="listings.search_placeholder" />
                 </div>
                 <button class="add-listing-btn" id="addListingBtn">
                     <i class="fas fa-plus"></i>
-                    Add Listing
+                    <span data-i18n="listings.add_listing">Add Listing</span>
                 </button>
             </div>
 
@@ -118,7 +114,7 @@
     <div class="modal" id="addListingModal">
       <div class="modal-content">
         <div class="modal-header">
-          <h3>Add Food Listing</h3>
+          <h3 data-i18n="listings.modal.title">Add Food Listing</h3>
           <button class="close-modal">&times;</button>
         </div>
 
@@ -126,60 +122,63 @@
         <div class="form-progress">
           <div class="progress-step active" data-step="1">
             <div class="step-circle">1</div>
-            <span class="step-label">Food Details</span>
+            <span class="step-label" data-i18n="listings.modal.steps.1">Food Details</span>
           </div>
           <div class="progress-line"></div>
           <div class="progress-step" data-step="2">
             <div class="step-circle">2</div>
-            <span class="step-label">Pickup Info</span>
+            <span class="step-label" data-i18n="listings.modal.steps.2">Pickup Info</span>
           </div>
           <div class="progress-line"></div>
           <div class="progress-step" data-step="3">
             <div class="step-circle">3</div>
-            <span class="step-label">Photo & Review</span>
+            <span class="step-label" data-i18n="listings.modal.steps.3">Photo & Review</span>
           </div>
         </div>
 
         <form class="listing-form" id="listingForm">
           <!-- Step 1: Food Details -->
           <div class="form-step active" data-step="1">
-            <h4 class="step-title">Tell us about the food</h4>
+            <h4 class="step-title" data-i18n="listings.modal.step_titles.food_details">Tell us about the food</h4>
             <div class="form-group">
-              <label for="foodType">Food Type *</label>
+              <label for="foodType" data-i18n="listings.modal.form_labels.foodType">Food Type *</label>
               <input
                 type="text"
                 id="foodType"
                 required
-                placeholder="e.g., Pizza, Sandwiches, Fruits"
+                data-i18n-attr="placeholder"
+                data-i18n="listings.modal.placeholders.foodType"
               />
             </div>
             <div class="form-row">
               <div class="form-group">
-                <label for="quantity">Quantity *</label>
+                <label for="quantity" data-i18n="listings.modal.form_labels.quantity">Quantity *</label>
                 <input
                   type="text"
                   id="quantity"
                   required
-                  placeholder="e.g., 10 portions"
+                  data-i18n-attr="placeholder"
+                  data-i18n="listings.modal.placeholders.quantity"
                 />
               </div>
               <div class="form-group">
-                <label for="category">Category *</label>
+                <label for="category" data-i18n="listings.modal.form_labels.category">Category *</label>
                 <select id="category" required>
-                  <option value="">Select Category</option>
-                  <option value="restaurant">Restaurant</option>
-                  <option value="household">Household</option>
-                  <option value="bakery">Bakery</option>
-                  <option value="event">Event</option>
+                  <option value="" data-i18n="listings.modal.placeholders.select">Select Category</option>
+                  <option value="restaurant" data-i18n="listings.filter.restaurant">Restaurant</option>
+                  <option value="household" data-i18n="listings.filter.household">Household</option>
+                  <option value="bakery" data-i18n="listings.filter.bakery">Bakery</option>
+                  <option value="event" data-i18n="listings.filter.event">Event</option>
                 </select>
               </div>
             </div>
             <div class="form-group">
-              <label for="description">Description</label>
+              <label for="description" data-i18n="listings.modal.form_labels.description">Description</label>
               <textarea
                 id="description"
                 rows="3"
-                placeholder="Additional details about the food..."
+                data-i18n-attr="placeholder"
+                data-i18n="listings.modal.placeholders.description"
               ></textarea>
             </div>
           </div>
@@ -236,8 +235,8 @@
               />
               <div class="file-upload-area" id="photoUpload">
                 <i class="fas fa-cloud-upload-alt"></i>
-                <span>Drag & drop your image here or click to browse</span>
-                <small>Supports: JPG, PNG, GIF (Max 5MB)</small>
+                <span data-i18n="listings.modal.placeholders.fileUpload">Drag & drop your image here or click to browse</span>
+                <small data-i18n="listings.modal.placeholders.supports">Supports: JPG, PNG, GIF (Max 5MB)</small>
               </div>
               <div id="imagePreview" class="image-preview"></div>
             </div>
@@ -250,13 +249,13 @@
               id="prevStep"
               style="display: none"
             >
-              <i class="fas fa-arrow-left"></i> Previous
+              <i class="fas fa-arrow-left"></i> <span data-i18n="listings.modal.buttons.previous">Previous</span>
             </button>
             <button type="button" class="btn btn-secondary" id="cancelForm">
-              Cancel
+              <span data-i18n="listings.modal.buttons.cancel">Cancel</span>
             </button>
             <button type="button" class="btn btn-primary" id="nextStep">
-              Next <i class="fas fa-arrow-right"></i>
+              <span data-i18n="listings.modal.buttons.next">Next</span> <i class="fas fa-arrow-right"></i>
             </button>
             <button
               type="submit"
@@ -264,7 +263,7 @@
               id="submitForm"
               style="display: none"
             >
-              <i class="fas fa-check"></i> Add Listing
+              <i class="fas fa-check"></i> <span data-i18n="listings.modal.buttons.submit">Add Listing</span>
             </button>
           </div>
         </form>
@@ -275,7 +274,7 @@
     <div class="loading-overlay" id="loadingOverlay">
       <div class="loading-spinner">
         <div class="spinner"></div>
-        <p>Loading ShareBite...</p>
+        <p data-i18n="listings.modal.buttons.loading">Loading ShareBite...</p>
       </div>
     </div>
 

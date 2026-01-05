@@ -376,7 +376,7 @@ validateCurrentStep() {
     for (let input of requiredInputs) {
         if (!input.value.trim()) {
             input.focus();
-            this.showToast(`Please fill in the required field: ${input.previousElementSibling.textContent}`, 'error');
+            this.showToast(window.i18n.t('listings.errors.required_field', { field: input.previousElementSibling.textContent }), 'error');
             return false;
         }
     }
@@ -416,7 +416,7 @@ setupFileUpload() {
             fileInput.files = files;
             this.handleFileSelect(files[0]);
         } else {
-            this.showToast('Please upload a valid image file', 'error');
+            this.showToast(window.i18n.t('listings.errors.invalid_image'), 'error');
         }
     });
 
@@ -432,12 +432,12 @@ handleFileSelect(file) {
     const uploadArea = document.getElementById('photoUpload');
     
     if (!file.type.startsWith('image/')) {
-        this.showToast('Please select an image file', 'error');
+        this.showToast(window.i18n.t('listings.errors.invalid_type'), 'error');
         return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-        this.showToast('Image size should be less than 5MB', 'error');
+        this.showToast(window.i18n.t('listings.errors.image_too_large'), 'error');
         return;
     }
 
@@ -1168,8 +1168,8 @@ handleFileSelect(file) {
             foodGrid.innerHTML = `
                 <div class="no-listings">
                     <i class="fas fa-search" style="font-size: 3rem; color: var(--medium-gray); margin-bottom: 1rem;"></i>
-                    <h3>No listings found</h3>
-                    <p>Try adjusting your filters or search terms.</p>
+                    <h3>${window.i18n.t('listings.no_listings_found')}</h3>
+                    <p>${window.i18n.t('listings.no_listings_try')}</p>
                 </div>
             `;
             return;
@@ -1190,26 +1190,26 @@ handleFileSelect(file) {
             if (isClaimed) {
             return `
                 <button class="claim-btn claimed" disabled>
-                    <i class="fas fa-check-circle"></i> Claimed
+                    <i class="fas fa-check-circle"></i> ${window.i18n.t('listings.claimed')}
                 </button>
             `;
             } else if (isCollector) {
                 return `
                     <button class="claim-btn" data-id="${listing.id}">
-                        <i class="fas fa-hand-paper"></i> Claim Food
+                        <i class="fas fa-hand-paper"></i> ${window.i18n.t('listings.claim_food')}
                     </button>
                 `;
             } else {
                 return `
                     <button class="claim-btn" style="opacity: 0.5; cursor: not-allowed;" disabled>
-                        <i class="fas fa-hand-paper"></i> Switch to Collector
+                        <i class="fas fa-hand-paper"></i> ${window.i18n.t('listings.switch_to_collector')}
                     </button>
                 `;
             }
         } else {
             return `
                 <button class="claim-btn" style="opacity: 0.5; cursor: not-allowed;" disabled>
-                    <i class="fas fa-hand-paper"></i> Login to Claim
+                    <i class="fas fa-hand-paper"></i> ${window.i18n.t('listings.login_to_claim')}
                 </button>
             `;
         }
@@ -1242,7 +1242,7 @@ createFoodCard(listing) {
     let tagsHTML = '';
     if (listing.dietaryTags && listing.dietaryTags.length > 0) {
         tagsHTML = `<div class="food-tags">` +
-            listing.dietaryTags.map(tag => `<span class="tag tag-${tag}">${tag}</span>`).join('') +
+            listing.dietaryTags.map(tag => `<span class="tag tag-${tag}">${window.i18n.t('listings.dietary.' + tag)}</span>`).join('') +
         `</div>`;
     }
     
@@ -1253,14 +1253,14 @@ createFoodCard(listing) {
              data-tags="${listing.dietaryTags ? listing.dietaryTags.join(',') : ''}">
             <div class="food-image">
                 ${imageHTML}
-                <div class="food-category">${this.capitalizeFirst(listing.category)}</div>
+                <div class="food-category">${window.i18n.t('listings.filter.' + listing.category) || this.capitalizeFirst(listing.category)}</div>
             </div>
             <div class="food-details">
                 <h3 class="food-title">${listing.foodType}</h3>
                 ${tagsHTML} 
                 <p class="food-description">${listing.description}</p>
                 <div class="food-meta">
-                    <span class="quantity"><i class="fas fa-utensils"></i> ${listing.quantity}</span>
+                    <span class="quantity"><i class="fas fa-utensils"></i> ${this.localizeQuantity(listing.quantity)}</span>
                     <span class="freshness"><i class="fas fa-clock"></i> ${freshUntil}</span>
                 </div>
                 <div class="food-location">
@@ -1399,12 +1399,12 @@ createFoodCard(listing) {
         const hours = Math.floor(minutes / 60);
         
         if (minutes < 60) {
-            return `${minutes}m ago`;
+            return window.i18n.t('time.minutesAgo', { n: minutes });
         } else if (hours < 24) {
-            return `${hours}h ago`;
+            return window.i18n.t('time.hoursAgo', { n: hours });
         } else {
             const days = Math.floor(hours / 24);
-            return `${days}d ago`;
+            return window.i18n.t('time.daysAgo', { n: days });
         }
     }
 
@@ -1415,10 +1415,10 @@ createFoodCard(listing) {
         const hours = Math.floor(diff / (1000 * 60 * 60));
         
         if (hours < 24) {
-            return `${hours}h left`;
+            return window.i18n.t('time.hoursLeft', { n: hours });
         } else {
             const days = Math.floor(hours / 24);
-            return `${days}d left`;
+            return window.i18n.t('time.daysLeft', { n: days });
         }
     }
 
@@ -1427,6 +1427,17 @@ createFoodCard(listing) {
         const date = new Date();
         date.setHours(hours, minutes);
         return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    localizeQuantity(quantity) {
+        if (!quantity || typeof quantity !== 'string') return quantity;
+        let q = quantity;
+        const units = ['slices','sandwiches','portions','items'];
+        units.forEach(unit => {
+            const translated = window.i18n.t('listings.quantity_units.' + unit) || unit;
+            q = q.replace(new RegExp('\\b' + unit + '\\b','gi'), translated);
+        });
+        return q;
     }
 
     startAnimations() {
@@ -1570,8 +1581,8 @@ createFoodCard(listing) {
             notificationList.innerHTML = `
                 <div class="no-notifications">
                     <i class="fas fa-bell-slash"></i>
-                    <h4>No claimed items yet</h4>
-                    <p>Start claiming food items to see them here</p>
+                    <h4>${window.i18n.t('listings.notification.no_items')}</h4>
+                    <p>${window.i18n.t('listings.notification.empty_prompt')}</p>
                 </div>
             `;
             return;

@@ -129,8 +129,8 @@ class ShareBiteFoodListing {
         const notificationBell = document.getElementById('notificationBell');
         
         if (this.currentRole === 'collector') {
-            if (donateBtn) donateBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
-            if (findBtn) findBtn.innerHTML = '<i class="fas fa-heart"></i> Help Others';
+            if (donateBtn) donateBtn.innerHTML = `<i class="fas fa-search"></i> ${window.i18n.t('hero.find')}`;
+            if (findBtn) findBtn.innerHTML = `<i class="fas fa-heart"></i> ${window.i18n.t('hero.help')}`;
             if (addListingBtn) addListingBtn.style.display = 'none';
             
             // Show notification bell for collectors
@@ -138,8 +138,8 @@ class ShareBiteFoodListing {
                 notificationBell.style.display = 'block';
             }
         } else {
-            if (donateBtn) donateBtn.innerHTML = '<i class="fas fa-heart"></i> Donate Food';
-            if (findBtn) findBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
+            if (donateBtn) donateBtn.innerHTML = `<i class="fas fa-heart"></i> ${window.i18n.t('hero.donate')}`;
+            if (findBtn) findBtn.innerHTML = `<i class="fas fa-search"></i> ${window.i18n.t('hero.find')}`;
             if (addListingBtn) addListingBtn.style.display = 'flex';
             
             // Hide notification bell for donors (unless they have notifications)
@@ -257,7 +257,7 @@ validateCurrentStep() {
     for (let input of requiredInputs) {
         if (!input.value.trim()) {
             input.focus();
-            this.showToast(`Please fill in the required field: ${input.previousElementSibling.textContent}`, 'error');
+            this.showToast(window.i18n.t('listings.errors.required_field', { field: input.previousElementSibling.textContent }), 'error');
             return false;
         }
         
@@ -265,7 +265,7 @@ validateCurrentStep() {
         if (input.id === 'contact') {
             if (!this.validateContactInfo(input.value.trim())) {
                 input.focus();
-                this.showToast('Please enter a valid email address or phone number', 'error');
+                this.showToast(window.i18n.t('listings.errors.invalid_contact'), 'error');
                 return false;
             }
         }
@@ -330,7 +330,7 @@ setupFileUpload() {
             fileInput.files = files;
             this.handleFileSelect(files[0]);
         } else {
-            this.showToast('Please upload a valid image file', 'error');
+            this.showToast(window.i18n.t('listings.errors.invalid_image'), 'error');
         }
     });
 
@@ -346,13 +346,12 @@ handleFileSelect(file) {
     const uploadArea = document.getElementById('photoUpload');
     
     if (!file.type.startsWith('image/')) {
-        this.showToast('Please select an image file', 'error');
+        this.showToast(window.i18n.t('listings.errors.invalid_type'), 'error');
         return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-        this.showToast('Image size should be less than 5MB', 'error');
-        return;
+        this.showToast(window.i18n.t('listings.errors.image_too_large'), 'error');
     }
 
     const reader = new FileReader();
@@ -426,20 +425,22 @@ handleFileSelect(file) {
         
         for (let field of requiredFields) {
             if (!data[field] || data[field].trim() === '') {
-                this.showErrorMessage(`Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}.`);
+                const labelEl = document.querySelector(`label[for="${field}"]`);
+                const labelText = labelEl ? labelEl.textContent : field;
+                this.showErrorMessage(window.i18n.t('listings.errors.required_field', { field: labelText }));
                 return false;
             }
         }
         
         const freshDate = new Date(data.freshUntil);
         if (freshDate <= new Date()) {
-            this.showErrorMessage('Fresh until date must be in the future.');
+            this.showErrorMessage(window.i18n.t('listings.errors.fresh_date_future'));
             return false;
         }
         
         // Validate contact information
         if (!this.validateContactInfo(data.contact)) {
-            this.showErrorMessage('Please enter a valid email address or phone number for contact information.');
+            this.showErrorMessage(window.i18n.t('listings.errors.invalid_contact'));
             return false;
         }
         
@@ -453,7 +454,7 @@ handleFileSelect(file) {
     }
 
     showSuccessMessage() {
-        this.showToast('Food listing added successfully!', 'success');
+        this.showToast(window.i18n.t('listings.success.added'), 'success');
     }
 
     showErrorMessage(message) {
@@ -903,8 +904,8 @@ handleFileSelect(file) {
             foodGrid.innerHTML = `
                 <div class="no-listings">
                     <i class="fas fa-search" style="font-size: 3rem; color: var(--medium-gray); margin-bottom: 1rem;"></i>
-                    <h3>No listings found</h3>
-                    <p>Try adjusting your filters or search terms.</p>
+                    <h3>${window.i18n.t('listings.no_listings_found')}</h3>
+                    <p>${window.i18n.t('listings.no_listings_try')}</p>
                 </div>
             `;
             return;
@@ -925,26 +926,26 @@ handleFileSelect(file) {
             if (isClaimed) {
             return `
                 <button class="claim-btn claimed" disabled>
-                    <i class="fas fa-check-circle"></i> Claimed
+                    <i class="fas fa-check-circle"></i> ${window.i18n.t('listings.claimed')}
                 </button>
             `;
             } else if (isCollector) {
                 return `
                     <button class="claim-btn" data-id="${listing.id}">
-                        <i class="fas fa-hand-paper"></i> Claim Food
+                        <i class="fas fa-hand-paper"></i> ${window.i18n.t('listings.claim_food')}
                     </button>
                 `;
             } else {
                 return `
                     <button class="claim-btn" style="opacity: 0.5; cursor: not-allowed;" disabled>
-                        <i class="fas fa-hand-paper"></i> Switch to Collector
+                        <i class="fas fa-hand-paper"></i> ${window.i18n.t('listings.switch_to_collector')}
                     </button>
                 `;
             }
         } else {
             return `
                 <button class="claim-btn" style="opacity: 0.5; cursor: not-allowed;" disabled>
-                    <i class="fas fa-hand-paper"></i> Login to Claim
+                    <i class="fas fa-hand-paper"></i> ${window.i18n.t('listings.login_to_claim')}
                 </button>
             `;
         }
@@ -977,7 +978,7 @@ handleFileSelect(file) {
     let tagsHTML = '';
     if (listing.dietaryTags && listing.dietaryTags.length > 0) {
         tagsHTML = `<div class="food-tags">` +
-            listing.dietaryTags.map(tag => `<span class="tag tag-${tag}">${tag}</span>`).join('') +
+            listing.dietaryTags.map(tag => `<span class="tag tag-${tag}">${window.i18n.t('listings.dietary.' + tag)}</span>`).join('') +
         `</div>`;
     }
     
@@ -995,7 +996,7 @@ handleFileSelect(file) {
                 ${tagsHTML} 
                 <p class="food-description">${listing.description}</p>
                 <div class="food-meta">
-                    <span class="quantity"><i class="fas fa-utensils"></i> ${listing.quantity}</span>
+                    <span class="quantity"><i class="fas fa-utensils"></i> ${this.localizeQuantity(listing.quantity)}</span>
                     <span class="freshness"><i class="fas fa-clock"></i> ${freshUntil}</span>
                 </div>
                 <div class="food-location">
@@ -1128,12 +1129,12 @@ handleFileSelect(file) {
         const hours = Math.floor(minutes / 60);
         
         if (minutes < 60) {
-            return `${minutes}m ago`;
+            return window.i18n.t('time.minutesAgo', { n: minutes });
         } else if (hours < 24) {
-            return `${hours}h ago`;
+            return window.i18n.t('time.hoursAgo', { n: hours });
         } else {
             const days = Math.floor(hours / 24);
-            return `${days}d ago`;
+            return window.i18n.t('time.daysAgo', { n: days });
         }
     }
 
@@ -1144,10 +1145,10 @@ handleFileSelect(file) {
         const hours = Math.floor(diff / (1000 * 60 * 60));
         
         if (hours < 24) {
-            return `${hours}h left`;
+            return window.i18n.t('time.hoursLeft', { n: hours });
         } else {
             const days = Math.floor(hours / 24);
-            return `${days}d left`;
+            return window.i18n.t('time.daysLeft', { n: days });
         }
     }
 
@@ -1156,6 +1157,17 @@ handleFileSelect(file) {
         const date = new Date();
         date.setHours(hours, minutes);
         return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    localizeQuantity(quantity) {
+        if (!quantity || typeof quantity !== 'string') return quantity;
+        let q = quantity;
+        const units = ['slices','sandwiches','portions','items'];
+        units.forEach(unit => {
+            const translated = window.i18n.t('listings.quantity_units.' + unit) || unit;
+            q = q.replace(new RegExp('\\b' + unit + '\\b','gi'), translated);
+        });
+        return q;
     }
 
     startAnimations() {
@@ -1299,7 +1311,7 @@ handleFileSelect(file) {
             notificationList.innerHTML = `
                 <div class="no-notifications">
                     <i class="fas fa-bell-slash"></i>
-                    <h4>No claimed items yet</h4>
+                    <h4>${window.i18n.t('listings.notification.no_items')}</h4>
                     <p>Start claiming food items to see them here</p>
                 </div>
             `;

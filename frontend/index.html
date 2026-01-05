@@ -175,42 +175,42 @@
     <section id="features" class="features">
       <div class="container">
         <div class="section-header">
-          <h2 class="section-title">How ShareBite Works</h2>
-          <p class="section-subtitle">Simple steps to make a difference</p>
+          <h2 class="section-title" data-i18n="features.title">How ShareBite Works</h2>
+          <p class="section-subtitle" data-i18n="features.subtitle">Simple steps to make a difference</p>
         </div>
         <div class="features-grid">
           <div class="feature-card" data-aos="fade-up">
             <div class="feature-icon donor-icon">
               <i class="fas fa-store"></i>
             </div>
-            <h3>List Your Food</h3>
-            <p>
+            <h3 data-i18n="features.step1.title">List Your Food</h3>
+            <p data-i18n="features.step1.desc">
               Restaurants and households can easily list fresh leftover food
               with details about quantity, type, and pickup location.
             </p>
-            <div class="feature-step">Step 1</div>
+            <div class="feature-step" data-i18n="features.step1.stepLabel">Step 1</div>
           </div>
           <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
             <div class="feature-icon connector-icon">
               <i class="fas fa-handshake"></i>
             </div>
-            <h3>Connect & Coordinate</h3>
-            <p>
+            <h3 data-i18n="features.step2.title">Connect & Coordinate</h3>
+            <p data-i18n="features.step2.desc">
               Our platform connects donors with NGOs, shelters, and volunteers
               for seamless pickup coordination.
             </p>
-            <div class="feature-step">Step 2</div>
+            <div class="feature-step" data-i18n="features.step2.stepLabel">Step 2</div>
           </div>
           <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
             <div class="feature-icon collector-icon">
               <i class="fas fa-heart"></i>
             </div>
-            <h3>Feed Communities</h3>
-            <p>
+            <h3 data-i18n="features.step3.title">Feed Communities</h3>
+            <p data-i18n="features.step3.desc">
               Collected food reaches those who need it most, reducing waste
               while fighting hunger in local communities.
             </p>
-            <div class="feature-step">Step 3</div>
+            <div class="feature-step" data-i18n="features.step3.stepLabel">Step 3</div>
           </div>
         </div>
       </div>
@@ -220,33 +220,29 @@
     <section id="listings" class="listings">
       <div class="container">
         <div class="section-header">
-          <h2 class="section-title">Food Listings</h2>
-          <p class="section-subtitle">Available food waiting to be collected</p>
+          <h2 class="section-title" data-i18n="listings.title">Food Listings</h2>
+          <p class="section-subtitle" data-i18n="listings.subtitle">Available food waiting to be collected</p>
         </div>
 
        <div class="filter-bar">
     <div class="filter-group">
-        <button class="filter-btn active" data-filter="all">All</button>
-        <button class="filter-btn" data-filter="restaurant">
-            Restaurant
-        </button>
-        <button class="filter-btn" data-filter="household">
-            Household
-        </button>
-        <button class="filter-btn" data-filter="bakery">Bakery</button>
+        <button class="filter-btn active" data-filter="all" data-i18n="listings.filter.all">All</button>
+        <button class="filter-btn" data-filter="restaurant" data-i18n="listings.filter.restaurant">Restaurant</button>
+        <button class="filter-btn" data-filter="household" data-i18n="listings.filter.household">Household</button>
+        <button class="filter-btn" data-filter="bakery" data-i18n="listings.filter.bakery">Bakery</button>
     </div>
 
    <div class="dropdown-check-container">
     <button class="dropdown-btn" id="dietary-filter-btn">
-        <span>Dietary Filters</span>
+        <span data-i18n="listings.dietaryFilters">Dietary Filters</span>
         <i class="fas fa-chevron-down"></i>
     </button>
     <div class="dropdown-content" id="dietary-dropdown">
-        <label><input type="checkbox" name="dietary-filter" value="vegetarian"> Vegetarian</label>
-        <label><input type="checkbox" name="dietary-filter" value="vegan"> Vegan</label>
-        <label><input type="checkbox" name="dietary-filter" value="gluten-free"> Gluten-Free</label>
-        <label><input type="checkbox" name="dietary-filter" value="dairy-free"> Dairy-Free</label>
-        <label><input type="checkbox" name="dietary-filter" value="non-vegetarian"> Non-Vegetarian</label>
+        <label><input type="checkbox" name="dietary-filter" value="vegetarian"> <span data-i18n="listings.dietary.vegetarian">Vegetarian</span></label>
+        <label><input type="checkbox" name="dietary-filter" value="vegan"> <span data-i18n="listings.dietary.vegan">Vegan</span></label>
+        <label><input type="checkbox" name="dietary-filter" value="gluten-free"> <span data-i18n="listings.dietary.gluten-free">Gluten-Free</span></label>
+        <label><input type="checkbox" name="dietary-filter" value="dairy-free"> <span data-i18n="listings.dietary.dairy-free">Dairy-Free</span></label>
+        <label><input type="checkbox" name="dietary-filter" value="non-vegetarian"> <span data-i18n="listings.dietary.non-vegetarian">Non-Vegetarian</span></label>
     </div>
 </div>
     
@@ -254,12 +250,13 @@
         <i class="fas fa-search"></i>
         <input
             type="text"
-            placeholder="Search by location or food type..."
+            data-i18n-attr="placeholder"
+            data-i18n="listings.search_placeholder"
         />
     </div>
     <button class="add-listing-btn" id="addListingBtn">
         <i class="fas fa-plus"></i>
-        Add Listing
+        <span data-i18n="listings.add_listing">Add Listing</span>
     </button>
 </div>
 
@@ -268,7 +265,7 @@
           <!-- Sample listings will be generated by JavaScript -->
         </div>
         <div class="learn-more-container">
-          <a class="learn-more-btn" id="learnMoreBtn" href="foodlisting.html">
+          <a class="learn-more-btn" id="learnMoreBtn" href="foodlisting.html" data-i18n="listings.learn_more">
             Explore More
           </a>
         </div>
@@ -279,7 +276,7 @@
     <div class="modal" id="addListingModal">
       <div class="modal-content">
         <div class="modal-header">
-          <h3>Add Food Listing</h3>
+          <h3 data-i18n="listings.modal.title">Add Food Listing</h3>
           <button class="close-modal">&times;</button>
         </div>
 
@@ -287,86 +284,89 @@
         <div class="form-progress">
           <div class="progress-step active" data-step="1">
             <div class="step-circle">1</div>
-            <span class="step-label">Food Details</span>
+            <span class="step-label" data-i18n="listings.modal.steps.1">Food Details</span>
           </div>
           <div class="progress-line"></div>
           <div class="progress-step" data-step="2">
             <div class="step-circle">2</div>
-            <span class="step-label">Pickup Info</span>
+            <span class="step-label" data-i18n="listings.modal.steps.2">Pickup Info</span>
           </div>
           <div class="progress-line"></div>
           <div class="progress-step" data-step="3">
             <div class="step-circle">3</div>
-            <span class="step-label">Photo & Review</span>
+            <span class="step-label" data-i18n="listings.modal.steps.3">Photo & Review</span>
           </div>
         </div>
 
         <form class="listing-form" id="listingForm">
           <!-- Step 1: Food Details -->
           <div class="form-step active" data-step="1">
-            <h4 class="step-title">Tell us about the food</h4>
+            <h4 class="step-title" data-i18n="listings.modal.step_titles.food_details">Tell us about the food</h4>
             <div class="form-group">
-              <label for="foodType">Food Type *</label>
+              <label for="foodType" data-i18n="listings.modal.form_labels.foodType">Food Type *</label>
               <input
                 type="text"
                 id="foodType"
                 required
-                placeholder="e.g., Pizza, Sandwiches, Fruits"
+                data-i18n-attr="placeholder"
+                data-i18n="listings.modal.placeholders.foodType"
               />
             </div>
             <div class="form-row">
               <div class="form-group">
-                <label for="quantity">Quantity *</label>
+                <label for="quantity" data-i18n="listings.modal.form_labels.quantity">Quantity *</label>
                 <input
                   type="text"
                   id="quantity"
                   required
-                  placeholder="e.g., 10 portions"
+                  data-i18n-attr="placeholder"
+                  data-i18n="listings.modal.placeholders.quantity"
                 />
               </div>
               <div class="form-group">
-                <label for="category">Category *</label>
+                <label for="category" data-i18n="listings.modal.form_labels.category">Category *</label>
                 <select id="category" required>
-                  <option value="">Select Category</option>
-                  <option value="restaurant">Restaurant</option>
-                  <option value="household">Household</option>
-                  <option value="bakery">Bakery</option>
-                  <option value="event">Event</option>
+                  <option value="" data-i18n="listings.modal.placeholders.select">Select Category</option>
+                  <option value="restaurant" data-i18n="listings.filter.restaurant">Restaurant</option>
+                  <option value="household" data-i18n="listings.filter.household">Household</option>
+                  <option value="bakery" data-i18n="listings.filter.bakery">Bakery</option>
+                  <option value="event" data-i18n="listings.filter.event">Event</option>
                 </select>
               </div>
             </div>
             <div class="form-group">
-              <label for="description">Description</label>
+              <label for="description" data-i18n="listings.modal.form_labels.description">Description</label>
               <textarea
                 id="description"
                 rows="3"
-                placeholder="Additional details about the food..."
+                data-i18n-attr="placeholder"
+                data-i18n="listings.modal.placeholders.description"
               ></textarea>
             </div>
             <div class="form-group">
-              <label>Dietary Information (optional)</label>
+              <label data-i18n="listings.modal.form_labels.dietary">Dietary Information (optional)</label>
               <div class="checkbox-group">
-                  <div><input type="checkbox" id="tag-vegetarian" name="dietary" value="vegetarian"><label for="tag-vegetarian">Vegetarian</label></div>
-                  <div><input type="checkbox" id="tag-vegan" name="dietary" value="vegan"><label for="tag-vegan">Vegan</label></div>
-                  <div><input type="checkbox" id="tag-gluten-free" name="dietary" value="gluten-free"><label for="tag-gluten-free">Gluten-Free</label></div>
-                  <div><input type="checkbox" id="tag-nut-free" name="dietary" value="nut-free"><label for="tag-nut-free">Nut-Free</label></div>
+                  <div><input type="checkbox" id="tag-vegetarian" name="dietary" value="vegetarian"><label for="tag-vegetarian" data-i18n="listings.dietary.vegetarian">Vegetarian</label></div>
+                  <div><input type="checkbox" id="tag-vegan" name="dietary" value="vegan"><label for="tag-vegan" data-i18n="listings.dietary.vegan">Vegan</label></div>
+                  <div><input type="checkbox" id="tag-gluten-free" name="dietary" value="gluten-free"><label for="tag-gluten-free" data-i18n="listings.dietary.gluten-free">Gluten-Free</label></div>
+                  <div><input type="checkbox" id="tag-nut-free" name="dietary" value="nut-free"><label for="tag-nut-free" data-i18n="listings.dietary.nut-free">Nut-Free</label></div>
               </div>
             </div>
           </div>
 
           <!-- Step 2: Pickup Info -->
           <div class="form-step" data-step="2">
-            <h4 class="step-title">When and where to pick up?</h4>
+            <h4 class="step-title" data-i18n="listings.modal.step_titles.pickup_info">When and where to pick up?</h4>
             <div class="form-row">
               <div class="form-group">
-                <label for="freshUntil">Fresh Until *</label>
+                <label for="freshUntil" data-i18n="listings.modal.form_labels.freshUntil">Fresh Until *</label>
                 <div class="input-container-relative">
                   <input type="datetime-local" id="freshUntil" class="datetime-input" required />
                   <span class="checkmark-icon hidden">✓</span>
                 </div>
               </div>
               <div class="form-group">
-                <label for="pickupTime">Preferred Pickup Time *</label>
+                <label for="pickupTime" data-i18n="listings.modal.form_labels.pickupTime">Preferred Pickup Time *</label>
                 <div class="input-container-relative">
                   <input type="time" id="pickupTime" class="datetime-input" required />
                   <span class="checkmark-icon-time hidden">✓</span>
@@ -374,21 +374,23 @@
               </div>
             </div>
             <div class="form-group">
-              <label for="location">Pickup Location *</label>
+              <label for="location" data-i18n="listings.modal.form_labels.location">Pickup Location *</label>
               <input
                 type="text"
                 id="location"
                 required
-                placeholder="Address or landmark"
+                data-i18n-attr="placeholder"
+                data-i18n="listings.modal.placeholders.location"
               />
             </div>
             <div class="form-group">
-              <label for="contact">Contact Information *</label>
+              <label for="contact" data-i18n="listings.modal.form_labels.contact">Contact Information *</label>
               <input
                 type="text"
                 id="contact"
                 required
-                placeholder="Phone number or email"
+                data-i18n-attr="placeholder"
+                data-i18n="listings.modal.placeholders.contact"
               />
             </div>
           </div>
@@ -406,8 +408,8 @@
               />
               <div class="file-upload-area" id="photoUpload">
                 <i class="fas fa-cloud-upload-alt"></i>
-                <span>Drag & drop your image here or click to browse</span>
-                <small>Supports: JPG, PNG, GIF (Max 5MB)</small>
+                <span data-i18n="listings.modal.placeholders.fileUpload">Drag & drop your image here or click to browse</span>
+                <small data-i18n="listings.modal.placeholders.supports">Supports: JPG, PNG, GIF (Max 5MB)</small>
               </div>
               <div id="imagePreview" class="image-preview"></div>
             </div>
@@ -446,8 +448,8 @@
       <div class="container">
         <div class="about-content">
           <div class="about-text">
-            <h2>About ShareBite</h2>
-            <p>
+            <h2 data-i18n="about.title">About ShareBite</h2>
+            <p data-i18n="about.description">
               ShareBite is a revolutionary platform designed to tackle food
               waste while addressing hunger in communities. We believe that
               fresh, good food should never go to waste when there are people
@@ -457,22 +459,22 @@
               <div class="impact-item">
                 <i class="fas fa-leaf"></i>
                 <div>
-                  <strong>Environmental Impact</strong>
-                  <span>Reducing carbon footprint through waste reduction</span>
+                  <strong data-i18n="about.impact.environmental_title">Environmental Impact</strong>
+                  <span data-i18n="about.impact.environmental_text">Reducing carbon footprint through waste reduction</span>
                 </div>
               </div>
               <div class="impact-item">
                 <i class="fas fa-users"></i>
                 <div>
-                  <strong>Community Support</strong>
-                  <span>Connecting businesses with local communities</span>
+                  <strong data-i18n="about.impact.community_title">Community Support</strong>
+                  <span data-i18n="about.impact.community_text">Connecting businesses with local communities</span>
                 </div>
               </div>
               <div class="impact-item">
                 <i class="fas fa-chart-line"></i>
                 <div>
-                  <strong>Sustainable Growth</strong>
-                  <span>Building a sustainable food ecosystem</span>
+                  <strong data-i18n="about.impact.growth_title">Sustainable Growth</strong>
+                  <span data-i18n="about.impact.growth_text">Building a sustainable food ecosystem</span>
                 </div>
               </div>
             </div>
@@ -481,7 +483,7 @@
             <div class="stats-circle">
               <div class="circle-stat">
                 <span class="percentage">40%</span>
-                <span class="label">Food Waste Reduced</span>
+                <span class="label" data-i18n="about.stats.percent_label">Food Waste Reduced</span>
               </div>
             </div>
           </div>
@@ -655,8 +657,8 @@
 
       <div class="container">
         <div class="section-header" style="margin: 0;">
-          <h2 class="section-title">What People Say</h2>
-          <p class="section-subtitle">Real stories from our amazing community</p>
+          <h2 class="section-title" data-i18n="testimonials.title">What People Say</h2>
+          <p class="section-subtitle" data-i18n="testimonials.subtitle">Real stories from our amazing community</p>
         </div>
 
         <div class="testimonials-carousel">
@@ -669,8 +671,8 @@
                   <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah Johnson">
                 </div>
                 <div class="testimonial-author">
-                  <h4>Sarah Johnson</h4>
-                  <p class="testimonial-role">Restaurant Owner</p>
+                  <h4 data-i18n="testimonials.card1.author">Sarah Johnson</h4>
+                  <p class="testimonial-role" data-i18n="testimonials.card1.role">Restaurant Owner</p>
                   <div class="testimonial-rating">
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
@@ -682,10 +684,10 @@
               </div>
               <div class="testimonial-content">
                 <i class="fas fa-quote-left testimonial-quote"></i>
-                <p>ShareBite has transformed how we handle excess food at our restaurant. Instead of wasting perfectly good meals, we now connect with local shelters. It feels amazing to make a real difference!</p>
+                <p data-i18n="testimonials.card1.quote">ShareBite has transformed how we handle excess food at our restaurant. Instead of wasting perfectly good meals, we now connect with local shelters. It feels amazing to make a real difference!</p>
                 <div class="testimonial-meta">
-                  <span><i class="fas fa-map-marker-alt"></i> New York, USA</span>
-                  <span><i class="fas fa-calendar"></i> Member since 2023</span>
+                  <span><i class="fas fa-map-marker-alt"></i> <span data-i18n="testimonials.card1.location">New York, USA</span></span>
+                  <span><i class="fas fa-calendar"></i> <span data-i18n="testimonials.card1.member_since">Member since 2023</span></span>
                 </div>
               </div>
             </div>
@@ -697,8 +699,8 @@
                   <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Michael Chen">
                 </div>
                 <div class="testimonial-author">
-                  <h4>Michael Chen</h4>
-                  <p class="testimonial-role">NGO Coordinator</p>
+                  <h4 data-i18n="testimonials.card2.author">Michael Chen</h4>
+                  <p class="testimonial-role" data-i18n="testimonials.card2.role">NGO Coordinator</p>
                   <div class="testimonial-rating">
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
@@ -710,10 +712,10 @@
               </div>
               <div class="testimonial-content">
                 <i class="fas fa-quote-left testimonial-quote"></i>
-                <p>This platform has been a game-changer for our food distribution efforts. We can now reach more families in need and coordinate pickups seamlessly. The impact on our community has been tremendous!</p>
+                <p data-i18n="testimonials.card2.quote">This platform has been a game-changer for our food distribution efforts. We can now reach more families in need and coordinate pickups seamlessly. The impact on our community has been tremendous!</p>
                 <div class="testimonial-meta">
-                  <span><i class="fas fa-map-marker-alt"></i> San Francisco, USA</span>
-                  <span><i class="fas fa-calendar"></i> Member since 2022</span>
+                  <span><i class="fas fa-map-marker-alt"></i> <span data-i18n="testimonials.card2.location">San Francisco, USA</span></span>
+                  <span><i class="fas fa-calendar"></i> <span data-i18n="testimonials.card2.member_since">Member since 2022</span></span>
                 </div>
               </div>
             </div>
@@ -725,8 +727,8 @@
                   <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Emily Rodriguez">
                 </div>
                 <div class="testimonial-author">
-                  <h4>Emily Rodriguez</h4>
-                  <p class="testimonial-role">Volunteer Coordinator</p>
+                  <h4 data-i18n="testimonials.card3.author">Emily Rodriguez</h4>
+                  <p class="testimonial-role" data-i18n="testimonials.card3.role">Volunteer Coordinator</p>
                   <div class="testimonial-rating">
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
@@ -738,10 +740,10 @@
               </div>
               <div class="testimonial-content">
                 <i class="fas fa-quote-left testimonial-quote"></i>
-                <p>As a volunteer, ShareBite makes it so easy to find and claim food donations. The notification system keeps me updated, and I love seeing the positive impact we're making together in reducing food waste.</p>
+                <p data-i18n="testimonials.card3.quote">As a volunteer, ShareBite makes it so easy to find and claim food donations. The notification system keeps me updated, and I love seeing the positive impact we're making together in reducing food waste.</p>
                 <div class="testimonial-meta">
-                  <span><i class="fas fa-map-marker-alt"></i> Chicago, USA</span>
-                  <span><i class="fas fa-calendar"></i> Member since 2023</span>
+                  <span><i class="fas fa-map-marker-alt"></i> <span data-i18n="testimonials.card3.location">Chicago, USA</span></span>
+                  <span><i class="fas fa-calendar"></i> <span data-i18n="testimonials.card3.member_since">Member since 2023</span></span>
                 </div>
               </div>
             </div>
@@ -753,8 +755,8 @@
                   <img src="https://randomuser.me/api/portraits/men/56.jpg" alt="David Thompson">
                 </div>
                 <div class="testimonial-author">
-                  <h4>David Thompson</h4>
-                  <p class="testimonial-role">Bakery Manager</p>
+                  <h4 data-i18n="testimonials.card4.author">David Thompson</h4>
+                  <p class="testimonial-role" data-i18n="testimonials.card4.role">Bakery Manager</p>
                   <div class="testimonial-rating">
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
@@ -766,10 +768,10 @@
               </div>
               <div class="testimonial-content">
                 <i class="fas fa-quote-left testimonial-quote"></i>
-                <p>Every evening, we have fresh bread and pastries left over. Thanks to ShareBite, these don't go to waste anymore. It's incredibly rewarding to know our baked goods are feeding people who need them.</p>
+                <p data-i18n="testimonials.card4.quote">Every evening, we have fresh bread and pastries left over. Thanks to ShareBite, these don't go to waste anymore. It's incredibly rewarding to know our baked goods are feeding people who need them.</p>
                 <div class="testimonial-meta">
-                  <span><i class="fas fa-map-marker-alt"></i> Boston, USA</span>
-                  <span><i class="fas fa-calendar"></i> Member since 2022</span>
+                  <span data-i18n="testimonials.card4.location"><i class="fas fa-map-marker-alt"></i> Boston, USA</span>
+                  <span data-i18n="testimonials.card4.member_since"><i class="fas fa-calendar"></i> Member since 2022</span>
                 </div>
               </div>
             </div>
@@ -781,8 +783,8 @@
                   <img src="https://randomuser.me/api/portraits/women/28.jpg" alt="Priya Sharma">
                 </div>
                 <div class="testimonial-author">
-                  <h4>Priya Sharma</h4>
-                  <p class="testimonial-role">Community Leader</p>
+                  <h4 data-i18n="testimonials.card5.author">Priya Sharma</h4>
+                  <p class="testimonial-role" data-i18n="testimonials.card5.role">Community Leader</p>
                   <div class="testimonial-rating">
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
@@ -794,10 +796,10 @@
               </div>
               <div class="testimonial-content">
                 <i class="fas fa-quote-left testimonial-quote"></i>
-                <p>ShareBite connects our entire community. From donors to recipients, everyone benefits. The platform is user-friendly, and the support team is always helpful. This is what social impact looks like!</p>
+                <p data-i18n="testimonials.card5.quote">ShareBite connects our entire community. From donors to recipients, everyone benefits. The platform is user-friendly, and the support team is always helpful. This is what social impact looks like!</p>
                 <div class="testimonial-meta">
-                  <span><i class="fas fa-map-marker-alt"></i> Seattle, USA</span>
-                  <span><i class="fas fa-calendar"></i> Member since 2023</span>
+                  <span data-i18n="testimonials.card5.location"><i class="fas fa-map-marker-alt"></i> Seattle, USA</span>
+                  <span data-i18n="testimonials.card5.member_since"><i class="fas fa-calendar"></i> Member since 2023</span>
                 </div>
               </div>
             </div>
@@ -830,7 +832,7 @@
             </div>
             <div class="testimonial-stat-info">
               <h3 class="testimonial-stat-number" data-target="2500">100+</h3>
-              <p>Active Users</p>
+              <p data-i18n="testimonials.stats.active_users">Active Users</p>
             </div>
           </div>
           <div class="testimonial-stat-item">
@@ -839,7 +841,7 @@
             </div>
             <div class="testimonial-stat-info">
               <h3 class="testimonial-stat-number">4.9</h3>
-              <p>Average Rating</p>
+              <p data-i18n="testimonials.stats.average_rating">Average Rating</p>
             </div>
           </div>
           <div class="testimonial-stat-item">
@@ -848,7 +850,7 @@
             </div>
             <div class="testimonial-stat-info">
               <h3 class="testimonial-stat-number" data-target="98">98%</h3>
-              <p>Satisfaction Rate</p>
+              <p data-i18n="testimonials.stats.satisfaction_rate">Satisfaction Rate</p>
             </div>
           </div>
         </div>
