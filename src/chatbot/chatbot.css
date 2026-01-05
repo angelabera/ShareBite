@@ -1,6 +1,7 @@
-/* Compact responsive styles for ShareBot chatbot widget */
 
-/* Container */
+  /* ===================================================== */
+
+/* ================= Container ================= */
 #sharebot-container {
   position: fixed;
   right: 20px;
@@ -10,25 +11,39 @@
     Arial, sans-serif;
 }
 
-/* Floating bubble button */
+/* ================= Floating Bubble ================= */
 #sharebot-bubble {
-  width: 56px;
-  height: 56px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #4caf50, #2e7d32);
+  background: linear-gradient(135deg, #66bb6a, #1b5e20);
   border: none;
   color: #fff;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  box-shadow: 0 12px 30px rgba(46, 125, 50, 0.45);
+  animation: pulseGlow 2.8s infinite;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 14px rgba(76, 175, 80, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+  }
 }
 
 #sharebot-bubble:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  transform: translateY(-4px) scale(1.1);
+  box-shadow: 0 18px 45px rgba(27, 94, 32, 0.6);
 }
 
 #sharebot-bubble.hidden {
@@ -36,45 +51,46 @@
 }
 
 .sharebot-emoji {
-  font-size: 24px;
-  line-height: 1;
+  font-size: 28px;
 }
 
-/* Chat widget */
+/* ================= Widget ================= */
 #sharebot-widget {
-  width: 360px;
+  width: 380px;
   max-width: calc(100vw - 32px);
-  height: 500px;
-  max-height: calc(100vh - 100px);
-  background: #fff;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
-  border-radius: 12px;
-  overflow: hidden;
+  height: 540px;
+  max-height: calc(100vh - 110px);
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(16px);
+  border-radius: 18px;
   display: flex;
   flex-direction: column;
-  animation: slideUp 0.3s ease;
+  overflow: hidden;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.35);
+  animation: widgetIn 0.35s ease;
 }
 
-@keyframes slideUp {
+@keyframes widgetIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(40px) scale(0.95);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
-/* Header */
+/* ================= Header ================= */
 .sharebot-header {
-  background: linear-gradient(90deg, #4caf50, #2e7d32);
+  background: linear-gradient(135deg, #43a047, #1b5e20);
   color: #fff;
-  padding: 14px 16px;
+  padding: 16px 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.15),
+    0 4px 14px rgba(0, 0, 0, 0.2);
 }
 
 .sharebot-brand {
@@ -85,78 +101,67 @@
 
 .sharebot-logo {
   font-size: 22px;
-  line-height: 1;
 }
 
 .sharebot-brand strong {
   font-size: 16px;
   font-weight: 600;
+  letter-spacing: 0.4px;
 }
 
 .sharebot-close {
-  background: transparent;
-  border: 0;
+  background: rgba(255, 255, 255, 0.18);
+  border: none;
   color: #fff;
   font-size: 20px;
+  padding: 6px 10px;
+  border-radius: 10px;
   cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
-  transition: background 0.2s ease;
+  transition: background 0.2s ease, transform 0.15s ease;
 }
 
 .sharebot-close:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.35);
+  transform: scale(1.1);
 }
 
-/* Main content area */
+/* ================= Main ================= */
 .sharebot-main {
-  padding: 12px;
-  flex: 1 1 auto;
+  padding: 14px;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  overflow: hidden;
+  background: linear-gradient(180deg, #f6faf7, #ffffff);
 }
 
-/* Messages area */
+/* ================= Messages ================= */
 .sharebot-messages {
-  flex: 1 1 auto;
+  flex: 1;
   overflow-y: auto;
-  overflow-x: hidden;
   padding-right: 6px;
   scroll-behavior: smooth;
 }
 
-/* Scrollbar styling (webkit) */
+/* Scrollbar */
 .sharebot-messages::-webkit-scrollbar {
   width: 6px;
 }
-
-.sharebot-messages::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 3px;
-}
-
 .sharebot-messages::-webkit-scrollbar-thumb {
-  background: #bbb;
-  border-radius: 3px;
+  background: #b7d8c1;
+  border-radius: 4px;
 }
 
-.sharebot-messages::-webkit-scrollbar-thumb:hover {
-  background: #999;
-}
-
-/* Individual message */
+/* ================= Message Bubble ================= */
 .sharebot-message {
-  margin: 10px 0;
   display: flex;
-  animation: fadeIn 0.3s ease;
+  margin: 10px 0;
+  animation: msgIn 0.25s ease;
 }
 
-@keyframes fadeIn {
+@keyframes msgIn {
   from {
     opacity: 0;
-    transform: translateY(5px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -173,66 +178,79 @@
 }
 
 .sharebot-bubble {
-  padding: 10px 14px;
-  border-radius: 14px;
-  max-width: 85%;
-  line-height: 1.5;
+  position: relative;
+  padding: 12px 15px;
+  max-width: 82%;
   font-size: 14px;
-  word-wrap: break-word;
+  line-height: 1.6;
+  border-radius: 18px;
 }
 
+/* Bot bubble */
 .sharebot-bot .sharebot-bubble {
-  background: #f1f7f3;
-  color: #0a0a0a;
-  border-bottom-left-radius: 4px;
+  background: #eef6f1;
+  color: #1c1c1c;
+  border-bottom-left-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* Formatted text in bot messages */
+/* Bot tail */
+.sharebot-bot .sharebot-bubble::before {
+  content: "";
+  position: absolute;
+  left: -6px;
+  bottom: 8px;
+  width: 12px;
+  height: 12px;
+  background: #eef6f1;
+  border-radius: 50%;
+}
+
+/* User bubble */
+.sharebot-user .sharebot-bubble {
+  background: linear-gradient(135deg, #4caf50, #1b5e20);
+  color: #fff;
+  border-bottom-right-radius: 6px;
+  box-shadow: 0 6px 18px rgba(27, 94, 32, 0.45);
+}
+
+/* User tail */
+.sharebot-user .sharebot-bubble::after {
+  content: "";
+  position: absolute;
+  right: -6px;
+  bottom: 8px;
+  width: 12px;
+  height: 12px;
+  background: #2e7d32;
+  border-radius: 50%;
+}
+
+/* ================= Text Formatting ================= */
 .sharebot-bot .sharebot-bubble b {
-  font-weight: 600;
   color: #2e7d32;
 }
-
 .sharebot-bot .sharebot-bubble i {
-  font-style: italic;
   color: #555;
 }
-
-.sharebot-bot .sharebot-bubble br {
-  display: block;
-  content: "";
-  margin-top: 6px;
-}
-
-.sharebot-user .sharebot-bubble {
-  background: #4caf50;
-  color: #fff;
-  border-bottom-right-radius: 4px;
-}
-
-/* Links in bot messages */
 .sharebot-bot .sharebot-bubble a {
   color: #2e7d32;
-  font-weight: 500;
+  font-weight: 600;
   text-decoration: underline;
 }
 
-.sharebot-bot .sharebot-bubble a:hover {
-  color: #1b5e20;
-}
-
-/* Quick replies section */
+/* ================= Quick Replies ================= */
 .sharebot-quick {
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px solid #eee;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed #d9e8df;
 }
 
 .sharebot-quick-label {
   font-size: 12px;
+  font-weight: 600;
   color: #666;
   margin-bottom: 8px;
-  font-weight: 500;
 }
 
 .sharebot-quick-list {
@@ -242,96 +260,89 @@
 }
 
 .sharebot-quick-item {
-  background: #f4f6f5;
-  border: 1px solid #e0e0e0;
-  padding: 6px 12px;
-  border-radius: 12px;
-  cursor: pointer;
+  background: #ffffff;
+  border: 1px solid #cfe3d6;
+  padding: 6px 16px;
+  border-radius: 999px;
   font-size: 13px;
-  color: #333;
+  cursor: pointer;
+  color: #2e7d32;
   transition: all 0.2s ease;
 }
 
 .sharebot-quick-item:hover {
-  background: #4caf50;
+  background: linear-gradient(135deg, #4caf50, #2e7d32);
   color: #fff;
-  border-color: #4caf50;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 
-/* Input area */
+/* ================= Input ================= */
 .sharebot-input-area {
   padding: 12px;
   display: flex;
   gap: 8px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid #e0e0e0;
   background: #fafafa;
 }
 
 .sharebot-input-area input {
-  flex: 1 1 auto;
-  padding: 10px 12px;
-  border-radius: 20px;
-  border: 1px solid #ddd;
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 999px;
+  border: 1px solid #dcdcdc;
   font-size: 14px;
-  font-family: inherit;
   outline: none;
-  transition: border-color 0.2s ease;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
 }
 
 .sharebot-input-area input:focus {
   border-color: #4caf50;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
 }
 
 .sharebot-input-area button {
-  background: #2e7d32;
+  background: linear-gradient(135deg, #43a047, #1b5e20);
+  border: none;
   color: #fff;
-  border: 0;
-  padding: 10px 16px;
-  border-radius: 20px;
+  padding: 12px 20px;
+  border-radius: 999px;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: background 0.2s ease, transform 0.1s ease;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
 }
 
 .sharebot-input-area button:hover {
-  background: #1b5e20;
+  box-shadow: 0 8px 22px rgba(27, 94, 32, 0.45);
 }
 
 .sharebot-input-area button:active {
-  transform: scale(0.95);
+  transform: scale(0.92);
 }
 
-/* Responsive: smaller on narrow screens */
+/* ================= Responsive ================= */
 @media (max-width: 420px) {
   #sharebot-container {
     right: 12px;
-    bottom: 150px;
+    bottom: 110px;
   }
 
   #sharebot-widget {
     width: calc(100vw - 24px);
-    height: calc(100vh - 80px);
-    border-radius: 12px;
-  }
-
-  #sharebot-bubble {
-    width: 50px;
-    height: 50px;
+    height: calc(100vh - 90px);
+    border-radius: 16px;
   }
 
   .sharebot-emoji {
-    font-size: 20px;
+    font-size: 24px;
   }
 
   .sharebot-bubble {
-    max-width: 90%;
+    max-width: 92%;
     font-size: 13px;
   }
 }
 
-/* Accessibility */
+/* ================= Accessibility ================= */
 #sharebot-widget[hidden] {
   display: none;
 }
