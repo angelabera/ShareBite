@@ -59,6 +59,17 @@ body {
     line-height: 1.6;
     color: var(--black);
     overflow-x: hidden;
+    background: 
+      url('../logo/sharebite_logo.png') center center / contain no-repeat,
+      linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(255, 107, 53, 0.1) 50%, rgba(76, 175, 80, 0.1) 100%);
+    background-attachment: fixed;
+}
+
+body.dark-mode {
+    background: 
+      url('../logo/sharebite_logo.png') center center / contain no-repeat,
+      linear-gradient(135deg, rgba(0, 50, 0, 0.3) 0%, rgba(0, 30, 0, 0.4) 50%, rgba(0, 50, 0, 0.3) 100%);
+    background-attachment: fixed;
 }
 
 .container {

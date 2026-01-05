@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ry<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -47,24 +47,22 @@
             align-items: center;
             min-height: 100vh;
             padding: 1rem;
-            background: linear-gradient(
-              135deg,
-              #667eea 0%,
-              #764ba2 50%,
-              #f093fb 100%
-            );
+        background:
+          url('https://img.freepik.com/premium-vector/ngo-volunteers-non-governmental-nonprofit-organizations-work-concept-humanitarian-aid-donation-international-support-solidarity-flat-vector-illustration-isolated-white-background_198278-21317.jpg?w=2000') center center / cover no-repeat,
+          url('https://images.unsplash.com/photo-1593113598332-cd288d649433?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80') center center / cover no-repeat,
+          linear-gradient(135deg, rgba(34, 139, 34, 0.6) 0%, rgba(50, 205, 50, 0.7) 50%, rgba(34, 139, 34, 0.6) 100%);
+            background-attachment: fixed;
             color: var(--text-color-light);
             transition: background 0.4s, color 0.4s;
             padding-top: 40px; /* Reduced padding for simple nav */
         }
 
         body.dark-mode {
-            background: linear-gradient(
-              135deg,
-              #2c3e50 0%,
-              #34495e 50%,
-              #9b59b6 100%
-            );
+            background:
+              url('https://img.freepik.com/premium-vector/ngo-volunteers-non-governmental-nonprofit-organizations-work-concept-humanitarian-aid-donation-international-support-solidarity-flat-vector-illustration-isolated-white-background_198278-21317.jpg?w=2000') center center / cover no-repeat,
+              url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80') center center / cover no-repeat,
+              linear-gradient(135deg, rgba(0, 50, 0, 0.7) 0%, rgba(0, 30, 0, 0.8) 50%, rgba(0, 50, 0, 0.7) 100%);
+            background-attachment: fixed;
             color: var(--text-color-dark);
         }
 
@@ -208,7 +206,7 @@
         }
 
         .auth-container {
-            background-color: var(--card-bg-light);
+            background-color: rgba(255, 255, 255, 0.5);
             padding: 3rem;
             border-radius: 1.5rem;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
@@ -221,7 +219,7 @@
         }
 
         body.dark-mode .auth-container {
-            background-color: var(--card-bg-dark);
+            background-color: rgba(0, 0, 0, 0.5);
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), 0 5px 15px rgba(0, 0, 0, 0.3);
             border: 1px solid #404040;
         }
