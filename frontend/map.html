@@ -35,6 +35,11 @@
       --transition: all 0.3s ease;
     }
 
+    html{
+      height: 100%;
+      margin: 0;
+    }
+
     body {
       font-family: 'Poppins', sans-serif;
       margin: 0;
@@ -43,6 +48,7 @@
       background-color: var(--bg-light);
       color: var(--text-light);
       overflow-x: hidden;
+      height: 100%;
     }
 
     body.dark {
@@ -213,7 +219,6 @@
       z-index: 1001;
       opacity: 0;
       visibility: hidden;
-      transform: translateY(-10px);
       transition: var(--transition);
     }
     
@@ -313,6 +318,7 @@
     }
 
     /* Enhanced Map Header */
+
     .map-header {
       text-align: center;
       margin-top: 100px;
@@ -358,19 +364,18 @@
 
     /* Enhanced Map Container */
     .map-container {
-      height: 75vh;
       width: 100%;
       margin-top: 20px;
       position: relative;
+      overflow: visible;
       padding: 0 20px;
       max-width: 1200px;
       margin-left: auto;
       margin-right: auto;
     }
-
     #map {
       height: 100%;
-      width: 100%;
+      height: 600px; 
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       transition: var(--transition);
@@ -382,8 +387,8 @@
 
     .legend {
       position: absolute;
-      bottom: 20px;
-      left: 20px;
+      bottom: 10px;
+      left: 30px;
       background: var(--card-light);
       color: var(--text-light);
       padding: 20px;
@@ -392,10 +397,8 @@
       font-size: 14px;
       transition: var(--transition);
       z-index: 1000;
-      -webkit-backdrop-filter: blur(10px);
-      backdrop-filter: blur(10px);
       border: 1px solid rgba(255,255,255,0.1);
-      min-width: 200px;
+      min-width: 240px;
     }
     
 
@@ -484,18 +487,19 @@
     .search-panel {
       position: absolute;
       top: 20px;
-      left: 20px;
+      left: 30px;
       background: var(--card-light);
       color: var(--text-light);
-      padding: 20px;
+      padding: 25px;
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       transition: var(--transition);
       z-index: 1000;
-      -webkit-backdrop-filter: blur(10px);
-      backdrop-filter: blur(10px);
       border: 1px solid rgba(255,255,255,0.1);
-      width: 300px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      width: 240px;
+      max-height: 350px; 
     }
      
     body.dark .search-panel {
@@ -717,7 +721,7 @@
     .stats-panel {
       position: absolute;
       bottom: 20px;
-      right: 20px;
+      right: 30px;
       background: var(--card-light);
       color: var(--text-light);
       padding: 20px;
@@ -725,8 +729,6 @@
       box-shadow: var(--shadow);
       transition: var(--transition);
       z-index: 1000;
-      -webkit-backdrop-filter: blur(10px);
-      backdrop-filter: blur(10px);
       border: 1px solid rgba(255,255,255,0.1);
       min-width: 200px;
     }
@@ -780,11 +782,11 @@
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       z-index: 2000;
-      transform: translateX(150%);
       transition: transform 0.3s ease;
       display: flex;
       align-items: center;
       gap: 10px;
+      max-height: 100px;
     }
 
     .toast.show {
@@ -795,61 +797,92 @@
       font-size: 1.2rem;
     }
 
-    /* Responsive Design */
-    @media (max-width: 1024px) {
-      .map-container {
-        height: 70vh;
-      }
-      
-      .search-panel {
-        width: 250px;
-      }
+    .mobile-fab {
+      display: none;
     }
 
+    
+    /* Responsive Design */
     @media (max-width: 768px) {
+
+      /* Header tweaks */
       .map-header h2 {
-        font-size: 2.2rem;
+        font-size: 1.6rem;
       }
-      
+
       .map-header p {
-        font-size: 1rem;
+        font-size: 0.95rem;
       }
-      
+
+      /* Make map fullscreen */
       .map-container {
-        height: 65vh;
-        padding: 0 10px;
+        height: calc(100vh - 120px); /* navbar + header */
+        padding: 10px;
       }
-      
+
+      #map {
+        height: 100%;
+        width: 100%;
+      }
+
+      .mobile-fab {
+        display: flex;
+        position: fixed;
+        bottom: 20px;
+        right: 70px;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: #ff6a00;
+        color: #fff;
+        border: none;
+        font-size: 20px;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999; 
+      }
+
+      /* Turn filter into bottom sheet */
       .search-panel {
-        width: 200px;
-        left: 10px;
-        top: 10px;
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        top: auto;
+        width: 100%;
+        height: 45vh;
+        background: var(--bg);
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
+        border-radius: 16px 16px 0 0;
+        z-index: 2000;
+        overflow-y: auto;
       }
-      
-      .legend {
-        left: 10px;
-        bottom: 10px;
-        padding: 15px;
+
+      .search-panel.active {
+        transform: translateY(0);
       }
-      
+
+      /* Hide these on mobile (IMPORTANT) */
+      .legend,
       .stats-panel {
-        right: 10px;
-        bottom: 10px;
-        padding: 15px;
+        display: none;
       }
-      
+
+      /* Move map controls safely */
       .map-controls {
-        right: 10px;
-        top: 10px;
+        top: auto;
+        bottom: 90px;
+        right: 16px;
       }
-      
+
+      /* Hide desktop nav */
       .nav-menu {
         display: none;
       }
-      
+
       .notification-panel {
-        width: 280px;
-        right: -20px;
+        width: 260px;
+        right: 0;
       }
     }
 
@@ -953,7 +986,9 @@
   <!-- Map Container -->
   <div class="map-container">
     <div id="map"></div>
-    
+    <button class="mobile-fab" id="filterToggle" aria-label="Toggle filters">
+      <i class="fas fa-filter"></i>
+    </button>
     <!-- Search Panel -->
     <div class="search-panel">
       <h3><i class="fas fa-filter"></i> Filter Locations</h3>
@@ -1037,7 +1072,19 @@
   <script>
     // Initialize map
     const map = L.map('map').setView([19.0760, 72.8777], 12); // Mumbai default
+    const filterToggleBtn = document.getElementById("filterToggle");
+    const searchPanel = document.querySelector(".search-panel");
 
+    if (filterToggleBtn && searchPanel) {
+      filterToggleBtn.addEventListener("click", () => {
+        searchPanel.classList.toggle("active");
+
+        // CRITICAL: force Leaflet to recalculate map size
+        setTimeout(() => {
+          map.invalidateSize();
+        }, 350); // must match CSS transition duration
+      });
+    }
     // Tile layers
     const lightTiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,

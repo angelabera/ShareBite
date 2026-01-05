@@ -726,8 +726,8 @@ body.dark .profile-menu-item:hover {
                 top: 100%;
                 left: 0;
                 width: 100%;
-              background: var(--bg-black) !important;
-                 color: white;
+                background: var(--bg-black) !important;
+                color: white;
                 flex-direction: column;
                 align-items: stretch;
                 gap: 0;
@@ -1254,10 +1254,11 @@ body.dark .profile-menu-item:hover {
 }
 
 .btn-secondary {
-    background: transparent;
-    color: white;
-    border: 2px solid white;
+    background: white;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
 }
+
 
 .btn-secondary:hover {
     background: white;
@@ -2306,17 +2307,9 @@ button#prevStep:hover, button#cancelForm:hover {
     margin-top: 2rem;
 }
 
-/* About Section */
 .about {
-    padding: var(--section-padding);
-    background: var(--light-gray);
-}
-
-.about-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: center;
+  padding: 80px 0;
+  background: linear-gradient(180deg, #f9fff9, #ffffff);
 }
 
 .about-text h2 {
@@ -2331,75 +2324,159 @@ button#prevStep:hover, button#cancelForm:hover {
     line-height: 1.7;
     margin-bottom: 2rem;
 }
+.about-content {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+}
 
+/* LEFT TEXT */
+.about-text {
+  flex: 1;
+}
+
+.about-text h2 {
+  font-size: 2.6rem;
+  text-align: center;
+  margin-bottom: 18px;
+  color: #1b1b1b;
+}
+
+.about-text p {
+  color: #666;
+  line-height: 1.7;
+  margin-bottom: 30px;
+}
 .impact-stats {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px; 
+  margin: 40px 0;
 }
 
 .impact-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
+  background: #ffffff;
+  padding: 30px 20px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); /* Soft shadow for depth */
+  text-align: center; /* Centers all text and icons */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Hover Effect: Lifts the card up slightly */
+.impact-item:hover {
+  transform: translateY(100px);
+  box-shadow: 0 15px 40px rgba(46, 204, 113, 0.2); /* Green glow on hover */
 }
 
 .impact-item i {
-    font-size: 1.5rem;
-    color: var(--primary-color);
-    margin-top: 0.25rem;
+  font-size: 2rem;
+  color: #2ecc71; /* ShareBite Green */
+  background-color: #e8f5e9; /* Light Green Circle Background */
+  width: 70px;
+  height: 70px;
+  
+  /* Centers the icon inside the circle */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  border-radius: 50%;
+  margin-bottom: 20px; /* Space between icon and text */
 }
 
 .impact-item strong {
-    display: block;
-    font-weight: 600;
-    color: var(--black);
-    margin-bottom: 0.25rem;
+  display: block; /* Forces title to own line */
+  font-size: 1.25rem;
+  color: #2c3e50;
+  margin-bottom: 10px;
 }
 
 .impact-item span {
-    color: var(--medium-gray);
-    font-size: 0.95rem;
+  font-size: 0.95rem;
+  color: #666;
+  line-height: 1.5;
 }
 
-.about-visual {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.about-flow {
+  margin-top: 60px;
+  padding: 26px;
+  background: #f1faf1;
+  border-radius: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  font-weight: 600;
+  color: #2e7d32;
 }
 
-.stats-circle {
-    width: 250px;
-    height: 250px;
-    border-radius: 50%;
-    background: var(--primary-gradient);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    box-shadow: var(--shadow-heavy);
+.flow-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.5rem;
 }
 
-.circle-stat {
-    text-align: center;
-    color: white;
+.flow-arrow {
+  font-size: 1.8rem;
+  color: #4caf50;
 }
 
-.percentage {
-    display: block;
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
+.about-cta {
+  margin-top: 36px;
+  text-align: center;
 }
 
-.label {
-    font-size: 1rem;
-    font-weight: 500;
-}/* Footer */
+.cta-btn {
+  display: inline-block;
+  background: linear-gradient(135deg, #4caf50, #2e7d32);
+  color: #ffffff;
+  padding: 15px 40px;
+  border-radius: 40px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 12px 30px rgba(76, 175, 80, 0.35);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cta-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(76, 175, 80, 0.45);
+}
+
+
+
+
+/* Footer */
 .footer {
     background: var(--black);
     color: white;
     padding: 3rem 0 1rem;
+    background: #0f172a;
+    color: #cbd5e1;
+    padding: 4rem 1rem 2rem;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2.5rem;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #22c55e;
 }
 
 /* Main Footer Layout */
@@ -2625,6 +2702,77 @@ button#prevStep:hover, button#cancelForm:hover {
 .settings-label {
   font-size: 0.95rem;
   color: var(--medium-gray);
+.footer-brand p {
+  margin: 1rem 0;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.footer-links h4 {
+  color: #f8fafc;
+  margin-bottom: 1rem;
+  font-size: 1.05rem;
+}
+
+.footer-links ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links li {
+  margin-bottom: 0.6rem;
+}
+
+.footer-links a {
+  color: #cbd5e1;
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
+  color: var(--primary-color);
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.footer-links a:hover {
+  color: #22c55e;
+}
+
+.social-links {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.social-links a {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1e293b;
+  border-radius: 50%;
+  color: #e5e7eb;
+  transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+  background: #22c55e;
+  color: #0f172a;
+}
+
+.footer-bottom {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #1e293b;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.footer-bottom a {
+  color: #22c55e;
+  color: #cbd5e1;
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
 }
 
 /* Loading Overlay */
@@ -3992,6 +4140,27 @@ body.dark-mode .divider-icon {
     position: relative;
 }
 
+/* Unread notification styling */
+.notification-item.unread {
+    background: linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%);
+    border-left: 4px solid var(--primary-color);
+}
+
+.notification-item.unread::after {
+    content: '';
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 8px;
+    height: 8px;
+    background: var(--primary-color);
+    border-radius: 50%;
+}
+
+body.dark-mode .notification-item.unread {
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.15) 0%, rgba(76, 175, 80, 0.1) 100%);
+}
+
 .notification-item::before {
     content: '';
     position: absolute;
@@ -5288,4 +5457,47 @@ body.dark-mode .notification-bell:hover {
 :root.dark .checkmark-icon-time:hover {
     background: var(--primary-dark);
     box-shadow: 0 4px 12px rgba(76, 175, 80, 0.5);
+}
+
+/* --- Navigation Fix Patch --- */
+@media screen and (max-width: 768px) {
+    /* Ensure the main navbar container is above everything */
+    .navbar {
+        z-index: 10000 !important;
+    }
+
+    /* Force the menu to be visible when active */
+    .nav-menu.active {
+        display: flex !important;
+        position: fixed !important;
+        top: 60px; /* Adjust to match your navbar height */
+        left: 0;
+        width: 100%;
+        height: auto;
+        max-height: 100vh;
+        background-color: #1a1a1a !important; /* Solid dark background so white text is visible */
+        flex-direction: column;
+        padding: 2rem 0;
+        z-index: 9999 !important;
+        overflow-y: auto;
+    }
+
+    /* Make sure links aren't hidden */
+    .nav-menu.active .nav-link {
+        color: #ffffff !important;
+        font-size: 1.2rem;
+        padding: 1rem;
+        text-align: center;
+        display: block;
+    }
+
+    /* Ensure hamburger lines are visible */
+    .hamburger {
+        display: flex !important;
+        z-index: 10001 !important;
+    }
+    
+    .hamburger span {
+        background-color: #4CAF50 !important; /* Forces green lines */
+    }
 }
