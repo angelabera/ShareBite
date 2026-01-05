@@ -474,6 +474,32 @@
           ? "Hide Password"
           : "Show Password";
       });
+      // --- Email validation (RUN ONCE) ---
+      const emailInput = document.getElementById("email");
+
+      const emailError = document.createElement("div");
+      emailError.style.color = "var(--secondary-orange)";
+      emailError.style.paddingTop = "0.3rem";
+      emailError.style.fontSize = "0.97rem";
+      emailError.style.display = "none";
+
+      emailInput.closest(".form-group").appendChild(emailError);
+
+      function validateEmail(email) {
+        const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return re.test(email);
+      }
+
+      emailInput.addEventListener("blur", () => {
+        if (!emailInput.value || validateEmail(emailInput.value)) {
+          emailError.style.display = "none";
+          emailInput.style.borderColor = "var(--input-border-light)";
+        } else {
+          emailError.textContent = "Please enter a valid email address.";
+          emailError.style.display = "block";
+          emailInput.style.borderColor = "var(--secondary-orange)";
+        }
+      });
 
       // --- Form Submission ---
       const registerForm = document.getElementById("registerForm");
@@ -483,56 +509,10 @@
 
         // Get form values
         const fullName = registerForm.name.value.trim();
-        const emailInput = registerForm.email; 
         const email = emailInput.value.trim(); 
         const password = registerForm.password.value.trim();
         const confirmPassword = registerForm.confirmPassword.value.trim();
         const role = registerForm.role.value;
-
-        // Create container for error message
-        const emailError = document.createElement('div');
-        emailError.style.color = 'var(--secondary-orange)';
-        emailError.style.paddingTop = '0.3rem';
-        emailError.style.fontSize = '0.97rem';
-        emailError.style.display = 'none';
-        
-        const emailGroup = emailInput.closest('.form-group'); 
-        emailGroup.appendChild(emailError);
-
-        function validateEmail(email) {
-        const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        return re.test(email);
-        }
-
-        emailInput.addEventListener('blur', function () {
-          if (!emailInput.value || validateEmail(emailInput.value)) {
-            emailError.style.display = 'none';
-            emailInput.style.borderColor = 'var(--input-border-light)';
-          } else {
-            emailError.textContent = 'Please enter a valid email address.';
-            emailError.style.display = 'block';
-            emailInput.style.borderColor = 'var(--secondary-orange)';
-          }
-        });
-
-        if (!fullName || !email || !password || !role) {
-          alert("Please fill in all fields before registering.");
-          return;
-        }
-
-        // Password match validation
-        if (password !== confirmPassword) {
-          alert("Passwords do not match. Please re-enter.");
-          return;
-        }
-
-        // Hash password using SHA-256
-        const encoder = new TextEncoder();
-        const data = encoder.encode(password);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashedPassword = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-
         // Missing field validation
         if (!fullName || !email || !password || !role) {
           Swal.fire({
@@ -564,7 +544,8 @@
           const response = await registerUser({
             name: fullName,
             email: email,
-            password: password
+            password: password,
+            role
           });
 
           // Success message
@@ -592,17 +573,6 @@
           });
         }
       }));
-
-      const password = document.getElementById("password");
-      const show_pwd = document.getElementById("show-pwd");
-      function passwordToggle() {
-        if (show_pwd.checked) {
-          password.type = "text";
-        } else {
-          password.type = "password";
-        }
-      }
-      show_pwd.addEventListener("change", passwordToggle);
     </script>
   </body>
 </html>

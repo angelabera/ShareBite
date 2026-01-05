@@ -3,6 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta property="og:title" content="ShareBite">
+    <meta property="og:description" content="Reduce Food Waste, Feed Communities | Connect restaurants and households with NGOs and volunteers to redistribute fresh leftover food and fight hunger while reducing waste.">
+    <meta property="og:image" content="https://angelabera.github.io/ShareBite/logo/sharebite_logo.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://angelabera.github.io/ShareBite/">
     <!-- Cache Control for Development -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
@@ -316,7 +323,7 @@
               <div class="form-group">
                 <label for="quantity" data-i18n="listings.modal.form_labels.quantity">Quantity *</label>
                 <input
-                  type="text"
+                  type="number"
                   id="quantity"
                   required
                   data-i18n-attr="placeholder"
@@ -991,27 +998,70 @@
               <li><a href="#about">About Us</a></li>
             </ul>
           </div>
+<footer class="footer">
+  <div class="container footer-grid">
 
-          <div class="footer-section">
-            <h4>For Donors</h4>
-            <ul>
-              <li><a href="foodlisting.html">List Food</a></li>
-              <li><a href="donor-guidelines.html">Donor Guidelines</a></li>
-              <li><a href="track-impact.html">Track Impact</a></li>
-              <li><a href="support.html">Support</a></li>
-            </ul>
-          </div>
+    <!-- Brand Section -->
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <i class="fas fa-utensils"></i>
+        <span>ShareBite</span>
+      </div>
+      <p>
+        Making a difference, one meal at a time.  
+        Join us in the fight against food waste and hunger.
+      </p>
 
-          <div class="footer-section">
-            <h4>For Collectors</h4>
-            <ul>
-              <li><a href="#">Find Food</a></li>
-              <li><a href="ngo-register.html">Register NGO</a></li>
-              <li><a href="vounteer_food.html">Volunteer</a></li>
-              <li><a href="#">Resources</a></li>
-            </ul>
-          </div>
-        </div>
+      <div class="social-links">
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+    </div>
+
+    <!-- Links -->
+    <div class="footer-links">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#features">How It Works</a></li>
+        <li><a href="foodlisting.html">Food Listings</a></li>
+        <li><a href="#about">About Us</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-links">
+      <h4>For Donors</h4>
+      <ul>
+        <li><a href="foodlisting.html">List Food</a></li>
+        <li><a href="donor-guidelines.html">Donor Guidelines</a></li>
+        <li><a href="track-impact.html">Track Impact</a></li>
+        <li><a href="support.html">Support</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-links">
+      <h4>For Collectors</h4>
+      <ul>
+        <li><a href="#">Find Food</a></li>
+        <li><a href="ngo-register.html">Register NGO</a></li>
+        <li><a href="vounteer_food.html">Volunteer</a></li>
+        <li><a href="#">Resources</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Footer Bottom -->
+  <div class="footer-bottom">
+    <p>Made with 💚 by <strong>Angela Bera</strong></p>
+    <p>
+      © 2025 ShareBite. All rights reserved · 
+      <a href="License.html">License</a>
+    </p>
+  </div>
+</footer>
 
         <!-- Footer Bottom -->
         <div class="footer-bottom">
@@ -1077,6 +1127,8 @@
         });
       });
     </script>
+    <script src="js/api.js"></script>
+    <script src="js/foodlisting.js"></script>
    
   <!-- ShareBite Chatbot is lazy-loaded via js/script.js -->
   </body>

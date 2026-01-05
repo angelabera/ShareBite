@@ -20,6 +20,11 @@ const userSchema = new mongoose.Schema(
       required: true,
       minlength: 6,
     },
+    role: {
+      type: String,
+      enum: ['donor', 'collector'],
+      required: true,
+    },
   },
   { timestamps: true }
 );
