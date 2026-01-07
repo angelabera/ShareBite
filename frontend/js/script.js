@@ -21,6 +21,23 @@
             }
         });
 
+        const menuToggle = document.getElementById("menuToggle");
+        const navMenu = document.getElementById("navMenu");
+
+        menuToggle.addEventListener("click", () => {
+        navMenu.classList.toggle("active");
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const menuToggle = document.getElementById("menuToggle");
+            const navMenu = document.getElementById("navMenu");
+          
+            menuToggle.addEventListener("click", () => {
+              navMenu.classList.toggle("active");
+            });
+          });
+          
+
         // Notification Toggle
         const notificationBell = document.getElementById('notificationBell');
         const notificationPanel = document.getElementById('notificationPanel');
