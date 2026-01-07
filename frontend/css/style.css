@@ -157,11 +157,24 @@ body {
             position: relative;
         }
 
+        .role-switch {
+            transition:
+              transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+       }
+
         .theme-toggle:hover,
-        .notification-bell:hover,
-        .role-switch:hover {
+        .notification-bell:hover{
             background: var(--border-color);
             transform: translateY(-2px);
+        }
+
+        .role-switch:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6),
+                        0 0 30px rgba(76, 175, 80, 0.3);
+    
         }
 
         .notification-bell {
