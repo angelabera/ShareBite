@@ -3,6 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta property="og:title" content="ShareBite">
+    <meta property="og:description" content="Reduce Food Waste, Feed Communities | Connect restaurants and households with NGOs and volunteers to redistribute fresh leftover food and fight hunger while reducing waste.">
+    <meta property="og:image" content="https://angelabera.github.io/ShareBite/logo/sharebite_logo.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://angelabera.github.io/ShareBite/">
     <!-- Cache Control for Development -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
@@ -306,7 +313,7 @@
               <div class="form-group">
                 <label for="quantity">Quantity *</label>
                 <input
-                  type="text"
+                  type="number"
                   id="quantity"
                   required
                   placeholder="e.g., 10 portions"
@@ -430,52 +437,70 @@
     </div>
 
     <!-- About Section -->
-    <section id="about" class="about">
-      <div class="container">
-        <div class="about-content">
-          <div class="about-text">
-            <h2>About ShareBite</h2>
-            <p>
-              ShareBite is a revolutionary platform designed to tackle food
-              waste while addressing hunger in communities. We believe that
-              fresh, good food should never go to waste when there are people
-              who need it.
-            </p>
-            <div class="impact-stats">
-              <div class="impact-item">
-                <i class="fas fa-leaf"></i>
-                <div>
-                  <strong>Environmental Impact</strong>
-                  <span>Reducing carbon footprint through waste reduction</span>
-                </div>
-              </div>
-              <div class="impact-item">
-                <i class="fas fa-users"></i>
-                <div>
-                  <strong>Community Support</strong>
-                  <span>Connecting businesses with local communities</span>
-                </div>
-              </div>
-              <div class="impact-item">
-                <i class="fas fa-chart-line"></i>
-                <div>
-                  <strong>Sustainable Growth</strong>
-                  <span>Building a sustainable food ecosystem</span>
-                </div>
-              </div>
+<section id="about" class="about">
+  <div class="container">
+    <div class="about-content">    
+      <!-- LEFT: TEXT -->
+      <div class="about-text">
+        <h2>About ShareBite</h2>
+        <p> ShareBite is a revolutionary platform 
+          designed to tackle food waste while addressing hunger in communities. We believe that fresh, good food should never go to waste when there are people who need it. </p>
+
+        <!-- Impact Points -->
+        <div class="impact-stats">
+          <div class="impact-item">
+            <i class="fas fa-leaf"></i>
+            <div>
+              <strong>Reduce Waste & Emissions</strong>
+              <span>Lowering carbon footprint through food redistribution</span>
             </div>
           </div>
-          <div class="about-visual">
-            <div class="stats-circle">
-              <div class="circle-stat">
-                <span class="percentage">40%</span>
-                <span class="label">Food Waste Reduced</span>
-              </div>
+
+          <div class="impact-item">
+            <i class="fas fa-hands-helping"></i>
+            <div>
+              <strong>Support Local Communities</strong>
+              <span>Direct food delivery to NGOs and shelters</span>
+            </div>
+          </div>
+
+          <div class="impact-item">
+            <i class="fas fa-shield-alt"></i>
+            <div>
+              <strong>Safe & Scalable System</strong>
+              <span>Verified NGOs and responsible food handling</span>
             </div>
           </div>
         </div>
+
+      <div class="about-visual">
+
+      <!-- Full Width Flow -->
+      <div class="about-flow">
+        <div class="flow-step">
+          🍽 <span>Donor Lists Food</span>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          🤝 <span>NGO Accepts</span>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          ❤️ <span>Food Reaches People</span>
+        </div>
       </div>
-    </section>
+
+      </div>
+            <!-- CTA -->
+      <div class="about-cta">
+        <a href="login.html" class="cta-btn">Join the Mission</a>
+      </div>
+
+
+    </div>
+  </div>
+</section>
+
 
     <!-- Section Divider -->
     <div class="section-divider">
@@ -947,65 +972,71 @@
 
 
     <!-- Footer -->
-    <footer class="footer">
-      <div class="container">
-        <div class="footer-content">
-          <div class="footer-section">
-            <div class="footer-logo">
-              <i class="fas fa-utensils"></i>
-              <span>ShareBite</span>
-            </div>
-            <p>
-              Making a difference, one meal at a time. Join us in the fight
-              against food waste and hunger.
-            </p>
-            <div class="social-links">
-              <a href="#"><i class="fab fa-facebook"></i></a>
-              <a href="#"><i class="fab fa-x-twitter"></i></a>
-              <a href="#"><i class="fab fa-instagram"></i></a>
-              <a href="#"><i class="fab fa-linkedin"></i></a>
-            </div>
-          </div>
-           <div class="footer-section">
-            <h4>Quick Links</h4>
-            <ul>
-              <li><a href="#home">Home</a></li>
-              <li><a href="#features">How It Works</a></li>
-              <li><a href="foodlisting.html">Food Listings</a></li>
-              <li><a href="#about">About Us</a></li>
-            </ul>
-          </div>
+<footer class="footer">
+  <div class="container footer-grid">
 
-          <div class="footer-section">
-            <h4>For Donors</h4>
-            <ul>
-              <li><a href="foodlisting.html">List Food</a></li>
-              <li><a href="donor-guidelines.html">Donor Guidelines</a></li>
-              <li><a href="track-impact.html">Track Impact</a></li>
-              <li><a href="support.html">Support</a></li>
-            </ul>
-          </div>
-
-          <div class="footer-section">
-            <h4>For Collectors</h4>
-            <ul>
-              <li><a href="#">Find Food</a></li>
-              <li><a href="ngo-register.html">Register NGO</a></li>
-              <li><a href="vounteer_food.html">Volunteer</a></li>
-              <li><a href="#">Resources</a></li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Footer Bottom -->
-        <div class="footer-bottom">
-          <p class="footer-credit">Made with 💚 by Angela Bera</p>
-          <p>
-            &copy; 2025 ShareBite. All rights reserved. <a href="License.html">License</a> 
-          </p>
-        </div>
+    <!-- Brand Section -->
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <i class="fas fa-utensils"></i>
+        <span>ShareBite</span>
       </div>
-    </footer>
+      <p>
+        Making a difference, one meal at a time.  
+        Join us in the fight against food waste and hunger.
+      </p>
+
+      <div class="social-links">
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+    </div>
+
+    <!-- Links -->
+    <div class="footer-links">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#features">How It Works</a></li>
+        <li><a href="foodlisting.html">Food Listings</a></li>
+        <li><a href="#about">About Us</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-links">
+      <h4>For Donors</h4>
+      <ul>
+        <li><a href="foodlisting.html">List Food</a></li>
+        <li><a href="donor-guidelines.html">Donor Guidelines</a></li>
+        <li><a href="track-impact.html">Track Impact</a></li>
+        <li><a href="support.html">Support</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-links">
+      <h4>For Collectors</h4>
+      <ul>
+        <li><a href="#">Find Food</a></li>
+        <li><a href="ngo-register.html">Register NGO</a></li>
+        <li><a href="vounteer_food.html">Volunteer</a></li>
+        <li><a href="#">Resources</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Footer Bottom -->
+  <div class="footer-bottom">
+    <p>Made with 💚 by <strong>Angela Bera</strong></p>
+    <p>
+      © 2025 ShareBite. All rights reserved · 
+      <a href="License.html">License</a>
+    </p>
+  </div>
+</footer>
+
 
     <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
@@ -1033,6 +1064,8 @@
     <script src="js/theme.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/script.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/foodlisting.js"></script>
    
   <!-- ShareBite Chatbot is lazy-loaded via js/script.js -->
   </body>
