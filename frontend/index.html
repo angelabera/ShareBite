@@ -1029,12 +1029,13 @@
 
   <!-- Footer Bottom -->
   <div class="footer-bottom">
-    <p>Made with 💚 by <strong>Angela Bera</strong></p>
-    <p>
-      © 2025 ShareBite. All rights reserved · 
-      <a href="License.html">License</a>
-    </p>
-  </div>
+  <p>Made with 💚 by <strong>Angela Bera</strong></p>
+  <p>
+    © <span id="current-year"></span> ShareBite. All rights reserved ·
+    <a href="License.html">License</a>
+  </p>
+</div>
+
 </footer>
 
 
@@ -1066,6 +1067,15 @@
     <script src="js/script.js"></script>
     <script src="js/api.js"></script>
     <script src="js/foodlisting.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const yearSpan = document.getElementById("current-year");
+        if (yearSpan) {
+          yearSpan.textContent = new Date().getFullYear();
+        }
+      });
+    </script>
+
    
   <!-- ShareBite Chatbot is lazy-loaded via js/script.js -->
   </body>
