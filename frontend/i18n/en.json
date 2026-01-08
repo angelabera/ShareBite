@@ -1,0 +1,34 @@
+{
+  "contact": {
+    "title": "📞 Contact Us",
+    "question": "💬 Do You Have a Question?",
+    "fillForm": "Fill out the form below to get started",
+    "form": {
+      "name": "Full Name:",
+      "name_placeholder": "Enter your full name",
+      "email": "Email:",
+      "email_placeholder": "Enter your email",
+      "message": "Message:",
+      "message_placeholder": "Type in your Message",
+      "submit": "Submit"
+    },
+    "getInTouch": "Get In Touch",
+    "getInTouchText": "We love to hear from you. Our team is always here to answer your questions.",
+    "address": "Address:",
+    "address_value": "ShareBite Building, Noida, India",
+    "phone_label": "Phone No.:",
+    "phone_value": "+91 8888889999",
+    "email_label": "Email:",
+    "email_value": "sharebite@support.com.ng"
+  },
+  "toast": {
+    "welcome": "Welcome, {name}! 🎉"
+  },
+  "footer": {
+    "description": "Making a difference, one meal at a time. Join us in the fight against food waste and hunger.",
+    "madeBy": "Made with 💚 by Angela Bera",
+    "cursorTrailLabel": "Cursor trail",
+    "copyright": "© 2025 ShareBite. All rights reserved.",
+    "license": "License"
+  }
+}
