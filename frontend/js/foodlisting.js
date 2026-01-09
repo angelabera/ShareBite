@@ -4,6 +4,7 @@ class ShareBiteFoodListing {
     constructor() {
         this.currentRole = 'donor';
         this.foodListings = [];
+        this.uploadedPhotoBase64 = null;
         this.filteredListings = [];
         this.currentFilter = 'all';
         this.claimedItems = this.loadClaimedItems();
@@ -16,7 +17,6 @@ class ShareBiteFoodListing {
 
     init() {
         this.setupEventListeners();
-        // this.generateSampleListings();
         this.loadListingsFromDB();
         this.renderFoodListings();
         this.setupNotificationSystem();
@@ -369,6 +369,7 @@ handleFileSelect(file) {
 
     const reader = new FileReader();
     reader.onload = (e) => {
+        this.uploadedPhotoBase64 = e.target.result;
         imagePreview.innerHTML = `
             <img src="${e.target.result}" alt="Food preview">
             <button type="button" class="remove-image">
@@ -385,6 +386,7 @@ handleFileSelect(file) {
             imagePreview.classList.remove('active');
             uploadArea.style.display = 'block';
             document.getElementById('photo').value = '';
+            this.uploadedPhotoBase64 = null;
         });
     };
     reader.readAsDataURL(file);
@@ -421,15 +423,13 @@ handleFileSelect(file) {
                 pickupLocation: formData.location, 
                 contactInfo: formData.contact,
                 dietaryTags: formData.dietaryTags,
-                
-                // Handle Photo: Ideally use Multer. For now, we send an empty array 
-                // or the   Base64 string if you implemented the FileReader logic in getFormData
-                photos: [] 
+                photos: formData.photos,
             };
 
             const newListing = this.api.createFoodListing(backendData);
             this.foodListings.unshift(newListing);
             this.filterListings();
+            this.loadListingsFromDB();
             this.renderFoodListings();
             this.showSuccessMessage();
             this.closeModalAndReset();
@@ -462,7 +462,7 @@ handleFileSelect(file) {
             pickupTime: document.getElementById('pickupTime').value,
             location: document.getElementById('location').value,
             contact: document.getElementById('contact').value,
-            photo: document.getElementById('photo').files[0],
+            photos: this.uploadedPhotoBase64 ? [this.uploadedPhotoBase64] : [],
             dietaryTags: selectedTags,
         };
     }

@@ -103,6 +103,7 @@ class ShareBite {
         this.contactEmail = 'sharebite@support.com.ng';
         this.currentRole = 'donor';
         this.foodListings = [];
+        this.uploadedPhotoBase64 = null;
         this.filteredListings = [];
         this.currentFilter = 'all';
         this.claimedItems = this.loadClaimedItems();
@@ -116,8 +117,7 @@ class ShareBite {
     init() {
         this.setupEventListeners();
         this.updateContactInfo();
-        // this.generateSampleListings();
-        this.fetchListings();
+        this.loadListingsFromDB();
         this.renderFoodListings();
         this.setupNotificationSystem();
         this.updateNotificationDisplay();
@@ -484,6 +484,7 @@ handleFileSelect(file) {
 
     const reader = new FileReader();
     reader.onload = (e) => {
+        this.uploadedPhotoBase64 = e.target.result;
         imagePreview.innerHTML = `
             <img src="${e.target.result}" alt="Food preview">
             <button type="button" class="remove-image">
@@ -500,6 +501,7 @@ handleFileSelect(file) {
             imagePreview.classList.remove('active');
             uploadArea.style.display = 'block';
             document.getElementById('photo').value = '';
+             this.uploadedPhotoBase64 = null;
         });
     };
     reader.readAsDataURL(file);
@@ -535,15 +537,13 @@ handleFileSelect(file) {
                 pickupLocation: formData.location, 
                 contactInfo: formData.contact,
                 dietaryTags: formData.dietaryTags,
-                
-                // Handle Photo: Ideally use Multer. For now, we send an empty array 
-                // or the   Base64 string if you implemented the FileReader logic in getFormData
-                photos: [] 
+                photos: formData.photos,
             };
 
             const newListing = this.api.createFoodListing(backendData);
             this.foodListings.unshift(newListing);
             this.filterListings();
+            this.loadListingsFromDB();
             this.renderFoodListings();
             this.showSuccessMessage();
             this.closeModalAndReset();
@@ -576,7 +576,7 @@ handleFileSelect(file) {
             pickupTime: document.getElementById('pickupTime').value,
             location: document.getElementById('location').value,
             contact: document.getElementById('contact').value,
-            photo: document.getElementById('photo').files[0],
+            photos: this.uploadedPhotoBase64 ? [this.uploadedPhotoBase64] : [],
             dietaryTags: selectedTags 
         };
     }
@@ -1084,20 +1084,33 @@ handleFileSelect(file) {
         });
     }
 
-      async fetchListings() {
-    try {
-        const response = await this.api.getAllFoodListings();
-        // The controller returns the array directly
-        this.foodListings = response; 
-        this.filteredListings = this.foodListings;
-        this.renderFoodListings();
-        this.hideLoadingOverlay();
-    } catch (error) {
-        console.error('Failed to fetch listings:', error);
-        this.showToast('Failed to load food listings. Please try again.', 'error');
-        this.hideLoadingOverlay();
+      async loadListingsFromDB() {
+        try {
+            const listings = await getAllFoodListings(); 
+          
+            this.foodListings = listings.map(item => ({
+                ...item,
+                id: item._id,
+                location: item.pickupLocation || item.location || 'Location not specified',
+                contact: item.contactInfo || item.contact || 'No contact info',
+                donor: item.donorId?.name || 'Anonymous Donor',
+                photoUrl: (item.photos && item.photos.length > 0) ? item.photos[0] : null,
+                category: item.category || 'general',
+                dietaryTags: item.dietaryTags || [],
+                createdAt: new Date(item.createdAt),
+            }));
+
+            this.foodListings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            this.filteredListings = this.foodListings;
+            this.renderFoodListings();
+            
+        } catch (error) {
+            console.error("Failed to load listings:", error);
+            this.foodListings = [];
+            this.renderFoodListings(); // Will render the "No listings found" state
+            this.showToast("Failed to connect to database", "error");
+        }
     }
-}
 
     getRandomFutureDate() {
         const now = new Date();
