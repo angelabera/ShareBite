@@ -6,7 +6,7 @@ We aim to keep `ShareBite` up to date and secure. Please see below for the versi
 
 | Version | Supported          |
 |---------|--------------------|
-| Latest  | ✅ Yes              |
+| Latest (1.0.0)  | ✅ Yes              |
 | Older   | ❌ No               |
 
 ---
