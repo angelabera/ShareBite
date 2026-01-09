@@ -174,7 +174,14 @@ body {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6),
                         0 0 30px rgba(76, 175, 80, 0.3);
-    
+
+        }
+
+
+        .theme-toggle:hover,
+        .notification-bell:hover{
+            background: var(--border-color);
+            transform: translateY(-2px);
         }
 
         .notification-bell {

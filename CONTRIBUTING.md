@@ -148,14 +148,80 @@ Not a coder? You can still make a **huge impact**:
 ### File Organization
 ```
 ShareBite/
-├── index.html              # Main HTML structure
-├── css/
-│   └── style.css          # All styles with responsive design
-├── js/
-│   └── script.js          # Interactive functionality
-├── images/                # Food and UI images
-├── README.md              # Project documentation
-└── CONTRIBUTING.md        # This file
+│
+├── .gitignore                     # Specifies files and folders Git should ignore
+├── README.md                      # Main project overview, setup, and usage instructions
+├── CONTRIBUTING.md                # Guidelines for contributing to the project
+├── CODE_OF_CONDUCT.md             # Community behavior and contribution standards
+├── INTEGRATION_GUIDE.md           # Instructions for integrating different project modules
+├── TESTING_GUIDE.md               # Testing procedures and best practices
+├── License.md                     # Open-source license information
+├── sw.js                          # Service worker enabling PWA and offline support
+├── git                            # Git-related metadata or configuration file
+│
+├── backend/                       # Backend server handling APIs and database logic
+│   ├── server.js                  # Entry point for Express server initialization
+│   ├── package.json               # Backend dependencies, scripts, and metadata
+│   ├── package-lock.json          # Locked backend dependency versions
+│   │
+│   └── src/                       # Core backend source code
+│       ├── config/                # Configuration files
+│       │   └── db.js              # MongoDB connection setup
+│       │
+│       ├── controllers/           # Business logic for handling requests
+│       │   ├── authController.js  # User authentication logic (login/register)
+│       │   ├── ngoAuthController.js # NGO authentication logic
+│       │   └── foodListingController.js # Food listing creation and management
+│       │
+│       ├── middleware/            # Express middleware functions
+│       │   └── authMiddleware.js  # JWT-based route protection
+│       │
+│       ├── models/                # Database schemas
+│       │   ├── User.js            # User schema definition
+│       │   ├── Ngo.js             # NGO schema definition
+│       │   └── FoodListing.js     # Food donation listing schema
+│       │
+│       └── routes/                # API route definitions
+│           ├── authRoutes.js      # User authentication routes
+│           ├── ngoAuthRoutes.js   # NGO authentication routes
+│           └── foodListingRoutes.js # Food listing API routes
+│
+├── frontend/                      # Frontend user interface (HTML, CSS, JS)
+│   ├── css/                       # Stylesheets
+│   │   └── style.css              # Global application styling
+│   │
+│   ├── js/                        # Frontend JavaScript logic
+│   │   ├── api.js                 # Handles API calls to backend
+│   │   ├── auth.js                # Frontend authentication logic
+│   │   ├── foodlisting.js         # Food listing UI logic
+│   │   ├── script.js              # Common JavaScript utilities
+│   │   └── theme.js               # Dark/light theme handling
+│   │
+│   ├── logo/                      # Branding assets
+│   │   ├── logo.svg               # Scalable vector logo
+│   │   └── sharebite_logo.png     # Logo image
+│   │
+│   ├── index.html                 # Landing page
+│   ├── login.html                 # User login page
+│   ├── login_ngo.html             # NGO login page
+│   ├── register.html              # User registration page
+│   ├── ngo-register.html          # NGO registration page
+│   ├── foodlisting.html           # Donor food listing page
+│   ├── volunteer_food.html        # Volunteer food viewing page
+│   ├── map.html                   # Map-based food location view
+│   ├── track-impact.html          # Donation impact tracking page
+│   ├── donor-guidelines.html      # Donor rules and guidelines
+│   ├── forgotpassword.html        # Password recovery page
+│   ├── support.html               # Support and help page
+│   ├── License.html               # Frontend license information
+│   └── 404.html                   # Custom 404 error page
+│
+├── src/                           # Additional project modules
+│   └── chatbot/                   # Chatbot logic for user assistance
+│        ├── chatbot.css           # Chatbot UI styling
+│        ├── ChatbotKnowledge.js   # Chatbot responses, intents, and logic
+│        └── ChatbotWidget.js      # Chatbot UI widget and event handling
+
 ```
 
 ### Testing Your Changes
