@@ -168,13 +168,23 @@ class ShareBiteFoodListing {
         document.body.style.overflow = 'hidden';
         this.resetFormSteps();
     });
-
+    
+    // Close the Add Listing modal with confirmation
+    // Prevents accidental cancellation of food pickup
     const closeModal = () => {
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-        this.resetForm();
-        this.resetFormSteps();
+      // Ask user for confirmation before cancelling
+      if (!confirm("Are you sure you want to cancel this food pickup?")) {
+           return; // cancellation aborted
+      }
+
+     // Close modal and restore page state
+     modal.style.display = 'none';
+     document.body.style.overflow = 'auto';
+
+     // Reset form steps to initial state
+     this.resetFormSteps();
     };
+
 
     closeModalBtn.addEventListener('click', closeModal);
     cancelBtn.addEventListener('click', closeModal);
