@@ -7,10 +7,12 @@
     <title>ShareBite - Food Listing</title>
     <meta name="sharebite-build" content="v-darkmode-fix-1">
     <link rel="stylesheet" href="css/style.css?v=darkmode-fix-1">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> -->
+        <link rel="stylesheet" href="./css/fontawesome/all.min.css">
+ 
     <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -181,6 +183,15 @@
                 rows="3"
                 placeholder="Additional details about the food..."
               ></textarea>
+            </div>
+            <div class="form-group">
+              <label>Dietary Information (optional)</label>
+              <div class="checkbox-group">
+                  <div><input type="checkbox" id="tag-vegetarian" name="dietary" value="vegetarian"><label for="tag-vegetarian">Vegetarian</label></div>
+                  <div><input type="checkbox" id="tag-vegan" name="dietary" value="vegan"><label for="tag-vegan">Vegan</label></div>
+                  <div><input type="checkbox" id="tag-gluten-free" name="dietary" value="gluten-free"><label for="tag-gluten-free">Gluten-Free</label></div>
+                  <div><input type="checkbox" id="tag-nut-free" name="dietary" value="nut-free"><label for="tag-nut-free">Nut-Free</label></div>
+              </div>
             </div>
           </div>
 

@@ -9,12 +9,15 @@ const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const ngoAuthRoutes = require('./routes/ngoAuthRoutes');
 const foodListingRoutes = require('./routes/foodListingRoutes');
+const impactRoutes = require('./routes/impactRoutes');
+
 
 const app = express();
 
 // Middleware
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' })); 
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 // Load rate limiter configuration from environment variables
 const RATE_LIMIT_WINDOW_MS = parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000; // Default: 15 minutes
@@ -53,6 +56,8 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/ngo', ngoAuthRoutes);
 app.use('/api/food', foodListingRoutes);
+app.use('/api/impact', impactRoutes);
+
 
 const PORT = process.env.PORT || 5000;
 

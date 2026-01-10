@@ -4,10 +4,12 @@ class ShareBiteFoodListing {
     constructor() {
         this.currentRole = 'donor';
         this.foodListings = [];
+        this.uploadedPhotoBase64 = null;
         this.filteredListings = [];
         this.currentFilter = 'all';
         this.claimedItems = this.loadClaimedItems();
         this.notifications = this.loadNotifications();
+        this.api = window;
         
         this.init();
         this.initTheme(); // add theme initialization after base init
@@ -15,7 +17,7 @@ class ShareBiteFoodListing {
 
     init() {
         this.setupEventListeners();
-        this.generateSampleListings();
+        this.loadListingsFromDB();
         this.renderFoodListings();
         this.setupNotificationSystem();
         this.updateNotificationDisplay();
@@ -192,6 +194,12 @@ setupFormNavigation() {
     const prevBtn = document.getElementById('prevStep');
     const submitBtn = document.getElementById('submitForm');
 
+    // If the main `script.js` ShareBite class is present on the page,
+    // duplicate listeners that can bypass validation logic.
+    if (window.ShareBite) {
+        return;
+    }
+
     nextBtn.addEventListener('click', () => {
         if (this.validateCurrentStep()) {
             this.goToStep(this.currentStep + 1);
@@ -279,23 +287,27 @@ validateContactInfo(contact) {
     // Email regex pattern
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     
-    // Phone number regex pattern (supports various formats)
-    const phonePattern = /^[\+]?[1-9]?[\d\s\-\(\)]{7,15}$/;
-    
-    // Remove spaces and common characters for phone validation
-    const cleanedContact = contact.replace(/[\s\-\(\)]/g, '');
-    
     // Check if it's a valid email
     if (emailPattern.test(contact)) {
         return true;
     }
-    
+
+    // Phone number regex pattern (Checks)
+    const phonePattern = /^\+?\d+$/;
+
     // Check if it's a valid phone number
-    if (phonePattern.test(contact) && cleanedContact.length >= 7 && cleanedContact.length <= 15) {
-        return true;
+    if (!phonePattern.test(contact)) {
+        return false;
     }
-    
-    return false;
+
+    // If phone number starts with '+', total digits (excluding '+') must be between 11 and 13
+    if (contact.startsWith('+')) {
+        const digitCount = contact.length - 1; // exclude '+'
+        return digitCount >= 11 && digitCount <= 13;
+    }
+
+    // If phone number does not contain country code, then check only for length
+    return contact.length === 10;
 }
 
 resetFormSteps() {
@@ -357,6 +369,7 @@ handleFileSelect(file) {
 
     const reader = new FileReader();
     reader.onload = (e) => {
+        this.uploadedPhotoBase64 = e.target.result;
         imagePreview.innerHTML = `
             <img src="${e.target.result}" alt="Food preview">
             <button type="button" class="remove-image">
@@ -373,6 +386,7 @@ handleFileSelect(file) {
             imagePreview.classList.remove('active');
             uploadArea.style.display = 'block';
             document.getElementById('photo').value = '';
+            this.uploadedPhotoBase64 = null;
         });
     };
     reader.readAsDataURL(file);
@@ -398,15 +412,48 @@ handleFileSelect(file) {
         const formData = this.getFormData();
         
         if (this.validateFormData(formData)) {
-            this.addNewListing(formData);
+            try {
+            const backendData = {
+                foodType: formData.foodType,
+                quantity: formData.quantity,
+                category: formData.category,
+                description: formData.description,
+                freshUntil: formData.freshUntil,
+                pickupTime: formData.pickupTime,
+                pickupLocation: formData.location, 
+                contactInfo: formData.contact,
+                dietaryTags: formData.dietaryTags,
+                photos: formData.photos,
+            };
+
+            const newListing = this.api.createFoodListing(backendData);
+            this.foodListings.unshift(newListing);
+            this.filterListings();
+            this.loadListingsFromDB();
+            this.renderFoodListings();
             this.showSuccessMessage();
             this.closeModalAndReset();
+
+            } catch (error) {
+            console.error('Error creating listing:', error);
+            // Handle auth errors specifically
+            if(error.status === 401) {
+                this.showToast('You must be logged in to add a listing', 'error');
+            } else {
+                this.showToast(error.message || 'Failed to create listing', 'error');
+            }
+        }
+
         }
     }
 
     getFormData() {
+
+        const selectedTags = [];
+    document.querySelectorAll('input[name="dietary"]:checked').forEach(checkbox => {
+        selectedTags.push(checkbox.value);
+    });
         return {
-            id: Date.now(),
             foodType: document.getElementById('foodType').value,
             quantity: document.getElementById('quantity').value,
             category: document.getElementById('category').value,
@@ -415,9 +462,8 @@ handleFileSelect(file) {
             pickupTime: document.getElementById('pickupTime').value,
             location: document.getElementById('location').value,
             contact: document.getElementById('contact').value,
-            photo: document.getElementById('photo').files[0],
-            createdAt: new Date(),
-            donor: 'Current User'
+            photos: this.uploadedPhotoBase64 ? [this.uploadedPhotoBase64] : [],
+            dietaryTags: selectedTags,
         };
     }
 
@@ -446,11 +492,6 @@ handleFileSelect(file) {
         return true;
     }
 
-    addNewListing(data) {
-        this.foodListings.unshift(data);
-        this.filterListings();
-        this.renderFoodListings();
-    }
 
     showSuccessMessage() {
         this.showToast('Food listing added successfully!', 'success');
@@ -699,195 +740,34 @@ handleFileSelect(file) {
         });
     }
 
-    generateSampleListings() {
-        const sampleListings = [
-            {
-                id: 1,
-                foodType: "Fresh Pizza Margherita",
-                quantity: "8 slices",
-                category: "restaurant",
-                description: "Freshly made pizza with mozzarella, tomato sauce, and basil. Perfect condition, just from lunch service.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "18:00",
-                location: "Mario's Pizzeria, 123 Main Street",
-                contact: "+1 234-567-8900",
-                createdAt: new Date(Date.now() - 3600000),
-                donor: "Mario's Pizzeria",
-                dietaryTags: ["vegetarian"],
-                photoUrl: "https://www.allrecipes.com/thmb/2rQA_OlnLbhidei70glz6HCCYAs=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/1453815-authentic-pizza-margherita-Cynthia-Ross-4x3-1-7410c69552274163a9049342b60c22ff.jpg",
-            },
-            {
-                id: 2,
-                foodType: "Assorted Sandwiches",
-                quantity: "15 sandwiches",
-                category: "event",
-                description: "Various sandwiches including turkey, ham, and vegetarian options from corporate catering event.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "16:30",
-                location: "Downtown Conference Center",
-                contact: "events@conference.com",
-                createdAt: new Date(Date.now() - 7200000),
-                donor: "Conference Center",
-                dietaryTags: ["non-vegetarian"],
-                photoUrl: "https://bangkok.mandarinorientalshop.com/cdn/shop/files/078-_3729_2048x.jpg?v=1690709512",
+       async loadListingsFromDB() {
+        try {
+            const listings = await getAllFoodListings(); 
+          
+            this.foodListings = listings.map(item => ({
+                ...item,
+                id: item._id,
+                location: item.pickupLocation || item.location || 'Location not specified',
+                contact: item.contactInfo || item.contact || 'No contact info',
+                donor: item.donorId?.name || 'Anonymous Donor',
+                photoUrl: (item.photos && item.photos.length > 0) ? item.photos[0] : null,
+                category: item.category || 'general',
+                dietaryTags: item.dietaryTags || [],
+                createdAt: new Date(item.createdAt),
+            }));
 
-            },
-            {
-                id: 3,
-                foodType: "Fresh Bread & Pastries",
-                quantity: "20+ items",
-                category: "bakery",
-                description: "End-of-day fresh bread, croissants, and pastries. All baked today and still perfectly fresh.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "20:00",
-                location: "Sunrise Bakery, Oak Avenue",
-                contact: "+1 234-567-8901",
-                createdAt: new Date(Date.now() - 1800000),
-                donor: "Sunrise Bakery",
-                dietaryTags: ["dairy-free"],
-                photoUrl: "https://media.istockphoto.com/id/507021914/photo/assorted-croissand-and-bread.jpg?s=612x612&w=0&k=20&c=ruHrARluyF_yR1-hmrurOyz4sLPNeohj1zKKv8fHa8U=",
-            },
-            {
-                id: 4,
-                foodType: "Home-cooked Curry",
-                quantity: "4-6 portions",
-                category: "household",
-                description: "Vegetarian curry with rice, made too much for family dinner. Spice level: medium.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "19:00",
-                location: "Residential Area, Pine Street",
-                contact: "+1 234-567-8902",
-                createdAt: new Date(Date.now() - 900000),
-                donor: "Local Family",
-                dietaryTags: ["vegetarian", "gluten-free"],
-                photoUrl: "https://www.tasteofhome.com/wp-content/uploads/2019/04/shutterstock_610126394.jpg",
-            },
-            {
-                id: 5,
-                foodType: "Fruit & Vegetable Box",
-                quantity: "1 large box",
-                category: "restaurant",
-                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "17:00",
-                location: "Green Garden Restaurant",
-                contact: "+1 234-567-8903",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant",
-                dietaryTags: ["vegan"],
-                photoUrl: "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
-            },
-            {
-                id: 6,
-                foodType: "Grilled Chicken Meals",
-                quantity: "12 complete meals",
-                category: "restaurant",
-                description: "Grilled chicken with rice and vegetables. Prepared for cancelled catering order.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "18:30",
-                location: "Healthy Eats Cafe, Market Square",
-                contact: "+1 234-567-8904",
-                createdAt: new Date(Date.now() - 2700000),
-                donor: "Healthy Eats Cafe",
-                dietaryTags: ["non-vegetarian", "dairy-free"],
-                photoUrl: "https://i0.wp.com/smittenkitchen.com/wp-content/uploads/2019/05/exceptional-grilled-chicken-scaled.jpg?fit=1200%2C800&ssl=1",
-            },
-            {
-                id: 7,
-                foodType: "Fresh Fruit Smoothies",
-                quantity: "10 bottles",
-                category: "Juice Bar",
-                description: "Blended today morning with real fruit. Chilled and fresh.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "17:52",
-                location: "Vita Juice Bar, Downtown Plaza",
-                contact: "+1 234-567-8908",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Vita Juice Bar",
-                dietaryTags: ["vegan","sugar-free"],
-                photoUrl: "https://steviabenefits.org/wp-content/uploads/2017/02/AdobeStock_110772899.jpeg",
-            },
-            {
-                id: 8,
-                foodType: "Chocolate Muffins",
-                quantity: "15 muffins",
-                category: "Bakery",
-                description: "Soft and rich chocolate muffins. Fresh, sweet, and perfect for evening snacks.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "16:30",
-                location: "Sweet Dream Bakery, Park Street",
-                contact: "+1 234-567-8903",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Sweet Dream Bakery",
-                dietaryTags: ["vegetarian"],
-                photoUrl: "https://images.unsplash.com/photo-1662980481668-7da79df5db26?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
-            },
-            {
-                id: 9,
-                foodType: "Chicken Noodles",
-                quantity: "2 boxes",
-                category: "restaurant",
-                description: "Freshly tossed noodles with vegetables, chicken and soy sauce.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "17:10",
-                location: "Dexter Restaurant, Spy Square",
-                contact: "+1 234-567-8893",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Dexter Restaurant",
-                dietaryTags: ["non-vegetarian"],
-                photoUrl: "https://plus.unsplash.com/premium_photo-1677000666741-17c3c57139a2?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687",
-            },
-            {
-                id: 10,
-                foodType: "Sushi Delights",
-                quantity: "22 pieces",
-                category: "restaurant",
-                description: "Assorted sushi rolls with salmon, avocado, and cucumber. Stored under refrigeration.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "18:32",
-                location: "Tokyo Table Restaurant, Palm Street",
-                contact: "+1 914-597-8893",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Tokyo Table Restaurant",
-                dietaryTags: ["non-vegetarian", "seafood"],
-                photoUrl: "https://images.unsplash.com/photo-1564489563601-c53cfc451e93?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687",
-            },
-            {
-                id: 11,
-                foodType: "Chicken Caesar Wraps",
-                quantity: "12 pieces",
-                category: "restaurant",
-                description: "Grilled chicken, crisp lettuce, parmesan, wrapped in soft tortillas.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "19:00",
-                location: "Urban Bites Café, Elm Street",
-                contact: "+1 914-597-8893",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Urban Bites Café",
-                dietaryTags: ["non-vegetarian"],
-                photoUrl: "https://beyond-meat-cms-production.s3.us-west-2.amazonaws.com/d354babb-c138-49da-8962-391cbcf07e8e.jpg",
-            },
-            {
-                id: 12,
-                foodType: "Tomato Chicken Lasagna",
-                quantity: "8 pieces",
-                category: "household",
-                description: "Layered pasta with rich tomato sauce, creamy béchamel, and melted cheese.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "18:40",
-                location: "Octal Residency, Palm Street",
-                contact: "+1 914-511-8111",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Local Family",
-                dietaryTags: ["non-vegetarian", "contains-dairy"],
-                photoUrl: "https://images.unsplash.com/photo-1574894709920-11b28e7367e3?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=735",
-            },
+            this.foodListings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            this.filteredListings = this.foodListings;
+            this.renderFoodListings();
             
-        ];
-        
-        this.foodListings = sampleListings;
-        this.filteredListings = sampleListings;
+        } catch (error) {
+            console.error("Failed to load listings:", error);
+            this.foodListings = [];
+            this.renderFoodListings(); // Will render the "No listings found" state
+            this.showToast("Failed to connect to database", "error");
+        }
     }
+
 
     getRandomFutureDate() {
         const now = new Date();
@@ -951,6 +831,9 @@ handleFileSelect(file) {
     }
 
     createFoodCard(listing) {
+    const listingId = listing._id || listing.id;
+    const location = listing.pickupLocation || listing.location || 'Unknown Location';
+    const contact = listing.contactInfo || listing.contact;
     const timeAgo = this.getTimeAgo(listing.createdAt);
     const freshUntil = this.formatDateTime(listing.freshUntil);
     const isClaimed = this.claimedItems.includes(listing.id);
@@ -1055,6 +938,7 @@ handleFileSelect(file) {
         const confirmed = confirm(`Claim "${listing.foodType}" from ${listing.donor}?\n\nPickup: ${listing.location}\nTime: ${this.formatTime(listing.pickupTime)}\nContact: ${listing.contact}`);
         
         if (confirmed) {
+            this.api.deleteFoodListing(listingId);
             // Add to claimed items
             this.claimedItems.push(listingId);
             this.saveClaimedItems();
@@ -1108,16 +992,18 @@ handleFileSelect(file) {
     }
 
     getFoodIcon(category) {
+        if (!category) return 'utensils';
         const icons = {
             restaurant: 'store',
             household: 'home',
             bakery: 'bread-slice',
             event: 'calendar-alt'
         };
-        return icons[category] || 'utensils';
+        return icons[category.toLowerCase()] || 'utensils';
     }
 
     capitalizeFirst(str) {
+        if (!str) return '';
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
@@ -1262,10 +1148,26 @@ handleFileSelect(file) {
     }
     
     addNotification(notification) {
+        notification.read = false; // Mark new notifications as unread
         this.notifications.unshift(notification);
         this.saveNotifications();
         this.updateNotificationDisplay();
         this.renderNotifications();
+    }
+
+    markNotificationAsRead(notificationId) {
+        const notification = this.notifications.find(n => n.id === notificationId);
+        if (notification && !notification.read) {
+            notification.read = true;
+            this.saveNotifications();
+            this.updateNotificationDisplay();
+        }
+    }
+
+    markAllNotificationsAsRead() {
+        this.notifications.forEach(n => n.read = true);
+        this.saveNotifications();
+        this.updateNotificationDisplay();
     }
     
     updateNotificationDisplay() {
@@ -1274,7 +1176,7 @@ handleFileSelect(file) {
         
         if (!notificationBell || !notificationBadge) return;
         
-        const unreadCount = this.notifications.length;
+        const unreadCount = this.notifications.filter(n => !n.read).length;
         
         if (unreadCount > 0) {
             notificationBell.style.display = 'block';
@@ -1318,9 +1220,10 @@ handleFileSelect(file) {
     
     createNotificationItem(notification) {
         const timeAgo = this.getTimeAgo(notification.claimedAt);
+        const unreadClass = notification.read ? '' : 'unread';
         
         return `
-            <div class="notification-item" data-id="${notification.id}">
+            <div class="notification-item ${unreadClass}" data-id="${notification.id}">
                 <div class="notification-item-header">
                     <div class="notification-item-icon">
                         <i class="fas fa-utensils"></i>
@@ -1367,6 +1270,9 @@ handleFileSelect(file) {
     viewNotificationDetails(notificationId) {
         const notification = this.notifications.find(n => n.id === notificationId);
         if (!notification) return;
+        
+        // Mark as read when viewed
+        this.markNotificationAsRead(notificationId);
         
         const details = `
 Food: ${notification.foodType}

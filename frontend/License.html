@@ -691,7 +691,7 @@ SOFTWARE.</div>
                 </div>
 
                 <div class="copyright-notice">
-                    <i class="fas fa-copyright"></i> Copyright (c) 2025 Angela Bera - All Rights Reserved
+                    <i class="fas fa-copyright"></i> Copyright (c) <span class="current-year"></span> Angela Bera - All Rights Reserved
                 </div>
             </div>
         </div>
@@ -746,8 +746,17 @@ SOFTWARE.</div>
         </div>
         <div class="footer-bottom">
             <p class="footer-credit">Made with 💚 by Angela Bera</p>
-            <p>&copy; 2025 ShareBite. All rights reserved. <a href="License.html">License</a></p>
+            <p>&copy; <span class="current-year"></span> ShareBite. All rights reserved. <a href="License.html">License</a></p>
         </div>
     </footer>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const yearSpans = document.querySelectorAll(".current-year");yearSpans.forEach(span => {
+                span.textContent = new Date().getFullYear();
+            });
+        });
+    </script>
+
+
 </body>
 </html>

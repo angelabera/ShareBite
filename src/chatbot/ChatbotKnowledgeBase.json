@@ -1,86 +1,103 @@
 {
   "greeting": "👋 Hi there! I'm ShareBot — your friendly guide at ShareBite. Together, we can reduce food waste and feed communities. 💚",
-  "shortIntro": "🌱 Hey traveler of good causes! Every meal counts. Would you like to donate Food, find food, or learn about ShareBiteFood?",
+  "shortIntro": "🌱 Hey traveler of good causes! Every meal counts. Would you like to donate food, find food, or learn about ShareBite?",
   "helpTopics": [
     "How ShareBite works",
     "How to donate food",
+    "How to find food",
     "How to register as NGO",
+    "How to become a volunteer",
+    "Food safety guidelines",
+    "See latest listings",
+    "Impact & statistics",
     "Contact information",
-    "See latest listings"
+    "Account & login help"
   ],
   "faqs": [
     {
       "id": "what_is_sharebite",
       "question": "What is ShareBite?",
-      "keywords": ["what is sharebite", "what is sharebite?", "about sharebite", "sharebite", "what is this"],
-      "answer": "🍽️ ShareBiteFood is a community-driven platform that connects food donors (restaurants, households) with NGOs and volunteers to redistribute fresh leftover Food.\n\nOur mission: <i>'Reduce Food Waste, Feed Communities.'</i>\nWe make it easy to list food, coordinate pickups, and track impact — turning excess meals into hope. 🌍"
+      "keywords": ["what is sharebite", "about sharebite", "sharebite", "platform", "purpose"],
+      "answer": "🍽️ <b>ShareBiteFood</b> is a community-driven platform that connects food donors (restaurants, hotels, households) with NGOs and volunteers to redistribute fresh leftover food.\n\nOur mission: <i>“Reduce Food Waste, Feed Communities.”</i>\n\nWe help transform excess meals into hope by enabling easy food listing, pickup coordination, and real-world impact tracking. 🌍"
     },
     {
       "id": "how_to_donate",
       "question": "How to donate food",
-      "keywords": ["how to donate", "donate food", "donation", "give food", "share food"],
-      "answer": "🍲 Donating food with ShareBite is simple and impactful:\n\n1️⃣ Login or register as a donor (restaurant, household, or bakery).\n2️⃣ List your fresh leftover food — include details like type, quantity, and pickup location.\n3️⃣ Our partner NGOs or volunteers will claim and collect the food to deliver it safely to those in need.\n\n👉 You can start from the 'Donor' section in the navigation menu."
+      "keywords": ["donate food", "donation", "give food", "share food", "food donation"],
+      "answer": "🍲 Donating food with ShareBite is easy:\n\n1️⃣ Register or login as a Donor (restaurant, bakery, household).\n2️⃣ List your fresh leftover food with quantity, type, and pickup location.\n3️⃣ NGOs or volunteers will claim and safely collect the food.\n\n💡 Always ensure food is fresh, hygienic, and safely packed."
     },
     {
       "id": "how_to_find",
       "question": "How to find food",
-      "keywords": ["how to find food", "find food", "where to find", "get food", "claim food"],
-      "answer": "To find food: switch to the Collector role (NGO/Volunteer), browse or filter listings by location and food type, then claim an item. After claiming, coordinate pickup with the donor using the provided contact details. You can also check the 'Food Listings' page."
+      "keywords": ["find food", "claim food", "get food", "collector", "ngo pickup"],
+      "answer": "🔍 NGOs and volunteers can find food by switching to the Collector role.\n\n➡ Browse food listings\n➡ Filter by location, food type, or freshness\n➡ Claim food and coordinate pickup with the donor\n\nThe Food Listings page shows all available donations in real time."
     },
     {
       "id": "system_steps",
       "question": "How the system works",
-      "keywords": ["how it works", "how the system works", "steps", "process", "workflow"],
-      "answer": "⚙️ It's a simple 3-step process:\n\nStep 1: 🍲 List Your Food — Add fresh food details and location.\nStep 2: 🤝 Connect & Coordinate — NGOs and volunteers get notified and arrange pickups.\nStep 3: 💚 Feed Communities — The food reaches people who need it most.\n\nTogether, we save meals and reduce waste!"
+      "keywords": ["how it works", "process", "workflow", "steps"],
+      "answer": "⚙️ ShareBite follows a simple 3-step workflow:\n\n1️⃣ 🍲 Donors list fresh surplus food\n2️⃣ 🤝 NGOs/Volunteers claim and collect food\n3️⃣ 💚 Food reaches people in need\n\nThis cycle helps reduce waste and fight hunger efficiently."
     },
     {
       "id": "ngo_partnerships",
       "question": "NGO partnerships",
-      "keywords": ["ngo", "ngos", "partnerships", "charity", "charities", "organization"],
-      "answer": "ShareBite works with local NGOs and volunteer groups to ensure surplus food reaches people who need it. NGOs can register, verify their organization, and claim listings. If your NGO would like to partner, please register on the NGO sign-up page or contact us for partnership details."
+      "keywords": ["ngo", "charity", "organization", "partnership"],
+      "answer": "🤝 ShareBite partners with verified NGOs and volunteer groups.\n\nNGOs can register, verify their organization, and start claiming food listings.\n\nInterested in partnering? Register through the NGO sign-up page or contact our team."
+    },
+    {
+      "id": "volunteer_info",
+      "question": "How to become a volunteer",
+      "keywords": ["volunteer", "help people", "join volunteer", "volunteering"],
+      "answer": "🙋 Volunteers play a crucial role!\n\nYou can register as a volunteer to:\n- Claim food listings\n- Assist NGOs with pickups\n- Help distribute food to communities\n\nNo organization needed — just compassion and commitment. 💚"
+    },
+    {
+      "id": "food_safety",
+      "question": "Food safety guidelines",
+      "keywords": ["food safety", "hygiene", "safe food", "freshness"],
+      "answer": "🧼 Food safety is very important at ShareBite:\n\n✔ Donate freshly prepared food only\n✔ Properly pack and label food\n✔ Avoid expired or spoiled items\n✔ Mention preparation time clearly\n\nThese steps ensure safe consumption for everyone."
     },
     {
       "id": "contact_info",
       "question": "Contact info",
-      "keywords": ["contact", "contact info", "how to contact", "reach out", "support", "help"],
-      "answer": "📞 You can reach the ShareBite team anytime through our Contact page.\n\nEmail: sharebite@support.com.ng\nPhone: +91 8888889999\nAddress: ShareBite Building, Noida, India\n\n💬 For collaborations or feedback, visit the 'Contact' section in the navigation menu — we'd love to hear from you!"
+      "keywords": ["contact", "support", "help", "reach out"],
+      "answer": "📞 <b>Contact ShareBite</b>\n\n📧 Email: sharebite@support.com.ng\n📱 Phone: +91 8888889999\n📍 Address: ShareBite Building, Noida, India\n\n💬 For feedback, partnerships, or help, visit the Contact page."
     },
     {
       "id": "about_sharebite",
       "question": "About ShareBite",
-      "keywords": ["about", "about sharebite", "who are you", "mission", "purpose"],
-      "answer": "🍽️ ShareBite is built to reduce food waste and fight hunger by making it easy for donors and charities to connect. It focuses on simple listings, safe pickup coordination, and supporting community NGOs and volunteers. Made with ❤️ for fighting food waste and hunger!"
+      "keywords": ["about", "mission", "purpose", "who are you"],
+      "answer": "🍽️ ShareBite is built to fight hunger and food waste through technology.\n\nWe empower donors, NGOs, and volunteers to work together and make food redistribution simple, transparent, and impactful."
     },
     {
       "id": "food_waste_stats",
       "question": "Food waste statistics",
-      "keywords": ["statistics", "food waste statistics", "how much food wasted", "stats", "numbers", "impact"],
-      "answer": "📊 So far, the ShareBite community has achieved incredible impact:\n\n🥗 1500+ meals saved\n🤝 250+ active donors\n🏢 85+ NGO partners\n🌿 40% reduction in food waste\n\nEvery number represents real people fed and less food wasted. 💚"
+      "keywords": ["statistics", "impact", "numbers", "results"],
+      "answer": "📊 <b>Community Impact</b>\n\n🥗 1500+ meals saved\n🤝 250+ active donors\n🏢 85+ NGO partners\n🌿 40% food waste reduction\n\nEvery meal saved makes a difference. 💚"
     },
     {
       "id": "join_donor_ngo",
-      "question": "How can I join as a donor/NGO?",
-      "keywords": ["join", "how to join", "register", "register as ngo", "donor register", "sign up", "signup"],
-      "answer": "🙌 NGOs and volunteers can join by visiting the 'Register NGO'Food section under For CollectorsFood in the menu.\nOnce approved, you'll be able to view available food listings and claim donations for pickup.\n\nDonors can register via the main 'Register'Food page — choose your role and start making an impact!"
+      "question": "How can I join as a donor or NGO?",
+      "keywords": ["join", "register", "signup", "ngo register", "donor register"],
+      "answer": "🙌 Joining ShareBite is simple:\n\n➡ Donors: Register via the main Register page and start listing food.\n➡ NGOs: Use the Register NGO section under For Collectors.\n\nAfter approval, you can immediately participate and make an impact."
     },
     {
       "id": "login_system",
       "question": "How does the login system work?",
-      "keywords": ["login", "how login works", "authentication", "signin", "sign in", "password"],
-      "answer": "ShareBite uses simple email/password authentication. Registered users can log in to create and manage listings or claim food. Passwords are stored securely (hashed). For password recovery, use the 'forgot password' link on the login page."
+      "keywords": ["login", "signin", "password", "authentication"],
+      "answer": "🔐 ShareBite uses secure email/password authentication.\n\n✔ Passwords are encrypted\n✔ Forgot password option available\n✔ Role-based access for donors and collectors\n\nYour data is safe with us."
     },
     {
       "id": "features",
       "question": "What are your features?",
-      "keywords": ["features", "what features", "capabilities", "what can you do", "functionality"],
-      "answer": "✨ ShareBite Features\n- 🏷️ Dual user roles: Donor & Collector\n- 🧭 Food listings with real-time filters\n- 📱 Responsive design for all devices\n- 🔔 Smart notifications for new food\n- 💬 Easy coordination between donors & NGOs\n- 📊 Impact statistics and community stories"
+      "keywords": ["features", "capabilities", "what can you do"],
+      "answer": "✨ <b>Key Features</b>\n\n- 🏷️ Donor & Collector roles\n- 📍 Location-based food listings\n- 🔔 Real-time notifications\n- 📱 Mobile-friendly design\n- 📊 Impact tracking\n- 🤝 Easy donor–NGO coordination"
     },
     {
       "id": "see_listings",
       "question": "Can I see available listings?",
-      "keywords": ["listings", "see listings", "available listings", "food listings", "view listings", "browse"],
-      "answer": "🍛 You can explore all available food donations on the Food Listings page.\nThere, you'll find items like Fresh Pizza, Bread & Pastries, and Home-cooked Meals — ready to be claimed by NGOs or volunteers.\n\n🕓 Listings include freshness time, pickup details, and dietary filters. <a href=\"foodlisting.html\" target=\"_blank\" style=\"color:#2E7D32;font-weight:500;\">Click here to view listings</a>."
+      "keywords": ["listings", "browse", "view food", "available food"],
+      "answer": "🍛 Yes! Visit the Food Listings page to explore available donations.\n\nEach listing shows food type, quantity, freshness time, and pickup details.\n\n<a href=\"foodlisting.html\" target=\"_blank\" style=\"color:#2E7D32;font-weight:500;\">👉 Click here to view listings</a>"
     }
   ],
-  "fallback": "🤔 That's a great question! I'm still learning every day. You can explore the About, Contact, or Features pages for more details — or ask me about donating, finding food, or joining as an NGO. 🌍"
+  "fallback": "🤔 That's a great question! I'm still learning every day.\n\nYou can ask me about donating food, finding food, joining as an NGO or volunteer, food safety, or viewing listings. 🌍"
 }
