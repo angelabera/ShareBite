@@ -1144,7 +1144,10 @@ handleFileSelect(file) {
     }
 
     createClaimButton(listing) {
-        const isClaimed = this.claimedItems.includes(listing.id);
+
+        const isClaimedInDB = listing.status === 'reserved';
+        const isClaimedLocally = this.claimedItems.includes(listing.id);
+        const isClaimed = isClaimedInDB || isClaimedLocally;
         const isCollector = this.currentRole === 'collector';
         const username = JSON.parse(localStorage.getItem('user'))?.name;
         
@@ -1257,7 +1260,8 @@ createFoodCard(listing) {
         const claimBtns = document.querySelectorAll('.claim-btn');
         claimBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const listingId = parseInt(btn.getAttribute('data-id'));
+                const listingId = btn.getAttribute('data-id');
+                // const listingId = parseInt(btn.getAttribute('data-id'));
                 this.handleClaimFood(listingId);
             });
         });
@@ -1277,19 +1281,24 @@ createFoodCard(listing) {
         if (!listing) return;
         
         // Check if already claimed
-        if (this.claimedItems.includes(listingId)) {
+        if (this.claimedItems.includes(listingId) || listing.status === 'reserved') {
             this.showToast('This item has already been claimed!', 'error');
             return;
         }
+
+        const listingIndex = this.foodListings.findIndex(l => l.id === listingId);
+            if(listingIndex !== -1) {
+                this.foodListings[listingIndex].status = 'claimed';
+            }
         
         // Show confirmation dialog
         const confirmed = confirm(`Claim "${listing.foodType}" from ${listing.donor}?\n\nPickup: ${listing.location}\nTime: ${this.formatTime(listing.pickupTime)}\nContact: ${listing.contact}`);
         
         if (confirmed) {
-            this.api.deleteFoodListing(listingId);
-            // Add to claimed items
+            this.api.claimFoodListing(listingId);
             this.claimedItems.push(listingId);
             this.saveClaimedItems();
+            listing.status = 'reserved';
             
             // Create notification
             const notification = {
@@ -1301,7 +1310,7 @@ createFoodCard(listing) {
                 pickupTime: listing.pickupTime,
                 contact: listing.contact,
                 claimedAt: new Date(),
-                status: 'claimed'
+                status: 'reserved'
             };
             
             this.addNotification(notification);

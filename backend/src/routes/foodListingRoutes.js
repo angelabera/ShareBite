@@ -7,6 +7,7 @@ const {
   getListingById,
   updateListing,
   deleteListing,
+  claimListing,
 } = require('../controllers/foodListingController');
 
 const router = express.Router();
@@ -29,6 +30,7 @@ router.post(
   createListing
 );
 
+router.put('/:id/claim', protect, claimListing);
 router.get('/', getAllListings);
 router.get('/:id', getListingById);
 router.put('/:id', protect, updateListing);

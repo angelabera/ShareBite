@@ -85,3 +85,40 @@ exports.deleteListing = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+exports.claimListing = async (req, res) => {
+  try {
+    const listing = await FoodListing.findById(req.params.id);
+
+    if (!listing) {
+      return res.status(404).json({ message: 'Listing not found' });
+    }
+
+    // Check if already reserved
+    if (listing.status === 'reserved' || listing.status === 'completed') {
+      return res.status(400).json({ message: 'This item has already been reserved' });
+    }
+
+    // Mark as Reserved
+    listing.status = 'reserved';
+    listing.claimedBy = req.user._id;
+    const savedListing = await listing.save();
+
+    // Currently set to 10 seconds. For 24 hours use: 24 * 60 * 60 * 1000
+    setTimeout(async () => {
+      try {
+        await FoodListing.findByIdAndDelete(savedListing._id);
+        // It is good practice to keep one log for background tasks
+        console.log(`Listing ${savedListing._id} auto-deleted successfully.`);
+      } catch (err) {
+        console.error(`Error auto-deleting listing ${savedListing._id}:`, err);
+      }
+    }, 20000);
+
+    res.json({ message: 'Food reserved successfully', listing: savedListing });
+
+  } catch (err) {
+    console.error('Claim listing error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};

@@ -18,6 +18,11 @@ const foodListingSchema = new mongoose.Schema(
       enum: ['available', 'reserved', 'completed'], 
       default: 'available' 
     },
+    claimedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        default: null
+    },
   },
   { timestamps: true }
 );
