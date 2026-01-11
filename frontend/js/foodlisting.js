@@ -837,6 +837,9 @@ handleFileSelect(file) {
     const timeAgo = this.getTimeAgo(listing.createdAt);
     const freshUntil = this.formatDateTime(listing.freshUntil);
     const isClaimed = this.claimedItems.includes(listing.id);
+    const statusClass = isClaimed ? 'reserved' : 'available';
+    const statusText = isClaimed ? 'Reserved' : 'Available';
+
 
     // *** MODIFIED LOGIC START ***
     let imgSource = '';
@@ -866,9 +869,13 @@ handleFileSelect(file) {
     
     // The main HTML template now uses the correctly generated imageHTML
     return `
-        <div class="food-card ${isClaimed ? 'claimed' : ''}" 
+        <div class="food-card ${isClaimed ? 'claimed' : ''} ${statusClass}"
              data-id="${listing.id}" 
              data-tags="${listing.dietaryTags ? listing.dietaryTags.join(',') : ''}">
+             
+             <span class="status-badge ${statusClass}">${statusText}</span>
+
+             
             <div class="food-image">
                 ${imageHTML}
                 <div class="food-category">${this.capitalizeFirst(listing.category)}</div>
