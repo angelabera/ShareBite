@@ -76,7 +76,7 @@ body {
  /* Navbar Styles */
        /* Navbar Styles */
 
-       .navbar {
+    .navbar {
         position: fixed;
         top: 0;
         width: 100%;
@@ -84,6 +84,14 @@ body {
         backdrop-filter: blur(10px);
         z-index: 1000;
         border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .nav-menu.scrolled {
+        background-color: var(--white);
+    }
+
+    .nav-menu.scrolled .nav-link {
+        color: var(--text-dark)
     }
 
     .nav-container {
@@ -114,12 +122,12 @@ body {
             margin: 0;
             padding: 0;
         }
-
+        
         .nav-link {
             color: var(--text-dark);
             text-decoration: none;
             font-weight: 500;
-            transition: var(--transition);
+            transition: var(--transition-slow);
             padding: 0.5rem 0;
             position: relative;
         }
@@ -132,7 +140,7 @@ body {
             width: 0;
             height: 2px;
             background: var(--primary-color);
-            transition: var(--transition);
+            transition: var(--transition-slow);
         }
 
         .nav-link:hover::after {
