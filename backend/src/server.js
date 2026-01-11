@@ -5,6 +5,8 @@ const rateLimit = require('express-rate-limit');
 
 // Load environment variables from src/.env explicitly
 require('dotenv').config({ path: path.resolve(__dirname, '.env') });
+const claimRoutes = require('../routes/claimRoutes');
+
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const ngoAuthRoutes = require('./routes/ngoAuthRoutes');
@@ -57,6 +59,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/ngo', ngoAuthRoutes);
 app.use('/api/food', foodListingRoutes);
 app.use('/api/impact', impactRoutes);
+app.use('/api/claims', claimRoutes);
 
 
 const PORT = process.env.PORT || 5000;
