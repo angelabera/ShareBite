@@ -5414,3 +5414,38 @@ body.dark-mode .notification-bell:hover {
         background-color: #4CAF50 !important; /* Forces green lines */
     }
 }
+/* Reserved vs Available indicator */
+
+.food-card {
+  position: relative;
+  border-left: 5px solid transparent;
+}
+
+.food-card.available {
+  border-left-color: #4caf50;
+}
+
+.food-card.reserved {
+  border-left-color: #ff9800;
+  opacity: 0.75;
+}
+
+.status-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.status-badge.available {
+  background-color: #4caf50;
+}
+
+.status-badge.reserved {
+  background-color: #ff9800;
+}
+
