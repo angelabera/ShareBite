@@ -3,11 +3,12 @@ const FoodListing = require('../models/FoodListing');
 
 exports.createListing = async (req, res) => {
   const errors = validationResult(req);
-  if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
 
   try {
-    const { foodType, quantity, category, description, freshUntil, pickupTime, pickupLocation, contactInfo, photos } = req.body;
-    const listing = await FoodListing.create({
+    const {
       foodType,
       quantity,
       category,
@@ -16,15 +17,46 @@ exports.createListing = async (req, res) => {
       pickupTime,
       pickupLocation,
       contactInfo,
+      photos,
+      dietaryTags,
+      latitude,
+      longitude,
+    } = req.body;
+
+    // ✅ Validate map coordinates
+    if (!latitude || !longitude) {
+      return res.status(400).json({
+        message: 'Pickup location coordinates are required',
+      });
+    }
+
+    const listing = await FoodListing.create({
+      foodType,
+      quantity,
+      category,
+      description,
+      freshUntil,
+      pickupTime,
+      pickupLocation, // human-readable address
+      contactInfo,
       photos: photos || [],
+      dietaryTags: dietaryTags || [],
       donorId: req.user._id,
+
+      // 📍 GeoJSON location for maps
+      location: {
+        type: 'Point',
+        coordinates: [longitude, latitude], // IMPORTANT ORDER
+      },
     });
+
     res.status(201).json(listing);
   } catch (err) {
     console.error('Create listing error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 };
+
 
 exports.getAllListings = async (req, res) => {
   try {
@@ -52,20 +84,44 @@ exports.getListingById = async (req, res) => {
 exports.updateListing = async (req, res) => {
   try {
     const listing = await FoodListing.findById(req.params.id);
-    if (!listing) return res.status(404).json({ message: 'Listing not found' });
+    if (!listing) {
+      return res.status(404).json({ message: 'Listing not found' });
+    }
 
-    // Only donor can update their listing
+    // Only donor can update
     if (listing.donorId.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: 'Not authorized to update this listing' });
     }
 
-    const updated = await FoodListing.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-    res.json(updated);
+    const {
+      latitude,
+      longitude,
+      ...rest
+    } = req.body;
+
+    const updateData = { ...rest };
+
+    // Update map location ONLY if coordinates are provided
+    if (latitude && longitude) {
+      updateData.location = {
+        type: 'Point',
+        coordinates: [longitude, latitude],
+      };
+    }
+
+    const updatedListing = await FoodListing.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true, runValidators: true }
+    );
+
+    res.json(updatedListing);
   } catch (err) {
     console.error('Update listing error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 };
+
 
 exports.deleteListing = async (req, res) => {
   try {

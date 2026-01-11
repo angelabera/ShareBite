@@ -21,6 +21,23 @@
             }
         });
 
+        const menuToggle = document.getElementById("menuToggle");
+        const navMenu = document.getElementById("navMenu");
+
+        menuToggle.addEventListener("click", () => {
+        navMenu.classList.toggle("active");
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const menuToggle = document.getElementById("menuToggle");
+            const navMenu = document.getElementById("navMenu");
+          
+            menuToggle.addEventListener("click", () => {
+              navMenu.classList.toggle("active");
+            });
+          });
+          
+
         // Notification Toggle
         const notificationBell = document.getElementById('notificationBell');
         const notificationPanel = document.getElementById('notificationPanel');
@@ -86,10 +103,12 @@ class ShareBite {
         this.contactEmail = 'sharebite@support.com.ng';
         this.currentRole = 'donor';
         this.foodListings = [];
+        this.uploadedPhotoBase64 = null;
         this.filteredListings = [];
         this.currentFilter = 'all';
         this.claimedItems = this.loadClaimedItems();
         this.notifications = this.loadNotifications();
+        this.api = window;
         
         this.init();
         this.initTheme(); // add theme initialization after base init
@@ -98,7 +117,7 @@ class ShareBite {
     init() {
         this.setupEventListeners();
         this.updateContactInfo();
-        this.generateSampleListings();
+        this.loadListingsFromDB();
         this.renderFoodListings();
         this.setupNotificationSystem();
         this.updateNotificationDisplay();
@@ -258,10 +277,24 @@ class ShareBite {
     this.totalSteps = 3;
 
     addListingBtn.addEventListener('click', () => {
-        modal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-        this.resetFormSteps();
-    });
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+    this.resetFormSteps();
+
+    // ✅ Ensure hidden location inputs exist
+    if (!document.getElementById('latitude')) {
+        const latInput = document.createElement('input');
+        latInput.type = 'hidden';
+        latInput.id = 'latitude';
+
+        const lngInput = document.createElement('input');
+        lngInput.type = 'hidden';
+        lngInput.id = 'longitude';
+
+        document.getElementById('listingForm').append(latInput, lngInput);
+    }
+});
+
 
     const closeModal = () => {
         modal.style.display = 'none';
@@ -356,9 +389,54 @@ validateCurrentStep() {
             this.showToast(`Please fill in the required field: ${input.previousElementSibling.textContent}`, 'error');
             return false;
         }
+
+        //Special validation for quantity
+        if (input.id === 'quantity') {
+            const quantity = parseInt(input.value.trim());
+            if (isNaN(quantity) || quantity <= 0) {
+                input.focus();
+                this.showToast('Please enter a valid quantity greater than 0', 'error');
+                return false;
+            }
+        }
+        
+        // Special validation for contact information
+        if (input.id === 'contact') {
+            if (!this.validateContactInfo(input.value.trim())) {
+                input.focus();
+                this.showToast('Please enter a valid email address or phone number', 'error');
+                return false;
+            }
+        }
     }
-    
     return true;
+}
+
+validateContactInfo(contact) {
+    // Email regex
+    if(!contact) return false;
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    // Email check
+    if (emailPattern.test(contact)) {
+        return true;
+    }
+
+    // Phone structure: optional '+' followed by digits only
+    const phonePattern = /^\+?\d+$/;
+
+    if (!phonePattern.test(contact)) {
+        return false;
+    }
+
+    // With country code
+    if (contact.startsWith('+')) {
+        const digitCount = contact.length - 1; // exclude '+'
+        return digitCount >= 11 && digitCount <= 13;
+    }
+
+    // Without country code
+    return contact.length === 10;
 }
 
 resetFormSteps() {
@@ -420,6 +498,7 @@ handleFileSelect(file) {
 
     const reader = new FileReader();
     reader.onload = (e) => {
+        this.uploadedPhotoBase64 = e.target.result;
         imagePreview.innerHTML = `
             <img src="${e.target.result}" alt="Food preview">
             <button type="button" class="remove-image">
@@ -436,6 +515,7 @@ handleFileSelect(file) {
             imagePreview.classList.remove('active');
             uploadArea.style.display = 'block';
             document.getElementById('photo').value = '';
+             this.uploadedPhotoBase64 = null;
         });
     };
     reader.readAsDataURL(file);
@@ -449,22 +529,59 @@ handleFileSelect(file) {
             e.preventDefault();
             this.handleFormSubmission();
         });
+        const useLocationBtn = document.getElementById('useCurrentLocationBtn');
+
+        if (useLocationBtn) {
+            useLocationBtn.addEventListener('click', this.useCurrentLocation.bind(this));
+        }
+
 
         const freshUntilInput = document.getElementById('freshUntil');
         const now = new Date();
         now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
         freshUntilInput.min = now.toISOString().slice(0, 16);
     }
+async handleFormSubmission() {
+  const formData = this.getFormData();
 
-    handleFormSubmission() {
-        const formData = this.getFormData();
-        
-        if (this.validateFormData(formData)) {
-            this.addNewListing(formData);
-            this.showSuccessMessage();
-            this.closeModalAndReset();
-        }
+  if (!this.validateFormData(formData)) return;
+
+  try {
+    const backendData = {
+      foodType: formData.foodType,
+      quantity: formData.quantity,
+      category: formData.category,
+      description: formData.description,
+      freshUntil: formData.freshUntil,
+      pickupTime: formData.pickupTime,
+      pickupLocation: formData.location,
+      contactInfo: formData.contact,
+      dietaryTags: formData.dietaryTags,
+      photos: formData.photos,
+      latitude: Number(document.getElementById('latitude')?.value),
+      longitude: Number(document.getElementById('longitude')?.value),
+    };
+
+    if (!backendData.latitude || !backendData.longitude) {
+      this.showToast(
+        'Please click "Use Current Location" to set pickup address',
+        'error'
+      );
+      return;
     }
+
+    const newListing = await this.api.createFoodListing(backendData);
+
+    this.foodListings.unshift(newListing);
+    this.loadListingsFromDB();
+    this.showSuccessMessage();
+    this.closeModalAndReset();
+
+  } catch (error) {
+    console.error(error);
+    this.showToast('Failed to create listing', 'error');
+  }
+}
 
     getFormData() {
         const selectedTags = [];
@@ -473,7 +590,6 @@ handleFileSelect(file) {
         });
 
         return {
-            id: Date.now(),
             foodType: document.getElementById('foodType').value,
             quantity: document.getElementById('quantity').value,
             category: document.getElementById('category').value,
@@ -482,9 +598,7 @@ handleFileSelect(file) {
             pickupTime: document.getElementById('pickupTime').value,
             location: document.getElementById('location').value,
             contact: document.getElementById('contact').value,
-            photo: document.getElementById('photo').files[0],
-            createdAt: new Date(),
-            donor: 'Current User',
+            photos: this.uploadedPhotoBase64 ? [this.uploadedPhotoBase64] : [],
             dietaryTags: selectedTags 
         };
     }
@@ -508,11 +622,6 @@ handleFileSelect(file) {
         return true;
     }
 
-    addNewListing(data) {
-        this.foodListings.unshift(data);
-        this.filterListings();
-        this.renderFoodListings();
-    }
 
     showSuccessMessage() {
         this.showToast('Food listing added successfully!', 'success');
@@ -577,7 +686,6 @@ handleFileSelect(file) {
         now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
         freshUntilInput.min = now.toISOString().slice(0, 16);
     }
-
     // Date Input Confirmation functionality
     setupDateInputConfirmation() {
         const freshUntilInput = document.getElementById('freshUntil');
@@ -997,149 +1105,34 @@ handleFileSelect(file) {
         });
     }
 
-    generateSampleListings() {
-        const sampleListings = [
-            {
-                id: 1,
-                foodType: "Fresh Pizza Margherita",
-                quantity: "8 slices",
-                category: "restaurant",
-                description: "Freshly made pizza with mozzarella, tomato sauce, and basil. Perfect condition, just from lunch service.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "18:00",
-                location: "Mario's Pizzeria, 123 Main Street",
-                contact: "+1 234-567-8900",
-                createdAt: new Date(Date.now() - 3600000),
-                donor: "Mario's Pizzeria",
-                dietaryTags: ["vegetarian"],
-                photoUrl: "https://www.allrecipes.com/thmb/2rQA_OlnLbhidei70glz6HCCYAs=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/1453815-authentic-pizza-margherita-Cynthia-Ross-4x3-1-7410c69552274163a9049342b60c22ff.jpg",
-            },
-            {
-                id: 2,
-                foodType: "Assorted Sandwiches",
-                quantity: "15 sandwiches",
-                category: "event",
-                description: "Various sandwiches including turkey, ham, and vegetarian options from corporate catering event.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "16:30",
-                location: "Downtown Conference Center",
-                contact: "events@conference.com",
-                createdAt: new Date(Date.now() - 7200000),
-                donor: "Conference Center",
-                dietaryTags: ["non-vegetarian"],
-                photoUrl: "https://bangkok.mandarinorientalshop.com/cdn/shop/files/078-_3729_2048x.jpg?v=1690709512",
+      async loadListingsFromDB() {
+        try {
+            const listings = await getAllFoodListings(); 
+          
+            this.foodListings = listings.map(item => ({
+                ...item,
+                id: item._id,
+                  latitude: item.location?.coordinates?.[1],
+                  longitude: item.location?.coordinates?.[0],
+                location: item.pickupLocation || item.location || 'Location not specified',
+                contact: item.contactInfo || item.contact || 'No contact info',
+                donor: item.donorId?.name || 'Anonymous Donor',
+                photoUrl: (item.photos && item.photos.length > 0) ? item.photos[0] : null,
+                category: item.category || 'general',
+                dietaryTags: item.dietaryTags || [],
+                createdAt: new Date(item.createdAt),
+            }));
 
-            },
-            {
-                id: 3,
-                foodType: "Fresh Bread & Pastries",
-                quantity: "20+ items",
-                category: "bakery",
-                description: "End-of-day fresh bread, croissants, and pastries. All baked today and still perfectly fresh.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "20:00",
-                location: "Sunrise Bakery, Oak Avenue",
-                contact: "+1 234-567-8901",
-                createdAt: new Date(Date.now() - 1800000),
-                donor: "Sunrise Bakery",
-                dietaryTags: ["dairy-free"],
-                photoUrl: "https://media.istockphoto.com/id/507021914/photo/assorted-croissand-and-bread.jpg?s=612x612&w=0&k=20&c=ruHrARluyF_yR1-hmrurOyz4sLPNeohj1zKKv8fHa8U=",
-            },
-            {
-                id: 4,
-                foodType: "Home-cooked Curry",
-                quantity: "4-6 portions",
-                category: "household",
-                description: "Vegetarian curry with rice, made too much for family dinner. Spice level: medium.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "19:00",
-                location: "Residential Area, Pine Street",
-                contact: "+1 234-567-8902",
-                createdAt: new Date(Date.now() - 900000),
-                donor: "Local Family",
-                dietaryTags: ["vegetarian", "gluten-free"],
-                photoUrl: "https://www.tasteofhome.com/wp-content/uploads/2019/04/shutterstock_610126394.jpg",
-            },
-            {
-                id: 5,
-                foodType: "Fruit & Vegetable Box",
-                quantity: "1 large box",
-                category: "restaurant",
-                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "17:00",
-                location: "Green Garden Restaurant",
-                contact: "+1 234-567-8903",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant",
-                dietaryTags: ["vegan"],
-                photoUrl: "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
-            },
-            {
-                id: 6,
-                foodType: "Grilled Chicken Meals",
-                quantity: "12 complete meals",
-                category: "restaurant",
-                description: "Grilled chicken with rice and vegetables. Prepared for cancelled catering order.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "18:30",
-                location: "Healthy Eats Cafe, Market Square",
-                contact: "+1 234-567-8904",
-                createdAt: new Date(Date.now() - 2700000),
-                donor: "Healthy Eats Cafe",
-                dietaryTags: ["non-vegetarian", "dairy-free"],
-                photoUrl: "https://i0.wp.com/smittenkitchen.com/wp-content/uploads/2019/05/exceptional-grilled-chicken-scaled.jpg?fit=1200%2C800&ssl=1",
-            },
-            {
-                id: 5,
-                foodType: "Fruit & Vegetable Box",
-                quantity: "1 large box",
-                category: "restaurant",
-                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "17:00",
-                location: "Green Garden Restaurant",
-                contact: "+1 234-567-8903",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant",
-                dietaryTags: ["vegan"],
-                photoUrl: "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
-            },
-            {
-                id: 7,
-                foodType: "Fruit & Vegetable Box",
-                quantity: "1 large box",
-                category: "restaurant",
-                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "17:00",
-                location: "Green Garden Restaurant",
-                contact: "+1 234-567-8903",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant",
-                dietaryTags: ["vegan"],
-                photoUrl: "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
-            },
-            {
-                id: 8,
-                foodType: "Fruit & Vegetable Box",
-                quantity: "1 large box",
-                category: "restaurant",
-                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "17:00",
-                location: "Green Garden Restaurant",
-                contact: "+1 234-567-8903",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant",
-                dietaryTags: ["vegan"],
-                photoUrl: "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
-            },
+            this.foodListings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            this.filteredListings = this.foodListings;
+            this.renderFoodListings();
             
-        ];
-        
-        this.foodListings = sampleListings;
-        this.filteredListings = sampleListings;
+        } catch (error) {
+            console.error("Failed to load listings:", error);
+            this.foodListings = [];
+            this.renderFoodListings(); // Will render the "No listings found" state
+            this.showToast("Failed to connect to database", "error");
+        }
     }
 
     getRandomFutureDate() {
@@ -1206,59 +1199,79 @@ handleFileSelect(file) {
             `;
         }
     }
-
 createFoodCard(listing) {
+    const listingId = listing._id || listing.id;
+    const location = listing.pickupLocation || listing.location || 'Unknown Location';
+    const contact = listing.contactInfo || listing.contact;
     const timeAgo = this.getTimeAgo(listing.createdAt);
     const freshUntil = this.formatDateTime(listing.freshUntil);
     const isClaimed = this.claimedItems.includes(listing.id);
 
-    // *** MODIFIED LOGIC START ***
+    // Image handling
     let imgSource = '';
-
     if (listing.photoUrl) {
-        // 1. Use external/sample URL if provided
         imgSource = listing.photoUrl;
     } else if (listing.photo && typeof listing.photo === 'object' && listing.photo instanceof File) {
-        // 2. Use temporary URL for newly uploaded file objects
         imgSource = URL.createObjectURL(listing.photo);
-    } 
-    // If neither photoUrl nor a valid File object exists, imgSource remains empty.
-    
-    // Create the image/icon HTML based on the determined source
-    const imageHTML = imgSource 
-        ? `<img src="${imgSource}" alt="${listing.foodType}">` 
-        : `<i class="fas fa-${this.getFoodIcon(listing.category)}"></i>`;
-    // *** MODIFIED LOGIC END ***
+    }
 
-    // This logic generates the HTML for the tags
+    const imageHTML = imgSource
+        ? `<img src="${imgSource}" alt="${listing.foodType}">`
+        : `<i class="fas fa-${this.getFoodIcon(listing.category)}"></i>`;
+
+    // Dietary tags
     let tagsHTML = '';
     if (listing.dietaryTags && listing.dietaryTags.length > 0) {
-        tagsHTML = `<div class="food-tags">` +
-            listing.dietaryTags.map(tag => `<span class="tag tag-${tag}">${tag}</span>`).join('') +
-        `</div>`;
+        tagsHTML = `
+            <div class="food-tags">
+                ${listing.dietaryTags.map(tag => `<span class="tag tag-${tag}">${tag}</span>`).join('')}
+            </div>
+        `;
     }
-    
-    // The main HTML template now uses the correctly generated imageHTML
+
+    // Navigation button (only if coords exist)
+    const navigateButtonHTML =
+        listing.latitude && listing.longitude
+            ? `
+                <button class="navigate-btn"
+                        data-lat="${listing.latitude}"
+                        data-lng="${listing.longitude}"
+                        title="Navigate to pickup location">
+                    <i class="fas fa-directions"></i>
+                </button>
+              `
+            : '';
+
     return `
-        <div class="food-card ${isClaimed ? 'claimed' : ''}" 
-             data-id="${listing.id}" 
+        <div class="food-card ${isClaimed ? 'claimed' : ''}"
+             data-id="${listing.id}"
              data-tags="${listing.dietaryTags ? listing.dietaryTags.join(',') : ''}">
+             
             <div class="food-image">
                 ${imageHTML}
                 <div class="food-category">${this.capitalizeFirst(listing.category)}</div>
             </div>
+
             <div class="food-details">
                 <h3 class="food-title">${listing.foodType}</h3>
-                ${tagsHTML} 
+                ${tagsHTML}
+
                 <p class="food-description">${listing.description}</p>
+
                 <div class="food-meta">
-                    <span class="quantity"><i class="fas fa-utensils"></i> ${listing.quantity}</span>
-                    <span class="freshness"><i class="fas fa-clock"></i> ${freshUntil}</span>
+                    <span class="quantity">
+                        <i class="fas fa-utensils"></i> ${listing.quantity}
+                    </span>
+                    <span class="freshness">
+                        <i class="fas fa-clock"></i> ${freshUntil}
+                    </span>
                 </div>
+
                 <div class="food-location">
                     <i class="fas fa-map-marker-alt"></i>
-                    <span>${listing.location}</span>
+                    <span>${location}</span>
                 </div>
+
                 <div class="food-meta" style="margin-bottom: 1rem;">
                     <span style="color: var(--medium-gray); font-size: 0.9rem;">
                         <i class="fas fa-user"></i> ${listing.donor}
@@ -1267,11 +1280,13 @@ createFoodCard(listing) {
                         <i class="fas fa-clock"></i> ${timeAgo}
                     </span>
                 </div>
+
                 <div class="food-actions">
                     ${this.createClaimButton(listing)}
-                    <button class="contact-btn" data-contact="${listing.contact}">
+                    <button class="contact-btn" data-contact="${contact}" title="Copy contact">
                         <i class="fas fa-phone"></i>
                     </button>
+                    ${navigateButtonHTML}
                 </div>
             </div>
         </div>
@@ -1279,25 +1294,81 @@ createFoodCard(listing) {
 }
 
 
-    setupFoodCardInteractions() {
-        // Claim buttons
-        const claimBtns = document.querySelectorAll('.claim-btn');
-        claimBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const listingId = parseInt(btn.getAttribute('data-id'));
-                this.handleClaimFood(listingId);
-            });
+setupFoodCardInteractions() {
+    // Claim buttons
+    const claimBtns = document.querySelectorAll('.claim-btn');
+    claimBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const listingId = parseInt(btn.getAttribute('data-id'));
+            this.handleClaimFood(listingId);
         });
-        
-        // Contact buttons
-        const contactBtns = document.querySelectorAll('.contact-btn');
-        contactBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const contact = btn.getAttribute('data-contact');
-                this.handleContactDonor(contact);
-            });
+    });
+
+    // Contact buttons
+    const contactBtns = document.querySelectorAll('.contact-btn');
+    contactBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const contact = btn.getAttribute('data-contact');
+            this.handleContactDonor(contact);
         });
+    });
+
+    // ✅ Navigate buttons (NEW)
+    const navigateBtns = document.querySelectorAll('.navigate-btn');
+    navigateBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const lat = btn.dataset.lat;
+            const lng = btn.dataset.lng;
+
+            if (!lat || !lng) {
+                this.showToast('Location coordinates not available', 'error');
+                return;
+            }
+
+            // Open Google Maps directions
+            window.open(
+                `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
+                '_blank'
+            );
+        });
+    });
+}
+
+  async useCurrentLocation() {
+  if (!navigator.geolocation) {
+    this.showToast('Geolocation not supported', 'error');
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    async (position) => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+      document.getElementById('latitude').value = latitude;
+      document.getElementById('longitude').value = longitude;
+
+      try {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`,
+          { headers: { 'User-Agent': 'ShareBite' } }
+        );
+
+        const data = await res.json();
+        document.getElementById('location').value =
+          data.display_name || 'Current location';
+
+      } catch (err) {
+        document.getElementById('location').value = 'Current location';
+      }
+    },
+    () => {
+      this.showToast('Location permission denied', 'error');
     }
+  );
+}
+
+
 
     handleClaimFood(listingId) {
         const listing = this.foodListings.find(l => l.id === listingId);
@@ -1313,6 +1384,7 @@ createFoodCard(listing) {
         const confirmed = confirm(`Claim "${listing.foodType}" from ${listing.donor}?\n\nPickup: ${listing.location}\nTime: ${this.formatTime(listing.pickupTime)}\nContact: ${listing.contact}`);
         
         if (confirmed) {
+            this.api.deleteFoodListing(listingId);
             // Add to claimed items
             this.claimedItems.push(listingId);
             this.saveClaimedItems();
@@ -1371,16 +1443,18 @@ createFoodCard(listing) {
     }
 
     getFoodIcon(category) {
+        if (!category) return 'utensils';
         const icons = {
             restaurant: 'store',
             household: 'home',
             bakery: 'bread-slice',
             event: 'calendar-alt'
         };
-        return icons[category] || 'utensils';
+        return icons[category.toLowerCase()] || 'utensils';
     }
 
     capitalizeFirst(str) {
+        if (!str) return '';
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
@@ -1525,10 +1599,26 @@ createFoodCard(listing) {
     }
     
     addNotification(notification) {
+        notification.read = false; // Mark new notifications as unread
         this.notifications.unshift(notification);
         this.saveNotifications();
         this.updateNotificationDisplay();
         this.renderNotifications();
+    }
+
+    markNotificationAsRead(notificationId) {
+        const notification = this.notifications.find(n => n.id === notificationId);
+        if (notification && !notification.read) {
+            notification.read = true;
+            this.saveNotifications();
+            this.updateNotificationDisplay();
+        }
+    }
+
+    markAllNotificationsAsRead() {
+        this.notifications.forEach(n => n.read = true);
+        this.saveNotifications();
+        this.updateNotificationDisplay();
     }
     
     updateNotificationDisplay() {
@@ -1537,7 +1627,7 @@ createFoodCard(listing) {
         
         if (!notificationBell || !notificationBadge) return;
         
-        const unreadCount = this.notifications.length;
+        const unreadCount = this.notifications.filter(n => !n.read).length;
         
         if (unreadCount > 0) {
             notificationBell.style.display = 'block';
@@ -1581,9 +1671,10 @@ createFoodCard(listing) {
     
     createNotificationItem(notification) {
         const timeAgo = this.getTimeAgo(notification.claimedAt);
+        const unreadClass = notification.read ? '' : 'unread';
         
         return `
-            <div class="notification-item" data-id="${notification.id}">
+            <div class="notification-item ${unreadClass}" data-id="${notification.id}">
                 <div class="notification-item-header">
                     <div class="notification-item-icon">
                         <i class="fas fa-utensils"></i>
@@ -1630,6 +1721,9 @@ createFoodCard(listing) {
     viewNotificationDetails(notificationId) {
         const notification = this.notifications.find(n => n.id === notificationId);
         if (!notification) return;
+        
+        // Mark as read when viewed
+        this.markNotificationAsRead(notificationId);
         
         const details = `
 Food: ${notification.foodType}
