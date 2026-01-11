@@ -26,6 +26,18 @@ router.post(
     body('contactInfo').notEmpty().withMessage('Contact info is required'),
     body('dietaryTags').optional().isArray().withMessage('Dietary tags must be an array'),
     body('photos').optional().isArray(),
+
+    body('latitude')
+      .notEmpty()
+      .withMessage('Latitude is required')
+      .isFloat({ min: -90, max: 90 })
+      .withMessage('Latitude must be valid'),
+
+    body('longitude')
+      .notEmpty()
+      .withMessage('Longitude is required')
+      .isFloat({ min: -180, max: 180 })
+      .withMessage('Longitude must be valid'),
   ],
   createListing
 );

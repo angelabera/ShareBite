@@ -277,10 +277,24 @@ class ShareBite {
     this.totalSteps = 3;
 
     addListingBtn.addEventListener('click', () => {
-        modal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-        this.resetFormSteps();
-    });
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+    this.resetFormSteps();
+
+    // ✅ Ensure hidden location inputs exist
+    if (!document.getElementById('latitude')) {
+        const latInput = document.createElement('input');
+        latInput.type = 'hidden';
+        latInput.id = 'latitude';
+
+        const lngInput = document.createElement('input');
+        lngInput.type = 'hidden';
+        lngInput.id = 'longitude';
+
+        document.getElementById('listingForm').append(latInput, lngInput);
+    }
+});
+
 
     const closeModal = () => {
         modal.style.display = 'none';
@@ -515,51 +529,59 @@ handleFileSelect(file) {
             e.preventDefault();
             this.handleFormSubmission();
         });
+        const useLocationBtn = document.getElementById('useCurrentLocationBtn');
+
+        if (useLocationBtn) {
+            useLocationBtn.addEventListener('click', this.useCurrentLocation.bind(this));
+        }
+
 
         const freshUntilInput = document.getElementById('freshUntil');
         const now = new Date();
         now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
         freshUntilInput.min = now.toISOString().slice(0, 16);
     }
+async handleFormSubmission() {
+  const formData = this.getFormData();
 
-    handleFormSubmission() {
-        const formData = this.getFormData();
-        
-        if (this.validateFormData(formData)) {
-            try {
-            const backendData = {
-                foodType: formData.foodType,
-                quantity: formData.quantity,
-                category: formData.category,
-                description: formData.description,
-                freshUntil: formData.freshUntil,
-                pickupTime: formData.pickupTime,
-                pickupLocation: formData.location, 
-                contactInfo: formData.contact,
-                dietaryTags: formData.dietaryTags,
-                photos: formData.photos,
-            };
+  if (!this.validateFormData(formData)) return;
 
-            const newListing = this.api.createFoodListing(backendData);
-            this.foodListings.unshift(newListing);
-            this.filterListings();
-            this.loadListingsFromDB();
-            this.renderFoodListings();
-            this.showSuccessMessage();
-            this.closeModalAndReset();
+  try {
+    const backendData = {
+      foodType: formData.foodType,
+      quantity: formData.quantity,
+      category: formData.category,
+      description: formData.description,
+      freshUntil: formData.freshUntil,
+      pickupTime: formData.pickupTime,
+      pickupLocation: formData.location,
+      contactInfo: formData.contact,
+      dietaryTags: formData.dietaryTags,
+      photos: formData.photos,
+      latitude: Number(document.getElementById('latitude')?.value),
+      longitude: Number(document.getElementById('longitude')?.value),
+    };
 
-            } catch (error) {
-            console.error('Error creating listing:', error);
-            // Handle auth errors specifically
-            if(error.status === 401) {
-                this.showToast('You must be logged in to add a listing', 'error');
-            } else {
-                this.showToast(error.message || 'Failed to create listing', 'error');
-            }
-        }
-
-        }
+    if (!backendData.latitude || !backendData.longitude) {
+      this.showToast(
+        'Please click "Use Current Location" to set pickup address',
+        'error'
+      );
+      return;
     }
+
+    const newListing = await this.api.createFoodListing(backendData);
+
+    this.foodListings.unshift(newListing);
+    this.loadListingsFromDB();
+    this.showSuccessMessage();
+    this.closeModalAndReset();
+
+  } catch (error) {
+    console.error(error);
+    this.showToast('Failed to create listing', 'error');
+  }
+}
 
     getFormData() {
         const selectedTags = [];
@@ -664,7 +686,6 @@ handleFileSelect(file) {
         now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
         freshUntilInput.min = now.toISOString().slice(0, 16);
     }
-
     // Date Input Confirmation functionality
     setupDateInputConfirmation() {
         const freshUntilInput = document.getElementById('freshUntil');
@@ -1091,6 +1112,8 @@ handleFileSelect(file) {
             this.foodListings = listings.map(item => ({
                 ...item,
                 id: item._id,
+                  latitude: item.location?.coordinates?.[1],
+                  longitude: item.location?.coordinates?.[0],
                 location: item.pickupLocation || item.location || 'Location not specified',
                 contact: item.contactInfo || item.contact || 'No contact info',
                 donor: item.donorId?.name || 'Anonymous Donor',
@@ -1179,7 +1202,6 @@ handleFileSelect(file) {
             `;
         }
     }
-
 createFoodCard(listing) {
     const listingId = listing._id || listing.id;
     const location = listing.pickupLocation || listing.location || 'Unknown Location';
@@ -1188,53 +1210,71 @@ createFoodCard(listing) {
     const freshUntil = this.formatDateTime(listing.freshUntil);
     const isClaimed = this.claimedItems.includes(listing.id);
 
-    // *** MODIFIED LOGIC START ***
+    // Image handling
     let imgSource = '';
-
     if (listing.photoUrl) {
-        // 1. Use external/sample URL if provided
         imgSource = listing.photoUrl;
     } else if (listing.photo && typeof listing.photo === 'object' && listing.photo instanceof File) {
-        // 2. Use temporary URL for newly uploaded file objects
         imgSource = URL.createObjectURL(listing.photo);
-    } 
-    // If neither photoUrl nor a valid File object exists, imgSource remains empty.
-    
-    // Create the image/icon HTML based on the determined source
-    const imageHTML = imgSource 
-        ? `<img src="${imgSource}" alt="${listing.foodType}">` 
-        : `<i class="fas fa-${this.getFoodIcon(listing.category)}"></i>`;
-    // *** MODIFIED LOGIC END ***
+    }
 
-    // This logic generates the HTML for the tags
+    const imageHTML = imgSource
+        ? `<img src="${imgSource}" alt="${listing.foodType}">`
+        : `<i class="fas fa-${this.getFoodIcon(listing.category)}"></i>`;
+
+    // Dietary tags
     let tagsHTML = '';
     if (listing.dietaryTags && listing.dietaryTags.length > 0) {
-        tagsHTML = `<div class="food-tags">` +
-            listing.dietaryTags.map(tag => `<span class="tag tag-${tag}">${tag}</span>`).join('') +
-        `</div>`;
+        tagsHTML = `
+            <div class="food-tags">
+                ${listing.dietaryTags.map(tag => `<span class="tag tag-${tag}">${tag}</span>`).join('')}
+            </div>
+        `;
     }
-    
-    // The main HTML template now uses the correctly generated imageHTML
+
+    // Navigation button (only if coords exist)
+    const navigateButtonHTML =
+        listing.latitude && listing.longitude
+            ? `
+                <button class="navigate-btn"
+                        data-lat="${listing.latitude}"
+                        data-lng="${listing.longitude}"
+                        title="Navigate to pickup location">
+                    <i class="fas fa-directions"></i>
+                </button>
+              `
+            : '';
+
     return `
-        <div class="food-card ${isClaimed ? 'claimed' : ''}" 
-             data-id="${listing.id}" 
+        <div class="food-card ${isClaimed ? 'claimed' : ''}"
+             data-id="${listing.id}"
              data-tags="${listing.dietaryTags ? listing.dietaryTags.join(',') : ''}">
+             
             <div class="food-image">
                 ${imageHTML}
                 <div class="food-category">${this.capitalizeFirst(listing.category)}</div>
             </div>
+
             <div class="food-details">
                 <h3 class="food-title">${listing.foodType}</h3>
-                ${tagsHTML} 
+                ${tagsHTML}
+
                 <p class="food-description">${listing.description}</p>
+
                 <div class="food-meta">
-                    <span class="quantity"><i class="fas fa-utensils"></i> ${listing.quantity}</span>
-                    <span class="freshness"><i class="fas fa-clock"></i> ${freshUntil}</span>
+                    <span class="quantity">
+                        <i class="fas fa-utensils"></i> ${listing.quantity}
+                    </span>
+                    <span class="freshness">
+                        <i class="fas fa-clock"></i> ${freshUntil}
+                    </span>
                 </div>
+
                 <div class="food-location">
                     <i class="fas fa-map-marker-alt"></i>
-                    <span>${listing.location}</span>
+                    <span>${location}</span>
                 </div>
+
                 <div class="food-meta" style="margin-bottom: 1rem;">
                     <span style="color: var(--medium-gray); font-size: 0.9rem;">
                         <i class="fas fa-user"></i> ${listing.donor}
@@ -1243,11 +1283,13 @@ createFoodCard(listing) {
                         <i class="fas fa-clock"></i> ${timeAgo}
                     </span>
                 </div>
+
                 <div class="food-actions">
                     ${this.createClaimButton(listing)}
-                    <button class="contact-btn" data-contact="${listing.contact}">
+                    <button class="contact-btn" data-contact="${contact}" title="Copy contact">
                         <i class="fas fa-phone"></i>
                     </button>
+                    ${navigateButtonHTML}
                 </div>
             </div>
         </div>
@@ -1264,17 +1306,81 @@ createFoodCard(listing) {
                 // const listingId = parseInt(btn.getAttribute('data-id'));
                 this.handleClaimFood(listingId);
             });
+setupFoodCardInteractions() {
+    // Claim buttons
+    const claimBtns = document.querySelectorAll('.claim-btn');
+    claimBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const listingId = parseInt(btn.getAttribute('data-id'));
+            this.handleClaimFood(listingId);
         });
-        
-        // Contact buttons
-        const contactBtns = document.querySelectorAll('.contact-btn');
-        contactBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const contact = btn.getAttribute('data-contact');
-                this.handleContactDonor(contact);
-            });
+    });
+
+    // Contact buttons
+    const contactBtns = document.querySelectorAll('.contact-btn');
+    contactBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const contact = btn.getAttribute('data-contact');
+            this.handleContactDonor(contact);
         });
+    });
+
+    // ✅ Navigate buttons (NEW)
+    const navigateBtns = document.querySelectorAll('.navigate-btn');
+    navigateBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const lat = btn.dataset.lat;
+            const lng = btn.dataset.lng;
+
+            if (!lat || !lng) {
+                this.showToast('Location coordinates not available', 'error');
+                return;
+            }
+
+            // Open Google Maps directions
+            window.open(
+                `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
+                '_blank'
+            );
+        });
+    });
+}
+
+  async useCurrentLocation() {
+  if (!navigator.geolocation) {
+    this.showToast('Geolocation not supported', 'error');
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    async (position) => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+      document.getElementById('latitude').value = latitude;
+      document.getElementById('longitude').value = longitude;
+
+      try {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`,
+          { headers: { 'User-Agent': 'ShareBite' } }
+        );
+
+        const data = await res.json();
+        document.getElementById('location').value =
+          data.display_name || 'Current location';
+
+      } catch (err) {
+        document.getElementById('location').value = 'Current location';
+      }
+    },
+    () => {
+      this.showToast('Location permission denied', 'error');
     }
+  );
+}
+
+
 
     handleClaimFood(listingId) {
         const listing = this.foodListings.find(l => l.id === listingId);
