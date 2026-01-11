@@ -59,6 +59,7 @@ body {
     line-height: 1.6;
     color: var(--black);
     overflow-x: hidden;
+
     background: 
       url('../logo/sharebite_logo.png') center center / contain no-repeat,
       linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(255, 107, 53, 0.1) 50%, rgba(76, 175, 80, 0.1) 100%);
@@ -72,6 +73,9 @@ body.dark-mode {
     background-attachment: fixed;
 
     padding-top: 80px;
+
+    padding-top: 60px;
+
 }
 
 .container {
@@ -80,7 +84,14 @@ body.dark-mode {
     padding: var(--container-padding);
 }
 .hero {
-    min-height: calc(100vh - 80px);
+  position: relative;
+  min-height: 130vh;   
+  display: flex;
+  align-items: center;
+  padding-top: 1rem;  
+  padding-bottom: 4rem;
+  background: #000;    
+  overflow: hidden;
 }
 
 
@@ -101,7 +112,7 @@ body.dark-mode {
     .nav-container {
         max-width: 1200px;
         margin: 0 auto;
-        padding: 1rem 1.25rem;
+        padding: 0rem 1.25rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -284,7 +295,7 @@ body.dark-mode {
     background: var(--primary-gradient);
     color: white;
     border: none;
-    padding: 0.75rem 1rem;
+    padding: 0rem 1rem;
     border-radius: var(--border-radius);
     cursor: pointer;
     font-weight: 600;
@@ -553,8 +564,9 @@ body.dark .profile-menu-item:hover {
         .login-btn {
             position: relative;
             overflow: hidden;
-            padding: 10px 26px; /* smaller padding */
+            padding: 6px 20px; /* smaller padding */
             font-size: 1rem; /* smaller text */
+            white-space: nowrap;
             font-family: 'Poppins', sans-serif;
             color: #fff;
             border: none;
@@ -665,7 +677,7 @@ body.dark .profile-menu-item:hover {
             }
 
             .nav-menu {
-                gap: 1.5rem;
+                gap: 1rem;
             }
 
             .user-actions {
@@ -682,7 +694,7 @@ body.dark .profile-menu-item:hover {
         @media (min-width: 769px) {
             .nav-menu {
                 display: flex;
-                gap: 2rem;
+                gap: 1.25rem;
                 position: static;
                 background: none;
             }
@@ -730,7 +742,7 @@ body.dark .profile-menu-item:hover {
                 position: absolute;
                 top: 100%;
                 left: 0;
-                width: 100%;
+                width: 50%;
                 background: #0b0f1a;
                 z-index: 2000; /* higher than hero */
               }
@@ -820,7 +832,7 @@ body.dark .profile-menu-item:hover {
                 left: 10px;
                 text-align: center;
             }
-        }
+        }   
 /* Navigation */
 .navbar {
     position: fixed;
@@ -844,7 +856,7 @@ body.dark .profile-menu-item:hover {
 .nav-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 1rem 2rem;
+    padding: 0rem 0rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -5502,3 +5514,38 @@ body.dark-mode .notification-bell:hover {
         background-color: #4CAF50 !important; /* Forces green lines */
     }
 }
+/* Reserved vs Available indicator */
+
+.food-card {
+  position: relative;
+  border-left: 5px solid transparent;
+}
+
+.food-card.available {
+  border-left-color: #4caf50;
+}
+
+.food-card.reserved {
+  border-left-color: #ff9800;
+  opacity: 0.75;
+}
+
+.status-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.status-badge.available {
+  background-color: #4caf50;
+}
+
+.status-badge.reserved {
+  background-color: #ff9800;
+}
+
