@@ -2497,3 +2497,26 @@ if (document.querySelector('.testimonials-section')) {
     // (optional) listen for user interactions on the injected widget to update launcher state
     // No-op: the module exposes window.ShareBot.open/close which we call above
 })();
+
+// Add Listing Success Message
+document.addEventListener("DOMContentLoaded", () => {
+  const submitBtn = document.getElementById("submitForm");
+  const successMsg = document.getElementById("listingSuccessMsg");
+
+  if (submitBtn && successMsg) {
+    submitBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      // Show success message
+      successMsg.style.display = "block";
+
+      // Reset the form
+      submitBtn.closest("form").reset();
+
+      // Hide message after 4 seconds
+      setTimeout(() => {
+        successMsg.style.display = "none";
+      }, 4000);
+    });
+  }
+});
