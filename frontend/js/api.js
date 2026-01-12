@@ -108,6 +108,12 @@ async function deleteFoodListing(id) {
   });
 }
 
+async function claimFoodListing(id) {
+  return apiRequest(`/food/${id}/claim`, {
+    method: 'PUT',
+  });
+}
+
 // Export for use in other scripts
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
@@ -120,5 +126,6 @@ if (typeof module !== 'undefined' && module.exports) {
     getFoodListingById,
     updateFoodListing,
     deleteFoodListing,
+    claimFoodListing,
   };
 }

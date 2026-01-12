@@ -160,29 +160,47 @@ class ShareBiteFoodListing {
     const closeModalBtn = document.querySelector('.close-modal');
     const cancelBtn = document.getElementById('cancelForm');
 
-    this.currentStep = 1;
-    this.totalSteps = 3;
-
-    addListingBtn.addEventListener('click', () => {
-        modal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-        this.resetFormSteps();
-    });
-
     const closeModal = () => {
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-        this.resetForm();
-        this.resetFormSteps();
+      // Ask user for confirmation before cancelling
+      if (!confirm("Are you sure you want to cancel this food pickup?")) {
+           return; // cancellation aborted
+      }
+
+     // Close modal and restore page state
+     modal.style.display = 'none';
+     document.body.style.overflow = 'auto';
+
+     // Reset form steps to initial state
+     this.resetFormSteps();
     };
+    
+     // Cancel button (needs preventDefault)
+    
+    cancelBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    closeModal();
+  });
+    
+    // ✅ X (close) button
 
     closeModalBtn.addEventListener('click', closeModal);
-    cancelBtn.addEventListener('click', closeModal);
+    
+     // ✅ Click outside modal
     
     modal.addEventListener('click', (e) => {
         if (e.target === modal) {
             closeModal();
         }
+    });
+    
+    this.currentStep = 1;
+    this.totalSteps = 3;
+
+    
+    addListingBtn.addEventListener('click', () => {
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        this.resetFormSteps();
     });
 
     this.setupFileUpload();
@@ -839,6 +857,9 @@ handleFileSelect(file) {
     const urgency = this.getUrgencyStatus(listing.freshUntil);
     const isClaimed = this.claimedItems.includes(listing.id);
     
+    const statusClass = isClaimed ? 'reserved' : 'available';
+    const statusText = isClaimed ? 'Reserved' : 'Available';
+
 
     // *** MODIFIED LOGIC START ***
     let imgSource = '';
@@ -868,9 +889,13 @@ handleFileSelect(file) {
     
     // The main HTML template now uses the correctly generated imageHTML
     return `
-        <div class="food-card ${isClaimed ? 'claimed' : ''}" 
+        <div class="food-card ${isClaimed ? 'claimed' : ''} ${statusClass}"
              data-id="${listing.id}" 
              data-tags="${listing.dietaryTags ? listing.dietaryTags.join(',') : ''}">
+             
+             <span class="status-badge ${statusClass}">${statusText}</span>
+
+             
             <div class="food-image">
                 ${imageHTML}
                 <div class="food-category">${this.capitalizeFirst(listing.category)}</div>

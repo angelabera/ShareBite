@@ -35,6 +35,9 @@
     <link rel="stylesheet" href="./css/fontawesome/all.min.css">
     <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Leaflet Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
   </head>
   <body>
      <!-- Navigation -->
@@ -85,8 +88,8 @@
                     <i class="fas fa-exchange-alt"></i>
                     <span id="currentRole">Donor</span>
                 </button>
-                <button class="login-btn" onclick="window.location.href='login.html'">Login as User</button>
-                <button class="login-btn" onclick="window.location.href='login_ngo.html'">Login as NGO</button>
+                <button class="login-btn" onclick="window.location.href='login.html'">User Login</button>
+                <button class="login-btn" onclick="window.location.href='login_ngo.html'">NGO Login</button>
             </div>
             <div class="hamburger" id="menuToggle">
                 <span></span>
@@ -372,12 +375,18 @@
             </div>
             <div class="form-group">
               <label for="location">Pickup Location *</label>
-              <input
-                type="text"
-                id="location"
-                required
-                placeholder="Address or landmark"
-              />
+              <input type="text" id="location" required placeholder="Address or landmark" />
+            <button type="button" id="useCurrentLocationBtn" class="btn btn-secondary">
+              <i class="fas fa-location-crosshairs"></i>
+              Use Current Location
+            </button>
+
+            
+              <div id="map" style="display:none; margin-top:10px; height: 250px; width: 100%; border-radius: 8px;"></div>
+            
+              <!-- Hidden inputs to send to backend -->
+              <input type="hidden" id="latitude" />
+              <input type="hidden" id="longitude" />
             </div>
             <div class="form-group">
               <label for="contact">Contact Information *</label>
