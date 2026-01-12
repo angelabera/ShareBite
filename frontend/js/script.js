@@ -20,6 +20,8 @@
                 showToast('Light mode enabled');
             }
         });
+     
+
 
         const menuToggle = document.getElementById("menuToggle");
         const navMenu = document.getElementById("navMenu");
@@ -27,6 +29,13 @@
         menuToggle.addEventListener("click", () => {
         navMenu.classList.toggle("active");
         });
+        menuToggle.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        menuToggle.click();
+    }
+});
+
 
         document.addEventListener("DOMContentLoaded", () => {
             const menuToggle = document.getElementById("menuToggle");
@@ -111,8 +120,19 @@ class ShareBite {
         this.api = window;
         
         this.init();
-        this.initTheme(); // add theme initialization after base init
+        this.initTheme();
+        
+        
+
+        
+        
+        
+        // add theme initialization after base init
     }
+
+        setupEventListeners() {
+          this.setupHeroButtons();
+            }
 
     init() {
         this.setupEventListeners();
@@ -305,12 +325,45 @@ class ShareBite {
 setupFormNavigation() {
     const nextBtn = document.getElementById('nextStep');
     const prevBtn = document.getElementById('prevStep');
-    const submitBtn = document.getElementById('submitForm');
 
     nextBtn.addEventListener('click', () => {
-        if (this.validateCurrentStep()) {
-            this.goToStep(this.currentStep + 1);
+        // Step-level required field validation
+        if (!this.validateCurrentStep()) return;
+
+        // 🔴 ISSUE-416: Expiry vs Pickup validation
+        const freshUntilValue = document.getElementById('freshUntil')?.value;
+        const pickupTimeValue = document.getElementById('pickupTime')?.value;
+
+        if (freshUntilValue && pickupTimeValue) {
+            const expiry = new Date(freshUntilValue);
+
+            // Parse "04 : 00 pm" / "09 : 00 am"
+            const match = pickupTimeValue.match(/(\d+)\s*:\s*(\d+)\s*(am|pm)/i);
+
+            if (match) {
+                let hour = parseInt(match[1]);
+                const minute = parseInt(match[2]);
+                const period = match[3].toLowerCase();
+
+                if (period === 'pm' && hour !== 12) hour += 12;
+                if (period === 'am' && hour === 12) hour = 0;
+
+                const pickup = new Date(expiry);
+                pickup.setHours(hour, minute, 0, 0);
+
+                // 🚫 BLOCK if pickup is after expiry
+                if (pickup > expiry) {
+                    this.showToast(
+                        'Pickup time cannot be later than expiry time.',
+                        'error'
+                    );
+                    return;
+                }
+            }
         }
+
+        // ✅ Move to next step only if all validations pass
+        this.goToStep(this.currentStep + 1);
     });
 
     prevBtn.addEventListener('click', () => {
@@ -318,24 +371,6 @@ setupFormNavigation() {
     });
 }
 
-goToStep(stepNumber) {
-    if (stepNumber < 1 || stepNumber > this.totalSteps) return;
-
-    document.querySelectorAll('.form-step').forEach(step => {
-        step.classList.remove('active');
-    });
-
-    const newStep = document.querySelector(`.form-step[data-step="${stepNumber}"]`);
-    if (newStep) {
-        newStep.classList.add('active');
-    }
-
-    this.updateProgress(stepNumber);
-
-    this.updateNavigationButtons(stepNumber);
-
-    this.currentStep = stepNumber;
-}
 
 updateProgress(stepNumber) {
     const steps = document.querySelectorAll('.progress-step');
@@ -507,26 +542,38 @@ handleFileSelect(file) {
     reader.readAsDataURL(file);
 }
 
+setupFormHandling() {
+    const form = document.getElementById('listingForm');
 
-    setupFormHandling() {
-        const form = document.getElementById('listingForm');
-        
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.handleFormSubmission();
-        });
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.handleFormSubmission();
+    });
 
-        const freshUntilInput = document.getElementById('freshUntil');
-        const now = new Date();
-        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+
+    // Expiry time must be future
+    const freshUntilInput = document.getElementById('freshUntil');
+    if (freshUntilInput) {
         freshUntilInput.min = now.toISOString().slice(0, 16);
     }
 
-    handleFormSubmission() {
-        const formData = this.getFormData();
+    // OPTIONAL: Pickup time must be future
+    const pickupTimeInput = document.getElementById('pickupTime');
+    if (pickupTimeInput) {
+        pickupTimeInput.min = now.toISOString().slice(0, 16);
+    }
+}
+     
+
+
+handleFormSubmission() {
+    const formData = this.getFormData();
+    
+    if (this.validateFormData(formData)) {
         
-        if (this.validateFormData(formData)) {
-            try {
+        try {
             const backendData = {
                 foodType: formData.foodType,
                 quantity: formData.quantity,
@@ -548,18 +595,21 @@ handleFileSelect(file) {
             this.showSuccessMessage();
             this.closeModalAndReset();
 
-            } catch (error) {
+        } catch (error) {
             console.error('Error creating listing:', error);
-            // Handle auth errors specifically
-            if(error.status === 401) {
+            if (error.status === 401) {
                 this.showToast('You must be logged in to add a listing', 'error');
             } else {
                 this.showToast(error.message || 'Failed to create listing', 'error');
             }
         }
-
-        }
     }
+}
+
+    
+ 
+
+
 
     getFormData() {
         const selectedTags = [];
@@ -580,25 +630,68 @@ handleFileSelect(file) {
             dietaryTags: selectedTags 
         };
     }
+validateFormData(data) {
+    const requiredFields = [
+        'foodType',
+        'quantity',
+        'category',
+        'freshUntil',
+        'pickupTime',
+        'location',
+        'contact'
+    ];
 
-    validateFormData(data) {
-        const requiredFields = ['foodType', 'quantity', 'category', 'freshUntil', 'pickupTime', 'location', 'contact'];
-        
-        for (let field of requiredFields) {
-            if (!data[field] || data[field].trim() === '') {
-                this.showErrorMessage(`Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}.`);
-                return false;
-            }
-        }
-        
-        const freshDate = new Date(data.freshUntil);
-        if (freshDate <= new Date()) {
-            this.showErrorMessage('Fresh until date must be in the future.');
+    for (let field of requiredFields) {
+        if (!data[field] || data[field].trim() === '') {
+            this.showErrorMessage(
+                `Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}.`
+            );
             return false;
         }
-        
-        return true;
     }
+
+    const now = new Date();
+    const freshUntilDate = new Date(data.freshUntil);
+
+    // 1️⃣ Expiry must be in future
+    if (freshUntilDate <= now) {
+        this.showErrorMessage('Food expiry time must be in the future.');
+        return false;
+    }
+
+    // 🔴 FIX: Parse pickup time with AM/PM correctly
+    const pickupMatch = data.pickupTime.match(/(\d+)\s*:\s*(\d+)\s*(am|pm)/i);
+
+    if (!pickupMatch) {
+        this.showErrorMessage('Invalid pickup time format.');
+        return false;
+    }
+
+    let hour = parseInt(pickupMatch[1]);
+    const minute = parseInt(pickupMatch[2]);
+    const meridiem = pickupMatch[3].toLowerCase();
+
+    if (meridiem === 'pm' && hour !== 12) hour += 12;
+    if (meridiem === 'am' && hour === 12) hour = 0;
+
+    const pickupDateTime = new Date(freshUntilDate);
+    pickupDateTime.setHours(hour, minute, 0, 0);
+
+    // 2️⃣ Pickup must be future
+    if (pickupDateTime <= now) {
+        this.showErrorMessage('Pickup time must be in the future.');
+        return false;
+    }
+
+    // 3️⃣ ISSUE-416: Pickup must be BEFORE expiry ✅
+    if (pickupDateTime > freshUntilDate) {
+        this.showErrorMessage('Pickup time cannot be later than expiry time.');
+        return false;
+    }
+
+    return true;
+}
+
 
 
     showSuccessMessage() {
@@ -1141,6 +1234,7 @@ handleFileSelect(file) {
 
         // Add event listeners to food cards
         this.setupFoodCardInteractions();
+        this.setupFoodCardAccessibility();
     }
 
     createClaimButton(listing) {
@@ -1271,6 +1365,16 @@ createFoodCard(listing) {
             });
         });
     }
+    setupFoodCardAccessibility() {
+    const foodCards = document.querySelectorAll('.food-card');
+
+    foodCards.forEach(card => {
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('role', 'button');
+        card.setAttribute('aria-label', 'View food details');
+    });
+}
+
 
     handleClaimFood(listingId) {
         const listing = this.foodListings.find(l => l.id === listingId);
@@ -1802,12 +1906,13 @@ class GalleryManager {
     constructor() {
         this.galleryItems = document.querySelectorAll('.gallery-item');
         this.init();
-    }
+    }   
 
     init() {
         this.setupScrollAnimation();
         this.setupHoverEffects();
         this.setupClickEvents();
+        this.setupKeyboardAccessibility();
     }
 
     setupScrollAnimation() {
@@ -1815,6 +1920,19 @@ class GalleryManager {
             threshold: 0.1,
             rootMargin: '0px 0px -100px 0px'
         };
+        setupKeyboardAccessibility() {
+    this.galleryItems.forEach(item => {
+        // 1️⃣ Allow Tab key to reach this card
+        item.setAttribute('tabindex', '0');
+
+        // 2️⃣ Tell screen readers this behaves like a button
+        item.setAttribute('role', 'button');
+
+        // 3️⃣ Accessible description
+        item.setAttribute('aria-label', 'Open gallery item');
+    });
+}
+
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -1859,17 +1977,31 @@ class GalleryManager {
     }
 
     setupClickEvents() {
-        this.galleryItems.forEach(item => {
-            item.addEventListener('click', () => {
+    this.galleryItems.forEach(item => {
+
+        // 🖱 Mouse click (already works)
+        item.addEventListener('click', () => {
+            const category = item.getAttribute('data-category');
+            const title = item.querySelector('h3').textContent;
+            const description = item.querySelector('p').textContent;
+
+            this.showGalleryDetail(item, title, description, category);
+        });
+
+        // ⌨ Keyboard support (NEW)
+        item.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault(); // stop page scroll (Space key)
+
                 const category = item.getAttribute('data-category');
                 const title = item.querySelector('h3').textContent;
                 const description = item.querySelector('p').textContent;
 
-                // Optional: Open lightbox or show more details
                 this.showGalleryDetail(item, title, description, category);
-            });
+            }
         });
-    }
+    });
+}
 
     showGalleryDetail(item, title, description, category) {
         // Create a simple lightbox effect
@@ -2491,9 +2623,32 @@ if (document.querySelector('.testimonials-section')) {
             e.preventDefault();
             loadAndOpen();
         }
-    });
+    
+
+
+  
+
+
+
+
+
+
+
+// some function
+});
+}
+
+// another function
+
+
+// end of file
+
+      
+
+
+
 
     // If ShareBot loads itself or another script opens the widget, keep state in sync
     // (optional) listen for user interactions on the injected widget to update launcher state
-    // No-op: the module exposes window.ShareBot.open/close which we call above
-})();
+ // No-op: the module exposes window.ShareBot.open/close which we call above
+());
