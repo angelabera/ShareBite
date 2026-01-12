@@ -37,6 +37,14 @@
             });
           });
           
+        window.addEventListener("scroll",()=>{
+            if(window.scrollY > 50){
+                navMenu.classList.add("scrolled");
+            }
+            else{
+                navMenu.classList.remove("scrolled");       
+            }
+        })
 
         // Notification Toggle
         const notificationBell = document.getElementById('notificationBell');
