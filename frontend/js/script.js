@@ -585,6 +585,8 @@ handleFormSubmission() {
                 contactInfo: formData.contact,
                 dietaryTags: formData.dietaryTags,
                 photos: formData.photos,
+                status: "Available",
+
             };
 
             const newListing = this.api.createFoodListing(backendData);
@@ -1191,6 +1193,8 @@ validateFormData(data) {
                 category: item.category || 'general',
                 dietaryTags: item.dietaryTags || [],
                 createdAt: new Date(item.createdAt),
+                status: item.status || "Available",
+
             }));
 
             this.foodListings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -1390,6 +1394,8 @@ createFoodCard(listing) {
         const confirmed = confirm(`Claim "${listing.foodType}" from ${listing.donor}?\n\nPickup: ${listing.location}\nTime: ${this.formatTime(listing.pickupTime)}\nContact: ${listing.contact}`);
         
         if (confirmed) {
+            listing.status = "Assigned";
+
             this.api.deleteFoodListing(listingId);
             // Add to claimed items
             this.claimedItems.push(listingId);
@@ -1405,7 +1411,7 @@ createFoodCard(listing) {
                 pickupTime: listing.pickupTime,
                 contact: listing.contact,
                 claimedAt: new Date(),
-                status: 'claimed'
+                status: 'Assigned'
             };
             
             this.addNotification(notification);
@@ -1727,7 +1733,11 @@ createFoodCard(listing) {
     viewNotificationDetails(notificationId) {
         const notification = this.notifications.find(n => n.id === notificationId);
         if (!notification) return;
-        
+          
+
+        notification.status = "Collected";
+        this.saveNotifications();
+
         // Mark as read when viewed
         this.markNotificationAsRead(notificationId);
         
