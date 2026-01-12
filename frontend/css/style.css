@@ -348,6 +348,29 @@ body {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+.expiry.safe {
+    color: #2ecc71;
+}
+
+.expiry.warning {
+    color: #f1c40f;
+    font-weight: 600;
+}
+
+.expiry.critical {
+    color: #e67e22;
+    font-weight: 700;
+}
+
+.expiry.expired {
+    color: #e74c3c;
+    font-weight: 700;
+}
+
+.claim-btn.expired {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
 
 .profile-btn .dropdown-icon {
     transition: transform var(--transition-fast);
@@ -731,7 +754,7 @@ body.dark .profile-menu-item:hover {
                 z-index: 2000; /* higher than hero */
               }
             
-                background: var(--bg-black) !important;
+                /* background: var(--bg-black) !important;
                 color: white;
                 flex-direction: column;
                 align-items: stretch;
@@ -739,7 +762,7 @@ body.dark .profile-menu-item:hover {
                 max-height: 0;
                 overflow: hidden;
                 transition: max-height 0.3s ease;
-                box-shadow: var(--shadow);
+                box-shadow: var(--shadow); */
             }
 
             .nav-menu.active {
@@ -791,7 +814,7 @@ body.dark .profile-menu-item:hover {
             body {
                 padding-top: 72px; /* mobile navbar height */
               }
-        }
+        
 
         @media screen and (max-width: 480px) {
             .nav-logo-link span {
