@@ -836,7 +836,9 @@ handleFileSelect(file) {
     const contact = listing.contactInfo || listing.contact;
     const timeAgo = this.getTimeAgo(listing.createdAt);
     const freshUntil = this.formatDateTime(listing.freshUntil);
+    const urgency = this.getUrgencyStatus(listing.freshUntil);
     const isClaimed = this.claimedItems.includes(listing.id);
+    
 
     // *** MODIFIED LOGIC START ***
     let imgSource = '';
@@ -880,6 +882,8 @@ handleFileSelect(file) {
                 <div class="food-meta">
                     <span class="quantity"><i class="fas fa-utensils"></i> ${listing.quantity}</span>
                     <span class="freshness"><i class="fas fa-clock"></i> ${freshUntil}</span>
+
+
                 </div>
                 <div class="food-location">
                     <i class="fas fa-map-marker-alt"></i>
@@ -1036,6 +1040,21 @@ handleFileSelect(file) {
             return `${days}d left`;
         }
     }
+    getUrgencyStatus(freshUntil) {
+    const now = new Date();
+    const expiry = new Date(freshUntil);
+    const diffMs = expiry - now;
+    const hoursLeft = diffMs / (1000 * 60 * 60);
+
+    if (hoursLeft > 6) {
+        return { label: "🟢 Fresh", className: "fresh" };
+    } else if (hoursLeft > 2) {
+        return { label: "🟡 Expiring Soon", className: "expiring" };
+    } else {
+        return { label: "🔴 Urgent", className: "urgent" };
+    }
+}
+
 
     formatTime(timeString) {
         const [hours, minutes] = timeString.split(':');

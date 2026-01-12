@@ -1815,6 +1815,26 @@ body.dark .profile-menu-item:hover {
     color: var(--secondary-color);
     font-weight: 500;
 }
+/* ================================================= */
+/* ADDITION: Food Freshness & Urgency Visual States */
+/* (No existing code modified) */
+/* ================================================= */
+
+.freshness.fresh {
+    color: #28a745; /* Green */
+    font-weight: 600;
+}
+
+.freshness.expiring {
+    color: #ffc107; /* Yellow */
+    font-weight: 600;
+}
+
+.freshness.urgent {
+    color: #dc3545; /* Red */
+    font-weight: 700;
+}
+
 
 .food-location {
     display: flex;
