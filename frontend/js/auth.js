@@ -373,3 +373,48 @@ setTimeout(() => {
         }
     }
 }, 500);
+
+// ===== INLINE EMAIL & PASSWORD VALIDATION (LOGIN PAGE ONLY) =====
+document.addEventListener("DOMContentLoaded", () => {
+  const emailInput = document.getElementById("email");
+  const emailError = document.getElementById("emailError");
+
+  const passwordInput = document.getElementById("password");
+  const passwordError = document.getElementById("passwordError");
+
+  // Stop if not on login page
+  if (!emailInput || !passwordInput) return;
+
+  // Email validation while typing
+  emailInput.addEventListener("input", () => {
+    const value = emailInput.value.trim();
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (value.length === 0) {
+      emailError.textContent = "Email is required";
+      emailError.style.display = "block";
+    } else if (!emailPattern.test(value)) {
+      emailError.textContent = "Please enter a valid email address";
+      emailError.style.display = "block";
+    } else {
+      emailError.textContent = "";
+      emailError.style.display = "none";
+    }
+  });
+
+  // Password validation while typing
+  passwordInput.addEventListener("input", () => {
+    const value = passwordInput.value.trim();
+
+    if (value.length === 0) {
+      passwordError.textContent = "Password is required";
+      passwordError.style.display = "block";
+    } else if (value.length < 6) {
+      passwordError.textContent = "Password must be at least 6 characters";
+      passwordError.style.display = "block";
+    } else {
+      passwordError.textContent = "";
+      passwordError.style.display = "none";
+    }
+  });
+});

@@ -4,6 +4,7 @@ class ShareBiteFoodListing {
     constructor() {
         this.currentRole = 'donor';
         this.foodListings = [];
+        this.uploadedPhotoBase64 = null;
         this.filteredListings = [];
         this.currentFilter = 'all';
         this.claimedItems = this.loadClaimedItems();
@@ -16,7 +17,6 @@ class ShareBiteFoodListing {
 
     init() {
         this.setupEventListeners();
-        // this.generateSampleListings();
         this.loadListingsFromDB();
         this.renderFoodListings();
         this.setupNotificationSystem();
@@ -160,29 +160,47 @@ class ShareBiteFoodListing {
     const closeModalBtn = document.querySelector('.close-modal');
     const cancelBtn = document.getElementById('cancelForm');
 
-    this.currentStep = 1;
-    this.totalSteps = 3;
-
-    addListingBtn.addEventListener('click', () => {
-        modal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-        this.resetFormSteps();
-    });
-
     const closeModal = () => {
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-        this.resetForm();
-        this.resetFormSteps();
+      // Ask user for confirmation before cancelling
+      if (!confirm("Are you sure you want to cancel this food pickup?")) {
+           return; // cancellation aborted
+      }
+
+     // Close modal and restore page state
+     modal.style.display = 'none';
+     document.body.style.overflow = 'auto';
+
+     // Reset form steps to initial state
+     this.resetFormSteps();
     };
+    
+     // Cancel button (needs preventDefault)
+    
+    cancelBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    closeModal();
+  });
+    
+    // ✅ X (close) button
 
     closeModalBtn.addEventListener('click', closeModal);
-    cancelBtn.addEventListener('click', closeModal);
+    
+     // ✅ Click outside modal
     
     modal.addEventListener('click', (e) => {
         if (e.target === modal) {
             closeModal();
         }
+    });
+    
+    this.currentStep = 1;
+    this.totalSteps = 3;
+
+    
+    addListingBtn.addEventListener('click', () => {
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        this.resetFormSteps();
     });
 
     this.setupFileUpload();
@@ -368,6 +386,7 @@ handleFileSelect(file) {
 
     const reader = new FileReader();
     reader.onload = (e) => {
+        this.uploadedPhotoBase64 = e.target.result;
         imagePreview.innerHTML = `
             <img src="${e.target.result}" alt="Food preview">
             <button type="button" class="remove-image">
@@ -384,6 +403,7 @@ handleFileSelect(file) {
             imagePreview.classList.remove('active');
             uploadArea.style.display = 'block';
             document.getElementById('photo').value = '';
+            this.uploadedPhotoBase64 = null;
         });
     };
     reader.readAsDataURL(file);
@@ -420,15 +440,13 @@ handleFileSelect(file) {
                 pickupLocation: formData.location, 
                 contactInfo: formData.contact,
                 dietaryTags: formData.dietaryTags,
-                
-                // Handle Photo: Ideally use Multer. For now, we send an empty array 
-                // or the   Base64 string if you implemented the FileReader logic in getFormData
-                photos: [] 
+                photos: formData.photos,
             };
 
             const newListing = this.api.createFoodListing(backendData);
             this.foodListings.unshift(newListing);
             this.filterListings();
+            this.loadListingsFromDB();
             this.renderFoodListings();
             this.showSuccessMessage();
             this.closeModalAndReset();
@@ -461,7 +479,7 @@ handleFileSelect(file) {
             pickupTime: document.getElementById('pickupTime').value,
             location: document.getElementById('location').value,
             contact: document.getElementById('contact').value,
-            photo: document.getElementById('photo').files[0],
+            photos: this.uploadedPhotoBase64 ? [this.uploadedPhotoBase64] : [],
             dietaryTags: selectedTags,
         };
     }
@@ -838,6 +856,9 @@ handleFileSelect(file) {
     const timeAgo = this.getTimeAgo(listing.createdAt);
     const freshUntil = this.formatDateTime(listing.freshUntil);
     const isClaimed = this.claimedItems.includes(listing.id);
+    const statusClass = isClaimed ? 'reserved' : 'available';
+    const statusText = isClaimed ? 'Reserved' : 'Available';
+
 
     // *** MODIFIED LOGIC START ***
     let imgSource = '';
@@ -867,9 +888,13 @@ handleFileSelect(file) {
     
     // The main HTML template now uses the correctly generated imageHTML
     return `
-        <div class="food-card ${isClaimed ? 'claimed' : ''}" 
+        <div class="food-card ${isClaimed ? 'claimed' : ''} ${statusClass}"
              data-id="${listing.id}" 
              data-tags="${listing.dietaryTags ? listing.dietaryTags.join(',') : ''}">
+             
+             <span class="status-badge ${statusClass}">${statusText}</span>
+
+             
             <div class="food-image">
                 ${imageHTML}
                 <div class="food-category">${this.capitalizeFirst(listing.category)}</div>
