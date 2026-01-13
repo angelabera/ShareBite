@@ -1,8 +1,5 @@
 // ShareBite JavaScript - Interactive Food Waste Reduction Platform
-
-  
- 
-
+    
         // Theme Toggle
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
@@ -1476,15 +1473,6 @@ createFoodCard(listing) {
 
 
     setupFoodCardInteractions() {
-        // Claim buttons
-        const claimBtns = document.querySelectorAll('.claim-btn');
-        claimBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const listingId = btn.getAttribute('data-id');
-                // const listingId = parseInt(btn.getAttribute('data-id'));
-                this.handleClaimFood(listingId);
-            });
-setupFoodCardInteractions() {
     // Claim buttons
     const claimBtns = document.querySelectorAll('.claim-btn');
     claimBtns.forEach(btn => {
@@ -2721,8 +2709,8 @@ if (document.querySelector('.testimonials-section')) {
         const wrapper = document.getElementById('scrollTopWrapper');
         const gap = 12; // px gap between wrapper and launcher
         // default fallback values
-    let leftPx = null;
-    let bottomPx = 140;
+        let leftPx = null;
+        let bottomPx = 140;
 
         if (wrapper) {
             // Try to align to the map icon specifically (anchor with class .scroll-link)
@@ -2877,6 +2865,7 @@ if (document.querySelector('.testimonials-section')) {
     // No-op: the module exposes window.ShareBot.open/close which we call above
 })();
 
+
 // Add Listing Success Message
 document.addEventListener("DOMContentLoaded", () => {
   const submitBtn = document.getElementById("submitForm");
@@ -2899,4 +2888,5 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+ main
  main
