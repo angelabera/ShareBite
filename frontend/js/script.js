@@ -37,6 +37,14 @@
             });
           });
           
+        window.addEventListener("scroll",()=>{
+            if(window.scrollY > 50){
+                navMenu.classList.add("scrolled");
+            }
+            else{
+                navMenu.classList.remove("scrolled");       
+            }
+        })
 
         // Notification Toggle
         const notificationBell = document.getElementById('notificationBell');
@@ -1313,16 +1321,6 @@ createFoodCard(listing) {
     `;
 }
 
-
-    setupFoodCardInteractions() {
-        // Claim buttons
-        const claimBtns = document.querySelectorAll('.claim-btn');
-        claimBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const listingId = btn.getAttribute('data-id');
-                // const listingId = parseInt(btn.getAttribute('data-id'));
-                this.handleClaimFood(listingId);
-            });
 setupFoodCardInteractions() {
     // Claim buttons
     const claimBtns = document.querySelectorAll('.claim-btn');
@@ -2640,3 +2638,26 @@ if (document.querySelector('.testimonials-section')) {
     // (optional) listen for user interactions on the injected widget to update launcher state
     // No-op: the module exposes window.ShareBot.open/close which we call above
 })();
+
+// Add Listing Success Message
+document.addEventListener("DOMContentLoaded", () => {
+  const submitBtn = document.getElementById("submitForm");
+  const successMsg = document.getElementById("listingSuccessMsg");
+
+  if (submitBtn && successMsg) {
+    submitBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      // Show success message
+      successMsg.style.display = "block";
+
+      // Reset the form
+      submitBtn.closest("form").reset();
+
+      // Hide message after 4 seconds
+      setTimeout(() => {
+        successMsg.style.display = "none";
+      }, 4000);
+    });
+  }
+});
