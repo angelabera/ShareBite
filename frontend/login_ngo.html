@@ -50,8 +50,8 @@ ry<!DOCTYPE html>
         background:
           url('https://img.freepik.com/premium-vector/ngo-volunteers-non-governmental-nonprofit-organizations-work-concept-humanitarian-aid-donation-international-support-solidarity-flat-vector-illustration-isolated-white-background_198278-21317.jpg?w=2000') center center / cover no-repeat,
           url('https://images.unsplash.com/photo-1593113598332-cd288d649433?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80') center center / cover no-repeat,
-          linear-gradient(135deg, rgba(34, 139, 34, 0.6) 0%, rgba(50, 205, 50, 0.7) 50%, rgba(34, 139, 34, 0.6) 100%);
-            background-attachment: fixed;
+          linear-gradient(135deg, rgba(34, 139, 34, 0.6) 0%, rgba(50, 205, 50, 0.7) 50%, rgba(34, 139, 34, 0.6) 100%) !important;
+            background-attachment: fixed !important;
             color: var(--text-color-light);
             transition: background 0.4s, color 0.4s;
             padding-top: 40px; /* Reduced padding for simple nav */
@@ -61,8 +61,8 @@ ry<!DOCTYPE html>
             background:
               url('https://img.freepik.com/premium-vector/ngo-volunteers-non-governmental-nonprofit-organizations-work-concept-humanitarian-aid-donation-international-support-solidarity-flat-vector-illustration-isolated-white-background_198278-21317.jpg?w=2000') center center / cover no-repeat,
               url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80') center center / cover no-repeat,
-              linear-gradient(135deg, rgba(0, 50, 0, 0.7) 0%, rgba(0, 30, 0, 0.8) 50%, rgba(0, 50, 0, 0.7) 100%);
-            background-attachment: fixed;
+              linear-gradient(135deg, rgba(0, 50, 0, 0.7) 0%, rgba(0, 30, 0, 0.8) 50%, rgba(0, 50, 0, 0.7) 100%) !important;
+            background-attachment: fixed !important;
             color: var(--text-color-dark);
         }
 
@@ -206,7 +206,7 @@ ry<!DOCTYPE html>
         }
 
         .auth-container {
-            background-color: rgba(255, 255, 255, 0.5);
+            background-color: rgba(255, 255, 255, 0.9);
             padding: 3rem;
             border-radius: 1.5rem;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
@@ -216,10 +216,11 @@ ry<!DOCTYPE html>
             animation: fadeIn 0.8s ease-out forwards;
             opacity: 0;
             transform: translateY(20px);
+            border: 1px solid rgba(0, 0, 0, 0.1);
         }
 
         body.dark-mode .auth-container {
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.7);
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), 0 5px 15px rgba(0, 0, 0, 0.3);
             border: 1px solid #404040;
         }
@@ -235,7 +236,7 @@ ry<!DOCTYPE html>
             margin-bottom: 0.75rem;
             font-weight: 600;
             font-size: 1.8rem;
-            color: var(--text-color-light);
+            color: #333;
         }
 
         .logo {
@@ -263,17 +264,17 @@ ry<!DOCTYPE html>
         }
 
         body.dark-mode .auth-container h1 {
-            color: var(--text-color-dark);
+            color: #ffffff;
         }
 
-        .auth-container p.subtitle {
-            color: var(--subtext-color-light);
-            margin-bottom: 2rem;
-        }
+      .auth-container p.subtitle {
+        color: var(--text-color-light);
+        margin-bottom: 2rem;
+      }
 
-        body.dark-mode .auth-container p.subtitle {
-            color: var(--subtext-color-dark);
-        }
+      body.dark-mode .auth-container p.subtitle {
+        color: var(--text-color-dark);
+      }
 
         .form-group {
             margin-bottom: 1.5rem;
@@ -296,7 +297,7 @@ ry<!DOCTYPE html>
             width: 100%;
             padding: 0.85rem 1rem;
             border: 1px solid var(--input-border-light);
-            background-color: var(--input-bg-light);
+            background: var(--input-bg-light);
             color: var(--text-color-light);
             border-radius: 8px;
             font-family: 'Poppins', sans-serif;
@@ -313,13 +314,13 @@ ry<!DOCTYPE html>
             border: none;
             cursor: pointer;
             font-size: 1.1rem;
-            color: var(--subtext-color-light);
+            color: var(--text-color-light);
             line-height: 1;
             padding: 0;
         }
 
         body.dark-mode .toggle-password {
-            color: var(--subtext-color-dark);
+            color: var(--text-color-dark);
         }
 
         .toggle-password:hover {
