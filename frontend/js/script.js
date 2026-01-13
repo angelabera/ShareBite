@@ -2084,6 +2084,18 @@ class GalleryManager {
         this.galleryItems = document.querySelectorAll('.gallery-item');
         this.init();
     }   
+     setupKeyboardAccessibility() {
+    this.galleryItems.forEach(item => {
+        // 1️⃣ Allow Tab key to reach this card
+        item.setAttribute('tabindex', '0');
+
+        // 2️⃣ Tell screen readers this behaves like a button
+        item.setAttribute('role', 'button');
+
+        // 3️⃣ Accessible description
+        item.setAttribute('aria-label', 'Open gallery item');
+    });
+}
 
     init() {
         this.setupScrollAnimation();
@@ -2097,18 +2109,7 @@ class GalleryManager {
             threshold: 0.1,
             rootMargin: '0px 0px -100px 0px'
         };
-        setupKeyboardAccessibility() {
-    this.galleryItems.forEach(item => {
-        // 1️⃣ Allow Tab key to reach this card
-        item.setAttribute('tabindex', '0');
-
-        // 2️⃣ Tell screen readers this behaves like a button
-        item.setAttribute('role', 'button');
-
-        // 3️⃣ Accessible description
-        item.setAttribute('aria-label', 'Open gallery item');
-    });
-}
+       
 
 
         const observer = new IntersectionObserver((entries) => {
