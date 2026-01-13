@@ -392,6 +392,25 @@ setupFormNavigation() {
         this.goToStep(this.currentStep - 1);
     });
 }
+goToStep(stepNumber) {
+    if (stepNumber < 1 || stepNumber > this.totalSteps) return;
+
+    // Hide all steps
+    document.querySelectorAll('.form-step').forEach(step => {
+        step.classList.remove('active');
+    });
+
+    // Show current step
+    const currentStepEl = document.querySelector(`.form-step[data-step="${stepNumber}"]`);
+    if (currentStepEl) {
+        currentStepEl.classList.add('active');
+    }
+
+    this.updateProgress(stepNumber);
+    this.updateNavigationButtons(stepNumber);
+    this.currentStep = stepNumber;
+}
+
 
 
 updateProgress(stepNumber) {
@@ -409,6 +428,7 @@ updateProgress(stepNumber) {
         } else {
             step.classList.remove('active', 'completed');
         }
+
     });
 }
 
@@ -423,6 +443,7 @@ updateNavigationButtons(stepNumber) {
 }
 
 validateCurrentStep() {
+
     const currentStepEl = document.querySelector(`.form-step[data-step="${this.currentStep}"]`);
     const requiredInputs = currentStepEl.querySelectorAll('[required]');
     
@@ -2098,6 +2119,18 @@ scrollToTopBtn.addEventListener("click", () => {
 
 // ===== Gallery Animation and Interactivity =====
 class GalleryManager {
+     setupKeyboardAccessibility() {
+        this.galleryItems.forEach(item => {
+        // 1️⃣ Allow Tab key to reach this card
+        item.setAttribute('tabindex', '0');
+
+        // 2️⃣ Tell screen readers this behaves like a button
+        item.setAttribute('role', 'button');
+
+        // 3️⃣ Accessible description
+        item.setAttribute('aria-label', 'Open gallery item');
+    });
+       }
     constructor() {
         this.galleryItems = document.querySelectorAll('.gallery-item');
         this.init();
@@ -2115,18 +2148,7 @@ class GalleryManager {
             threshold: 0.1,
             rootMargin: '0px 0px -100px 0px'
         };
-        setupKeyboardAccessibility() {
-    this.galleryItems.forEach(item => {
-        // 1️⃣ Allow Tab key to reach this card
-        item.setAttribute('tabindex', '0');
-
-        // 2️⃣ Tell screen readers this behaves like a button
-        item.setAttribute('role', 'button');
-
-        // 3️⃣ Accessible description
-        item.setAttribute('aria-label', 'Open gallery item');
-    });
-}
+        
 
 
         const observer = new IntersectionObserver((entries) => {
@@ -2140,6 +2162,9 @@ class GalleryManager {
         this.galleryItems.forEach(item => {
             observer.observe(item);
         });
+       
+         
+        
     }
 
     setupHoverEffects() {
