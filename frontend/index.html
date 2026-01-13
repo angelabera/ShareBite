@@ -974,7 +974,8 @@
     alert(`✅ Thank you, ${name}! Your message has been sent.`);
     form.reset();
   });
-  const username = JSON.parse(localStorage.getItem('user')).name;
+  const user = JSON.parse(localStorage.getItem('user'));
+  const username = user ? user.name : null;
   const toast = document.getElementById('toast');
 
   if (username) {
