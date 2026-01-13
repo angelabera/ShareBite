@@ -1304,16 +1304,6 @@ createFoodCard(listing) {
     `;
 }
 
-
-    setupFoodCardInteractions() {
-        // Claim buttons
-        const claimBtns = document.querySelectorAll('.claim-btn');
-        claimBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const listingId = btn.getAttribute('data-id');
-                // const listingId = parseInt(btn.getAttribute('data-id'));
-                this.handleClaimFood(listingId);
-            });
 setupFoodCardInteractions() {
     // Claim buttons
     const claimBtns = document.querySelectorAll('.claim-btn');
