@@ -59,7 +59,7 @@ body {
     line-height: 1.6;
     color: var(--black);
     overflow-x: hidden;
-    padding-top: 80px;
+    padding-top: 60px;
 }
 
 .container {
@@ -68,7 +68,14 @@ body {
     padding: var(--container-padding);
 }
 .hero {
-    min-height: calc(100vh - 80px);
+  position: relative;
+  min-height: 130vh;   
+  display: flex;
+  align-items: center;
+  padding-top: 1rem;  
+  padding-bottom: 4rem;
+  background: #000;    
+  overflow: hidden;
 }
 
 
@@ -76,7 +83,7 @@ body {
  /* Navbar Styles */
        /* Navbar Styles */
 
-       .navbar {
+    .navbar {
         position: fixed;
         top: 0;
         width: 100%;
@@ -86,10 +93,18 @@ body {
         border-bottom: 1px solid rgba(255,255,255,0.1);
     }
 
+    .nav-menu.scrolled {
+        background-color: var(--white);
+    }
+
+    .nav-menu.scrolled .nav-link {
+        color: var(--text-dark)
+    }
+
     .nav-container {
         max-width: 1200px;
         margin: 0 auto;
-        padding: 1rem 1.25rem;
+        padding: 0rem 1.25rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -114,12 +129,12 @@ body {
             margin: 0;
             padding: 0;
         }
-
+        
         .nav-link {
             color: var(--text-dark);
             text-decoration: none;
             font-weight: 500;
-            transition: var(--transition);
+            transition: var(--transition-slow);
             padding: 0.5rem 0;
             position: relative;
         }
@@ -132,7 +147,7 @@ body {
             width: 0;
             height: 2px;
             background: var(--primary-color);
-            transition: var(--transition);
+            transition: var(--transition-slow);
         }
 
         .nav-link:hover::after {
@@ -272,7 +287,7 @@ body {
     background: var(--primary-gradient);
     color: white;
     border: none;
-    padding: 0.75rem 1rem;
+    padding: 0rem 1rem;
     border-radius: var(--border-radius);
     cursor: pointer;
     font-weight: 600;
@@ -340,6 +355,29 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+.expiry.safe {
+    color: #2ecc71;
+}
+
+.expiry.warning {
+    color: #f1c40f;
+    font-weight: 600;
+}
+
+.expiry.critical {
+    color: #e67e22;
+    font-weight: 700;
+}
+
+.expiry.expired {
+    color: #e74c3c;
+    font-weight: 700;
+}
+
+.claim-btn.expired {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 .profile-btn .dropdown-icon {
@@ -559,8 +597,9 @@ body.dark .profile-menu-item:hover {
         .login-btn {
             position: relative;
             overflow: hidden;
-            padding: 10px 26px; /* smaller padding */
+            padding: 6px 20px; /* smaller padding */
             font-size: 1rem; /* smaller text */
+            white-space: nowrap;
             font-family: 'Poppins', sans-serif;
             color: #fff;
             border: none;
@@ -671,7 +710,7 @@ body.dark .profile-menu-item:hover {
             }
 
             .nav-menu {
-                gap: 1.5rem;
+                gap: 1rem;
             }
 
             .user-actions {
@@ -688,7 +727,7 @@ body.dark .profile-menu-item:hover {
         @media (min-width: 769px) {
             .nav-menu {
                 display: flex;
-                gap: 2rem;
+                gap: 1.25rem;
                 position: static;
                 background: none;
             }
@@ -736,12 +775,12 @@ body.dark .profile-menu-item:hover {
                 position: absolute;
                 top: 100%;
                 left: 0;
-                width: 100%;
+                width: 50%;
                 background: #0b0f1a;
                 z-index: 2000; /* higher than hero */
               }
             
-                background: var(--bg-black) !important;
+                /* background: var(--bg-black) !important;
                 color: white;
                 flex-direction: column;
                 align-items: stretch;
@@ -749,7 +788,7 @@ body.dark .profile-menu-item:hover {
                 max-height: 0;
                 overflow: hidden;
                 transition: max-height 0.3s ease;
-                box-shadow: var(--shadow);
+                box-shadow: var(--shadow); */
             }
 
             .nav-menu.active {
@@ -801,7 +840,7 @@ body.dark .profile-menu-item:hover {
             body {
                 padding-top: 72px; /* mobile navbar height */
               }
-        }
+        
 
         @media screen and (max-width: 480px) {
             .nav-logo-link span {
@@ -826,7 +865,7 @@ body.dark .profile-menu-item:hover {
                 left: 10px;
                 text-align: center;
             }
-        }
+        }   
 /* Navigation */
 /* Navbar state when scrolled (light mode) */
 .navbar.scrolled {
@@ -837,7 +876,7 @@ body.dark .profile-menu-item:hover {
 .nav-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 1rem 2rem;
+    padding: 0rem 0rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -5432,8 +5471,6 @@ body.dark-mode .notification-bell:hover {
         background-color: #4CAF50 !important; /* Forces green lines */
     }
 }
-/* ===== Inline Form Validation Styles ===== */
-
 .form-group {
   position: relative;
 }
@@ -5464,10 +5501,6 @@ body.dark-mode .notification-bell:hover {
   display: none;
 }
 
-/* ============================= */
-/* Keyboard Accessibility Fix */
-/* ============================= */
-
 button:focus-visible,
 a:focus-visible,
 [role="button"]:focus-visible {
@@ -5484,3 +5517,40 @@ a:focus,
 }
 
 
+=======
+/* Reserved vs Available indicator */
+
+.food-card {
+  position: relative;
+  border-left: 5px solid transparent;
+}
+
+.food-card.available {
+  border-left-color: #4caf50;
+}
+
+.food-card.reserved {
+  border-left-color: #ff9800;
+  opacity: 0.75;
+}
+
+.status-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.status-badge.available {
+  background-color: #4caf50;
+}
+
+.status-badge.reserved {
+  background-color: #ff9800;
+}
+
+ main
