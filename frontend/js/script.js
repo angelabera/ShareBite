@@ -1,8 +1,5 @@
 // ShareBite JavaScript - Interactive Food Waste Reduction Platform
-
-  
- 
-
+    
         // Theme Toggle
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
@@ -1304,7 +1301,8 @@ createFoodCard(listing) {
     `;
 }
 
-setupFoodCardInteractions() {
+
+    setupFoodCardInteractions() {
     // Claim buttons
     const claimBtns = document.querySelectorAll('.claim-btn');
     claimBtns.forEach(btn => {
@@ -2482,8 +2480,8 @@ if (document.querySelector('.testimonials-section')) {
         const wrapper = document.getElementById('scrollTopWrapper');
         const gap = 12; // px gap between wrapper and launcher
         // default fallback values
-    let leftPx = null;
-    let bottomPx = 140;
+        let leftPx = null;
+        let bottomPx = 140;
 
         if (wrapper) {
             // Try to align to the map icon specifically (anchor with class .scroll-link)
@@ -2610,26 +2608,3 @@ if (document.querySelector('.testimonials-section')) {
     // (optional) listen for user interactions on the injected widget to update launcher state
     // No-op: the module exposes window.ShareBot.open/close which we call above
 })();
-
-// Add Listing Success Message
-document.addEventListener("DOMContentLoaded", () => {
-  const submitBtn = document.getElementById("submitForm");
-  const successMsg = document.getElementById("listingSuccessMsg");
-
-  if (submitBtn && successMsg) {
-    submitBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-
-      // Show success message
-      successMsg.style.display = "block";
-
-      // Reset the form
-      submitBtn.closest("form").reset();
-
-      // Hide message after 4 seconds
-      setTimeout(() => {
-        successMsg.style.display = "none";
-      }, 4000);
-    });
-  }
-});
