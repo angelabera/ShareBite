@@ -37,6 +37,14 @@
             });
           });
           
+        window.addEventListener("scroll",()=>{
+            if(window.scrollY > 50){
+                navMenu.classList.add("scrolled");
+            }
+            else{
+                navMenu.classList.remove("scrolled");       
+            }
+        })
 
         // Notification Toggle
         const notificationBell = document.getElementById('notificationBell');
@@ -1167,7 +1175,10 @@ async handleFormSubmission() {
     }
 
     createClaimButton(listing) {
-        const isClaimed = this.claimedItems.includes(listing.id);
+
+        const isClaimedInDB = listing.status === 'reserved';
+        const isClaimedLocally = this.claimedItems.includes(listing.id);
+        const isClaimed = isClaimedInDB || isClaimedLocally;
         const isCollector = this.currentRole === 'collector';
         const username = JSON.parse(localStorage.getItem('user'))?.name;
         
@@ -1294,6 +1305,15 @@ createFoodCard(listing) {
 }
 
 
+    setupFoodCardInteractions() {
+        // Claim buttons
+        const claimBtns = document.querySelectorAll('.claim-btn');
+        claimBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const listingId = btn.getAttribute('data-id');
+                // const listingId = parseInt(btn.getAttribute('data-id'));
+                this.handleClaimFood(listingId);
+            });
 setupFoodCardInteractions() {
     // Claim buttons
     const claimBtns = document.querySelectorAll('.claim-btn');
@@ -1375,19 +1395,24 @@ setupFoodCardInteractions() {
         if (!listing) return;
         
         // Check if already claimed
-        if (this.claimedItems.includes(listingId)) {
+        if (this.claimedItems.includes(listingId) || listing.status === 'reserved') {
             this.showToast('This item has already been claimed!', 'error');
             return;
         }
+
+        const listingIndex = this.foodListings.findIndex(l => l.id === listingId);
+            if(listingIndex !== -1) {
+                this.foodListings[listingIndex].status = 'claimed';
+            }
         
         // Show confirmation dialog
         const confirmed = confirm(`Claim "${listing.foodType}" from ${listing.donor}?\n\nPickup: ${listing.location}\nTime: ${this.formatTime(listing.pickupTime)}\nContact: ${listing.contact}`);
         
         if (confirmed) {
-            this.api.deleteFoodListing(listingId);
-            // Add to claimed items
+            this.api.claimFoodListing(listingId);
             this.claimedItems.push(listingId);
             this.saveClaimedItems();
+            listing.status = 'reserved';
             
             // Create notification
             const notification = {
@@ -1399,7 +1424,7 @@ setupFoodCardInteractions() {
                 pickupTime: listing.pickupTime,
                 contact: listing.contact,
                 claimedAt: new Date(),
-                status: 'claimed'
+                status: 'reserved'
             };
             
             this.addNotification(notification);
@@ -2595,3 +2620,26 @@ if (document.querySelector('.testimonials-section')) {
     // (optional) listen for user interactions on the injected widget to update launcher state
     // No-op: the module exposes window.ShareBot.open/close which we call above
 })();
+
+// Add Listing Success Message
+document.addEventListener("DOMContentLoaded", () => {
+  const submitBtn = document.getElementById("submitForm");
+  const successMsg = document.getElementById("listingSuccessMsg");
+
+  if (submitBtn && successMsg) {
+    submitBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      // Show success message
+      successMsg.style.display = "block";
+
+      // Reset the form
+      submitBtn.closest("form").reset();
+
+      // Hide message after 4 seconds
+      setTimeout(() => {
+        successMsg.style.display = "none";
+      }, 4000);
+    });
+  }
+});

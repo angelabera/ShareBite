@@ -1,3 +1,17 @@
+const express = require('express');
+const { body } = require('express-validator');
+const { protect } = require('../middleware/authMiddleware');
+const {
+  createListing,
+  getAllListings,
+  getListingById,
+  updateListing,
+  deleteListing,
+  claimListing,
+} = require('../controllers/foodListingController');
+
+const router = express.Router();
+
 router.post(
   '/',
   protect,
@@ -27,3 +41,11 @@ router.post(
   ],
   createListing
 );
+
+router.put('/:id/claim', protect, claimListing);
+router.get('/', getAllListings);
+router.get('/:id', getListingById);
+router.put('/:id', protect, updateListing);
+router.delete('/:id', protect, deleteListing);
+
+module.exports = router;
