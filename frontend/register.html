@@ -13,27 +13,31 @@
     <link rel="icon" type="image/svg+xml" href="logo/logo.svg" />
     <style>
       :root {
-        --primary-green: #4caf50;
-        --secondary-orange: #ff6b35;
+        --primary-green: #228B22;
+        --secondary-orange: #32CD32;
         --accent-yellow: #ffc107;
+        --success-green: #28a745;
+        --error-red: #dc3545;
 
         /* Light Mode */
-        --bg-gradient-start-light: #e9e3ff;
-        --bg-gradient-end-light: #f7f5ff;
-        --card-bg-light: #ffffff;
-        --text-color-light: #333;
-        --subtext-color-light: #555;
-        --input-bg-light: #fdfdfd;
-        --input-border-light: #ddd;
+        --bg-gradient-start-light: #667eea;
+        --bg-gradient-end-light: #764ba2;
+        --card-bg-light: rgba(255, 255, 255, 0.95);
+        --text-color-light: #2c3e50;
+        --subtext-color-light: #5a6c7d;
+        --input-bg-light: #ffffff;
+        --input-border-light: #e1e8ed;
+        --shadow-light: rgba(0, 0, 0, 0.1);
 
         /* Dark Mode */
-        --bg-gradient-start-dark: #121212;
-        --bg-gradient-end-dark: #1a1a1a;
-        --card-bg-dark: #2e2e2e;
-        --text-color-dark: #f1f1f1;
-        --subtext-color-dark: #b0b0b0;
-        --input-bg-dark: #3a3a3a;
-        --input-border-dark: #555;
+        --bg-gradient-start-dark: #2c3e50;
+        --bg-gradient-end-dark: #34495e;
+        --card-bg-dark: rgba(44, 62, 80, 0.95);
+        --text-color-dark: #ecf0f1;
+        --subtext-color-dark: #bdc3c7;
+        --input-bg-dark: #34495e;
+        --input-border-dark: #7f8c8d;
+        --shadow-dark: rgba(0, 0, 0, 0.3);
       }
 
       * {
@@ -49,51 +53,192 @@
         align-items: center;
         min-height: 100vh;
         padding: 1rem;
-        background: linear-gradient(
-          135deg,
-          var(--bg-gradient-start-light),
-          var(--bg-gradient-end-light)
-        );
+        background:
+          url('https://www.green.org/wp-content/uploads/2024/01/Food-Waste-Reduction.jpg') center center / cover no-repeat !important;
+        background-attachment: fixed !important;
         color: var(--text-color-light);
-        transition: background 0.4s, color 0.4s;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+          radial-gradient(circle at 20% 80%, rgba(34, 139, 34, 0.2) 0%, transparent 50%),
+          radial-gradient(circle at 80% 20%, rgba(0, 100, 0, 0.2) 0%, transparent 50%),
+          radial-gradient(circle at 40% 40%, rgba(50, 205, 50, 0.15) 0%, transparent 50%);
+        animation: natureFloat 25s ease-in-out infinite;
+      }
+
+      @keyframes natureFloat {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        25% { transform: translateY(-5px) rotate(0.5deg); }
+        50% { transform: translateY(-10px) rotate(0deg); }
+        75% { transform: translateY(-5px) rotate(-0.5deg); }
       }
 
       body.dark-mode {
-        background: linear-gradient(
-          135deg,
-          var(--bg-gradient-start-dark),
-          var(--bg-gradient-end-dark)
-        );
+        background:
+          url('https://www.green.org/wp-content/uploads/2024/01/Food-Waste-Reduction.jpg') center center / cover no-repeat !important;
+        background-attachment: fixed !important;
         color: var(--text-color-dark);
+      }
+
+      body.dark-mode::before {
+        background: 
+          radial-gradient(circle at 20% 80%, rgba(0, 50, 0, 0.4) 0%, transparent 50%),
+          radial-gradient(circle at 80% 20%, rgba(0, 30, 0, 0.4) 0%, transparent 50%),
+          radial-gradient(circle at 40% 40%, rgba(0, 40, 0, 0.3) 0%, transparent 50%);
       }
 
       .theme-toggle {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        background: none;
-        border: 1px solid var(--input-border-light);
-        color: var(--text-color-light);
-        width: 40px;
-        height: 40px;
+        position: relative;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+        width: 50px;
+        height: 50px;
         border-radius: 50%;
         cursor: pointer;
-        font-size: 1.2rem;
+        font-size: 1.4rem;
         display: flex;
         justify-content: center;
         align-items: center;
-        transition: all 0.3s;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
       }
 
       body.dark-mode .theme-toggle {
-        border-color: var(--input-border-dark);
-        color: var(--text-color-dark);
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.1);
+        color: #f39c12;
       }
 
       .theme-toggle:hover {
         transform: scale(1.1) rotate(15deg);
-        border-color: var(--primary-green);
-        color: var(--primary-green);
+        background: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      }
+
+      .theme-toggle:active {
+        transform: scale(0.95);
+      }
+      .home-btn {
+        position: relative;
+        overflow: hidden;
+        padding: 12px 24px;
+        font-size: 0.95rem;
+        font-family: 'Poppins', sans-serif;
+        color: #ffffff;
+        border: none;
+        cursor: pointer;
+        border-radius: 50px;
+        letter-spacing: 0.5px;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.8), rgba(147, 51, 234, 0.8), rgba(244, 63, 94, 0.8));
+        background-size: 300%;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 500;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .home-btn:hover {
+        background-position: right;
+        box-shadow: 0 8px 25px rgba(147, 51, 234, 0.4), 0 0 40px rgba(59, 130, 246, 0.3);
+        transform: translateY(-2px) scale(1.05);
+      }
+
+      .home-btn::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+        transform: scale(0);
+        border-radius: inherit;
+        transition: transform 0.4s ease;
+        z-index: 0;
+      }
+
+      .home-btn:hover::before {
+        transform: scale(2.5);
+      }
+
+      .home-btn:active {
+        transform: translateY(0) scale(0.98);
+        transition: all 0.1s ease;
+      }
+
+      /* Simple Navigation */
+      .simple-nav {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        z-index: 1000;
+      }
+
+      /* Navigation Styles */
+      .navbar {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 50%, rgba(240, 147, 251, 0.95) 100%);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+        z-index: 1000;
+        transition: background 0.4s, color 0.4s;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      body.dark-mode .navbar {
+        background: linear-gradient(135deg, rgba(44, 62, 80, 0.95) 0%, rgba(52, 73, 94, 0.95) 50%, rgba(155, 89, 182, 0.95) 100%);
+      }
+
+      .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .nav-logo {
+        display: flex;
+        align-items: center;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #fff;
+        gap: 0.5rem;
+      }
+
+      .nav-logo-link {
+        text-decoration: none;
+        color: inherit;
+        cursor: pointer;
+      }
+
+      .nav-logo-link:hover {
+        opacity: 0.85;
+      }
+
+      .user-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
       }
 
       body.dark-mode .theme-toggle:hover {
@@ -102,107 +247,156 @@
       }
 
       .auth-container {
-        background-color: var(--card-bg-light);
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px);
         padding: 3rem;
-        border-radius: 1.5rem;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        border-radius: 24px;
+        box-shadow: 
+          0 20px 40px var(--shadow-light),
+          0 0 0 1px rgba(255, 255, 255, 0.1);
         width: 100%;
-        max-width: 480px;
+        max-width: 520px;
         text-align: center;
-        animation: fadeIn 0.8s ease-out forwards;
+        animation: slideIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(30px) scale(0.95);
+        position: relative;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .auth-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-green), var(--secondary-orange), var(--accent-yellow));
+        border-radius: 24px 24px 0 0;
       }
 
       body.dark-mode .auth-container {
-        background-color: var(--card-bg-dark);
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4),
-          0 5px 15px rgba(0, 0, 0, 0.3);
-        border: 1px solid #404040;
+        background: rgba(0, 0, 0, 0.5);
+        box-shadow: 
+          0 20px 40px var(--shadow-dark),
+          0 0 0 1px rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.1);
       }
 
-      @keyframes fadeIn {
+      @keyframes slideIn {
         to {
           opacity: 1;
-          transform: translateY(0);
+          transform: translateY(0) scale(1);
         }
       }
 
       .auth-container h1 {
         margin-bottom: 0.75rem;
-        font-weight: 600;
-        font-size: 1.8rem;
+        font-weight: 700;
+        font-size: 2rem;
         color: var(--text-color-light);
+        animation: textGlow 2s ease-in-out infinite alternate;
+      }
+
+      @keyframes textGlow {
+        from { filter: brightness(1); }
+        to { filter: brightness(1.1) drop-shadow(0 0 10px rgba(34, 139, 34, 0.3)); }
+      }
+
+      .logo {
+        width: 90px;
+        height: auto;
+        margin-bottom: 1.5rem;
+        animation: logoFloat 3s ease-in-out infinite;
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+      }
+
+      @keyframes logoFloat {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-5px); }
       }
 
       body.dark-mode .auth-container h1 {
         color: var(--text-color-dark);
-      }
-
-      .auth-container p.subtitle {
-        color: var(--subtext-color-light);
-        margin-bottom: 2rem;
-      }
-
-      body.dark-mode .auth-container p.subtitle {
-        color: var(--subtext-color-dark);
+        -webkit-text-fill-color: var(--text-color-dark);
       }
 
       .form-group {
-        margin-bottom: 1.5rem;
+        margin-bottom: 2rem;
         text-align: left;
         position: relative;
       }
 
       .form-group label {
-        display: block;
-        margin-bottom: 0.5rem;
+        position: absolute;
+        top: 16px;
+        left: 16px;
         font-weight: 500;
         color: var(--text-color-light);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        pointer-events: none;
+        background: transparent;
+        padding: 0 4px;
       }
 
       body.dark-mode .form-group label {
         color: var(--text-color-dark);
       }
 
+      body.dark-mode .form-group label {
+        color: #ffffff;
+      }
+
       .form-group input,
       .form-group select {
         width: 100%;
-        padding: 0.85rem 1rem;
-        border: 1px solid var(--input-border-light);
+        padding: 16px;
+        border: 2px solid var(--input-border-light);
         background-color: var(--input-bg-light);
         color: var(--text-color-light);
-        border-radius: 8px;
+        border-radius: 12px;
         font-family: "Poppins", sans-serif;
         font-size: 1rem;
-        transition: all 0.3s;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      }
+
+      .form-group input::placeholder,
+      .form-group select option:first-child {
+        color: transparent;
+      }
+
+      .form-group input:focus::placeholder,
+      .form-group select:focus option:first-child {
+        color: var(--subtext-color-light);
       }
 
       .toggle-password {
         position: absolute;
-        top: 72%;
-        right: 1rem;
+        top: 50%;
+        right: 16px;
         transform: translateY(-50%);
         background: none;
         border: none;
         cursor: pointer;
-        font-size: 1.1rem;
-        color: var(--subtext-color-light);
+        font-size: 1.2rem;
+        color: var(--text-color-light);
         line-height: 1;
-        padding: 0;
+        padding: 4px;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       body.dark-mode .toggle-password {
-        color: var(--subtext-color-dark);
-      }
-
-      .toggle-password:hover {
-        color: var(--primary-green);
+        color: var(--text-color-dark);
       }
 
       .form-group input[type="password"],
       .form-group input[type="text"] {
-        padding-right: 3rem;
+        padding-right: 50px;
       }
 
       body.dark-mode .form-group input,
@@ -210,60 +404,108 @@
         border-color: var(--input-border-dark);
         background-color: var(--input-bg-dark);
         color: var(--text-color-dark);
-        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
       }
 
       body.dark-mode .form-group input:focus,
       body.dark-mode .form-group select:focus {
         border-color: var(--primary-green);
-        box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2),
-          inset 0 1px 3px rgba(0, 0, 0, 0.3);
+        box-shadow: 
+          0 0 0 3px rgba(34, 139, 34, 0.2),
+          inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        background-color: var(--input-bg-dark);
       }
 
       .form-group input:focus,
       .form-group select:focus {
         outline: none;
         border-color: var(--primary-green);
-        box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2);
+        box-shadow: 
+          0 0 0 3px rgba(34, 139, 34, 0.2),
+          0 4px 12px rgba(34, 139, 34, 0.1);
+        transform: translateY(-1px);
       }
 
       .btn {
         width: 100%;
-        padding: 0.9rem;
+        padding: 16px;
         border: none;
-        border-radius: 8px;
+        border-radius: 12px;
         font-family: "Poppins", sans-serif;
         font-size: 1.1rem;
         font-weight: 600;
         cursor: pointer;
-        transition: all 0.3s;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         text-align: center;
         display: block;
         margin: 0 auto;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s ease;
+      }
+
+      .btn:hover::before {
+        left: 100%;
       }
 
       .btn-primary {
-        background-color: var(--primary-green);
+        background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-orange) 100%);
         color: #fff;
+        border: 2px solid transparent;
       }
 
       .btn-primary:hover {
-        background-color: #45a049;
-        transform: translateY(-3px);
-        box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-orange) 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(34, 139, 34, 0.3);
+      }
+
+      .btn-primary:active {
+        transform: translateY(0);
+        transition: all 0.1s ease;
       }
 
       .login-link {
-        margin-top: 1.5rem;
+        margin-top: 2rem;
         display: block;
         color: var(--secondary-orange);
         text-decoration: none;
         font-weight: 500;
         text-align: center;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .login-link::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--primary-green), var(--secondary-orange));
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
       }
 
       .login-link:hover {
-        text-decoration: underline;
+        color: var(--primary-green);
+        transform: translateY(-1px);
+      }
+
+      .login-link:hover::after {
+        width: 100%;
       }
 
       body.dark-mode .login-link {
@@ -273,56 +515,82 @@
       /* Responsive Design */
       @media (max-width: 520px) {
         .auth-container {
-          padding: 2rem;
+          padding: 2rem 1.5rem;
+          margin: 1rem;
+          border-radius: 20px;
         }
         .auth-container h1 {
-          font-size: 1.5rem;
+          font-size: 1.75rem;
+        }
+        .logo {
+          width: 70px;
+        }
+        .simple-nav {
+          top: 15px;
+          right: 15px;
+        }
+        .theme-toggle, .home-btn {
+          width: 45px;
+          height: 45px;
+          font-size: 1.2rem;
+        }
+        .home-btn {
+          padding: 10px 18px;
+          font-size: 0.85rem;
         }
       }
     </style>
   </head>
   <body>
-    <button id="theme-toggle" class="theme-toggle" title="Toggle dark mode">
-      🌙
-    </button>
+    <!-- Simple Navigation -->
+    <div class="simple-nav">
+        <button onclick="window.location.href='index.html'" class="home-btn" aria-label="Go to Home">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </button>
+        <button id="theme-toggle" class="theme-toggle" title="Toggle dark mode">
+          🌙
+        </button>
+    </div>
 
     <div class="auth-container">
+      <img src="logo/sharebite_logo.png" alt="ShareBite Logo" class="logo" />
       <h1>Create Your ShareBite Account</h1>
       <p class="subtitle">
         Join our mission to reduce food waste and feed communities.
       </p>
       <form id="registerForm">
         <div class="form-group">
-          <label for="name">Full Name</label>
           <input
             type="text"
             id="name"
             name="name"
-            placeholder="Enter your full name"
+            placeholder=" "
             required
           />
+          <label for="name">Full Name</label>
         </div>
         <div class="form-group">
-          <label for="email">Email</label>
           <input
             type="email"
             id="email"
             name="email"
-            placeholder="Enter your email (eg: user@example.com)"
+            placeholder=" "
             required
             pattern="^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$"
           />
+          <label for="email">Email Address</label>
         </div>
         <div class="form-group">
-          <label for="password">Password</label>
           <input
             type="password"
             id="password"
             name="password"
-            placeholder="Minimum 6 characters"
+            placeholder=" "
             required
             minlength="6"
           />
+          <label for="password">Password</label>
           <button
             type="button"
             id="togglePassword"
@@ -347,22 +615,22 @@
         </div>
         <div id="password-strength" style="
             display: none;
-            margin-top: -0.4rem;
-            margin-bottom: 0.8rem;
+            margin-top: -1rem;
+            margin-bottom: 1rem;
             font-weight: 500;
             font-size: 0.9rem;
             text-align: right;">
           Strength: <span id="strength-text" style="color: red;">Weak</span>
         </div>
         <div class="form-group">
-          <label for="confirmPassword">Confirm Password</label>
           <input
             type="password"
             id="confirmPassword"
             name="confirmPassword"
-            placeholder="Re-enter your password"
+            placeholder=" "
             required
           />
+          <label for="confirmPassword">Confirm Password</label>
           <button
             type="button"
             id="toggleConfirmPassword"
@@ -387,12 +655,12 @@
         </div>
 
         <div class="form-group">
-          <label for="role">Role</label>
           <select id="role" name="role" required>
-            <option value="" disabled selected>Select your role</option>
+            <option value="" disabled selected></option>
             <option value="donor">Donor</option>
             <option value="collector">Collector</option>
           </select>
+          <label for="role">Role</label>
         </div>
         <button type="submit" class="btn btn-primary">Register</button>
       </form>
