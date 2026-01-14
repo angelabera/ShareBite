@@ -1,8 +1,5 @@
 // ShareBite JavaScript - Interactive Food Waste Reduction Platform
-
-  
- 
-
+    
         // Theme Toggle
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
@@ -20,6 +17,8 @@
                 showToast('Light mode enabled');
             }
         });
+     
+
 
         const menuToggle = document.getElementById("menuToggle");
         const navMenu = document.getElementById("navMenu");
@@ -27,6 +26,13 @@
         menuToggle.addEventListener("click", () => {
         navMenu.classList.toggle("active");
         });
+        menuToggle.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        menuToggle.click();
+    }
+});
+
 
         document.addEventListener("DOMContentLoaded", () => {
             const menuToggle = document.getElementById("menuToggle");
@@ -37,6 +43,14 @@
             });
           });
           
+        window.addEventListener("scroll",()=>{
+            if(window.scrollY > 50){
+                navMenu.classList.add("scrolled");
+            }
+            else{
+                navMenu.classList.remove("scrolled");       
+            }
+        })
 
         // Notification Toggle
         const notificationBell = document.getElementById('notificationBell');
@@ -111,8 +125,19 @@ class ShareBite {
         this.api = window;
         
         this.init();
-        this.initTheme(); // add theme initialization after base init
+        this.initTheme();
+        
+        
+
+        
+        
+        
+        // add theme initialization after base init
     }
+
+        setupEventListeners() {
+          this.setupHeroButtons();
+            }
 
     init() {
         this.setupEventListeners();
@@ -319,12 +344,46 @@ class ShareBite {
 setupFormNavigation() {
     const nextBtn = document.getElementById('nextStep');
     const prevBtn = document.getElementById('prevStep');
-    const submitBtn = document.getElementById('submitForm');
 
     nextBtn.addEventListener('click', () => {
-        if (this.validateCurrentStep()) {
-            this.goToStep(this.currentStep + 1);
+        // Step-level required field validation
+        if (!this.validateCurrentStep()) return;
+
+
+        // 🔴 ISSUE-416: Expiry vs Pickup validation
+        const freshUntilValue = document.getElementById('freshUntil')?.value;
+        const pickupTimeValue = document.getElementById('pickupTime')?.value;
+
+        if (freshUntilValue && pickupTimeValue) {
+            const expiry = new Date(freshUntilValue);
+
+            // Parse "04 : 00 pm" / "09 : 00 am"
+            const match = pickupTimeValue.match(/(\d+)\s*:\s*(\d+)\s*(am|pm)/i);
+
+            if (match) {
+                let hour = parseInt(match[1]);
+                const minute = parseInt(match[2]);
+                const period = match[3].toLowerCase();
+
+                if (period === 'pm' && hour !== 12) hour += 12;
+                if (period === 'am' && hour === 12) hour = 0;
+
+                const pickup = new Date(expiry);
+                pickup.setHours(hour, minute, 0, 0);
+
+                // 🚫 BLOCK if pickup is after expiry
+                if (pickup > expiry) {
+                    this.showToast(
+                        'Pickup time cannot be later than expiry time.',
+                        'error'
+                    );
+                    return;
+                }
+            }
         }
+
+        // ✅ Move to next step only if all validations pass
+        this.goToStep(this.currentStep + 1);
     });
 
     prevBtn.addEventListener('click', () => {
@@ -332,25 +391,71 @@ setupFormNavigation() {
     });
 }
 
+
+
+
+        // 🔴 ISSUE-416: Expiry vs Pickup validation
+        const freshUntilValue = document.getElementById('freshUntil')?.value;
+        const pickupTimeValue = document.getElementById('pickupTime')?.value;
+
+        if (freshUntilValue && pickupTimeValue) {
+            const expiry = new Date(freshUntilValue);
+
+            // Parse "04 : 00 pm" / "09 : 00 am"
+            const match = pickupTimeValue.match(/(\d+)\s*:\s*(\d+)\s*(am|pm)/i);
+
+            if (match) {
+                let hour = parseInt(match[1]);
+                const minute = parseInt(match[2]);
+                const period = match[3].toLowerCase();
+
+                if (period === 'pm' && hour !== 12) hour += 12;
+                if (period === 'am' && hour === 12) hour = 0;
+
+                const pickup = new Date(expiry);
+                pickup.setHours(hour, minute, 0, 0);
+
+                // 🚫 BLOCK if pickup is after expiry
+                if (pickup > expiry) {
+                    this.showToast(
+                        'Pickup time cannot be later than expiry time.',
+                        'error'
+                    );
+                    return;
+                }
+            }
+        }
+
+        // ✅ Move to next step only if all validations pass
+        this.goToStep(this.currentStep + 1);
+    });
+
+    prevBtn.addEventListener('click', () => {
+        this.goToStep(this.currentStep - 1);
+    });
+}
 goToStep(stepNumber) {
     if (stepNumber < 1 || stepNumber > this.totalSteps) return;
 
+    // Hide all steps
     document.querySelectorAll('.form-step').forEach(step => {
         step.classList.remove('active');
     });
 
-    const newStep = document.querySelector(`.form-step[data-step="${stepNumber}"]`);
-    if (newStep) {
-        newStep.classList.add('active');
+    // Show current step
+    const currentStepEl = document.querySelector(`.form-step[data-step="${stepNumber}"]`);
+    if (currentStepEl) {
+        currentStepEl.classList.add('active');
     }
 
     this.updateProgress(stepNumber);
-
     this.updateNavigationButtons(stepNumber);
-
     this.currentStep = stepNumber;
 }
 
+
+
+main
 updateProgress(stepNumber) {
     const steps = document.querySelectorAll('.progress-step');
     
@@ -366,6 +471,7 @@ updateProgress(stepNumber) {
         } else {
             step.classList.remove('active', 'completed');
         }
+
     });
 }
 
@@ -380,6 +486,7 @@ updateNavigationButtons(stepNumber) {
 }
 
 validateCurrentStep() {
+
     const currentStepEl = document.querySelector(`.form-step[data-step="${this.currentStep}"]`);
     const requiredInputs = currentStepEl.querySelectorAll('[required]');
     
@@ -521,6 +628,14 @@ handleFileSelect(file) {
     reader.readAsDataURL(file);
 }
 
+setupFormHandling() {
+    const form = document.getElementById('listingForm');
+
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.handleFormSubmission();
+    });
 
     setupFormHandling() {
         const form = document.getElementById('listingForm');
@@ -535,10 +650,14 @@ handleFileSelect(file) {
             useLocationBtn.addEventListener('click', this.useCurrentLocation.bind(this));
         }
 
+ main
 
-        const freshUntilInput = document.getElementById('freshUntil');
-        const now = new Date();
-        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+
+    // Expiry time must be future
+    const freshUntilInput = document.getElementById('freshUntil');
+    if (freshUntilInput) {
         freshUntilInput.min = now.toISOString().slice(0, 16);
     }
 async handleFormSubmission() {
@@ -562,6 +681,63 @@ async handleFormSubmission() {
       longitude: Number(document.getElementById('longitude')?.value),
     };
 
+
+    // OPTIONAL: Pickup time must be future
+    const pickupTimeInput = document.getElementById('pickupTime');
+    if (pickupTimeInput) {
+        pickupTimeInput.min = now.toISOString().slice(0, 16);
+    }
+}
+     
+
+
+handleFormSubmission() {
+    const formData = this.getFormData();
+    
+    if (this.validateFormData(formData)) {
+        
+        try {
+            const backendData = {
+                foodType: formData.foodType,
+                quantity: formData.quantity,
+                category: formData.category,
+                description: formData.description,
+                freshUntil: formData.freshUntil,
+                pickupTime: formData.pickupTime,
+                pickupLocation: formData.location, 
+                contactInfo: formData.contact,
+                dietaryTags: formData.dietaryTags,
+                photos: formData.photos,
+
+                status: "Available",
+
+ main
+            };
+
+            const newListing = this.api.createFoodListing(backendData);
+            this.foodListings.unshift(newListing);
+            this.filterListings();
+            this.loadListingsFromDB();
+            this.renderFoodListings();
+            this.showSuccessMessage();
+            this.closeModalAndReset();
+
+        } catch (error) {
+            console.error('Error creating listing:', error);
+            if (error.status === 401) {
+                this.showToast('You must be logged in to add a listing', 'error');
+            } else {
+                this.showToast(error.message || 'Failed to create listing', 'error');
+            }
+        }
+    }
+}
+
+    
+ 
+
+
+
     if (!backendData.latitude || !backendData.longitude) {
       this.showToast(
         'Please click "Use Current Location" to set pickup address',
@@ -582,6 +758,7 @@ async handleFormSubmission() {
     this.showToast('Failed to create listing', 'error');
   }
 }
+ main
 
     getFormData() {
         const selectedTags = [];
@@ -602,25 +779,68 @@ async handleFormSubmission() {
             dietaryTags: selectedTags 
         };
     }
+validateFormData(data) {
+    const requiredFields = [
+        'foodType',
+        'quantity',
+        'category',
+        'freshUntil',
+        'pickupTime',
+        'location',
+        'contact'
+    ];
 
-    validateFormData(data) {
-        const requiredFields = ['foodType', 'quantity', 'category', 'freshUntil', 'pickupTime', 'location', 'contact'];
-        
-        for (let field of requiredFields) {
-            if (!data[field] || data[field].trim() === '') {
-                this.showErrorMessage(`Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}.`);
-                return false;
-            }
-        }
-        
-        const freshDate = new Date(data.freshUntil);
-        if (freshDate <= new Date()) {
-            this.showErrorMessage('Fresh until date must be in the future.');
+    for (let field of requiredFields) {
+        if (!data[field] || data[field].trim() === '') {
+            this.showErrorMessage(
+                `Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}.`
+            );
             return false;
         }
-        
-        return true;
     }
+
+    const now = new Date();
+    const freshUntilDate = new Date(data.freshUntil);
+
+    // 1️⃣ Expiry must be in future
+    if (freshUntilDate <= now) {
+        this.showErrorMessage('Food expiry time must be in the future.');
+        return false;
+    }
+
+    // 🔴 FIX: Parse pickup time with AM/PM correctly
+    const pickupMatch = data.pickupTime.match(/(\d+)\s*:\s*(\d+)\s*(am|pm)/i);
+
+    if (!pickupMatch) {
+        this.showErrorMessage('Invalid pickup time format.');
+        return false;
+    }
+
+    let hour = parseInt(pickupMatch[1]);
+    const minute = parseInt(pickupMatch[2]);
+    const meridiem = pickupMatch[3].toLowerCase();
+
+    if (meridiem === 'pm' && hour !== 12) hour += 12;
+    if (meridiem === 'am' && hour === 12) hour = 0;
+
+    const pickupDateTime = new Date(freshUntilDate);
+    pickupDateTime.setHours(hour, minute, 0, 0);
+
+    // 2️⃣ Pickup must be future
+    if (pickupDateTime <= now) {
+        this.showErrorMessage('Pickup time must be in the future.');
+        return false;
+    }
+
+    // 3️⃣ ISSUE-416: Pickup must be BEFORE expiry ✅
+    if (pickupDateTime > freshUntilDate) {
+        this.showErrorMessage('Pickup time cannot be later than expiry time.');
+        return false;
+    }
+
+    return true;
+}
+
 
 
     showSuccessMessage() {
@@ -1121,6 +1341,8 @@ async handleFormSubmission() {
                 category: item.category || 'general',
                 dietaryTags: item.dietaryTags || [],
                 createdAt: new Date(item.createdAt),
+                status: item.status || "Available",
+
             }));
 
             this.foodListings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -1164,6 +1386,7 @@ async handleFormSubmission() {
 
         // Add event listeners to food cards
         this.setupFoodCardInteractions();
+        this.setupFoodCardAccessibility();
     }
 
     createClaimButton(listing) {
@@ -1298,15 +1521,6 @@ createFoodCard(listing) {
 
 
     setupFoodCardInteractions() {
-        // Claim buttons
-        const claimBtns = document.querySelectorAll('.claim-btn');
-        claimBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const listingId = btn.getAttribute('data-id');
-                // const listingId = parseInt(btn.getAttribute('data-id'));
-                this.handleClaimFood(listingId);
-            });
-setupFoodCardInteractions() {
     // Claim buttons
     const claimBtns = document.querySelectorAll('.claim-btn');
     claimBtns.forEach(btn => {
@@ -1377,10 +1591,32 @@ setupFoodCardInteractions() {
     () => {
       this.showToast('Location permission denied', 'error');
     }
+
+    setupFoodCardAccessibility() {
+    const foodCards = document.querySelectorAll('.food-card');
+
+    foodCards.forEach(card => {
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('role', 'button');
+        card.setAttribute('aria-label', 'View food details');
+    });
+
+}
+
+
   );
 }
 
 
+
+}
+
+
+  );
+}
+
+main
+ main
 
     handleClaimFood(listingId) {
         const listing = this.foodListings.find(l => l.id === listingId);
@@ -1401,7 +1637,14 @@ setupFoodCardInteractions() {
         const confirmed = confirm(`Claim "${listing.foodType}" from ${listing.donor}?\n\nPickup: ${listing.location}\nTime: ${this.formatTime(listing.pickupTime)}\nContact: ${listing.contact}`);
         
         if (confirmed) {
+
+            listing.status = "Assigned";
+
+            this.api.deleteFoodListing(listingId);
+            // Add to claimed items
+
             this.api.claimFoodListing(listingId);
+ main
             this.claimedItems.push(listingId);
             this.saveClaimedItems();
             listing.status = 'reserved';
@@ -1416,7 +1659,11 @@ setupFoodCardInteractions() {
                 pickupTime: listing.pickupTime,
                 contact: listing.contact,
                 claimedAt: new Date(),
+
+                status: 'Assigned'
+
                 status: 'reserved'
+main
             };
             
             this.addNotification(notification);
@@ -1738,7 +1985,11 @@ setupFoodCardInteractions() {
     viewNotificationDetails(notificationId) {
         const notification = this.notifications.find(n => n.id === notificationId);
         if (!notification) return;
-        
+          
+
+        notification.status = "Collected";
+        this.saveNotifications();
+
         // Mark as read when viewed
         this.markNotificationAsRead(notificationId);
         
@@ -1912,17 +2163,44 @@ scrollToTopBtn.addEventListener("click", () => {
   });
 });
 
-// ===== Gallery Animation and Interactivity =====
 class GalleryManager {
+     setupKeyboardAccessibility() {
+        this.galleryItems.forEach(item => {
+        // 1️⃣ Allow Tab key to reach this card
+        item.setAttribute('tabindex', '0');
+
+        // 2️⃣ Tell screen readers this behaves like a button
+        item.setAttribute('role', 'button');
+
+        // 3️⃣ Accessible description
+        item.setAttribute('aria-label', 'Open gallery item');
+    });
+       }
     constructor() {
         this.galleryItems = document.querySelectorAll('.gallery-item');
         this.init();
-    }
+    }   
+
+     setupKeyboardAccessibility() {
+    this.galleryItems.forEach(item => {
+        // 1️⃣ Allow Tab key to reach this card
+        item.setAttribute('tabindex', '0');
+
+        // 2️⃣ Tell screen readers this behaves like a button
+        item.setAttribute('role', 'button');
+
+        // 3️⃣ Accessible description
+        item.setAttribute('aria-label', 'Open gallery item');
+    });
+}
+
+ main
 
     init() {
         this.setupScrollAnimation();
         this.setupHoverEffects();
         this.setupClickEvents();
+        this.setupKeyboardAccessibility();
     }
 
     setupScrollAnimation() {
@@ -1930,6 +2208,8 @@ class GalleryManager {
             threshold: 0.1,
             rootMargin: '0px 0px -100px 0px'
         };
+main
+
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -1942,6 +2222,9 @@ class GalleryManager {
         this.galleryItems.forEach(item => {
             observer.observe(item);
         });
+       
+         
+        
     }
 
     setupHoverEffects() {
@@ -1974,17 +2257,31 @@ class GalleryManager {
     }
 
     setupClickEvents() {
-        this.galleryItems.forEach(item => {
-            item.addEventListener('click', () => {
+    this.galleryItems.forEach(item => {
+
+        // 🖱 Mouse click (already works)
+        item.addEventListener('click', () => {
+            const category = item.getAttribute('data-category');
+            const title = item.querySelector('h3').textContent;
+            const description = item.querySelector('p').textContent;
+
+            this.showGalleryDetail(item, title, description, category);
+        });
+
+        // ⌨ Keyboard support (NEW)
+        item.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault(); // stop page scroll (Space key)
+
                 const category = item.getAttribute('data-category');
                 const title = item.querySelector('h3').textContent;
                 const description = item.querySelector('p').textContent;
 
-                // Optional: Open lightbox or show more details
                 this.showGalleryDetail(item, title, description, category);
-            });
+            }
         });
-    }
+    });
+}
 
     showGalleryDetail(item, title, description, category) {
         // Create a simple lightbox effect
@@ -2484,8 +2781,8 @@ if (document.querySelector('.testimonials-section')) {
         const wrapper = document.getElementById('scrollTopWrapper');
         const gap = 12; // px gap between wrapper and launcher
         // default fallback values
-    let leftPx = null;
-    let bottomPx = 140;
+        let leftPx = null;
+        let bottomPx = 140;
 
         if (wrapper) {
             // Try to align to the map icon specifically (anchor with class .scroll-link)
@@ -2606,9 +2903,62 @@ if (document.querySelector('.testimonials-section')) {
             e.preventDefault();
             loadAndOpen();
         }
-    });
+    
+
+
+  
+
+
+
+
+
+
+
+// some function
+});
+}
+
+// another function
+
+
+// end of file
+
+      
+
+
+
 
     // If ShareBot loads itself or another script opens the widget, keep state in sync
     // (optional) listen for user interactions on the injected widget to update launcher state
+
+ // No-op: the module exposes window.ShareBot.open/close which we call above
+());
+
     // No-op: the module exposes window.ShareBot.open/close which we call above
 })();
+
+
+// Add Listing Success Message
+document.addEventListener("DOMContentLoaded", () => {
+  const submitBtn = document.getElementById("submitForm");
+  const successMsg = document.getElementById("listingSuccessMsg");
+
+  if (submitBtn && successMsg) {
+    submitBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      // Show success message
+      successMsg.style.display = "block";
+
+      // Reset the form
+      submitBtn.closest("form").reset();
+
+      // Hide message after 4 seconds
+      setTimeout(() => {
+        successMsg.style.display = "none";
+      }, 4000);
+    });
+  }
+});
+ main
+ main

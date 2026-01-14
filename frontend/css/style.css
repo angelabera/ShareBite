@@ -83,7 +83,7 @@ body {
  /* Navbar Styles */
        /* Navbar Styles */
 
-       .navbar {
+    .navbar {
         position: fixed;
         top: 0;
         width: 100%;
@@ -91,6 +91,14 @@ body {
         backdrop-filter: blur(10px);
         z-index: 1000;
         border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .nav-menu.scrolled {
+        background-color: var(--white);
+    }
+
+    .nav-menu.scrolled .nav-link {
+        color: var(--text-dark)
     }
 
     .nav-container {
@@ -121,12 +129,12 @@ body {
             margin: 0;
             padding: 0;
         }
-
+        
         .nav-link {
             color: var(--text-dark);
             text-decoration: none;
             font-weight: 500;
-            transition: var(--transition);
+            transition: var(--transition-slow);
             padding: 0.5rem 0;
             position: relative;
         }
@@ -139,7 +147,7 @@ body {
             width: 0;
             height: 2px;
             background: var(--primary-color);
-            transition: var(--transition);
+            transition: var(--transition-slow);
         }
 
         .nav-link:hover::after {
@@ -294,7 +302,7 @@ body {
     line-height: 1;
     position: relative;
     z-index: 10;
-    outline: none;
+    /* outline: none; */
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
@@ -347,6 +355,29 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+.expiry.safe {
+    color: #2ecc71;
+}
+
+.expiry.warning {
+    color: #f1c40f;
+    font-weight: 600;
+}
+
+.expiry.critical {
+    color: #e67e22;
+    font-weight: 700;
+}
+
+.expiry.expired {
+    color: #e74c3c;
+    font-weight: 700;
+}
+
+.claim-btn.expired {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 .profile-btn .dropdown-icon {
@@ -494,12 +525,30 @@ body.dark .profile-menu-item:hover {
     color: #ffffff !important;
 }
 
+/* Hamburger hidden on desktop */
 .hamburger {
     display: none;
     flex-direction: column;
     cursor: pointer;
-    gap: 4px;
 }
+
+/* Show hamburger on small screens */
+@media (max-width: 768px) {
+    .hamburger {
+        display: flex;
+    }
+
+    .nav-menu {
+        display: none;
+    }
+
+    .nav-menu.active {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+
 
         .clear-notifications:hover {
             background: var(--bg-light);
@@ -731,7 +780,7 @@ body.dark .profile-menu-item:hover {
                 z-index: 2000; /* higher than hero */
               }
             
-                background: var(--bg-black) !important;
+                /* background: var(--bg-black) !important;
                 color: white;
                 flex-direction: column;
                 align-items: stretch;
@@ -739,7 +788,7 @@ body.dark .profile-menu-item:hover {
                 max-height: 0;
                 overflow: hidden;
                 transition: max-height 0.3s ease;
-                box-shadow: var(--shadow);
+                box-shadow: var(--shadow); */
             }
 
             .nav-menu.active {
@@ -791,7 +840,7 @@ body.dark .profile-menu-item:hover {
             body {
                 padding-top: 72px; /* mobile navbar height */
               }
-        }
+        
 
         @media screen and (max-width: 480px) {
             .nav-logo-link span {
@@ -5442,6 +5491,59 @@ body.dark-mode .notification-bell:hover {
         background-color: #4CAF50 !important; /* Forces green lines */
     }
 }
+ 
+
+main
+.form-group {
+  position: relative;
+}
+
+.form-group input.error {
+  border: 2px solid #e53935;
+}
+
+.form-group input.success {
+  border: 2px solid #43a047;
+}
+
+.error-message {
+  color: #e53935;
+  font-size: 0.85rem;
+  margin-top: 4px;
+  display: none;
+}
+
+.error-message.active {
+  display: block;
+}
+/* Inline validation error message */
+.error-message {
+  color: #e63946;
+  font-size: 12px;
+  margin-top: 4px;
+  display: none;
+}
+
+ main
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 3px;
+}
+
+/* Fallback for older browsers */
+button:focus,
+a:focus,
+[role="button"]:focus {
+  outline: 3px solid #2563eb;
+  outline-offset: 3px;
+}
+
+
+
+
+ main
 /* Reserved vs Available indicator */
 
 .food-card {
@@ -5477,3 +5579,8 @@ body.dark-mode .notification-bell:hover {
   background-color: #ff9800;
 }
 
+
+
+ main
+ main
+main

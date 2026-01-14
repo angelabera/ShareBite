@@ -16,6 +16,11 @@ class ShareBiteFoodListing {
     }
 
     init() {
+        // Refresh expiry countdown every minute
+setInterval(() => {
+    this.renderFoodListings();
+}, 60000);
+
         this.setupEventListeners();
         this.loadListingsFromDB();
         this.renderFoodListings();
@@ -815,6 +820,16 @@ handleFileSelect(file) {
     }
 
     createClaimButton(listing) {
+        const expiryStatus = this.getExpiryStatus(listing.freshUntil);
+
+if (expiryStatus.expired) {
+    return `
+        <button class="claim-btn expired" disabled>
+            <i class="fas fa-times-circle"></i> Expired
+        </button>
+    `;
+}
+
         const isClaimed = this.claimedItems.includes(listing.id);
         const isCollector = this.currentRole === 'collector';
         const username = JSON.parse(localStorage.getItem('user'))?.name;

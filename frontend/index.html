@@ -91,11 +91,17 @@
                 <button class="login-btn" onclick="window.location.href='login.html'">User Login</button>
                 <button class="login-btn" onclick="window.location.href='login_ngo.html'">NGO Login</button>
             </div>
-            <div class="hamburger" id="menuToggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
+            <div class="hamburger"
+     id="menuToggle"
+     tabindex="0"
+     role="button"
+     aria-label="Open navigation menu">
+    <span></span>
+    <span></span>
+    <span></span>
+main
+</div>
+
         </div>
     </nav>
     
@@ -110,6 +116,7 @@
         <div class="hero-content">
           <h1 class="hero-title">
             Reduce Food Waste,<br />
+
             <span class="gradient-text">Feed Communities</span>
           </h1>
           <p class="hero-description">
@@ -147,6 +154,7 @@
             <i class="fas fa-pizza-slice"></i>
             <span>Fresh Pizza</span>
           </div>
+
           <div class="floating-card food-card-2">
             <i class="fas fa-bread-slice"></i>
             <span>Bakery Items</span>
@@ -184,6 +192,7 @@
               <i class="fas fa-store"></i>
             </div>
             <h3>List Your Food</h3>
+            
             <p>
               Restaurants and households can easily list fresh leftover food
               with details about quantity, type, and pickup location.
@@ -442,6 +451,10 @@
             >
               <i class="fas fa-check"></i> Add Listing
             </button>
+           <p id="listingSuccessMsg"
+     style="display:none; color:green; font-weight:600; margin-top:12px; text-align:center;">Your food listing was added successfully. Thank you for helping reduce food waste 🌱
+</p>
+
           </div>
         </form>
       </div>
@@ -965,7 +978,8 @@
     alert(`✅ Thank you, ${name}! Your message has been sent.`);
     form.reset();
   });
-  const username = JSON.parse(localStorage.getItem('user')).name;
+  const user = JSON.parse(localStorage.getItem('user'));
+  const username = user ? user.name : null;
   const toast = document.getElementById('toast');
 
   if (username) {
@@ -1031,7 +1045,7 @@
       <ul>
         <li><a href="#">Find Food</a></li>
         <li><a href="ngo-register.html">Register NGO</a></li>
-        <li><a href="vounteer_food.html">Volunteer</a></li>
+        <li><a href="volunteer_food.html">Volunteer</a></li>
         <li><a href="#">Resources</a></li>
       </ul>
     </div>
