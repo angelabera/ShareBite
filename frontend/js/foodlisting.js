@@ -176,17 +176,18 @@ class ShareBiteFoodListing {
         this.resetFormSteps();
     };
 
-    cancelBtn.addEventListener('click', (e) => {
-  e.stopPropagation(); // prevents modal click handler
+   cancelBtn.onclick = (e) => {
+  e.preventDefault(); // stop form behavior
 
-  const confirmCancel = confirm(
+  const confirmCancel = window.confirm(
     "You have unsaved changes. Are you sure you want to cancel?"
   );
 
   if (confirmCancel) {
     closeModal();
   }
-});
+};
+
 
     
   modal.addEventListener('click', (e) => {
