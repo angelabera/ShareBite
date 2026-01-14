@@ -176,25 +176,31 @@ class ShareBiteFoodListing {
         this.resetFormSteps();
     };
 
-   cancelBtn.onclick = (e) => {
-  e.preventDefault(); // stop form behavior
+   cancelBtn.addEventListener(
+  'click',
+  (e) => {
+    e.preventDefault();
+    e.stopImmediatePropagation(); // blocks all other handlers
 
-  const confirmCancel = window.confirm(
-    "You have unsaved changes. Are you sure you want to cancel?"
-  );
+    const confirmCancel = window.confirm(
+      "You have unsaved changes. Are you sure you want to cancel?"
+    );
 
-  if (confirmCancel) {
-    closeModal();
-  }
-};
+    if (confirmCancel) {
+      closeModal();
+    }
+  },
+  true // capture phase
+);
+
 
 
     
-  modal.addEventListener('click', (e) => {
+ /* modal.addEventListener('click', (e) => {
   if (e.target === modal) {
     closeModal();
   }
-});
+});*/
 
 
 
