@@ -5471,8 +5471,9 @@ body.dark-mode .notification-bell:hover {
         background-color: #4CAF50 !important; /* Forces green lines */
     }
 }
-/* ===== Inline Form Validation Styles ===== */
+ 
 
+main
 .form-group {
   position: relative;
 }
@@ -5503,7 +5504,7 @@ body.dark-mode .notification-bell:hover {
   display: none;
 }
 
-
+ main
 button:focus-visible,
 a:focus-visible,
 [role="button"]:focus-visible {
@@ -5520,7 +5521,7 @@ a:focus,
 }
 
 
-=======
+
 /* Reserved vs Available indicator */
 
 .food-card {
@@ -5557,3 +5558,5 @@ a:focus,
 }
 
 
+ main
+ main

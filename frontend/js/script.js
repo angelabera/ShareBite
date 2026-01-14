@@ -349,6 +349,7 @@ setupFormNavigation() {
         // Step-level required field validation
         if (!this.validateCurrentStep()) return;
 
+
         // 🔴 ISSUE-416: Expiry vs Pickup validation
         const freshUntilValue = document.getElementById('freshUntil')?.value;
         const pickupTimeValue = document.getElementById('pickupTime')?.value;
@@ -391,6 +392,70 @@ setupFormNavigation() {
 }
 
 
+
+
+        // 🔴 ISSUE-416: Expiry vs Pickup validation
+        const freshUntilValue = document.getElementById('freshUntil')?.value;
+        const pickupTimeValue = document.getElementById('pickupTime')?.value;
+
+        if (freshUntilValue && pickupTimeValue) {
+            const expiry = new Date(freshUntilValue);
+
+            // Parse "04 : 00 pm" / "09 : 00 am"
+            const match = pickupTimeValue.match(/(\d+)\s*:\s*(\d+)\s*(am|pm)/i);
+
+            if (match) {
+                let hour = parseInt(match[1]);
+                const minute = parseInt(match[2]);
+                const period = match[3].toLowerCase();
+
+                if (period === 'pm' && hour !== 12) hour += 12;
+                if (period === 'am' && hour === 12) hour = 0;
+
+                const pickup = new Date(expiry);
+                pickup.setHours(hour, minute, 0, 0);
+
+                // 🚫 BLOCK if pickup is after expiry
+                if (pickup > expiry) {
+                    this.showToast(
+                        'Pickup time cannot be later than expiry time.',
+                        'error'
+                    );
+                    return;
+                }
+            }
+        }
+
+        // ✅ Move to next step only if all validations pass
+        this.goToStep(this.currentStep + 1);
+    });
+
+    prevBtn.addEventListener('click', () => {
+        this.goToStep(this.currentStep - 1);
+    });
+}
+goToStep(stepNumber) {
+    if (stepNumber < 1 || stepNumber > this.totalSteps) return;
+
+    // Hide all steps
+    document.querySelectorAll('.form-step').forEach(step => {
+        step.classList.remove('active');
+    });
+
+    // Show current step
+    const currentStepEl = document.querySelector(`.form-step[data-step="${stepNumber}"]`);
+    if (currentStepEl) {
+        currentStepEl.classList.add('active');
+    }
+
+    this.updateProgress(stepNumber);
+    this.updateNavigationButtons(stepNumber);
+    this.currentStep = stepNumber;
+}
+
+
+
+main
 updateProgress(stepNumber) {
     const steps = document.querySelectorAll('.progress-step');
     
@@ -406,6 +471,7 @@ updateProgress(stepNumber) {
         } else {
             step.classList.remove('active', 'completed');
         }
+
     });
 }
 
@@ -420,6 +486,7 @@ updateNavigationButtons(stepNumber) {
 }
 
 validateCurrentStep() {
+
     const currentStepEl = document.querySelector(`.form-step[data-step="${this.currentStep}"]`);
     const requiredInputs = currentStepEl.querySelectorAll('[required]');
     
@@ -641,6 +708,10 @@ handleFormSubmission() {
                 contactInfo: formData.contact,
                 dietaryTags: formData.dietaryTags,
                 photos: formData.photos,
+
+                status: "Available",
+
+ main
             };
 
             const newListing = this.api.createFoodListing(backendData);
@@ -1270,6 +1341,8 @@ validateFormData(data) {
                 category: item.category || 'general',
                 dietaryTags: item.dietaryTags || [],
                 createdAt: new Date(item.createdAt),
+                status: item.status || "Available",
+
             }));
 
             this.foodListings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -1527,6 +1600,7 @@ createFoodCard(listing) {
         card.setAttribute('role', 'button');
         card.setAttribute('aria-label', 'View food details');
     });
+
 }
 
 
@@ -1534,6 +1608,14 @@ createFoodCard(listing) {
 }
 
 
+
+}
+
+
+  );
+}
+
+main
  main
 
     handleClaimFood(listingId) {
@@ -1555,7 +1637,14 @@ createFoodCard(listing) {
         const confirmed = confirm(`Claim "${listing.foodType}" from ${listing.donor}?\n\nPickup: ${listing.location}\nTime: ${this.formatTime(listing.pickupTime)}\nContact: ${listing.contact}`);
         
         if (confirmed) {
+
+            listing.status = "Assigned";
+
+            this.api.deleteFoodListing(listingId);
+            // Add to claimed items
+
             this.api.claimFoodListing(listingId);
+ main
             this.claimedItems.push(listingId);
             this.saveClaimedItems();
             listing.status = 'reserved';
@@ -1570,7 +1659,11 @@ createFoodCard(listing) {
                 pickupTime: listing.pickupTime,
                 contact: listing.contact,
                 claimedAt: new Date(),
+
+                status: 'Assigned'
+
                 status: 'reserved'
+main
             };
             
             this.addNotification(notification);
@@ -1892,7 +1985,11 @@ createFoodCard(listing) {
     viewNotificationDetails(notificationId) {
         const notification = this.notifications.find(n => n.id === notificationId);
         if (!notification) return;
-        
+          
+
+        notification.status = "Collected";
+        this.saveNotifications();
+
         // Mark as read when viewed
         this.markNotificationAsRead(notificationId);
         
@@ -2066,12 +2163,24 @@ scrollToTopBtn.addEventListener("click", () => {
   });
 });
 
-// ===== Gallery Animation and Interactivity =====
 class GalleryManager {
+     setupKeyboardAccessibility() {
+        this.galleryItems.forEach(item => {
+        // 1️⃣ Allow Tab key to reach this card
+        item.setAttribute('tabindex', '0');
+
+        // 2️⃣ Tell screen readers this behaves like a button
+        item.setAttribute('role', 'button');
+
+        // 3️⃣ Accessible description
+        item.setAttribute('aria-label', 'Open gallery item');
+    });
+       }
     constructor() {
         this.galleryItems = document.querySelectorAll('.gallery-item');
         this.init();
     }   
+
      setupKeyboardAccessibility() {
     this.galleryItems.forEach(item => {
         // 1️⃣ Allow Tab key to reach this card
@@ -2085,6 +2194,8 @@ class GalleryManager {
     });
 }
 
+ main
+
     init() {
         this.setupScrollAnimation();
         this.setupHoverEffects();
@@ -2097,7 +2208,7 @@ class GalleryManager {
             threshold: 0.1,
             rootMargin: '0px 0px -100px 0px'
         };
-       
+main
 
 
         const observer = new IntersectionObserver((entries) => {
@@ -2111,6 +2222,9 @@ class GalleryManager {
         this.galleryItems.forEach(item => {
             observer.observe(item);
         });
+       
+         
+        
     }
 
     setupHoverEffects() {
