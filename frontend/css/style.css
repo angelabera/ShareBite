@@ -5517,7 +5517,6 @@ a:focus,
 }
 
 
-=======
 /* Reserved vs Available indicator */
 
 .food-card {
@@ -5552,5 +5551,3 @@ a:focus,
 .status-badge.reserved {
   background-color: #ff9800;
 }
-
- main
