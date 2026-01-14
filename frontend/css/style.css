@@ -302,7 +302,7 @@ body {
     line-height: 1;
     position: relative;
     z-index: 10;
-    outline: none;
+    /* outline: none; */
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
@@ -525,12 +525,30 @@ body.dark .profile-menu-item:hover {
     color: #ffffff !important;
 }
 
+/* Hamburger hidden on desktop */
 .hamburger {
     display: none;
     flex-direction: column;
     cursor: pointer;
-    gap: 4px;
 }
+
+/* Show hamburger on small screens */
+@media (max-width: 768px) {
+    .hamburger {
+        display: flex;
+    }
+
+    .nav-menu {
+        display: none;
+    }
+
+    .nav-menu.active {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+
 
         .clear-notifications:hover {
             background: var(--bg-light);
@@ -5453,6 +5471,53 @@ body.dark-mode .notification-bell:hover {
         background-color: #4CAF50 !important; /* Forces green lines */
     }
 }
+.form-group {
+  position: relative;
+}
+
+.form-group input.error {
+  border: 2px solid #e53935;
+}
+
+.form-group input.success {
+  border: 2px solid #43a047;
+}
+
+.error-message {
+  color: #e53935;
+  font-size: 0.85rem;
+  margin-top: 4px;
+  display: none;
+}
+
+.error-message.active {
+  display: block;
+}
+/* Inline validation error message */
+.error-message {
+  color: #e63946;
+  font-size: 12px;
+  margin-top: 4px;
+  display: none;
+}
+
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 3px;
+}
+
+/* Fallback for older browsers */
+button:focus,
+a:focus,
+[role="button"]:focus {
+  outline: 3px solid #2563eb;
+  outline-offset: 3px;
+}
+
+
+=======
 /* Reserved vs Available indicator */
 
 .food-card {
@@ -5488,3 +5553,4 @@ body.dark-mode .notification-bell:hover {
   background-color: #ff9800;
 }
 
+ main

@@ -306,7 +306,7 @@
     <div class="auth-container">
       <h1>Welcome Back to ShareBite</h1>
       <p class="subtitle">Log in to continue your journey with us.</p>
-      <form id="loginForm">
+      <form id="loginForm" novalidate>
         <div class="form-group">
           <label for="email">Email</label>
           <input
@@ -316,6 +316,8 @@
             placeholder="Enter your email"
             required
           />
+          <small class="error-message" id="emailError"></small>
+
         </div>
         <div class="form-group">
           <label for="password">Password</label>
@@ -326,6 +328,8 @@
             placeholder="Enter your password"
             required
           />
+          <small class="error-message" id="passwordError"></small>
+
           <button
             type="button"
             id="togglePassword"
@@ -381,6 +385,25 @@
           ? "Hide Password"
           : "Show Password";
       });
+
+      // --- Inline Password Validation ---
+const passwordError = document.getElementById("passwordError");
+
+passwordInput.addEventListener("input", () => {
+  const value = passwordInput.value.trim();
+
+  if (value.length === 0) {
+    passwordError.textContent = "Password is required";
+    passwordError.style.display = "block";
+  } else if (value.length < 6) {
+    passwordError.textContent = "Password must be at least 6 characters";
+    passwordError.style.display = "block";
+  } else {
+    passwordError.textContent = "";
+    passwordError.style.display = "none";
+  }
+});
+
 
       // --- Form Submission ---
       const loginForm = document.getElementById("loginForm");
