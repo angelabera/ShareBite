@@ -868,9 +868,10 @@ if (expiryStatus.expired) {
     const location = listing.pickupLocation || listing.location || 'Unknown Location';
     const contact = listing.contactInfo || listing.contact;
     const timeAgo = this.getTimeAgo(listing.createdAt);
-    // const freshUntil = this.formatDateTime(listing.freshUntil);
-    const expiryStatus = this.getExpiryStatus(listing.freshUntil);
+    const freshUntil = this.formatDateTime(listing.freshUntil);
+    const urgency = this.getUrgencyStatus(listing.freshUntil);
     const isClaimed = this.claimedItems.includes(listing.id);
+    
     const statusClass = isClaimed ? 'reserved' : 'available';
     const statusText = isClaimed ? 'Reserved' : 'Available';
 
@@ -920,10 +921,8 @@ if (expiryStatus.expired) {
                 <p class="food-description">${listing.description}</p>
                 <div class="food-meta">
                     <span class="quantity"><i class="fas fa-utensils"></i> ${listing.quantity}</span>
-                    
-                    <span class="freshness expiry ${expiryStatus.urgency}">
-                        <i class="fas fa-clock"></i> ${expiryStatus.text}
-                    </span>
+                    <span class="freshness"><i class="fas fa-clock"></i> ${freshUntil}</span>
+
 
                 </div>
                 <div class="food-location">
@@ -1081,33 +1080,21 @@ if (expiryStatus.expired) {
             return `${days}d left`;
         }
     }
-    getExpiryStatus(freshUntil) {
+    getUrgencyStatus(freshUntil) {
     const now = new Date();
     const expiry = new Date(freshUntil);
     const diffMs = expiry - now;
+    const hoursLeft = diffMs / (1000 * 60 * 60);
 
-    if (diffMs <= 0) {
-        return {
-            expired: true,
-            text: 'Expired',
-            hoursLeft: 0,
-            urgency: 'expired'
-        };
+    if (hoursLeft > 6) {
+        return { label: "🟢 Fresh", className: "fresh" };
+    } else if (hoursLeft > 2) {
+        return { label: "🟡 Expiring Soon", className: "expiring" };
+    } else {
+        return { label: "🔴 Urgent", className: "urgent" };
     }
-
-    const hoursLeft = Math.floor(diffMs / (1000 * 60 * 60));
-
-    let urgency = 'safe';
-    if (hoursLeft <= 2) urgency = 'critical';
-    else if (hoursLeft <= 6) urgency = 'warning';
-
-    return {
-        expired: false,
-        text: this.formatDateTime(freshUntil),
-        hoursLeft,
-        urgency
-    };
 }
+
 
     formatTime(timeString) {
         const [hours, minutes] = timeString.split(':');
