@@ -2414,6 +2414,7 @@ button#cancelForm:hover {
     margin-top: 2rem;
 }
 
+/* ABOUT SECTION */
 .about {
     padding: 80px 0;
     background: linear-gradient(180deg, #f9fff9, #ffffff);
@@ -2421,15 +2422,18 @@ button#cancelForm:hover {
 
 .about-text h2 {
     font-size: var(--h2-size);
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
+    color: var(--black);
+}
+
+:root.dark .about-text h2 {
     color: var(--black);
 }
 
 .about-text p {
-    font-size: 1.1rem;
     color: var(--medium-gray);
     line-height: 1.7;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
 }
 
 .about-content {
@@ -2518,6 +2522,7 @@ button#cancelForm:hover {
     line-height: 1.5;
 }
 
+/* FLOW STRIP */
 .about-flow {
     margin-top: 60px;
     padding: 26px;
@@ -2544,6 +2549,7 @@ button#cancelForm:hover {
     color: #4caf50;
 }
 
+/* CTA */
 .about-cta {
     margin-top: 36px;
     text-align: center;
@@ -2566,9 +2572,6 @@ button#cancelForm:hover {
     transform: translateY(-4px);
     box-shadow: 0 16px 40px rgba(76, 175, 80, 0.45);
 }
-
-
-
 
 /* Footer */
 .footer {
