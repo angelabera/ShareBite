@@ -2497,3 +2497,34 @@ if (document.querySelector('.testimonials-section')) {
     // (optional) listen for user interactions on the injected widget to update launcher state
     // No-op: the module exposes window.ShareBot.open/close which we call above
 })();
+
+.empty-state {
+  grid-column: 1 / -1;     /* span full grid width */
+  display: flex;
+  flex-direction: column;
+  align-items: center;    /* horizontal center */
+  justify-content: center;
+  text-align: center;
+  margin-top: 80px;
+  color: #555;
+}
+
+.empty-state i {
+  font-size: 3rem;
+  color: #ccc;
+  margin-bottom: 12px;
+}
+
+
+.empty-state p {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.empty-state span {
+  font-size: 1rem;
+  color: #777;
+}
+
+
