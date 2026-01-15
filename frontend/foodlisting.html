@@ -15,6 +15,9 @@
  
     <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Leaflet Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
 </head>
 
 <body>
@@ -216,13 +219,17 @@
             </div>
             <div class="form-group">
               <label for="location">Pickup Location *</label>
-              <input
-                type="text"
-                id="location"
-                required
-                placeholder="Address or landmark"
-              />
+              <input type="text" id="location" required placeholder="Address or landmark" />
+            
+              
+            
+              <div id="map" style="display:none; margin-top:10px; height: 250px; width: 100%; border-radius: 8px;"></div>
+            
+              <!-- Hidden inputs to send to backend -->
+              <input type="hidden" id="latitude" />
+              <input type="hidden" id="longitude" />
             </div>
+            
             <div class="form-group">
               <label for="contact">Contact Information *</label>
               <input
