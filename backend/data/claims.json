@@ -1,0 +1,11 @@
+[
+  {
+    "id": "e6499c8b-6237-4d6c-9368-6ab59577c369",
+    "foodId": "food-test-1",
+    "donorId": "donor-test-1",
+    "collectorId": "collector-test-1",
+    "status": "collected",
+    "createdAt": "2026-01-11T04:20:42.829Z",
+    "updatedAt": "2026-01-11T04:23:57.502Z"
+  }
+]
