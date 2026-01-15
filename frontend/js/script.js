@@ -2727,6 +2727,7 @@ if (document.querySelector('.testimonials-section')) {
 })();
     ());
 
+<<<<<<< HEAD
 // No-op: the module exposes window.ShareBot.open/close which we call above
 
 // Add Listing Success Message
@@ -2751,5 +2752,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+=======
+>>>>>>> a268cd3 (Move empty-state styles to CSS file)
 
 
