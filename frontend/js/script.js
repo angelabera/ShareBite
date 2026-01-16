@@ -2723,8 +2723,11 @@ if (document.querySelector('.testimonials-section')) {
     // (optional) listen for user interactions on the injected widget to update launcher state
 
     // No-op: the module exposes window.ShareBot.open/close which we call above
+
+})();
     ());
 
+<<<<<<< HEAD
 // No-op: the module exposes window.ShareBot.open/close which we call above
 
 // Add Listing Success Message
@@ -2749,4 +2752,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+=======
+>>>>>>> a268cd3 (Move empty-state styles to CSS file)
+
 

@@ -799,22 +799,38 @@ handleFileSelect(file) {
         return futureDate.toISOString().slice(0, 16);
     }
 
-    renderFoodListings() {
-        const foodGrid = document.getElementById('foodGrid');
-        
-        if (this.filteredListings.length === 0) {
-            foodGrid.innerHTML = `
-                <div class="no-listings">
-                    <i class="fas fa-search" style="font-size: 3rem; color: var(--medium-gray); margin-bottom: 1rem;"></i>
-                    <h3>No listings found</h3>
-                    <p>Try adjusting your filters or search terms.</p>
-                </div>
-            `;
-            return;
-        }
-        
-        foodGrid.innerHTML = this.filteredListings.map(listing => this.createFoodCard(listing)).join('');
-        
+     renderFoodListings() {
+  const foodGrid = document.getElementById('foodGrid');
+
+  // CASE 1: No food listings at all (backend empty / first load)
+  if (!this.foodListings || this.foodListings.length === 0) {
+     foodGrid.innerHTML = `
+         <div class="empty-state">
+            <i class="fas fa-utensils" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem;"></i>
+            <p>No food listings available right now 🍽️</p>
+            <span>Check back later!</span>
+        </div>
+`       ;
+     return;
+  }
+
+  // CASE 2: Listings exist, but filters remove all
+  if (this.filteredListings.length === 0) {
+    foodGrid.innerHTML = `
+      <div class="no-listings">
+        <i class="fas fa-search" style="font-size: 3rem; color: var(--medium-gray); margin-bottom: 1rem;"></i>
+        <h3>No listings found</h3>
+        <p>Try adjusting your filters or search terms.</p>
+      </div>
+    `;
+    return;
+  }
+
+  // ✅ CASE 3: Show listings
+    foodGrid.innerHTML = this.filteredListings
+    .map(listing => this.createFoodCard(listing))
+    .join('');
+      
         // Add event listeners to food cards
         this.setupFoodCardInteractions();
     }
@@ -919,12 +935,22 @@ if (expiryStatus.expired) {
                 <h3 class="food-title">${listing.foodType}</h3>
                 ${tagsHTML} 
                 <p class="food-description">${listing.description}</p>
-                <div class="food-meta">
-                    <span class="quantity"><i class="fas fa-utensils"></i> ${listing.quantity}</span>
-                    <span class="freshness"><i class="fas fa-clock"></i> ${freshUntil}</span>
+            <div class="food-meta" aria-describedby="foodMetaHelp-${listing.id}">
+                <span class="quantity">
+                <i class="fas fa-utensils"></i>
+                   Quantity: ${listing.quantity || "Not available"}
+                </span>
+                <span class="freshness">
+                <i class="fas fa-clock"></i>
+                  Expiry: ${freshUntil || "Not available"}
+                </span>
+             </div>
+
+            <p id="foodMetaHelp-${listing.id}" class="sr-only">
+                Food listing details: expiry time and available quantity.
+            </p>
 
 
-                </div>
                 <div class="food-location">
                     <i class="fas fa-map-marker-alt"></i>
                     <span>${listing.location}</span>
