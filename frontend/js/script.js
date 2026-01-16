@@ -2521,7 +2521,7 @@ if (document.querySelector('.testimonials-section')) {
 }
 
 // ===== Lazy-load ShareBot Chatbot Launcher =====
-(function setupChatbotLauncher() {
+function setupChatbotLauncher() {
     // Only run on pages where DOM exists
     if (!document.body) return;
     const LAUNCHER_ID = 'chatbot-launcher';
@@ -2724,10 +2724,7 @@ if (document.querySelector('.testimonials-section')) {
 
     // No-op: the module exposes window.ShareBot.open/close which we call above
 
-})();
-    ());
 
-<<<<<<< HEAD
 // No-op: the module exposes window.ShareBot.open/close which we call above
 
 // Add Listing Success Message
@@ -2752,7 +2749,5 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
-=======
->>>>>>> a268cd3 (Move empty-state styles to CSS file)
 
 
