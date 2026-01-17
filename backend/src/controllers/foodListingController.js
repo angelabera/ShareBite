@@ -121,6 +121,12 @@ exports.getListingById = async (req, res) => {
 exports.updateListing = async (req, res) => {
   try {
     const listing = await FoodListing.findById(req.params.id);
+    if (!listing) return res.status(404).json({ message: 'Listing not found' });
+     //Prevent updates on expired food
+    if (listing.expiryStatus === 'EXPIRED') {
+      return res.status(400).json({
+        message: 'Cannot update an expired food listing'
+      });
     if (!listing) {
       return res.status(404).json({ message: 'Listing not found' });
     }

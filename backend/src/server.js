@@ -11,6 +11,7 @@ const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const ngoAuthRoutes = require('./routes/ngoAuthRoutes');
 const foodListingRoutes = require('./routes/foodListingRoutes');
+require('./jobs/expiryScheduler');
 const impactRoutes = require('./routes/impactRoutes');
 
 
