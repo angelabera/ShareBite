@@ -7,7 +7,20 @@ const foodListingSchema = new mongoose.Schema(
     quantity: { type: String, required: true, trim: true },
     category: { type: String, required: true, trim: true },
     description: { type: String, trim: true },
+    // Expiry date
     freshUntil: { type: Date, required: true },
+
+    // Expiry tracking
+    expiryStatus: {
+      type: String,
+      enum: ["FRESH", "NEAR_EXPIRY", "EXPIRED"],
+      default: "FRESH"
+    },
+
+    isActive: {
+      type: Boolean,
+      default: true
+    },
     pickupTime: { type: String, required: true },
     pickupLocation: { type: String, required: true, trim: true },
     contactInfo: { type: String, required: true, trim: true },
