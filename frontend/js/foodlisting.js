@@ -935,12 +935,22 @@ if (expiryStatus.expired) {
                 <h3 class="food-title">${listing.foodType}</h3>
                 ${tagsHTML} 
                 <p class="food-description">${listing.description}</p>
-                <div class="food-meta">
-                    <span class="quantity"><i class="fas fa-utensils"></i> ${listing.quantity}</span>
-                    <span class="freshness"><i class="fas fa-clock"></i> ${freshUntil}</span>
+            <div class="food-meta" aria-describedby="foodMetaHelp-${listing.id}">
+                <span class="quantity">
+                <i class="fas fa-utensils"></i>
+                   Quantity: ${listing.quantity || "Not available"}
+                </span>
+                <span class="freshness">
+                <i class="fas fa-clock"></i>
+                  Expiry: ${freshUntil || "Not available"}
+                </span>
+             </div>
+
+            <p id="foodMetaHelp-${listing.id}" class="sr-only">
+                Food listing details: expiry time and available quantity.
+            </p>
 
 
-                </div>
                 <div class="food-location">
                     <i class="fas fa-map-marker-alt"></i>
                     <span>${listing.location}</span>
