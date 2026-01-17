@@ -6095,3 +6095,322 @@ main
     text-shadow: 0 0 5px var(--primary-light);
     animation: pulse 2s infinite;
 }
+
+/* Language Selector Styles */
+.language-selector {
+  position: relative;
+  display: inline-block;
+}
+
+.language-selector-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  background: var(--card-bg);
+  border: 1px solid var(--medium-gray);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  font-weight: 500;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+}
+
+.language-selector-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.language-selector-button:hover {
+  background: linear-gradient(135deg, var(--primary-color-light), var(--primary-color));
+  border-color: var(--primary-color);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(74, 144, 226, 0.3), 0 4px 10px rgba(0, 0, 0, 0.1);
+  color: white;
+}
+
+.language-selector-button:hover::before {
+  left: 100%;
+}
+
+.language-selector-button:hover .language-flag {
+  transform: scale(1.1) rotate(5deg);
+  transition: transform 0.3s ease;
+}
+
+.language-selector-button:hover .language-arrow {
+  transform: translateY(-2px);
+  animation: bounce 0.6s ease infinite alternate;
+}
+
+.language-selector-button:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+.language-flag {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.language-name {
+  font-weight: 600;
+}
+
+.language-arrow {
+  font-size: 0.7rem;
+  transition: transform 0.2s ease;
+}
+
+.language-selector.open .language-arrow {
+  transform: rotate(180deg);
+}
+
+.language-selector-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  background: var(--card-bg);
+  border: 1px solid var(--medium-gray);
+  border-radius: 8px;
+  box-shadow: var(--shadow-medium);
+  min-width: 200px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.2s ease;
+}
+
+.language-selector.open .language-selector-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.language-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  font-size: 0.9rem;
+  color: var(--text-dark);
+}
+
+.language-option:hover,
+.language-option:focus {
+  background: var(--light-gray);
+  outline: none;
+}
+
+.language-option.active {
+  background: var(--primary-color);
+  color: white;
+}
+
+.language-option.active .language-english {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.language-english {
+  font-size: 0.8rem;
+  color: var(--medium-gray);
+  margin-left: auto;
+}
+
+.language-check {
+  color: var(--primary-color);
+  font-weight: bold;
+  margin-left: auto;
+}
+
+.language-option.active .language-check {
+  color: white;
+}
+
+/* RTL Language Support */
+[dir="rtl"] .language-selector-dropdown {
+  right: auto;
+  left: 0;
+}
+
+[dir="rtl"] .language-option {
+  text-align: right;
+}
+
+[dir="rtl"] .language-english {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+/* Language-specific Typography */
+.lang-hi,
+.lang-bn,
+.lang-gu,
+.lang-pa,
+.lang-ur,
+.lang-mr,
+.lang-te,
+.lang-ta,
+.lang-ml {
+  font-family: 'Noto Sans', system-ui, -apple-system, sans-serif;
+}
+
+/* Bengali-specific font */
+.lang-bn {
+  font-family: 'Noto Sans Bengali', 'Noto Sans', system-ui, sans-serif;
+}
+
+/* Hindi-specific font */
+.lang-hi {
+  font-family: 'Noto Sans Devanagari', 'Noto Sans', system-ui, sans-serif;
+}
+
+/* Gujarati-specific font */
+.lang-gu {
+  font-family: 'Noto Sans Gujarati', 'Noto Sans', system-ui, sans-serif;
+}
+
+/* Tamil-specific font */
+.lang-ta {
+  font-family: 'Noto Sans Tamil', 'Noto Sans', system-ui, sans-serif;
+}
+
+/* Telugu-specific font */
+.lang-te {
+  font-family: 'Noto Sans Telugu', 'Noto Sans', system-ui, sans-serif;
+}
+
+/* Marathi-specific font */
+.lang-mr {
+  font-family: 'Noto Sans Devanagari', 'Noto Sans', system-ui, sans-serif;
+}
+
+/* Punjabi-specific font */
+.lang-pa {
+  font-family: 'Noto Sans Gurmukhi', 'Noto Sans', system-ui, sans-serif;
+}
+
+/* Urdu-specific font (RTL) */
+.lang-ur {
+  font-family: 'Noto Nastaliq Urdu', 'Noto Sans', system-ui, sans-serif;
+  direction: rtl;
+}
+
+/* Malayalam-specific font */
+.lang-ml {
+  font-family: 'Noto Sans Malayalam', 'Noto Sans', system-ui, sans-serif;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .language-selector-dropdown {
+    right: 0;
+    left: 0;
+    min-width: auto;
+    max-height: 250px;
+  }
+  
+  .language-option {
+    padding: 1rem;
+  }
+  
+  .language-name {
+    font-size: 0.95rem;
+  }
+  
+  .language-english {
+    font-size: 0.75rem;
+  }
+}
+
+/* Loading state for language switching */
+.language-selector.loading .language-selector-button {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.language-selector.loading .language-arrow {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bounce {
+  0% {
+    transform: translateY(-2px);
+  }
+  100% {
+    transform: translateY(2px);
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .language-selector-button {
+    border-width: 2px;
+  }
+  
+  .language-option.active {
+    border: 2px solid var(--text-dark);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .language-selector-dropdown,
+  .language-arrow,
+  .language-selector-button {
+    transition: none;
+  }
+  
+  .language-selector.loading .language-arrow {
+    animation: none;
+  }
+}
+
+/* Focus visible support */
+.language-selector-button:focus-visible,
+.language-option:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Dark mode adjustments */
+body.dark .language-selector-button {
+  background: var(--card-bg);
+  border-color: var(--medium-gray);
+}
+
+body.dark .language-selector-dropdown {
+  background: var(--card-bg);
+  border-color: var(--medium-gray);
+}
+
+body.dark .language-option:hover,
+body.dark .language-option:focus {
+  background: var(--light-gray);
+}

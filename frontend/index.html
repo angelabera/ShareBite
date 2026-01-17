@@ -53,11 +53,11 @@
         </a>
       </div>
       <ul class="nav-menu" id="navMenu">
-        <li><a href="#home" class="nav-link">Home</a></li>
-        <li><a href="#features" class="nav-link">Features</a></li>
-        <li><a href="#listings" class="nav-link" id="listingsLink">Listings</a></li>
-        <li><a href="#about" class="nav-link">About</a></li>
-        <li><a href="#contact-section" class="nav-link">Contact</a></li>
+        <li><a href="#home" class="nav-link" data-i18n="nav.home">Home</a></li>
+        <li><a href="#features" class="nav-link" data-i18n="nav.features">Features</a></li>
+        <li><a href="#listings" class="nav-link" id="listingsLink" data-i18n="nav.listings">Listings</a></li>
+        <li><a href="#about" class="nav-link" data-i18n="nav.about">About</a></li>
+        <li><a href="#contact-section" class="nav-link" data-i18n="nav.contact">Contact</a></li>
       </ul>
       <div class="user-actions">
         <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
@@ -66,6 +66,17 @@
         <button id="cursorToggle" class="cursor-toggle" aria-label="Toggle Cursor Trail">
           <i class="fas fa-magic"></i>
         </button>
+        <!-- Language Selector -->
+        <div class="language-selector" id="languageSelector">
+          <button class="language-selector-button" aria-label="Select language">
+            <span class="language-flag">🇬🇧</span>
+            <span class="language-name">English</span>
+            <span class="language-arrow">▼</span>
+          </button>
+          <div class="language-selector-dropdown">
+            <!-- Language options will be populated by JavaScript -->
+          </div>
+        </div>
         <div class="notification-bell" id="notificationBell">
           <i class="fas fa-bell"></i>
           <span class="notification-badge" id="notificationBadge">3</span>
@@ -116,12 +127,12 @@
   <section id="home" class="hero">
     <div class="hero-container">
       <div class="hero-content">
-        <h1 class="hero-title">
+        <h1 class="hero-title" data-i18n="home.title">
           Reduce Food Waste,<br />
 
           <span class="gradient-text">Feed Communities</span>
         </h1>
-        <p class="hero-description">
+        <p class="hero-description" data-i18n="home.subtitle">
           Connect restaurants and households with NGOs and volunteers to
           redistribute fresh leftover food and fight hunger while reducing
           waste.
@@ -129,11 +140,11 @@
         <div class="hero-buttons">
           <button class="btn btn-primary" id="donateFood">
             <i class="fas fa-heart"></i>
-            Donate Food
+            <span data-i18n="home.donate_food">Donate Food</span>
           </button>
           <button class="btn btn-secondary" id="findFood" onclick="window.location.href='#listings'">
             <i class="fas fa-search"></i>
-            Find Food
+            <span data-i18n="home.find_food">Find Food</span>
           </button>
         </div>
         <div class="hero-stats">
@@ -185,43 +196,43 @@
   <section id="features" class="features">
     <div class="container">
       <div class="section-header">
-        <h2 class="section-title">How ShareBite Works</h2>
-        <p class="section-subtitle">Simple steps to make a difference</p>
+        <h2 class="section-title" data-i18n="about.how_it_works">How ShareBite Works</h2>
+        <p class="section-subtitle" data-i18n="about.subtitle">Simple steps to make a difference</p>
       </div>
       <div class="features-grid">
         <div class="feature-card" data-aos="fade-up">
           <div class="feature-icon donor-icon">
             <i class="fas fa-store"></i>
           </div>
-          <h3>List Your Food</h3>
+          <h3 data-i18n="about.step1">List Your Food</h3>
 
-          <p>
+          <p data-i18n="about.step1_description">
             Restaurants and households can easily list fresh leftover food
             with details about quantity, type, and pickup location.
           </p>
-          <div class="feature-step">Step 1</div>
+          <div class="feature-step" data-i18n="about.step1_label">Step 1</div>
         </div>
         <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
           <div class="feature-icon connector-icon">
             <i class="fas fa-handshake"></i>
           </div>
-          <h3>Connect & Coordinate</h3>
-          <p>
+          <h3 data-i18n="about.step2">Connect & Coordinate</h3>
+          <p data-i18n="about.step2_description">
             Our platform connects donors with NGOs, shelters, and volunteers
             for seamless pickup coordination.
           </p>
-          <div class="feature-step">Step 2</div>
+          <div class="feature-step" data-i18n="about.step2_label">Step 2</div>
         </div>
         <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
           <div class="feature-icon collector-icon">
             <i class="fas fa-heart"></i>
           </div>
-          <h3>Feed Communities</h3>
-          <p>
+          <h3 data-i18n="about.step3">Feed Communities</h3>
+          <p data-i18n="about.step3_description">
             Collected food reaches those who need it most, reducing waste
             while fighting hunger in local communities.
           </p>
-          <div class="feature-step">Step 3</div>
+          <div class="feature-step" data-i18n="about.step3_label">Step 3</div>
         </div>
       </div>
     </div>
@@ -231,43 +242,43 @@
   <section id="listings" class="listings">
     <div class="container">
       <div class="section-header">
-        <h2 class="section-title">Food Listings</h2>
-        <p class="section-subtitle">Available food waiting to be collected</p>
+        <h2 class="section-title" data-i18n="listings.title">Food Listings</h2>
+        <p class="section-subtitle" data-i18n="listings.subtitle">Available food waiting to be collected</p>
       </div>
 
       <div class="filter-bar">
         <div class="filter-group">
-          <button class="filter-btn active" data-filter="all">All</button>
-          <button class="filter-btn" data-filter="restaurant">
+          <button class="filter-btn active" data-filter="all" data-i18n="listings.filter.all">All</button>
+          <button class="filter-btn" data-filter="restaurant" data-i18n="listings.filter.restaurant">
             Restaurant
           </button>
-          <button class="filter-btn" data-filter="household">
+          <button class="filter-btn" data-filter="household" data-i18n="listings.filter.household">
             Household
           </button>
-          <button class="filter-btn" data-filter="bakery">Bakery</button>
+          <button class="filter-btn" data-filter="bakery" data-i18n="listings.filter.bakery">Bakery</button>
         </div>
 
         <div class="dropdown-check-container">
           <button class="dropdown-btn" id="dietary-filter-btn">
-            <span>Dietary Filters</span>
+            <span data-i18n="listings.dietary_filters">Dietary Filters</span>
             <i class="fas fa-chevron-down"></i>
           </button>
           <div class="dropdown-content" id="dietary-dropdown">
-            <label><input type="checkbox" name="dietary-filter" value="vegetarian"> Vegetarian</label>
-            <label><input type="checkbox" name="dietary-filter" value="vegan"> Vegan</label>
-            <label><input type="checkbox" name="dietary-filter" value="gluten-free"> Gluten-Free</label>
-            <label><input type="checkbox" name="dietary-filter" value="dairy-free"> Dairy-Free</label>
-            <label><input type="checkbox" name="dietary-filter" value="non-vegetarian"> Non-Vegetarian</label>
+            <label><input type="checkbox" name="dietary-filter" value="vegetarian"> <span data-i18n="listings.dietary.vegetarian">Vegetarian</span></label>
+            <label><input type="checkbox" name="dietary-filter" value="vegan"> <span data-i18n="listings.dietary.vegan">Vegan</span></label>
+            <label><input type="checkbox" name="dietary-filter" value="gluten-free"> <span data-i18n="listings.dietary.gluten_free">Gluten-Free</span></label>
+            <label><input type="checkbox" name="dietary-filter" value="dairy-free"> <span data-i18n="listings.dietary.dairy_free">Dairy-Free</span></label>
+            <label><input type="checkbox" name="dietary-filter" value="non-vegetarian"> <span data-i18n="listings.dietary.non_vegetarian">Non-Vegetarian</span></label>
           </div>
         </div>
 
         <div class="search-box">
           <i class="fas fa-search"></i>
-          <input type="text" placeholder="Search by location or food type..." />
+          <input type="text" data-i18n-placeholder="listings.search.placeholder" placeholder="Search by location or food type..." />
         </div>
         <button class="add-listing-btn" id="addListingBtn">
           <i class="fas fa-plus"></i>
-          Add Listing
+          <span data-i18n="listings.add_listing">Add Listing</span>
         </button>
       </div>
 
@@ -276,7 +287,7 @@
         <!-- Sample listings will be generated by JavaScript -->
       </div>
       <div class="learn-more-container">
-        <a class="learn-more-btn" id="learnMoreBtn" href="#listings">
+        <a class="learn-more-btn" id="learnMoreBtn" href="#listings" data-i18n="listings.explore_more">
           Explore More
         </a>
       </div>
@@ -437,8 +448,8 @@
 
         <!-- LEFT: TEXT -->
         <div class="about-text">
-          <h2>About ShareBite</h2>
-          <p>
+          <h2 data-i18n="about.title">About ShareBite</h2>
+          <p data-i18n="about.mission_text">
             ShareBite is a revolutionary platform designed to tackle food waste while
             addressing hunger in communities. We believe that fresh, good food should
             never go to waste when there are people who need it.
@@ -449,25 +460,25 @@
 
             <div class="impact-bubble zig-1">
               <i class="fas fa-leaf"></i>
-              <strong>Environmental Impact</strong>
-              <span>Reducing carbon footprint through waste reduction</span>
+              <strong data-i18n="about.environmental_impact">Environmental Impact</strong>
+              <span data-i18n="about.environmental_impact_desc">Reducing carbon footprint through waste reduction</span>
             </div>
 
             <div class="impact-bubble zig-2">
               <i class="fas fa-users"></i>
-              <strong>Community Support</strong>
-              <span>Connecting businesses with local communities</span>
+              <strong data-i18n="about.community_support">Community Support</strong>
+              <span data-i18n="about.community_support_desc">Connecting businesses with local communities</span>
             </div>
 
             <div class="impact-bubble zig-3">
               <i class="fas fa-seedling"></i>
-              <strong>Sustainable Growth</strong>
-              <span>Building a sustainable food ecosystem</span>
+              <strong data-i18n="about.sustainable_growth">Sustainable Growth</strong>
+              <span data-i18n="about.sustainable_growth_desc">Building a sustainable food ecosystem</span>
             </div>
 
             <div class="impact-bubble zig-4 stat">
               <strong class="stat-value">40%</strong>
-              <span>Food Waste Reduced</span>
+              <span data-i18n="about.food_waste_reduced">Food Waste Reduced</span>
             </div>
 
             <!-- decorative bubbles -->
@@ -480,15 +491,15 @@
 
           <!-- Flow -->
           <div class="about-flow">
-            <div class="flow-step">🍽 <span>Donor Lists Food</span></div>
+            <div class="flow-step">🍽 <span data-i18n="about.flow.donor_lists">Donor Lists Food</span></div>
             <div class="flow-arrow">→</div>
-            <div class="flow-step">🤝 <span>NGO Accepts</span></div>
+            <div class="flow-step">🤝 <span data-i18n="about.flow.ngo_accepts">NGO Accepts</span></div>
             <div class="flow-arrow">→</div>
-            <div class="flow-step">❤️ <span>Food Reaches People</span></div>
+            <div class="flow-step">❤️ <span data-i18n="about.flow.food_reaches">Food Reaches People</span></div>
           </div>
 
           <div class="about-cta">
-            <a href="login.html" class="cta-btn">Join the Mission</a>
+            <a href="login.html" class="cta-btn" data-i18n="about.join_mission">Join the Mission</a>
           </div>
         </div>
 
@@ -509,8 +520,8 @@
   <section id="gallery" class="gallery-showcase">
     <div class="container-fluid" style="margin: 0px 20px; margin-top: 40px;">
       <div class="section-header">
-        <h2 class="section-title">Our Impact Gallery</h2>
-        <p class="section-subtitle">Moments of making a difference, one meal at a time</p>
+        <h2 class="section-title" data-i18n="gallery.title">Our Impact Gallery</h2>
+        <p class="section-subtitle" data-i18n="gallery.subtitle">Moments of making a difference, one meal at a time</p>
       </div>
 
       <div class="gallery-grid">
@@ -520,9 +531,9 @@
             alt="Community Food Distribution">
           <div class="gallery-overlay">
             <div class="gallery-info">
-              <h3>Community Food Distribution</h3>
-              <p>Serving 500+ meals to local communities</p>
-              <span class="gallery-tag"><i class="fas fa-users"></i> Community</span>
+              <h3 data-i18n="gallery.items.community.title">Community Food Distribution</h3>
+              <p data-i18n="gallery.items.community.description">Serving 500+ meals to local communities</p>
+              <span class="gallery-tag"><i class="fas fa-users"></i> <span data-i18n="gallery.items.community.tag">Community</span></span>
             </div>
           </div>
         </div>
@@ -532,9 +543,9 @@
           <img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?w=400" alt="Fresh Produce">
           <div class="gallery-overlay">
             <div class="gallery-info">
-              <h3>Fresh Produce</h3>
-              <p>Daily vegetable donations</p>
-              <span class="gallery-tag"><i class="fas fa-leaf"></i> Donation</span>
+              <h3 data-i18n="gallery.items.fresh_produce.title">Fresh Produce</h3>
+              <p data-i18n="gallery.items.fresh_produce.description">Daily vegetable donations</p>
+              <span class="gallery-tag"><i class="fas fa-leaf"></i> <span data-i18n="gallery.items.fresh_produce.tag">Donation</span></span>
             </div>
           </div>
         </div>
@@ -544,9 +555,9 @@
           <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600" alt="Restaurant Partnership">
           <div class="gallery-overlay">
             <div class="gallery-info">
-              <h3>Restaurant Partnership</h3>
-              <p>Quality meals from local restaurants</p>
-              <span class="gallery-tag"><i class="fas fa-store"></i> Restaurant</span>
+              <h3 data-i18n="gallery.items.restaurant.title">Restaurant Partnership</h3>
+              <p data-i18n="gallery.items.restaurant.description">Quality meals from local restaurants</p>
+              <span class="gallery-tag"><i class="fas fa-store"></i> <span data-i18n="gallery.items.restaurant.tag">Restaurant</span></span>
             </div>
           </div>
         </div>
@@ -556,9 +567,9 @@
           <img src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=400" alt="Volunteer Team">
           <div class="gallery-overlay">
             <div class="gallery-info">
-              <h3>Volunteer Team</h3>
-              <p>Dedicated volunteers in action</p>
-              <span class="gallery-tag"><i class="fas fa-hands-helping"></i> Volunteers</span>
+              <h3 data-i18n="gallery.items.volunteers.title">Volunteer Team</h3>
+              <p data-i18n="gallery.items.volunteers.description">Dedicated volunteers in action</p>
+              <span class="gallery-tag"><i class="fas fa-hands-helping"></i> <span data-i18n="gallery.items.volunteers.tag">Volunteers</span></span>
             </div>
           </div>
         </div>
@@ -568,9 +579,9 @@
           <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800" alt="Bakery Donations">
           <div class="gallery-overlay">
             <div class="gallery-info">
-              <h3>Bakery Donations</h3>
-              <p>Fresh bread and pastries daily</p>
-              <span class="gallery-tag"><i class="fas fa-bread-slice"></i> Bakery</span>
+              <h3 data-i18n="gallery.items.bakery.title">Bakery Donations</h3>
+              <p data-i18n="gallery.items.bakery.description">Fresh bread and pastries daily</p>
+              <span class="gallery-tag"><i class="fas fa-bread-slice"></i> <span data-i18n="gallery.items.bakery.tag">Bakery</span></span>
             </div>
           </div>
         </div>
@@ -580,9 +591,9 @@
           <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=600" alt="Food Drive Event">
           <div class="gallery-overlay">
             <div class="gallery-info">
-              <h3>Food Drive Event</h3>
-              <p>Monthly community gatherings</p>
-              <span class="gallery-tag"><i class="fas fa-calendar-alt"></i> Events</span>
+              <h3 data-i18n="gallery.items.events.title">Food Drive Event</h3>
+              <p data-i18n="gallery.items.events.description">Monthly community gatherings</p>
+              <span class="gallery-tag"><i class="fas fa-calendar-alt"></i> <span data-i18n="gallery.items.events.tag">Events</span></span>
             </div>
           </div>
         </div>
@@ -592,9 +603,9 @@
           <img src="https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=400" alt="Happy Recipients">
           <div class="gallery-overlay">
             <div class="gallery-info">
-              <h3>Happy Recipients</h3>
-              <p>Making smiles, one meal at a time</p>
-              <span class="gallery-tag"><i class="fas fa-heart"></i> Impact</span>
+              <h3 data-i18n="gallery.items.happy_recipients.title">Happy Recipients</h3>
+              <p data-i18n="gallery.items.happy_recipients.description">Making smiles, one meal at a time</p>
+              <span class="gallery-tag"><i class="fas fa-heart"></i> <span data-i18n="gallery.items.happy_recipients.tag">Impact</span></span>
             </div>
           </div>
         </div>
@@ -604,9 +615,9 @@
           <img src="https://images.unsplash.com/photo-1593113646773-028c64a8f1b8?w=600" alt="NGO Partnership">
           <div class="gallery-overlay">
             <div class="gallery-info">
-              <h3>NGO Partnership</h3>
-              <p>Working with 85+ NGO partners</p>
-              <span class="gallery-tag"><i class="fas fa-handshake"></i> NGO</span>
+              <h3 data-i18n="gallery.items.ngo.title">NGO Partnership</h3>
+              <p data-i18n="gallery.items.ngo.description">Working with 85+ NGO partners</p>
+              <span class="gallery-tag"><i class="fas fa-handshake"></i> <span data-i18n="gallery.items.ngo.tag">NGO</span></span>
             </div>
           </div>
         </div>
@@ -617,9 +628,9 @@
             alt="Happy Recipients">
           <div class="gallery-overlay">
             <div class="gallery-info">
-              <h3>Happy Recipients</h3>
-              <p>Happiness of the poor children.</p>
-              <span class="gallery-tag"><i class="fas fa-heart"></i> Impact</span>
+              <h3 data-i18n="gallery.items.happy_children.title">Happy Recipients</h3>
+              <p data-i18n="gallery.items.happy_children.description">Happiness of the poor children.</p>
+              <span class="gallery-tag"><i class="fas fa-heart"></i> <span data-i18n="gallery.items.happy_children.tag">Impact</span></span>
             </div>
           </div>
         </div>
@@ -630,9 +641,9 @@
             alt="NGO Partnership">
           <div class="gallery-overlay">
             <div class="gallery-info">
-              <h3>Partnership</h3>
-              <p>Diverse group of people sorting donated food for those in need while working at community center.</p>
-              <span class="gallery-tag"><i class="fas fa-handshake"></i> NGO</span>
+              <h3 data-i18n="gallery.items.partnership.title">Partnership</h3>
+              <p data-i18n="gallery.items.partnership.description">Diverse group of people sorting donated food for those in need while working at community center.</p>
+              <span class="gallery-tag"><i class="fas fa-handshake"></i> <span data-i18n="gallery.items.partnership.tag">NGO</span></span>
             </div>
           </div>
         </div>
@@ -667,8 +678,8 @@
 
     <div class="container">
       <div class="section-header" style="margin: 0;">
-        <h2 class="section-title">What People Say</h2>
-        <p class="section-subtitle">Real stories from our amazing community</p>
+        <h2 class="section-title" data-i18n="testimonials.title">What People Say</h2>
+        <p class="section-subtitle" data-i18n="testimonials.subtitle">Real stories from our amazing community</p>
       </div>
 
       <div class="testimonials-carousel">
@@ -681,8 +692,8 @@
                 <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah Johnson">
               </div>
               <div class="testimonial-author">
-                <h4>Sarah Johnson</h4>
-                <p class="testimonial-role">Restaurant Owner</p>
+                <h4 data-i18n="testimonials.sarah.name">Sarah Johnson</h4>
+                <p class="testimonial-role" data-i18n="testimonials.sarah.role">Restaurant Owner</p>
                 <div class="testimonial-rating">
                   <i class="fas fa-star"></i>
                   <i class="fas fa-star"></i>
@@ -694,11 +705,11 @@
             </div>
             <div class="testimonial-content">
               <i class="fas fa-quote-left testimonial-quote"></i>
-              <p>ShareBite has transformed how we handle excess food at our restaurant. Instead of wasting perfectly
+              <p data-i18n="testimonials.sarah.testimonial">ShareBite has transformed how we handle excess food at our restaurant. Instead of wasting perfectly
                 good meals, we now connect with local shelters. It feels amazing to make a real difference!</p>
               <div class="testimonial-meta">
-                <span><i class="fas fa-map-marker-alt"></i> New York, USA</span>
-                <span><i class="fas fa-calendar"></i> Member since 2023</span>
+                <span><i class="fas fa-map-marker-alt"></i> <span data-i18n="testimonials.sarah.location">New York, USA</span></span>
+                <span><i class="fas fa-calendar"></i> <span data-i18n="testimonials.sarah.member_since">Member since 2023</span></span>
               </div>
             </div>
           </div>
@@ -710,8 +721,8 @@
                 <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Michael Chen">
               </div>
               <div class="testimonial-author">
-                <h4>Michael Chen</h4>
-                <p class="testimonial-role">NGO Coordinator</p>
+                <h4 data-i18n="testimonials.michael.name">Michael Chen</h4>
+                <p class="testimonial-role" data-i18n="testimonials.michael.role">NGO Coordinator</p>
                 <div class="testimonial-rating">
                   <i class="fas fa-star"></i>
                   <i class="fas fa-star"></i>
@@ -723,11 +734,11 @@
             </div>
             <div class="testimonial-content">
               <i class="fas fa-quote-left testimonial-quote"></i>
-              <p>This platform has been a game-changer for our food distribution efforts. We can now reach more families
+              <p data-i18n="testimonials.michael.testimonial">This platform has been a game-changer for our food distribution efforts. We can now reach more families
                 in need and coordinate pickups seamlessly. The impact on our community has been tremendous!</p>
               <div class="testimonial-meta">
-                <span><i class="fas fa-map-marker-alt"></i> San Francisco, USA</span>
-                <span><i class="fas fa-calendar"></i> Member since 2022</span>
+                <span><i class="fas fa-map-marker-alt"></i> <span data-i18n="testimonials.michael.location">San Francisco, USA</span></span>
+                <span><i class="fas fa-calendar"></i> <span data-i18n="testimonials.michael.member_since">Member since 2022</span></span>
               </div>
             </div>
           </div>
@@ -739,8 +750,8 @@
                 <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Emily Rodriguez">
               </div>
               <div class="testimonial-author">
-                <h4>Emily Rodriguez</h4>
-                <p class="testimonial-role">Volunteer Coordinator</p>
+                <h4 data-i18n="testimonials.emily.name">Emily Rodriguez</h4>
+                <p class="testimonial-role" data-i18n="testimonials.emily.role">Volunteer Coordinator</p>
                 <div class="testimonial-rating">
                   <i class="fas fa-star"></i>
                   <i class="fas fa-star"></i>
@@ -752,12 +763,12 @@
             </div>
             <div class="testimonial-content">
               <i class="fas fa-quote-left testimonial-quote"></i>
-              <p>As a volunteer, ShareBite makes it so easy to find and claim food donations. The notification system
+              <p data-i18n="testimonials.emily.testimonial">As a volunteer, ShareBite makes it so easy to find and claim food donations. The notification system
                 keeps me updated, and I love seeing the positive impact we're making together in reducing food waste.
               </p>
               <div class="testimonial-meta">
-                <span><i class="fas fa-map-marker-alt"></i> Chicago, USA</span>
-                <span><i class="fas fa-calendar"></i> Member since 2023</span>
+                <span><i class="fas fa-map-marker-alt"></i> <span data-i18n="testimonials.emily.location">Chicago, USA</span></span>
+                <span><i class="fas fa-calendar"></i> <span data-i18n="testimonials.emily.member_since">Member since 2023</span></span>
               </div>
             </div>
           </div>
@@ -769,8 +780,8 @@
                 <img src="https://randomuser.me/api/portraits/men/56.jpg" alt="David Thompson">
               </div>
               <div class="testimonial-author">
-                <h4>David Thompson</h4>
-                <p class="testimonial-role">Bakery Manager</p>
+                <h4 data-i18n="testimonials.david.name">David Thompson</h4>
+                <p class="testimonial-role" data-i18n="testimonials.david.role">Bakery Manager</p>
                 <div class="testimonial-rating">
                   <i class="fas fa-star"></i>
                   <i class="fas fa-star"></i>
@@ -782,11 +793,11 @@
             </div>
             <div class="testimonial-content">
               <i class="fas fa-quote-left testimonial-quote"></i>
-              <p>Every evening, we have fresh bread and pastries left over. Thanks to ShareBite, these don't go to waste
+              <p data-i18n="testimonials.david.testimonial">Every evening, we have fresh bread and pastries left over. Thanks to ShareBite, these don't go to waste
                 anymore. It's incredibly rewarding to know our baked goods are feeding people who need them.</p>
               <div class="testimonial-meta">
-                <span><i class="fas fa-map-marker-alt"></i> Boston, USA</span>
-                <span><i class="fas fa-calendar"></i> Member since 2022</span>
+                <span><i class="fas fa-map-marker-alt"></i> <span data-i18n="testimonials.david.location">Boston, USA</span></span>
+                <span><i class="fas fa-calendar"></i> <span data-i18n="testimonials.david.member_since">Member since 2022</span></span>
               </div>
             </div>
           </div>
@@ -798,8 +809,8 @@
                 <img src="https://randomuser.me/api/portraits/women/28.jpg" alt="Priya Sharma">
               </div>
               <div class="testimonial-author">
-                <h4>Priya Sharma</h4>
-                <p class="testimonial-role">Community Leader</p>
+                <h4 data-i18n="testimonials.priya.name">Priya Sharma</h4>
+                <p class="testimonial-role" data-i18n="testimonials.priya.role">Community Leader</p>
                 <div class="testimonial-rating">
                   <i class="fas fa-star"></i>
                   <i class="fas fa-star"></i>
@@ -811,11 +822,11 @@
             </div>
             <div class="testimonial-content">
               <i class="fas fa-quote-left testimonial-quote"></i>
-              <p>ShareBite connects our entire community. From donors to recipients, everyone benefits. The platform is
+              <p data-i18n="testimonials.priya.testimonial">ShareBite connects our entire community. From donors to recipients, everyone benefits. The platform is
                 user-friendly, and the support team is always helpful. This is what social impact looks like!</p>
               <div class="testimonial-meta">
-                <span><i class="fas fa-map-marker-alt"></i> Seattle, USA</span>
-                <span><i class="fas fa-calendar"></i> Member since 2023</span>
+                <span><i class="fas fa-map-marker-alt"></i> <span data-i18n="testimonials.priya.location">Seattle, USA</span></span>
+                <span><i class="fas fa-calendar"></i> <span data-i18n="testimonials.priya.member_since">Member since 2023</span></span>
               </div>
             </div>
           </div>
@@ -853,7 +864,7 @@
           </div>
           <div class="testimonial-stat-info">
             <h3 class="testimonial-stat-number" data-target="2500">100+</h3>
-            <p>Active Users</p>
+            <p data-i18n="testimonials.stats.active_users">Active Users</p>
           </div>
         </div>
         <div class="testimonial-stat-item">
@@ -862,7 +873,7 @@
           </div>
           <div class="testimonial-stat-info">
             <h3 class="testimonial-stat-number">4.9</h3>
-            <p>Average Rating</p>
+            <p data-i18n="testimonials.stats.average_rating">Average Rating</p>
           </div>
         </div>
         <div class="testimonial-stat-item">
@@ -871,7 +882,7 @@
           </div>
           <div class="testimonial-stat-info">
             <h3 class="testimonial-stat-number" data-target="98">98%</h3>
-            <p>Satisfaction Rate</p>
+            <p data-i18n="testimonials.stats.satisfaction_rate">Satisfaction Rate</p>
           </div>
         </div>
       </div>
@@ -880,54 +891,54 @@
 
 
   <section id="contact-section" class="contact">
-    <h1 class="main-title">📞 Contact Us</h1>
+    <h1 class="main-title" data-i18n="contact.title">📞 Contact Us</h1>
     <div class="contact-wrapper">
       <div class="contact-container">
         <!-- Left: Form -->
         <div class="contact-left">
-          <h2 class="contact-title">💬 Do You Have a Question?</h2>
-          <p class="contact-subtitle">Fill out the form below to get started</p>
+          <h2 class="contact-title" data-i18n="contact.form_title">💬 Do You Have a Question?</h2>
+          <p class="contact-subtitle" data-i18n="contact.form_subtitle">Fill out the form below to get started</p>
 
           <form id="contact-form">
-            <label for="contact-name">Full Name:</label>
-            <input type="text" id="contact-name" placeholder="Enter your full name" />
+            <label for="contact-name" data-i18n="contact.name_label">Full Name:</label>
+            <input type="text" id="contact-name" data-i18n-placeholder="contact.name_placeholder" placeholder="Enter your full name" />
 
-            <label for="contact-email">Email:</label>
-            <input type="email" id="contact-email" placeholder="Enter your email" />
+            <label for="contact-email" data-i18n="contact.email_label">Email:</label>
+            <input type="email" id="contact-email" data-i18n-placeholder="contact.email_placeholder" placeholder="Enter your email" />
 
-            <label for="contact-msg">Message:</label>
-            <textarea id="contact-msg" placeholder="Type in your Message"></textarea>
+            <label for="contact-msg" data-i18n="contact.message_label">Message:</label>
+            <textarea id="contact-msg" data-i18n-placeholder="contact.message_placeholder" placeholder="Type in your Message"></textarea>
 
-            <button type="submit">Submit</button>
+            <button type="submit" data-i18n="contact.submit_button">Submit</button>
           </form>
         </div>
 
         <!-- Right: Info -->
         <div class="contact-right">
-          <h3>Get In Touch</h3>
-          <p>We love to hear from you. Our team is always here to answer your questions.</p>
+          <h3 data-i18n="contact.info_title">Get In Touch</h3>
+          <p data-i18n="contact.info_description">We love to hear from you. Our team is always here to answer your questions.</p>
 
           <div class="contact-info">
             <div class="info-item">
               <i class="fa-solid fa-house"></i>
               <div>
-                <strong>Address:</strong>
-                <p>ShareBite Building, Noida, India </p>
+                <strong data-i18n="contact.address_label">Address:</strong>
+                <p data-i18n="contact.address">ShareBite Building, Noida, India</p>
               </div>
             </div>
 
             <div class="info-item">
               <i class="fa-solid fa-phone"></i>
               <div>
-                <strong>Phone No.:</strong>
-                <p>+91 8888889999</p>
+                <strong data-i18n="contact.phone_label">Phone No.:</strong>
+                <p data-i18n="contact.phone">+91 8888889999</p>
               </div>
             </div>
 
             <div class="info-item">
               <i class="fa-solid fa-envelope"></i>
               <div>
-                <strong>Email:</strong>
+                <strong data-i18n="contact.email_label">Email:</strong>
                 <p id="contact-email-address"></p>
               </div>
             </div>
@@ -995,7 +1006,7 @@
           <i class="fas fa-utensils"></i>
           <span>ShareBite</span>
         </div>
-        <p>
+        <p data-i18n="footer.brand_description">
           Making a difference, one meal at a time.
           Join us in the fight against food waste and hunger.
         </p>
@@ -1010,32 +1021,32 @@
 
       <!-- Links -->
       <div class="footer-links">
-        <h4>Quick Links</h4>
+        <h4 data-i18n="footer.quick_links">Quick Links</h4>
         <ul>
-          <li><a href="#home">Home</a></li>
-          <li><a href="#features">How It Works</a></li>
-          <li><a href="#listings">Food Listings</a></li>
-          <li><a href="#about">About Us</a></li>
+          <li><a href="#home" data-i18n="nav.home">Home</a></li>
+          <li><a href="#features" data-i18n="nav.features">How It Works</a></li>
+          <li><a href="#listings" data-i18n="nav.listings">Food Listings</a></li>
+          <li><a href="#about" data-i18n="footer.about_us">About Us</a></li>
         </ul>
       </div>
 
       <div class="footer-links">
-        <h4>For Donors</h4>
+        <h4 data-i18n="footer.for_donors">For Donors</h4>
         <ul>
-          <li><a href="#listings">List Food</a></li>
-          <li><a href="donor-guidelines.html">Donor Guidelines</a></li>
-          <li><a href="track-impact.html">Track Impact</a></li>
-          <li><a href="support.html">Support</a></li>
+          <li><a href="#listings" data-i18n="footer.list_food">List Food</a></li>
+          <li><a href="donor-guidelines.html" data-i18n="footer.donor_guidelines">Donor Guidelines</a></li>
+          <li><a href="track-impact.html" data-i18n="footer.track_impact">Track Impact</a></li>
+          <li><a href="support.html" data-i18n="footer.support">Support</a></li>
         </ul>
       </div>
 
       <div class="footer-links">
-        <h4>For Collectors</h4>
+        <h4 data-i18n="footer.for_collectors">For Collectors</h4>
         <ul>
-          <li><a href="#">Find Food</a></li>
-          <li><a href="ngo-register.html">Register NGO</a></li>
-          <li><a href="volunteer_food.html">Volunteer</a></li>
-          <li><a href="#">Resources</a></li>
+          <li><a href="#" data-i18n="footer.find_food">Find Food</a></li>
+          <li><a href="ngo-register.html" data-i18n="footer.register_ngo">Register NGO</a></li>
+          <li><a href="volunteer_food.html" data-i18n="footer.volunteer">Volunteer</a></li>
+          <li><a href="#" data-i18n="footer.resources">Resources</a></li>
         </ul>
       </div>
 
@@ -1043,10 +1054,10 @@
 
     <!-- Footer Bottom -->
     <div class="footer-bottom">
-      <p>Made with 💚 by <strong>Angela Bera</strong></p>
+      <p data-i18n="footer.made_by">Made with 💚 by <strong>Angela Bera</strong></p>
       <p>
-        © <span id="current-year"></span> ShareBite. All rights reserved ·
-        <a href="License.html">License</a>
+        &copy; <span id="current-year"></span> ShareBite. <span data-i18n="footer.all_rights_reserved">All rights reserved</span> ·
+        <a href="License.html" data-i18n="footer.license">License</a>
       </p>
     </div>
 
@@ -1075,6 +1086,16 @@
 
 
 
+
+  <!-- Fonts for Indian Languages -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@300;400;500;600;700&family=Noto+Sans+Gujarati:wght@300;400;500;600;700&family=Noto+Sans+Tamil:wght@300;400;500;600;700&family=Noto+Sans+Telugu:wght@300;400;500;600;700&family=Noto+Sans+Gurmukhi:wght@300;400;500;600;700&family=Noto+Nastaliq+Urdu:wght@400;700&family=Noto+Sans+Malayalam:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- i18n System -->
+  <script type="module" src="js/i18n/config.js"></script>
+  <script type="module" src="js/i18n/i18n.js"></script>
+  <script type="module" src="js/i18n/languageSelector.js"></script>
 
   <script src="js/theme.js"></script>
   <script src="js/auth.js"></script>
