@@ -431,67 +431,67 @@
   </div>
 
   <!-- About Section -->
-  <section id="about" class="about">
+  <section id="about" class="about-section">
     <div class="container">
-      <div class="about-content">
-
-        <!-- LEFT: TEXT -->
-        <div class="about-text">
-          <h2>About ShareBite</h2>
-          <p>
-            ShareBite is a revolutionary platform designed to tackle food waste while
-            addressing hunger in communities. We believe that fresh, good food should
-            never go to waste when there are people who need it.
+      <div class="about-grid">
+        <!-- Left Column: Text & Stats -->
+        <div class="about-content-left">
+          <h2 class="about-headline">Our Mission to <br> <span class="gradient-text">End Hunger</span></h2>
+          <p class="about-description">
+            ShareBite bridges the gap between abundance and need. We connect local restaurants, bakeries, and households
+            with NGOs to redistribute fresh, surplus food to those who need it most. Together, we can create a
+            sustainable future where no good food goes to waste.
           </p>
 
-          <!-- Impact Bubbles -->
-          <div class="impact-bubbles horizontal">
-
-            <div class="impact-bubble zig-1">
-              <i class="fas fa-leaf"></i>
-              <strong>Environmental Impact</strong>
-              <span>Reducing carbon footprint through waste reduction</span>
+          <div class="about-stats-container">
+            <div class="impact-stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-utensils"></i>
+              </div>
+              <div class="stat-info">
+                <span class="stat-value">1500+</span>
+                <span class="stat-desc">Meals Saved</span>
+              </div>
             </div>
 
-            <div class="impact-bubble zig-2">
-              <i class="fas fa-users"></i>
-              <strong>Community Support</strong>
-              <span>Connecting businesses with local communities</span>
+            <div class="impact-stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-hand-holding-heart"></i>
+              </div>
+              <div class="stat-info">
+                <span class="stat-value">85+</span>
+                <span class="stat-desc">NGO Partners</span>
+              </div>
             </div>
-
-            <div class="impact-bubble zig-3">
-              <i class="fas fa-seedling"></i>
-              <strong>Sustainable Growth</strong>
-              <span>Building a sustainable food ecosystem</span>
-            </div>
-
-            <div class="impact-bubble zig-4 stat">
-              <strong class="stat-value">40%</strong>
-              <span>Food Waste Reduced</span>
-            </div>
-
-            <!-- decorative bubbles -->
-            <span class="decor-bubble d1"></span>
-            <span class="decor-bubble d2"></span>
-            <span class="decor-bubble d3"></span>
-
           </div>
 
-
-          <!-- Flow -->
-          <div class="about-flow">
-            <div class="flow-step">🍽 <span>Donor Lists Food</span></div>
-            <div class="flow-arrow">→</div>
-            <div class="flow-step">🤝 <span>NGO Accepts</span></div>
-            <div class="flow-arrow">→</div>
-            <div class="flow-step">❤️ <span>Food Reaches People</span></div>
-          </div>
-
-          <div class="about-cta">
-            <a href="login.html" class="cta-btn">Join the Mission</a>
-          </div>
+          <button class="btn btn-primary" onclick="window.location.href='login.html'">
+            Join the Mission <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
+          </button>
         </div>
 
+        <!-- Right Column: Visuals -->
+        <div class="about-visuals">
+          <div class="about-blob"></div>
+
+          <div class="glass-card main-card">
+            <div class="card-icon-wrapper">
+              <i class="fas fa-heart"></i>
+            </div>
+            <h4>ShareBite Impact</h4>
+            <p style="color: var(--medium-gray); font-size: 0.9rem;">Connecting communities, one meal at a time.</p>
+          </div>
+
+          <div class="glass-card float-card card-top">
+            <i class="fas fa-check-circle"></i>
+            <span>Verified Partners</span>
+          </div>
+
+          <div class="glass-card float-card card-bottom">
+            <i class="fas fa-bolt"></i>
+            <span>Fast Pickup</span>
+          </div>
+        </div>
       </div>
     </div>
   </section>
