@@ -1,4 +1,5 @@
 // ShareBite JavaScript - Interactive Food Waste Reduction Platform
+console.log("✅ foodlisting.js loaded");
 
 class ShareBiteFoodListing {
     constructor() {
@@ -1618,3 +1619,118 @@ window.clearShareBiteCaches = async function() {
         console.log('[ShareBite] Sent SKIP_WAITING to service worker');
     }
 };
+document.addEventListener("DOMContentLoaded", () => {
+  const listingForm = document.getElementById("listingForm");
+  if (!listingForm) return;
+
+  // Inputs
+  const foodType = document.getElementById("foodType");
+  const quantity = document.getElementById("quantity");
+  const category = document.getElementById("category");
+  const freshUntil = document.getElementById("freshUntil");
+  const pickupTime = document.getElementById("pickupTime");
+  const location = document.getElementById("location");
+  const contact = document.getElementById("contact");
+
+  // Error elements
+  const foodTypeError = document.getElementById("foodTypeError");
+  const quantityError = document.getElementById("quantityError");
+  const categoryError = document.getElementById("categoryError");
+  const freshUntilError = document.getElementById("freshUntilError");
+  const pickupTimeError = document.getElementById("pickupTimeError");
+  const locationError = document.getElementById("locationError");
+  const contactError = document.getElementById("contactError");
+
+  const clearAllErrors = () => {
+    foodTypeError.textContent = "";
+    quantityError.textContent = "";
+    categoryError.textContent = "";
+    freshUntilError.textContent = "";
+    pickupTimeError.textContent = "";
+    locationError.textContent = "";
+    contactError.textContent = "";
+  };
+
+  const validateListingForm = () => {
+    clearAllErrors();
+    let isValid = true;
+
+    // ✅ Required: foodType
+    if (!foodType.value.trim()) {
+      foodTypeError.textContent = "Food type is required";
+      isValid = false;
+    }
+
+    // ✅ Quantity must be positive number
+    const qtyValue = quantity.value.trim();
+    const qtyNumber = Number(qtyValue);
+
+    if (!qtyValue) {
+      quantityError.textContent = "Quantity is required";
+      isValid = false;
+    } else if (Number.isNaN(qtyNumber) || qtyNumber <= 0) {
+      quantityError.textContent = "Quantity must be a valid positive number";
+      isValid = false;
+    }
+
+    // ✅ Required: category
+    if (!category.value) {
+      categoryError.textContent = "Category is required";
+      isValid = false;
+    }
+
+    // ✅ Expiry date/time must not be in past
+    if (!freshUntil.value) {
+      freshUntilError.textContent = "Fresh until date/time is required";
+      isValid = false;
+    } else {
+      const selectedDate = new Date(freshUntil.value);
+      const now = new Date();
+
+      if (selectedDate <= now) {
+        freshUntilError.textContent = "Expiry date/time cannot be in the past";
+        isValid = false;
+      }
+    }
+
+    // ✅ Required: pickupTime
+    if (!pickupTime.value) {
+      pickupTimeError.textContent = "Pickup time is required";
+      isValid = false;
+    }
+
+    // ✅ Required: location
+    if (!location.value.trim()) {
+      locationError.textContent = "Pickup location is required";
+      isValid = false;
+    }
+
+    // ✅ Required: contact
+    if (!contact.value.trim()) {
+      contactError.textContent = "Contact information is required";
+      isValid = false;
+    }
+
+    return isValid;
+  };
+
+  listingForm.addEventListener("submit", (e) => {
+    const ok = validateListingForm();
+    if (!ok) e.preventDefault();
+  });
+
+  // ✅ Live validation (errors disappear while fixing)
+  [
+    foodType,
+    quantity,
+    category,
+    freshUntil,
+    pickupTime,
+    location,
+    contact,
+  ].forEach((el) => {
+    el.addEventListener("input", validateListingForm);
+    el.addEventListener("change", validateListingForm);
+  });
+});
+

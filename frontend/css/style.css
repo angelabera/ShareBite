@@ -5414,3 +5414,10 @@ body.dark-mode .notification-bell:hover {
         background-color: #4CAF50 !important; /* Forces green lines */
     }
 }
+.error-text {
+  color: #ff3b30;
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+}
+
