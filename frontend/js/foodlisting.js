@@ -17,6 +17,11 @@ class ShareBiteFoodListing {
     }
 
     init() {
+        // Refresh expiry countdown every minute
+setInterval(() => {
+    this.renderFoodListings();
+}, 60000);
+
         this.setupEventListeners();
         this.loadListingsFromDB();
         this.renderFoodListings();
@@ -161,30 +166,66 @@ class ShareBiteFoodListing {
     const closeModalBtn = document.querySelector('.close-modal');
     const cancelBtn = document.getElementById('cancelForm');
 
-    this.currentStep = 1;
-    this.totalSteps = 3;
-
-    addListingBtn.addEventListener('click', () => {
-        modal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-        this.resetFormSteps();
-    });
-
     const closeModal = () => {
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-        this.resetForm();
-        this.resetFormSteps();
-    };
+      // Ask user for confirmation before cancelling
+      if (!confirm("Are you sure you want to cancel this food pickup?")) {
+           return; // cancellation aborted
+      }
 
-    closeModalBtn.addEventListener('click', closeModal);
-    cancelBtn.addEventListener('click', closeModal);
+     // Close modal and restore page state
+     modal.style.display = 'none';
+     document.body.style.overflow = 'auto';
+
+     // Reset form steps to initial state
+     this.resetFormSteps();
+    };
     
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeModal();
-        }
-    });
+     // Cancel button (needs preventDefault)
+    
+    cancelBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    closeModal();
+  });
+   
+
+cancelBtn.addEventListener(
+  'click',
+  (e) => {
+    e.preventDefault();
+    e.stopImmediatePropagation(); // blocks other handlers
+
+    const confirmCancel = window.confirm(
+      "You have unsaved changes. Are you sure you want to cancel?"
+    );
+
+    if (confirmCancel) {
+      closeModal();
+    }
+  },
+  true // capture phase
+);
+
+
+closeModalBtn.addEventListener('click', closeModal);
+
+
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) {
+    closeModal();
+  }
+});
+
+// Reset steps
+this.currentStep = 1;
+this.totalSteps = 3;
+
+// Open modal
+addListingBtn.addEventListener('click', () => {
+  modal.style.display = 'block';
+  document.body.style.overflow = 'hidden';
+  this.resetFormSteps();
+});
+
 
     this.setupFileUpload();
     this.setupFormNavigation();
@@ -777,27 +818,53 @@ handleFileSelect(file) {
         return futureDate.toISOString().slice(0, 16);
     }
 
-    renderFoodListings() {
-        const foodGrid = document.getElementById('foodGrid');
-        
-        if (this.filteredListings.length === 0) {
-            foodGrid.innerHTML = `
-                <div class="no-listings">
-                    <i class="fas fa-search" style="font-size: 3rem; color: var(--medium-gray); margin-bottom: 1rem;"></i>
-                    <h3>No listings found</h3>
-                    <p>Try adjusting your filters or search terms.</p>
-                </div>
-            `;
-            return;
-        }
-        
-        foodGrid.innerHTML = this.filteredListings.map(listing => this.createFoodCard(listing)).join('');
-        
+     renderFoodListings() {
+  const foodGrid = document.getElementById('foodGrid');
+
+  // CASE 1: No food listings at all (backend empty / first load)
+  if (!this.foodListings || this.foodListings.length === 0) {
+     foodGrid.innerHTML = `
+         <div class="empty-state">
+            <i class="fas fa-utensils" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem;"></i>
+            <p>No food listings available right now 🍽️</p>
+            <span>Check back later!</span>
+        </div>
+`       ;
+     return;
+  }
+
+  // CASE 2: Listings exist, but filters remove all
+  if (this.filteredListings.length === 0) {
+    foodGrid.innerHTML = `
+      <div class="no-listings">
+        <i class="fas fa-search" style="font-size: 3rem; color: var(--medium-gray); margin-bottom: 1rem;"></i>
+        <h3>No listings found</h3>
+        <p>Try adjusting your filters or search terms.</p>
+      </div>
+    `;
+    return;
+  }
+
+  // ✅ CASE 3: Show listings
+    foodGrid.innerHTML = this.filteredListings
+    .map(listing => this.createFoodCard(listing))
+    .join('');
+      
         // Add event listeners to food cards
         this.setupFoodCardInteractions();
     }
 
     createClaimButton(listing) {
+        const expiryStatus = this.getExpiryStatus(listing.freshUntil);
+
+if (expiryStatus.expired) {
+    return `
+        <button class="claim-btn expired" disabled>
+            <i class="fas fa-times-circle"></i> Expired
+        </button>
+    `;
+}
+
         const isClaimed = this.claimedItems.includes(listing.id);
         const isCollector = this.currentRole === 'collector';
         const username = JSON.parse(localStorage.getItem('user'))?.name;
@@ -837,7 +904,12 @@ handleFileSelect(file) {
     const contact = listing.contactInfo || listing.contact;
     const timeAgo = this.getTimeAgo(listing.createdAt);
     const freshUntil = this.formatDateTime(listing.freshUntil);
+    const urgency = this.getUrgencyStatus(listing.freshUntil);
     const isClaimed = this.claimedItems.includes(listing.id);
+    
+    const statusClass = isClaimed ? 'reserved' : 'available';
+    const statusText = isClaimed ? 'Reserved' : 'Available';
+
 
     // *** MODIFIED LOGIC START ***
     let imgSource = '';
@@ -867,9 +939,13 @@ handleFileSelect(file) {
     
     // The main HTML template now uses the correctly generated imageHTML
     return `
-        <div class="food-card ${isClaimed ? 'claimed' : ''}" 
+        <div class="food-card ${isClaimed ? 'claimed' : ''} ${statusClass}"
              data-id="${listing.id}" 
              data-tags="${listing.dietaryTags ? listing.dietaryTags.join(',') : ''}">
+             
+             <span class="status-badge ${statusClass}">${statusText}</span>
+
+             
             <div class="food-image">
                 ${imageHTML}
                 <div class="food-category">${this.capitalizeFirst(listing.category)}</div>
@@ -878,10 +954,22 @@ handleFileSelect(file) {
                 <h3 class="food-title">${listing.foodType}</h3>
                 ${tagsHTML} 
                 <p class="food-description">${listing.description}</p>
-                <div class="food-meta">
-                    <span class="quantity"><i class="fas fa-utensils"></i> ${listing.quantity}</span>
-                    <span class="freshness"><i class="fas fa-clock"></i> ${freshUntil}</span>
-                </div>
+            <div class="food-meta" aria-describedby="foodMetaHelp-${listing.id}">
+                <span class="quantity">
+                <i class="fas fa-utensils"></i>
+                   Quantity: ${listing.quantity || "Not available"}
+                </span>
+                <span class="freshness">
+                <i class="fas fa-clock"></i>
+                  Expiry: ${freshUntil || "Not available"}
+                </span>
+             </div>
+
+            <p id="foodMetaHelp-${listing.id}" class="sr-only">
+                Food listing details: expiry time and available quantity.
+            </p>
+
+
                 <div class="food-location">
                     <i class="fas fa-map-marker-alt"></i>
                     <span>${listing.location}</span>
@@ -1037,6 +1125,21 @@ handleFileSelect(file) {
             return `${days}d left`;
         }
     }
+    getUrgencyStatus(freshUntil) {
+    const now = new Date();
+    const expiry = new Date(freshUntil);
+    const diffMs = expiry - now;
+    const hoursLeft = diffMs / (1000 * 60 * 60);
+
+    if (hoursLeft > 6) {
+        return { label: "🟢 Fresh", className: "fresh" };
+    } else if (hoursLeft > 2) {
+        return { label: "🟡 Expiring Soon", className: "expiring" };
+    } else {
+        return { label: "🔴 Urgent", className: "urgent" };
+    }
+}
+
 
     formatTime(timeString) {
         const [hours, minutes] = timeString.split(':');
