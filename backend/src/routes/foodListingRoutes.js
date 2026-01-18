@@ -11,6 +11,9 @@ const {
   deleteListing,
   claimListing,
 } = require('../controllers/foodListingController');
+const {
+  getRecommendedDonations
+} = require("../controllers/donationController");
 
 const router = express.Router();
 
@@ -47,6 +50,8 @@ router.post(
 // 🔹 SPECIAL ROUTES (STATIC — MUST COME FIRST)
 router.get('/nearby', protect, getNearbyListings);
 router.get('/city', protect, getCityListings);
+router.get('/recommendations', protect, getRecommendedDonations);
+
 
 // 🔹 GENERAL ROUTES (DYNAMIC — LAST)
 router.put('/:id/claim', protect, claimListing);
