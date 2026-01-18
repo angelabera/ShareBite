@@ -723,17 +723,7 @@ body.dark .profile-menu-item:hover {
                 z-index: 2000; /* higher than hero */
               }
             
-                background: var(--bg-black) !important;
-                color: white;
-                flex-direction: column;
-                align-items: stretch;
-                gap: 0;
-                max-height: 0;
-                overflow: hidden;
-                transition: max-height 0.3s ease;
-                box-shadow: var(--shadow);
-            }
-
+              
             .nav-menu.active {
                 display: flex;
             }

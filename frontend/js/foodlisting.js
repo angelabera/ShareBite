@@ -1,5 +1,5 @@
 // ShareBite JavaScript - Interactive Food Waste Reduction Platform
-console.log("✅ foodlisting.js loaded");
+
 
 class ShareBiteFoodListing {
     constructor() {
