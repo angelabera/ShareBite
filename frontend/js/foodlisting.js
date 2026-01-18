@@ -185,28 +185,46 @@ setInterval(() => {
     event.preventDefault();
     closeModal();
   });
-    
-    // ✅ X (close) button
+   
 
-    closeModalBtn.addEventListener('click', closeModal);
-    
-     // ✅ Click outside modal
-    
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeModal();
-        }
-    });
-    
-    this.currentStep = 1;
-    this.totalSteps = 3;
+cancelBtn.addEventListener(
+  'click',
+  (e) => {
+    e.preventDefault();
+    e.stopImmediatePropagation(); // blocks other handlers
 
-    
-    addListingBtn.addEventListener('click', () => {
-        modal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-        this.resetFormSteps();
-    });
+    const confirmCancel = window.confirm(
+      "You have unsaved changes. Are you sure you want to cancel?"
+    );
+
+    if (confirmCancel) {
+      closeModal();
+    }
+  },
+  true // capture phase
+);
+
+
+closeModalBtn.addEventListener('click', closeModal);
+
+
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) {
+    closeModal();
+  }
+});
+
+// Reset steps
+this.currentStep = 1;
+this.totalSteps = 3;
+
+// Open modal
+addListingBtn.addEventListener('click', () => {
+  modal.style.display = 'block';
+  document.body.style.overflow = 'hidden';
+  this.resetFormSteps();
+});
+
 
     this.setupFileUpload();
     this.setupFormNavigation();
