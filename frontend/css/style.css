@@ -138,6 +138,23 @@ body {
             padding: 0.5rem 0;
             position: relative;
         }
+        .navbar .nav-link {
+  color: var(--text-light);
+}
+.navbar .nav-link.active {
+  color: var(--secondary-color);
+}
+
+.navbar .nav-link.active {
+  color: var(--secondary-color);
+}
+.navbar .nav-link.active::after {
+  width: 100%;
+  background: var(--secondary-color);
+}
+
+
+
 
         .nav-link::after {
             content: '';
