@@ -5,13 +5,19 @@ const {
   createListing,
   getAllListings,
   getListingById,
+  getNearbyListings,
+  getCityListings,
   updateListing,
   deleteListing,
   claimListing,
 } = require('../controllers/foodListingController');
+const {
+  getRecommendedDonations
+} = require("../controllers/donationController");
 
 const router = express.Router();
 
+// 🔹 CREATE FOOD LISTING
 router.post(
   '/',
   protect,
@@ -21,10 +27,9 @@ router.post(
     body('category').notEmpty().withMessage('Category is required'),
     body('freshUntil').isISO8601().withMessage('Valid fresh until date is required'),
     body('pickupTime').notEmpty().withMessage('Pickup time is required'),
-    body('description').optional().isString().trim(),
     body('pickupLocation').notEmpty().withMessage('Pickup location is required'),
     body('contactInfo').notEmpty().withMessage('Contact info is required'),
-    body('dietaryTags').optional().isArray().withMessage('Dietary tags must be an array'),
+    body('dietaryTags').optional().isArray(),
     body('photos').optional().isArray(),
 
     body('latitude')
@@ -42,6 +47,13 @@ router.post(
   createListing
 );
 
+// 🔹 SPECIAL ROUTES (STATIC — MUST COME FIRST)
+router.get('/nearby', protect, getNearbyListings);
+router.get('/city', protect, getCityListings);
+router.get('/recommendations', protect, getRecommendedDonations);
+
+
+// 🔹 GENERAL ROUTES (DYNAMIC — LAST)
 router.put('/:id/claim', protect, claimListing);
 router.get('/', getAllListings);
 router.get('/:id', getListingById);

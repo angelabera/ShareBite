@@ -215,10 +215,22 @@
         font-size: 1rem;
         transition: all 0.3s;
       }
+   .password-wrapper {
+  position: relative;
+  width: 100%;
+  height: 48px; /* lock height */
+}
+
+      .password-wrapper input {
+        padding-right: 2.5rem;
+      }
+
+
 
       .toggle-password {
         position: absolute;
-        top: 72%;
+        top: 50%;
+        transform: translateY(-50%);
         right: 1rem;
         transform: translateY(-50%);
         background: none;
@@ -392,6 +404,7 @@
         </div>
         <div class="form-group">
           <label for="password">Password</label>
+          <div class="password-wrapper">
           <input
             type="password"
             id="password"
@@ -422,6 +435,7 @@
               <circle cx="12" cy="12" r="3"></circle>
             </svg>
           </button>
+          </div>
         </div>
         <div class="form-options">
           <a href="forgotpassword.html" class="forgot-password-link"
