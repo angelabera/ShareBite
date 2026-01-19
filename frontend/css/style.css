@@ -5559,8 +5559,9 @@ a:focus,
   background-color: #ff9800;
 }
 
+/* Dark mode navbar hover fix */
+body.dark .nav-link:hover {
+  background-color: transparent;
+  color: var(--secondary-color);
+}
 
-
- main
- main
-main
