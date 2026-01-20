@@ -508,8 +508,9 @@ body.dark .profile-info strong {
 }
 
 body.dark .profile-info small {
-    color: #cccccc !important;
+    color: #e5e7eb !important;
 }
+
 
 body.dark .profile-menu hr {
     border-top-color: #555;
@@ -5520,7 +5521,6 @@ a:focus,
 }
 
 
-=======
 /* Reserved vs Available indicator */
 
 .food-card {

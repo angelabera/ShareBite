@@ -321,7 +321,7 @@ class ShareBite {
 
         document.getElementById('listingForm').append(latInput, lngInput);
     }
-});
+ });
 
 
     const closeModal = () => {
@@ -343,6 +343,7 @@ class ShareBite {
     this.setupFileUpload();
     this.setupFormNavigation();
 }
+
 
 setupFormNavigation() {
     const nextBtn = document.getElementById('nextStep');
@@ -572,30 +573,36 @@ setupFormHandling() {
         e.preventDefault();
         this.handleFormSubmission();
     });
+}
 
     setupFormHandling() {
-        const form = document.getElementById('listingForm');
-        
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.handleFormSubmission();
-        });
-        const useLocationBtn = document.getElementById('useCurrentLocationBtn');
+  const form = document.getElementById('listingForm');
+  if (!form) return;
 
-        if (useLocationBtn) {
-            useLocationBtn.addEventListener('click', this.useCurrentLocation.bind(this));
-        }
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    this.handleFormSubmission();
+  });
 
- main
+  const useLocationBtn = document.getElementById('useCurrentLocationBtn');
+  if (useLocationBtn) {
+    useLocationBtn.addEventListener(
+      'click',
+      this.useCurrentLocation.bind(this)
+    );
+  }
 
-    const now = new Date();
-    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+  const now = new Date();
+  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
 
-    // Expiry time must be future
-    const freshUntilInput = document.getElementById('freshUntil');
-    if (freshUntilInput) {
-        freshUntilInput.min = now.toISOString().slice(0, 16);
-    }
+  // Expiry time must be future
+  const freshUntilInput = document.getElementById('freshUntil');
+  if (freshUntilInput) {
+    freshUntilInput.min = now.toISOString().slice(0, 16);
+  }
+}
+
+
 async handleFormSubmission() {
   const formData = this.getFormData();
 
@@ -623,51 +630,6 @@ async handleFormSubmission() {
     if (pickupTimeInput) {
         pickupTimeInput.min = now.toISOString().slice(0, 16);
     }
-}
-     
-
-
-handleFormSubmission() {
-    const formData = this.getFormData();
-    
-    if (this.validateFormData(formData)) {
-        
-        try {
-            const backendData = {
-                foodType: formData.foodType,
-                quantity: formData.quantity,
-                category: formData.category,
-                description: formData.description,
-                freshUntil: formData.freshUntil,
-                pickupTime: formData.pickupTime,
-                pickupLocation: formData.location, 
-                contactInfo: formData.contact,
-                dietaryTags: formData.dietaryTags,
-                photos: formData.photos,
-            };
-
-            const newListing = this.api.createFoodListing(backendData);
-            this.foodListings.unshift(newListing);
-            this.filterListings();
-            this.loadListingsFromDB();
-            this.renderFoodListings();
-            this.showSuccessMessage();
-            this.closeModalAndReset();
-
-        } catch (error) {
-            console.error('Error creating listing:', error);
-            if (error.status === 401) {
-                this.showToast('You must be logged in to add a listing', 'error');
-            } else {
-                this.showToast(error.message || 'Failed to create listing', 'error');
-            }
-        }
-    }
-}
-
-    
- 
-
 
 
     if (!backendData.latitude || !backendData.longitude) {
@@ -690,7 +652,7 @@ handleFormSubmission() {
     this.showToast('Failed to create listing', 'error');
   }
 }
- main
+ 
 
     getFormData() {
         const selectedTags = [];
@@ -772,6 +734,7 @@ validateFormData(data) {
 
     return true;
 }
+
 
 
 
@@ -1031,6 +994,7 @@ validateFormData(data) {
             }, 100);
         });
     }
+
 
     setupFilteringAndSearch() {
     // --- Existing Category Filter Logic ---
@@ -1451,14 +1415,23 @@ createFoodCard(listing) {
 
 
     setupFoodCardInteractions() {
-        // Claim buttons
-        const claimBtns = document.querySelectorAll('.claim-btn');
-        claimBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const listingId = btn.getAttribute('data-id');
-                // const listingId = parseInt(btn.getAttribute('data-id'));
-                this.handleClaimFood(listingId);
-            });
+  // Claim buttons
+  const claimBtns = document.querySelectorAll('.claim-btn');
+
+  if (!claimBtns.length) return;
+
+  claimBtns.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      const listingId = btn.getAttribute('data-id');
+      if (!listingId) return;
+
+      this.handleClaimFood(listingId);
+    });
+  });
+}
+
 setupFoodCardInteractions() {
     // Claim buttons
     const claimBtns = document.querySelectorAll('.claim-btn');
@@ -1510,8 +1483,12 @@ setupFoodCardInteractions() {
       const latitude = position.coords.latitude;
       const longitude = position.coords.longitude;
 
-      document.getElementById('latitude').value = latitude;
-      document.getElementById('longitude').value = longitude;
+      const latInput = document.getElementById('latitude');
+      const lonInput = document.getElementById('longitude');
+      const locationInput = document.getElementById('location');
+
+      if (latInput) latInput.value = latitude;
+      if (lonInput) lonInput.value = longitude;
 
       try {
         const res = await fetch(
@@ -1520,33 +1497,35 @@ setupFoodCardInteractions() {
         );
 
         const data = await res.json();
-        document.getElementById('location').value =
-          data.display_name || 'Current location';
-
+        if (locationInput) {
+          locationInput.value = data.display_name || 'Current location';
+        }
       } catch (err) {
-        document.getElementById('location').value = 'Current location';
+        if (locationInput) {
+          locationInput.value = 'Current location';
+        }
       }
     },
     () => {
       this.showToast('Location permission denied', 'error');
     }
-
-    setupFoodCardAccessibility() {
-    const foodCards = document.querySelectorAll('.food-card');
-
-    foodCards.forEach(card => {
-        card.setAttribute('tabindex', '0');
-        card.setAttribute('role', 'button');
-        card.setAttribute('aria-label', 'View food details');
-    });
-}
-
-
   );
 }
 
 
- main
+    setupFoodCardAccessibility() {
+  const foodCards = document.querySelectorAll('.food-card');
+
+  foodCards.forEach((card) => {
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('role', 'button');
+    card.setAttribute('aria-label', 'View food details');
+  });
+}
+
+
+
+ 
 
     handleClaimFood(listingId) {
         const listing = this.foodListings.find(l => l.id === listingId);
@@ -2023,7 +2002,7 @@ function addDynamicStyles() {
     `;
     document.head.appendChild(style);
 }
-
+    
 // Initialize the application
 document.addEventListener('DOMContentLoaded', () => {
     addDynamicStyles();
@@ -2472,6 +2451,7 @@ class TestimonialsCarousel {
         });
     }
 
+
     handleSwipe(startX, endX) {
         const threshold = 50;
         const diff = startX - endX;
@@ -2796,44 +2776,15 @@ if (document.querySelector('.testimonials-section')) {
     }
 
     btn.addEventListener('click', loadAndOpen);
-    btn.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            loadAndOpen();
-        }
-    
-
-
-  
-
-
-
-
-
-
-
-// some function
+btn.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    loadAndOpen();
+  }
 });
-}
-
-// another function
-
-
-// end of file
-
-      
-
-
-
-
-    // If ShareBot loads itself or another script opens the widget, keep state in sync
-    // (optional) listen for user interactions on the injected widget to update launcher state
-
- // No-op: the module exposes window.ShareBot.open/close which we call above
-());
-
-    // No-op: the module exposes window.ShareBot.open/close which we call above
 })();
+
+    
 
 // Add Listing Success Message
 document.addEventListener("DOMContentLoaded", () => {
@@ -2857,4 +2808,19 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
- main
+
+ // Offline / Online status handler
+function updateOnlineStatus() {
+  const banner = document.getElementById("offline-banner");
+  if (!banner) return;
+
+  if (navigator.onLine) {
+    banner.style.display = "none";
+  } else {
+    banner.style.display = "block";
+  }
+}
+
+window.addEventListener("online", updateOnlineStatus);
+window.addEventListener("offline", updateOnlineStatus);
+window.addEventListener("load", updateOnlineStatus);
