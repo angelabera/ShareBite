@@ -5,7 +5,7 @@
 // Immediately-invoked async function to allow use of await at top level
 (async function () {
   /* ===============================
-     Load CSS
+      Load CSS
   =============================== */
   const cssUrl = new URL("./chatbot.css", import.meta.url);
   const link = document.createElement("link");
@@ -14,7 +14,7 @@
   document.head.appendChild(link);
 
   /* ===============================
-     Load Knowledge Base
+      Load Knowledge Base
   =============================== */
   const kbUrl = new URL("./ChatbotKnowledgeBase.json", import.meta.url);
   let KB = null;
@@ -35,7 +35,7 @@
   }
 
   /* ===============================
-     Root Container
+      Root Container
   =============================== */
   const container = document.createElement("div");
   container.id = "sharebot-container";
@@ -43,7 +43,7 @@
   document.body.appendChild(container);
 
   /* ===============================
-     Floating Bubble Button
+      Floating Bubble Button (FAB)
   =============================== */
   const bubble = document.createElement("button");
   bubble.id = "sharebot-bubble";
@@ -52,18 +52,19 @@
   container.appendChild(bubble);
 
   /* ===============================
-     Chat Widget
+      Chat Widget Structure
   =============================== */
   const widget = document.createElement("div");
   widget.id = "sharebot-widget";
   widget.setAttribute("hidden", "");
+  // Enhanced Header with clear "X" button for Issue #432
   widget.innerHTML = `
     <header class="sharebot-header">
       <div class="sharebot-brand">
         <span class="sharebot-logo" aria-hidden="true">🍽️</span>
         <strong>ShareBot</strong>
       </div>
-      <button class="sharebot-close" aria-label="Close chat">✕</button>
+      <button class="sharebot-close" id="sharebot-close-btn" aria-label="Close chat" title="Close chat">✕</button>
     </header>
 
     <main class="sharebot-main">
@@ -75,7 +76,7 @@
       <input
         type="text"
         id="sharebot-input"
-        placeholder="Type a question or choose a topic..."
+        placeholder="Type a question..."
         aria-label="Message"
         autocomplete="off"
       />
@@ -88,17 +89,17 @@
   const quickEl = widget.querySelector("#sharebot-quick");
   const form = widget.querySelector("#sharebot-form");
   const input = widget.querySelector("#sharebot-input");
-  const closeBtn = widget.querySelector(".sharebot-close");
+  const closeBtn = widget.querySelector("#sharebot-close-btn");
 
   /* ===============================
-     State
+      State
   =============================== */
   let isOpen = false;
   let hasGreeted = false;
   const STORAGE_KEY = "sharebot-session";
 
   /* ===============================
-     Utilities
+      Utilities
   =============================== */
   function escapeHtml(str) {
     return String(str)
@@ -125,6 +126,8 @@
     wrapper.className = `sharebot-message sharebot-${role}`;
     wrapper.innerHTML = `<div class="sharebot-bubble">${html}</div>`;
     messagesEl.appendChild(wrapper);
+    
+    // Ensure automatic scroll to bottom for new messages
     messagesEl.scrollTop = messagesEl.scrollHeight;
 
     if (save) saveSession();
@@ -140,7 +143,7 @@
   }
 
   /* ===============================
-     FAQ Matching Logic
+      FAQ Matching Logic
   =============================== */
   function findAnswer(query) {
     if (!query || !Array.isArray(KB.faqs)) return null;
@@ -160,7 +163,6 @@
       }
     }
 
-    // Intent shortcuts
     const intents = [
       { keys: ["donate", "donation", "give"], id: "how_to_donate" },
       { keys: ["find", "claim", "get food"], id: "how_to_find" },
@@ -182,7 +184,7 @@
   }
 
   /* ===============================
-     Handle User Query
+      Handle User Query
   =============================== */
   function handleQuery(text) {
     const trimmed = text.trim();
@@ -209,7 +211,7 @@
   }
 
   /* ===============================
-     Quick Replies
+      Quick Replies
   =============================== */
   function renderQuickReplies() {
     quickEl.innerHTML = "";
@@ -237,14 +239,14 @@
   }
 
   /* ===============================
-     Open / Close Widget
+      Open / Close Widget Logic
   =============================== */
   function openWidget() {
     if (isOpen) return;
     isOpen = true;
 
     widget.removeAttribute("hidden");
-    bubble.classList.add("hidden");
+    bubble.style.display = 'none'; // Ensure FAB is hidden when chat is open
     input.focus();
 
     if (!hasGreeted) {
@@ -266,11 +268,11 @@
   function closeWidget() {
     isOpen = false;
     widget.setAttribute("hidden", "");
-    bubble.classList.remove("hidden");
+    bubble.style.display = 'flex'; // Show FAB so user can reopen chat
   }
 
   /* ===============================
-     Session Persistence
+      Session Persistence
   =============================== */
   function saveSession() {
     sessionStorage.setItem(STORAGE_KEY, messagesEl.innerHTML);
@@ -278,16 +280,22 @@
 
   function restoreSession() {
     const saved = sessionStorage.getItem(STORAGE_KEY);
-    if (saved) messagesEl.innerHTML = saved;
+    if (saved) {
+      messagesEl.innerHTML = saved;
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
   }
 
   restoreSession();
 
   /* ===============================
-     Events
+      Events
   =============================== */
   bubble.addEventListener("click", openWidget);
-  closeBtn.addEventListener("click", closeWidget);
+  closeBtn.addEventListener("click", (e) => {
+    e.stopPropagation(); // Prevent event bubbling
+    closeWidget();
+  });
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -304,7 +312,7 @@
   );
 
   /* ===============================
-     Public API
+      Public API
   =============================== */
   window.ShareBot = {
     open: openWidget,
