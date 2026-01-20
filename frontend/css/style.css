@@ -6368,6 +6368,12 @@ a:focus,
   font-size: 0.9rem;
 }
 
+/* Dark mode navbar hover fix */
+body.dark .nav-link:hover {
+  background-color: transparent;
+  color: var(--secondary-color);
+}
+
 :root.dark .stat-value {
   color: var(--primary-color);
 }
