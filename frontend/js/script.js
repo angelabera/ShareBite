@@ -293,9 +293,15 @@ class ShareBite {
                 lngInput.type = 'hidden';
                 lngInput.id = 'longitude';
 
+
+        document.getElementById('listingForm').append(latInput, lngInput);
+    }
+ });
+
                 document.getElementById('listingForm').append(latInput, lngInput);
             }
         });
+ main
 
         const closeModal = () => {
             modal.style.display = 'none';
@@ -317,9 +323,16 @@ class ShareBite {
         this.setupFormNavigation();
     }
 
+
+
+setupFormNavigation() {
+    const nextBtn = document.getElementById('nextStep');
+    const prevBtn = document.getElementById('prevStep');
+
     setupFormNavigation() {
         const nextBtn = document.getElementById('nextStep');
         const prevBtn = document.getElementById('prevStep');
+ main
 
         if (!nextBtn || !prevBtn) return;
 
@@ -431,6 +444,69 @@ class ShareBite {
                 return false;
             }
 
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.handleFormSubmission();
+    });
+}
+
+    setupFormHandling() {
+  const form = document.getElementById('listingForm');
+  if (!form) return;
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    this.handleFormSubmission();
+  });
+
+  const useLocationBtn = document.getElementById('useCurrentLocationBtn');
+  if (useLocationBtn) {
+    useLocationBtn.addEventListener(
+      'click',
+      this.useCurrentLocation.bind(this)
+    );
+  }
+
+  const now = new Date();
+  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+
+  // Expiry time must be future
+  const freshUntilInput = document.getElementById('freshUntil');
+  if (freshUntilInput) {
+    freshUntilInput.min = now.toISOString().slice(0, 16);
+  }
+}
+
+
+async handleFormSubmission() {
+  const formData = this.getFormData();
+
+  if (!this.validateFormData(formData)) return;
+
+  try {
+    const backendData = {
+      foodType: formData.foodType,
+      quantity: formData.quantity,
+      category: formData.category,
+      description: formData.description,
+      freshUntil: formData.freshUntil,
+      pickupTime: formData.pickupTime,
+      pickupLocation: formData.location,
+      contactInfo: formData.contact,
+      dietaryTags: formData.dietaryTags,
+      photos: formData.photos,
+      latitude: Number(document.getElementById('latitude')?.value),
+      longitude: Number(document.getElementById('longitude')?.value),
+    };
+
+
+    // OPTIONAL: Pickup time must be future
+    const pickupTimeInput = document.getElementById('pickupTime');
+    if (pickupTimeInput) {
+        pickupTimeInput.min = now.toISOString().slice(0, 16);
+    }
+
             if (input.id === 'quantity') {
                 const quantity = parseInt(input.value.trim(), 10);
                 if (isNaN(quantity) || quantity <= 0) {
@@ -502,6 +578,7 @@ class ShareBite {
             );
             return;
         }
+ main
 
 
         const newListing = await this.api.createFoodListing(backendData);
@@ -516,6 +593,13 @@ class ShareBite {
         this.showToast('Failed to create listing', 'error');
     }
 
+
+  } catch (error) {
+    console.error(error);
+    this.showToast('Failed to create listing', 'error');
+  }
+}
+ main
 
     getFormData() {
         const selectedTags = [];
@@ -597,6 +681,7 @@ class ShareBite {
 
         return true;
     }
+
 
 
 
@@ -856,6 +941,7 @@ class ShareBite {
             }, 100);
         });
     }
+
 
     setupFilteringAndSearch() {
         // --- Existing Category Filter Logic ---
@@ -1278,6 +1364,32 @@ class ShareBite {
 
 
     setupFoodCardInteractions() {
+
+  // Claim buttons
+  const claimBtns = document.querySelectorAll('.claim-btn');
+
+  if (!claimBtns.length) return;
+
+  claimBtns.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      const listingId = btn.getAttribute('data-id');
+      if (!listingId) return;
+
+      this.handleClaimFood(listingId);
+    });
+  });
+}
+
+setupFoodCardInteractions() {
+    // Claim buttons
+    const claimBtns = document.querySelectorAll('.claim-btn');
+    claimBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const listingId = parseInt(btn.getAttribute('data-id'));
+            this.handleClaimFood(listingId);
+
         // Claim buttons
         const claimBtns = document.querySelectorAll('.claim-btn');
         claimBtns.forEach(btn => {
@@ -1285,6 +1397,7 @@ class ShareBite {
                 const listingId = parseInt(btn.getAttribute('data-id'));
                 this.handleClaimFood(listingId);
             });
+ main
         });
 
         // Contact buttons
@@ -1331,11 +1444,20 @@ class ShareBite {
                 document.getElementById('latitude').value = latitude;
                 document.getElementById('longitude').value = longitude;
 
+
+      const latInput = document.getElementById('latitude');
+      const lonInput = document.getElementById('longitude');
+      const locationInput = document.getElementById('location');
+
+      if (latInput) latInput.value = latitude;
+      if (lonInput) lonInput.value = longitude;
+
                 try {
                     const res = await fetch(
                         `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`,
                         { headers: { 'User-Agent': 'ShareBite' } }
                     );
+ main
 
                     const data = await res.json();
                     document.getElementById('location').value =
@@ -1350,6 +1472,20 @@ class ShareBite {
         );
     }
 
+
+        const data = await res.json();
+        if (locationInput) {
+          locationInput.value = data.display_name || 'Current location';
+        }
+      } catch (err) {
+        if (locationInput) {
+          locationInput.value = 'Current location';
+        }
+      }
+    },
+    () => {
+      this.showToast('Location permission denied', 'error');
+
     setupFoodCardAccessibility() {
         const foodCards = document.querySelectorAll('.food-card');
 
@@ -1358,17 +1494,36 @@ class ShareBite {
             card.setAttribute('role', 'button');
             card.setAttribute('aria-label', 'View food details');
         });
+ main
     }
+  );
+}
+
+
+
+    setupFoodCardAccessibility() {
+  const foodCards = document.querySelectorAll('.food-card');
+
+  foodCards.forEach((card) => {
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('role', 'button');
+    card.setAttribute('aria-label', 'View food details');
+  });
+}
 
 
     setupFileUpload() {
         const dropzone = document.getElementById('photoUpload');
         const fileInput = document.getElementById('photoInput');
         if (!dropzone || !fileInput) return;
+ main
 
         const handleFiles = (files) => {
             const file = files[0];
             if (!file) return;
+
+
+ 
 
             if (!file.type.startsWith('image/')) {
                 this.showToast('Please upload an image file', 'error');
@@ -1411,6 +1566,7 @@ class ShareBite {
         });
     }
 
+ main
 
     handleClaimFood(listingId) {
         const listing = this.foodListings.find(l => l.id === listingId);
@@ -1902,7 +2058,7 @@ function addDynamicStyles() {
     `;
     document.head.appendChild(style);
 }
-
+    
 // Initialize the application
 document.addEventListener('DOMContentLoaded', () => {
     addDynamicStyles();
@@ -2365,6 +2521,7 @@ class TestimonialsCarousel {
         });
     }
 
+
     handleSwipe(startX, endX) {
         const threshold = 50;
         const diff = startX - endX;
@@ -2689,6 +2846,15 @@ function setupChatbotLauncher() {
     }
 
     btn.addEventListener('click', loadAndOpen);
+
+btn.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    loadAndOpen();
+  }
+});
+})();
+
     btn.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
@@ -2726,6 +2892,9 @@ function setupChatbotLauncher() {
 
 
 // No-op: the module exposes window.ShareBot.open/close which we call above
+ main
+
+    
 
 // Add Listing Success Message
 document.addEventListener("DOMContentLoaded", () => {
@@ -2751,3 +2920,21 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
+ // Offline / Online status handler
+function updateOnlineStatus() {
+  const banner = document.getElementById("offline-banner");
+  if (!banner) return;
+
+  if (navigator.onLine) {
+    banner.style.display = "none";
+  } else {
+    banner.style.display = "block";
+  }
+}
+
+window.addEventListener("online", updateOnlineStatus);
+window.addEventListener("offline", updateOnlineStatus);
+window.addEventListener("load", updateOnlineStatus);
+
+
+ main

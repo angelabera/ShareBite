@@ -25,6 +25,36 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> -->
+
+    <!--Locally imported fontawesome-->
+    <link rel="stylesheet" href="./css/fontawesome/all.min.css">
+    <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Leaflet Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+  </head>
+  <body>
+    <div id="offline-banner" style="
+  display: none;
+  background-color: #fee2e2;
+  color: #7f1d1d;
+  padding: 12px;
+  text-align: center;
+  font-weight: 500;
+">
+  ⚠️ You are offline. Please check your internet connection.
+</div>
+
+     <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="#home" class="nav-logo-link">
+                    <i class="fas fa-utensils"></i>
+                    <span>ShareBite</span>
+                </a>
+
   <!--Locally imported fontawesome-->
   <link rel="stylesheet" href="./css/fontawesome/all.min.css">
   <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
@@ -76,6 +106,7 @@
             <div class="notification-header">
               <span>Notifications</span>
               <button class="clear-notifications" id="clearNotifications">Clear All</button>
+ main
             </div>
             <div class="notification-list" id="notificationList">
               <div class="notification-item">
