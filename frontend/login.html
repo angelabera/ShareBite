@@ -96,6 +96,42 @@
           radial-gradient(circle at 20% 80%, rgba(0, 50, 0, 0.4) 0%, transparent 50%),
           radial-gradient(circle at 80% 20%, rgba(0, 30, 0, 0.4) 0%, transparent 50%),
           radial-gradient(circle at 40% 40%, rgba(0, 40, 0, 0.3) 0%, transparent 50%);
+      /* Back Button Styles */
+      .back-button {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background: none;
+        border: 1px solid var(--input-border-light);
+        color: var(--text-color-light);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1.2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.3s;
+        text-decoration: none;
+      }
+
+      body.dark-mode .back-button {
+        border-color: var(--input-border-dark);
+        color: var(--text-color-dark);
+      }
+
+      .back-button:hover {
+        transform: translateX(-3px);
+        border-color: var(--primary-green);
+        color: var(--primary-green);
+        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+      }
+
+      body.dark-mode .back-button:hover {
+        border-color: var(--secondary-orange);
+        color: var(--secondary-orange);
+        box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
       }
 
       .theme-toggle {
@@ -382,11 +418,24 @@
       .form-group input:focus::placeholder {
         color: var(--subtext-color-light);
       }
+   .password-wrapper {
+  position: relative;
+  width: 100%;
+  height: 48px; /* lock height */
+}
+
+      .password-wrapper input {
+        padding-right: 2.5rem;
+      }
+
+
 
       .toggle-password {
         position: absolute;
         top: 50%;
         right: 16px;
+        transform: translateY(-50%);
+        right: 1rem;
         transform: translateY(-50%);
         background: none;
         border: none;
@@ -436,6 +485,17 @@
           0 0 0 3px rgba(34, 139, 34, 0.2),
           0 4px 12px rgba(34, 139, 34, 0.1);
         transform: translateY(-1px);
+      }
+
+      .error-message {
+        display: none;
+        color: #d32f2f;
+        font-size: 0.85rem;
+        margin-top: 0.25rem;
+      }
+
+      body.dark-mode .error-message {
+        color: #ff6b6b;
       }
 
       .form-options {
@@ -570,6 +630,12 @@
           padding: 10px 18px;
           font-size: 0.85rem;
         }
+        .back-button,
+        .theme-toggle {
+          width: 36px;
+          height: 36px;
+          font-size: 1rem;
+        }
       }
     </style>
   </head>
@@ -584,12 +650,32 @@
           🌙
         </button>
     </div>
+    <!-- Back Button -->
+    <a href="index.html" class="back-button" title="Go back to home">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M19 12H5M12 19l-7-7 7-7" />
+      </svg>
+    </a>
+
+    <button id="theme-toggle" class="theme-toggle" title="Toggle dark mode">
+      🌙
+    </button>
 
     <div class="auth-container">
       <img src="logo/sharebite_logo.png" alt="ShareBite Logo" class="logo" />
       <h1>Welcome Back to ShareBite</h1>
       <p class="subtitle">Log in to continue your journey with us.</p>
-      <form id="loginForm">
+      <form id="loginForm" novalidate>
         <div class="form-group">
           <input
             type="email"
@@ -601,6 +687,11 @@
           <label for="email">Email Address</label>
         </div>
         <div class="form-group">
+          <small class="error-message" id="emailError"></small>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="password-wrapper">
           <input
             type="password"
             id="password"
@@ -609,6 +700,9 @@
             required
           />
           <label for="password">Password</label>
+
+          <small class="error-message" id="passwordError"></small>
+
           <button
             type="button"
             id="togglePassword"
@@ -630,6 +724,7 @@
               <circle cx="12" cy="12" r="3"></circle>
             </svg>
           </button>
+          </div>
         </div>
         <div class="form-options">
           <a href="forgotpassword.html" class="forgot-password-link"
@@ -665,10 +760,28 @@
           : "Show Password";
       });
 
+      // --- Inline Password Validation ---
+      const passwordError = document.getElementById("passwordError");
+
+      passwordInput.addEventListener("input", () => {
+        const value = passwordInput.value.trim();
+
+        if (value.length === 0) {
+          passwordError.textContent = "Password is required";
+          passwordError.style.display = "block";
+        } else if (value.length < 6) {
+          passwordError.textContent = "Password must be at least 6 characters";
+          passwordError.style.display = "block";
+        } else {
+          passwordError.textContent = "";
+          passwordError.style.display = "none";
+        }
+      });
+
       // --- Form Submission ---
       const loginForm = document.getElementById("loginForm");
 
-      loginForm.addEventListener("submit", (async function(e) {
+      loginForm.addEventListener("submit", async function (e) {
         e.preventDefault();
 
         // Get form values
@@ -691,10 +804,10 @@
         try {
           // Call backend API
           const response = await loginUser({ email, password });
-          
+
           // Store token and user data
-          localStorage.setItem('sharebite_token', response.token);
-          
+          localStorage.setItem("sharebite_token", response.token);
+
           // Use the auth system to log in
           sharebiteAuth.login(response.user);
 
@@ -710,7 +823,7 @@
             showConfirmButton: false,
           });
 
-          // Redirect after short delay 
+          // Redirect after short delay
           setTimeout(() => {
             window.location.href = "index.html";
           }, 1500);
@@ -724,7 +837,7 @@
             color: "#333",
           });
         }
-      }));
+      });
     </script>
   </body>
 </html>

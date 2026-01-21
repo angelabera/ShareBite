@@ -185,28 +185,46 @@ setInterval(() => {
     event.preventDefault();
     closeModal();
   });
-    
-    // ✅ X (close) button
+   
 
-    closeModalBtn.addEventListener('click', closeModal);
-    
-     // ✅ Click outside modal
-    
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeModal();
-        }
-    });
-    
-    this.currentStep = 1;
-    this.totalSteps = 3;
+cancelBtn.addEventListener(
+  'click',
+  (e) => {
+    e.preventDefault();
+    e.stopImmediatePropagation(); // blocks other handlers
 
-    
-    addListingBtn.addEventListener('click', () => {
-        modal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-        this.resetFormSteps();
-    });
+    const confirmCancel = window.confirm(
+      "You have unsaved changes. Are you sure you want to cancel?"
+    );
+
+    if (confirmCancel) {
+      closeModal();
+    }
+  },
+  true // capture phase
+);
+
+
+closeModalBtn.addEventListener('click', closeModal);
+
+
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) {
+    closeModal();
+  }
+});
+
+// Reset steps
+this.currentStep = 1;
+this.totalSteps = 3;
+
+// Open modal
+addListingBtn.addEventListener('click', () => {
+  modal.style.display = 'block';
+  document.body.style.overflow = 'hidden';
+  this.resetFormSteps();
+});
+
 
     this.setupFileUpload();
     this.setupFormNavigation();
@@ -799,22 +817,38 @@ handleFileSelect(file) {
         return futureDate.toISOString().slice(0, 16);
     }
 
-    renderFoodListings() {
-        const foodGrid = document.getElementById('foodGrid');
-        
-        if (this.filteredListings.length === 0) {
-            foodGrid.innerHTML = `
-                <div class="no-listings">
-                    <i class="fas fa-search" style="font-size: 3rem; color: var(--medium-gray); margin-bottom: 1rem;"></i>
-                    <h3>No listings found</h3>
-                    <p>Try adjusting your filters or search terms.</p>
-                </div>
-            `;
-            return;
-        }
-        
-        foodGrid.innerHTML = this.filteredListings.map(listing => this.createFoodCard(listing)).join('');
-        
+     renderFoodListings() {
+  const foodGrid = document.getElementById('foodGrid');
+
+  // CASE 1: No food listings at all (backend empty / first load)
+  if (!this.foodListings || this.foodListings.length === 0) {
+     foodGrid.innerHTML = `
+         <div class="empty-state">
+            <i class="fas fa-utensils" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem;"></i>
+            <p>No food listings available right now 🍽️</p>
+            <span>Check back later!</span>
+        </div>
+`       ;
+     return;
+  }
+
+  // CASE 2: Listings exist, but filters remove all
+  if (this.filteredListings.length === 0) {
+    foodGrid.innerHTML = `
+      <div class="no-listings">
+        <i class="fas fa-search" style="font-size: 3rem; color: var(--medium-gray); margin-bottom: 1rem;"></i>
+        <h3>No listings found</h3>
+        <p>Try adjusting your filters or search terms.</p>
+      </div>
+    `;
+    return;
+  }
+
+  // ✅ CASE 3: Show listings
+    foodGrid.innerHTML = this.filteredListings
+    .map(listing => this.createFoodCard(listing))
+    .join('');
+      
         // Add event listeners to food cards
         this.setupFoodCardInteractions();
     }
@@ -868,9 +902,10 @@ if (expiryStatus.expired) {
     const location = listing.pickupLocation || listing.location || 'Unknown Location';
     const contact = listing.contactInfo || listing.contact;
     const timeAgo = this.getTimeAgo(listing.createdAt);
-    // const freshUntil = this.formatDateTime(listing.freshUntil);
-    const expiryStatus = this.getExpiryStatus(listing.freshUntil);
+    const freshUntil = this.formatDateTime(listing.freshUntil);
+    const urgency = this.getUrgencyStatus(listing.freshUntil);
     const isClaimed = this.claimedItems.includes(listing.id);
+    
     const statusClass = isClaimed ? 'reserved' : 'available';
     const statusText = isClaimed ? 'Reserved' : 'Available';
 
@@ -918,14 +953,22 @@ if (expiryStatus.expired) {
                 <h3 class="food-title">${listing.foodType}</h3>
                 ${tagsHTML} 
                 <p class="food-description">${listing.description}</p>
-                <div class="food-meta">
-                    <span class="quantity"><i class="fas fa-utensils"></i> ${listing.quantity}</span>
-                    
-                    <span class="freshness expiry ${expiryStatus.urgency}">
-                        <i class="fas fa-clock"></i> ${expiryStatus.text}
-                    </span>
+            <div class="food-meta" aria-describedby="foodMetaHelp-${listing.id}">
+                <span class="quantity">
+                <i class="fas fa-utensils"></i>
+                   Quantity: ${listing.quantity || "Not available"}
+                </span>
+                <span class="freshness">
+                <i class="fas fa-clock"></i>
+                  Expiry: ${freshUntil || "Not available"}
+                </span>
+             </div>
 
-                </div>
+            <p id="foodMetaHelp-${listing.id}" class="sr-only">
+                Food listing details: expiry time and available quantity.
+            </p>
+
+
                 <div class="food-location">
                     <i class="fas fa-map-marker-alt"></i>
                     <span>${listing.location}</span>
@@ -1081,33 +1124,21 @@ if (expiryStatus.expired) {
             return `${days}d left`;
         }
     }
-    getExpiryStatus(freshUntil) {
+    getUrgencyStatus(freshUntil) {
     const now = new Date();
     const expiry = new Date(freshUntil);
     const diffMs = expiry - now;
+    const hoursLeft = diffMs / (1000 * 60 * 60);
 
-    if (diffMs <= 0) {
-        return {
-            expired: true,
-            text: 'Expired',
-            hoursLeft: 0,
-            urgency: 'expired'
-        };
+    if (hoursLeft > 6) {
+        return { label: "🟢 Fresh", className: "fresh" };
+    } else if (hoursLeft > 2) {
+        return { label: "🟡 Expiring Soon", className: "expiring" };
+    } else {
+        return { label: "🔴 Urgent", className: "urgent" };
     }
-
-    const hoursLeft = Math.floor(diffMs / (1000 * 60 * 60));
-
-    let urgency = 'safe';
-    if (hoursLeft <= 2) urgency = 'critical';
-    else if (hoursLeft <= 6) urgency = 'warning';
-
-    return {
-        expired: false,
-        text: this.formatDateTime(freshUntil),
-        hoursLeft,
-        urgency
-    };
 }
+
 
     formatTime(timeString) {
         const [hours, minutes] = timeString.split(':');
