@@ -157,6 +157,8 @@
                 required
                 placeholder="e.g., Pizza, Sandwiches, Fruits"
               />
+              <small class="error-text" id="foodTypeError"></small>
+
             </div>
             <div class="form-row">
               <div class="form-group">
@@ -167,16 +169,21 @@
                   required
                   placeholder="e.g., 10 portions"
                 />
+                <small class="error-text" id="quantityError"></small>
+
               </div>
               <div class="form-group">
                 <label for="category">Category *</label>
                 <select id="category" required>
+               
                   <option value="">Select Category</option>
                   <option value="restaurant">Restaurant</option>
                   <option value="household">Household</option>
                   <option value="bakery">Bakery</option>
                   <option value="event">Event</option>
                 </select>
+                <small class="error-text" id="categoryError"></small>
+
               </div>
             </div>
             <div class="form-group">
@@ -206,6 +213,8 @@
                 <label for="freshUntil">Fresh Until *</label>
                 <div class="input-container-relative">
                   <input type="datetime-local" id="freshUntil" class="datetime-input" required />
+                  <small class="error-text" id="freshUntilError"></small>
+
                   <span class="checkmark-icon">✓</span>
                 </div>
               </div>
@@ -213,21 +222,31 @@
                 <label for="pickupTime">Preferred Pickup Time *</label>
                 <div class="input-container-relative">
                   <input type="time" id="pickupTime" class="datetime-input" required />
+                  <small class="error-text" id="pickupTimeError"></small>
+
                   <span class="checkmark-icon-time">✓</span>
                 </div>
               </div>
             </div>
             <div class="form-group">
               <label for="location">Pickup Location *</label>
-              <input type="text" id="location" required placeholder="Address or landmark" />
-            
-              
-            
-              <div id="map" style="display:none; margin-top:10px; height: 250px; width: 100%; border-radius: 8px;"></div>
-            
-              <!-- Hidden inputs to send to backend -->
-              <input type="hidden" id="latitude" />
-              <input type="hidden" id="longitude" />
+                <input
+                      type="text"
+                      id="location"
+                      required
+                      placeholder="Address or landmark"
+                 />
+            <small class="error-text" id="locationError"></small>
+
+           <div
+            id="map"
+            style="display:none; margin-top:10px; height: 250px; width: 100%; border-radius: 8px;"
+           ></div>
+
+<!-- Hidden inputs to send to backend -->
+<input type="hidden" id="latitude" />
+<input type="hidden" id="longitude" />
+
             </div>
             
             <div class="form-group">
@@ -238,6 +257,8 @@
                 required
                 placeholder="Phone number or email"
               />
+              <small class="error-text" id="contactError"></small>
+
             </div>
           </div>
 

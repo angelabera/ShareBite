@@ -984,6 +984,99 @@ body.dark .profile-menu-item:hover {
         display: none;
     }
 
+
+ .role-switch span {
+    display: none;
+}
+
+/* ===== MOBILE NAV MENU FIX ===== */
+.nav-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: #0b0f1a;
+    z-index: 2000; /* higher than hero */
+}
+
+.nav-menu.active {
+    display: flex;
+}
+
+.nav-menu li {
+    padding: 0.75rem 0;
+}
+
+.nav-menu a {
+    color: #fff;
+    font-size: 1.1rem;
+}
+
+.nav-link {
+    display: block;
+    padding: 1rem 2rem;
+    width: 100%;
+    color: white; /* links visible on dark bg */
+}
+
+
+.nav-menu li {
+    padding: 0.75rem 0;
+}
+
+.nav-menu a {
+    color: #fff;
+    font-size: 1.1rem;
+}
+
+
+.nav-link {
+    display: block;
+    padding: 1rem 2rem;
+    width: 100%;
+    color: white;
+    /* links visible on dark bg */
+}
+
+.nav-link::after {
+    display: none;
+}
+
+.nav-link:hover {
+    background: var(--bg-light);
+    color: var(--text-dark);
+}
+
+.nav-link:hover::after {
+    content: '';
+    display: block;
+    height: 2px;
+    background: var(--primary-color);
+    width: 100%;
+    margin-top: 4px;
+    /* space between text and underline */
+}
+
+.notification-panel {
+    right: -50px;
+    width: 280px;
+}
+
+.theme-toggle,
+.notification-bell {
+    padding: 0.5rem 0.7rem;
+}
+
+body {
+    padding-top: 72px;
+    /* mobile navbar height */
+}
+
+
+@media screen and (max-width: 480px) {
+    .nav-logo-link span {
+        font-size: 1.2rem;
+
     .role-switch span {
         display: none;
     }
@@ -1010,6 +1103,7 @@ body.dark .profile-menu-item:hover {
 
     .nav-menu.active {
         display: flex;
+
     }
 
     .nav-menu li {
@@ -6188,87 +6282,87 @@ body.dark-mode .notification-bell:hover {
         /* Forces green lines */
     }
 }
+/* Inline error text (used in foodlisting.html) */
+.error-text {
+  color: #ff3b30;
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+}
 
 main .form-group {
-    position: relative;
+  position: relative;
 }
 
 .form-group input.error {
-    border: 2px solid #e53935;
+  border: 2px solid #e53935;
 }
 
 .form-group input.success {
-    border: 2px solid #43a047;
-}
-
-.error-message {
-    color: #e53935;
-    font-size: 0.85rem;
-    margin-top: 4px;
-    display: none;
-}
-
-.error-message.active {
-    display: block;
+  border: 2px solid #43a047;
 }
 
 /* Inline validation error message */
 .error-message {
-    color: #e63946;
-    font-size: 12px;
-    margin-top: 4px;
-    display: none;
+  color: #e63946;
+  font-size: 12px;
+  margin-top: 4px;
+  display: none;
 }
 
+.error-message.active {
+  display: block;
+}
+
+/* Focus styles */
 main button:focus-visible,
 a:focus-visible,
 [role="button"]:focus-visible {
-    outline: 3px solid #2563eb;
-    outline-offset: 3px;
+  outline: 3px solid #2563eb;
+  outline-offset: 3px;
 }
 
 /* Fallback for older browsers */
 button:focus,
 a:focus,
 [role="button"]:focus {
-    outline: 3px solid #2563eb;
-    outline-offset: 3px;
+  outline: 3px solid #2563eb;
+  outline-offset: 3px;
 }
-
 
 /* Reserved vs Available indicator */
 
 .food-card {
-    position: relative;
-    border-left: 5px solid transparent;
+  position: relative;
+  border-left: 5px solid transparent;
 }
 
 .food-card.available {
-    border-left-color: #4caf50;
+  border-left-color: #4caf50;
 }
 
 .food-card.reserved {
-    border-left-color: #ff9800;
-    opacity: 0.75;
+  border-left-color: #ff9800;
+  opacity: 0.75;
 }
 
 .status-badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 12px;
-    padding: 4px 8px;
-    border-radius: 12px;
-    color: #ffffff;
-    font-weight: 500;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  color: #ffffff;
+  font-weight: 500;
 }
 
 .status-badge.available {
-    background-color: #4caf50;
+  background-color: #4caf50;
 }
 
 .status-badge.reserved {
-    background-color: #ff9800;
+  background-color: #ff9800;
 }
 
 /* ============================= */
@@ -6334,7 +6428,7 @@ a:focus,
   padding: 1rem 1.5rem;
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255,  0.8);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   transition: transform 0.3s ease;
 }
@@ -6343,6 +6437,7 @@ a:focus,
   transform: translateY(-5px);
   background: rgba(255, 255, 255, 0.9);
 }
+
 
 /* Dark mode for impact stat cards */
 :root.dark .impact-stat-card {
@@ -6385,6 +6480,7 @@ body.dark .nav-link:hover {
 
 /* Glass / Visuals / Dark mode / Responsive */
 /* (unchanged from incoming — kept fully) */
+
 
 /* ============================= */
 /* Empty State Styles */
@@ -6439,12 +6535,13 @@ body.dark .nav-link:hover {
   width: 1px;
   height: 1px;
   padding: 0;
-  margin: -1px;
+  margin: 0;
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
 }
+
 
 .empty-state span {
     font-size: 1rem;
@@ -6788,4 +6885,5 @@ body.dark .language-option:hover,
 body.dark .language-option:focus {
   background: var(--light-gray);
 }
+
 
