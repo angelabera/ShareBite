@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/sharebite
+      - JWT_SECRET=devsecret
+      - PORT=5000
+    depends_on:
+      - mongo
+    networks:
+      - sharebite-network
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - sharebite-network
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - sharebite-network
+
+networks:
+  sharebite-network:
+    driver: bridge
+
+volumes:
+  mongo-data:

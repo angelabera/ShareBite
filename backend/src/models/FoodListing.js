@@ -1,41 +1,12 @@
-// const mongoose = require('mongoose');
-
-// const foodListingSchema = new mongoose.Schema(
-//   {
-//     dietaryTags: [{ type: String }],
-//     foodType: { type: String, required: true, trim: true },
-//     quantity: { type: String, required: true, trim: true },
-//     category: { type: String, required: true, trim: true },
-//     description: { type: String, trim: true },
-//     freshUntil: { type: Date, required: true },
-//     pickupTime: { type: String, required: true },
-//     pickupLocation: { type: String, required: true, trim: true },
-//     contactInfo: { type: String, required: true, trim: true },
-//     photos: [{ type: String }],
-//     donorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-//     status: { 
-//       type: String, 
-//       enum: ['available', 'reserved', 'completed'], 
-//       default: 'available' 
-//     },
-//   },
-//   { timestamps: true }
-// );
-
-// module.exports = mongoose.model('FoodListing', foodListingSchema);
-
 const mongoose = require('mongoose');
 
 const foodListingSchema = new mongoose.Schema(
   {
     dietaryTags: [{ type: String }],
-
     foodType: { type: String, required: true, trim: true },
     quantity: { type: String, required: true, trim: true },
     category: { type: String, required: true, trim: true },
     description: { type: String, trim: true },
-    // Expiry date
-
     freshUntil: { type: Date, required: true },
 
     // Expiry tracking
@@ -49,12 +20,12 @@ const foodListingSchema = new mongoose.Schema(
       type: Boolean,
       default: true
     },
+
     pickupTime: { type: String, required: true },
 
     // Human-readable address (shown in UI)
     pickupLocation: { type: String, required: true, trim: true },
 
-    //  ADD LOCATION HERE
     // 📍 Map-based location
     location: {
       type: {
@@ -70,22 +41,10 @@ const foodListingSchema = new mongoose.Schema(
         type: String,
         required: true
       }
-        default: 'Point',
-      },
-      coordinates: {
-        type: [Number], // [longitude, latitude]
-        required: true,
-      },
     },
 
     contactInfo: { type: String, required: true, trim: true },
     photos: [{ type: String }],
-    donorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-
-    status: { 
-      type: String, 
-      enum: ['available', 'reserved', 'completed'], 
-      default: 'available' 
 
     donorId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -93,23 +52,22 @@ const foodListingSchema = new mongoose.Schema(
       required: true,
     },
 
+    claimedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      default: null
+    },
+
     status: {
       type: String,
       enum: ['available', 'reserved', 'completed'],
-      default: 'available',
-    },
-    claimedBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        default: null
+      default: 'available'
     },
   },
   { timestamps: true }
 );
 
-// VERY IMPORTANT (for distance queries)
 // 🌍 Enable geospatial queries
 foodListingSchema.index({ location: '2dsphere' });
 
 module.exports = mongoose.model('FoodListing', foodListingSchema);
-
