@@ -7,6 +7,9 @@ services:
       - "5000:5000"
     env_file:
       - .env
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
     depends_on:
       - mongo
     networks:
@@ -16,6 +19,8 @@ services:
     build: ./frontend
     ports:
       - "8080:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html
     depends_on:
       - backend
     networks:

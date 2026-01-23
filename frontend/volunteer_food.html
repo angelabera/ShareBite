@@ -1,60 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Volunteer Food | ShareBite</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     :root {
-        --primary-color: #4CAF50;
-        --primary-light: #66BB6A;
-        --primary-dark: #388E3C;
-        --secondary-color: #FF6B35;
-        --secondary-dark: #E55A2B;
-        --accent-color: #FFC107;
-        --white: #FFFFFF;
-        --light-navbar: #FFFFFF;
-        --gray: #F8F9FA;
-        --light-gray: #F1F3F5;
-        --medium-gray: #6B7280;
-        --dark-gray: #374151;
-        --black: #111827;
-        --border-color: #E5E7EB;
-        --success-bg: #D1FAE5;
-        --success-text: #065F46;
-        --error-bg: #FEE2E2;
-        --error-text: #991B1B;
-        --primary-gradient: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
-        --secondary-gradient: linear-gradient(135deg, #FF6B35 0%, #FF8A65 100%);
-        --hero-gradient: linear-gradient(135deg, rgba(76, 175, 80, 0.08) 0%, rgba(255, 107, 53, 0.05) 100%);
-        --card-radius: 20px;
-        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
-        --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-        --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
-        --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.15);
-        --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      --primary-color: #4CAF50;
+      --primary-light: #66BB6A;
+      --primary-dark: #388E3C;
+      --secondary-color: #FF6B35;
+      --secondary-dark: #E55A2B;
+      --accent-color: #FFC107;
+      --white: #FFFFFF;
+      --light-navbar: #FFFFFF;
+      --gray: #F8F9FA;
+      --light-gray: #F1F3F5;
+      --medium-gray: #6B7280;
+      --dark-gray: #374151;
+      --black: #111827;
+      --border-color: #E5E7EB;
+      --success-bg: #D1FAE5;
+      --success-text: #065F46;
+      --error-bg: #FEE2E2;
+      --error-text: #991B1B;
+      --primary-gradient: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
+      --secondary-gradient: linear-gradient(135deg, #FF6B35 0%, #FF8A65 100%);
+      --hero-gradient: linear-gradient(135deg, rgba(76, 175, 80, 0.08) 0%, rgba(255, 107, 53, 0.05) 100%);
+      --card-radius: 20px;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
+      --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.15);
+      --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    
+
     :root.dark {
-        --white: #0F172A;
-        --light-navbar: #1E293B;
-        --gray: #1E293B;
-        --light-gray: #334155;
-        --medium-gray: #94A3B8;
-        --dark-gray: #E2E8F0;
-        --black: #F8FAFC;
-        --border-color: #334155;
-        --success-bg: #064E3B;
-        --success-text: #A7F3D0;
-        --error-bg: #7F1D1D;
-        --error-text: #FCA5A5;
-        --hero-gradient: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(255, 107, 53, 0.08) 100%);
-        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-        --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
-        --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.6);
-        --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.7);
+      --white: #0F172A;
+      --light-navbar: #1E293B;
+      --gray: #1E293B;
+      --light-gray: #334155;
+      --medium-gray: #94A3B8;
+      --dark-gray: #E2E8F0;
+      --black: #F8FAFC;
+      --border-color: #334155;
+      --success-bg: #064E3B;
+      --success-text: #A7F3D0;
+      --error-bg: #7F1D1D;
+      --error-text: #FCA5A5;
+      --hero-gradient: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(255, 107, 53, 0.08) 100%);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+      --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.6);
+      --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.7);
     }
 
     * {
@@ -85,9 +88,9 @@
     }
 
     .container {
-        max-width: 1280px;
-        margin: 0 auto;
-        padding: 0 1.5rem;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
     }
 
     /* Navbar */
@@ -255,8 +258,15 @@
     }
 
     @keyframes float {
-      0%, 100% { transform: translateY(0) translateX(0); }
-      50% { transform: translateY(-30px) translateX(30px); }
+
+      0%,
+      100% {
+        transform: translateY(0) translateX(0);
+      }
+
+      50% {
+        transform: translateY(-30px) translateX(30px);
+      }
     }
 
     .hero-content {
@@ -286,6 +296,7 @@
         opacity: 0;
         transform: translateY(-20px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -589,7 +600,8 @@
       font-size: 1.15rem;
     }
 
-    input, select {
+    input,
+    select {
       padding: 1.1rem 1.25rem;
       border-radius: 14px;
       border: 2.5px solid var(--border-color);
@@ -601,7 +613,8 @@
       font-weight: 500;
     }
 
-    input:focus, select:focus {
+    input:focus,
+    select:focus {
       outline: none;
       border-color: var(--primary-color);
       background: var(--white);
@@ -614,12 +627,14 @@
       font-weight: 400;
     }
 
-    input.error, select.error {
+    input.error,
+    select.error {
       border-color: #EF4444;
       background: var(--error-bg);
     }
 
-    input.success, select.success {
+    input.success,
+    select.success {
       border-color: var(--primary-color);
       background: var(--success-bg);
     }
@@ -725,6 +740,7 @@
         opacity: 0;
         transform: translateY(-15px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -763,9 +779,10 @@
     }
 
     /* Responsive Design */
-    
+
     /* Extra Large Screens */
     @media (min-width: 1920px) {
+
       .navbar-container,
       .container,
       .info-content,
@@ -788,7 +805,8 @@
         padding: 5rem 2rem 4rem;
       }
 
-      .info, .form-section {
+      .info,
+      .form-section {
         padding: 5rem 2rem;
       }
     }
@@ -856,13 +874,15 @@
         gap: 1rem;
       }
 
-      .btn-primary, .btn-outline {
+      .btn-primary,
+      .btn-outline {
         width: 100%;
         justify-content: center;
         padding: 1rem 2rem;
       }
 
-      .info, .form-section {
+      .info,
+      .form-section {
         padding: 4.5rem 1.5rem;
       }
 
@@ -910,7 +930,8 @@
         margin-bottom: 1.25rem;
       }
 
-      .info, .form-section {
+      .info,
+      .form-section {
         padding: 4rem 1.25rem;
       }
 
@@ -965,7 +986,8 @@
         font-size: 0.95rem;
       }
 
-      input, select {
+      input,
+      select {
         padding: 1rem 1.15rem;
         font-size: 1rem;
       }
@@ -1025,17 +1047,20 @@
         margin-bottom: 2rem;
       }
 
-      .btn-primary, .btn-outline {
+      .btn-primary,
+      .btn-outline {
         padding: 0.95rem 1.75rem;
         font-size: 0.95rem;
         gap: 0.6rem;
       }
 
-      .btn-primary i, .btn-outline i {
+      .btn-primary i,
+      .btn-outline i {
         font-size: 1.1rem;
       }
 
-      .info, .form-section {
+      .info,
+      .form-section {
         padding: 3.5rem 1rem;
       }
 
@@ -1109,7 +1134,8 @@
         font-size: 1rem;
       }
 
-      input, select {
+      input,
+      select {
         padding: 0.95rem 1.1rem;
         font-size: 0.95rem;
         border-radius: 12px;
@@ -1207,12 +1233,14 @@
         font-size: clamp(0.9rem, 3.5vw, 1rem);
       }
 
-      .btn-primary, .btn-outline {
+      .btn-primary,
+      .btn-outline {
         padding: 0.9rem 1.5rem;
         font-size: 0.9rem;
       }
 
-      .info, .form-section {
+      .info,
+      .form-section {
         padding: 3rem 0.9rem;
       }
 
@@ -1252,7 +1280,8 @@
         font-size: 0.95rem;
       }
 
-      input, select {
+      input,
+      select {
         padding: 0.9rem 1rem;
         font-size: 0.9rem;
       }
@@ -1291,12 +1320,14 @@
         font-size: clamp(1.35rem, 10vw, 1.85rem);
       }
 
-      .btn-primary, .btn-outline {
+      .btn-primary,
+      .btn-outline {
         padding: 0.85rem 1.35rem;
         font-size: 0.85rem;
       }
 
-      .info, .form-section {
+      .info,
+      .form-section {
         padding: 2.75rem 0.85rem;
       }
 
@@ -1308,7 +1339,8 @@
         padding: 2rem 1rem;
       }
 
-      input, select {
+      input,
+      select {
         padding: 0.85rem 0.95rem;
         font-size: 0.875rem;
       }
@@ -1337,7 +1369,8 @@
         margin-bottom: 1.5rem;
       }
 
-      .info, .form-section {
+      .info,
+      .form-section {
         padding: 3rem 1.5rem;
       }
 
@@ -1353,7 +1386,10 @@
 
     /* Accessibility */
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
+
+      *,
+      *::before,
+      *::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
@@ -1387,10 +1423,13 @@
     }
 
     @keyframes spinner {
-      to { transform: rotate(360deg); }
+      to {
+        transform: rotate(360deg);
+      }
     }
   </style>
 </head>
+
 <body>
   <!-- Navbar -->
   <nav class="navbar">
@@ -1426,7 +1465,8 @@
         <span>Join Our Community of Volunteers</span>
       </div>
       <h1>Make a <span>Difference</span> Through Volunteering</h1>
-      <p>Be part of a movement that delivers surplus food from restaurants and households to those who need it most. Every contribution counts.</p>
+      <p>Be part of a movement that delivers surplus food from restaurants and households to those who need it most.
+        Every contribution counts.</p>
       <div class="hero-buttons">
         <a href="#signup" class="btn-primary">
           <i class="fas fa-hand-holding-heart"></i>
@@ -1451,17 +1491,20 @@
         <div class="card">
           <div class="card-icon">🤝</div>
           <h3>Community Impact</h3>
-          <p>Every hour you spend volunteering helps feed families and reduce food waste in your city. Be part of a movement that's making real change happen.</p>
+          <p>Every hour you spend volunteering helps feed families and reduce food waste in your city. Be part of a
+            movement that's making real change happen.</p>
         </div>
         <div class="card">
           <div class="card-icon">📅</div>
           <h3>Flexible Schedule</h3>
-          <p>Choose volunteering times that fit your lifestyle - weekends, weekdays, or both. We work around your availability to make volunteering accessible.</p>
+          <p>Choose volunteering times that fit your lifestyle - weekends, weekdays, or both. We work around your
+            availability to make volunteering accessible.</p>
         </div>
         <div class="card">
           <div class="card-icon">🌍</div>
           <h3>Network & Growth</h3>
-          <p>Connect with like-minded individuals, NGOs, and organizations working together for a better tomorrow. Expand your network while making a difference.</p>
+          <p>Connect with like-minded individuals, NGOs, and organizations working together for a better tomorrow.
+            Expand your network while making a difference.</p>
         </div>
       </div>
     </div>
@@ -1544,7 +1587,6 @@
   <!-- Footer -->
   <footer>
     <div class="footer-content">
-      <p class="footer-credit">Made with 💚 by Angela Bera</p>
       <p>&copy; 2025 ShareBite. All rights reserved.</p>
     </div>
   </footer>
@@ -1581,7 +1623,7 @@
     function showError(fieldId, message) {
       const field = document.getElementById(fieldId);
       const errorDiv = document.getElementById(fieldId + 'Error');
-      
+
       if (field && errorDiv) {
         field.classList.add('error');
         field.classList.remove('success');
@@ -1593,7 +1635,7 @@
     function clearError(fieldId) {
       const field = document.getElementById(fieldId);
       const errorDiv = document.getElementById(fieldId + 'Error');
-      
+
       if (field && errorDiv) {
         field.classList.remove('error');
         field.classList.add('success');
@@ -1602,7 +1644,7 @@
     }
 
     // Real-time validation
-    document.getElementById('name').addEventListener('input', function(e) {
+    document.getElementById('name').addEventListener('input', function (e) {
       const validation = validateName(e.target.value);
       if (e.target.value.length > 0) {
         if (validation.valid) {
@@ -1613,7 +1655,7 @@
       }
     });
 
-    document.getElementById('email').addEventListener('input', function(e) {
+    document.getElementById('email').addEventListener('input', function (e) {
       const validation = validateEmail(e.target.value);
       if (e.target.value.length > 0) {
         if (validation.valid) {
@@ -1624,10 +1666,10 @@
       }
     });
 
-    document.getElementById('phone').addEventListener('input', function(e) {
+    document.getElementById('phone').addEventListener('input', function (e) {
       // Only allow numbers
       e.target.value = e.target.value.replace(/\D/g, '');
-      
+
       const validation = validatePhone(e.target.value);
       if (e.target.value.length > 0) {
         if (validation.valid) {
@@ -1638,7 +1680,7 @@
       }
     });
 
-    document.getElementById('availability').addEventListener('change', function(e) {
+    document.getElementById('availability').addEventListener('change', function (e) {
       if (e.target.value) {
         clearError('availability');
       }
@@ -1646,78 +1688,78 @@
 
     function handleForm(event) {
       event.preventDefault();
-      
+
       const name = document.getElementById("name").value;
       const email = document.getElementById("email").value;
       const phone = document.getElementById("phone").value;
       const availability = document.getElementById("availability").value;
-      
+
       // Validate all fields
       const nameValidation = validateName(name);
       const emailValidation = validateEmail(email);
       const phoneValidation = validatePhone(phone);
-      
+
       let isValid = true;
-      
+
       if (!nameValidation.valid) {
         showError('name', nameValidation.message);
         isValid = false;
       } else {
         clearError('name');
       }
-      
+
       if (!emailValidation.valid) {
         showError('email', emailValidation.message);
         isValid = false;
       } else {
         clearError('email');
       }
-      
+
       if (!phoneValidation.valid) {
         showError('phone', phoneValidation.message);
         isValid = false;
       } else {
         clearError('phone');
       }
-      
+
       if (!availability) {
         showError('availability', 'Please select your availability');
         isValid = false;
       } else {
         clearError('availability');
       }
-      
+
       if (!isValid) {
         return false;
       }
-      
+
       // Show success message
       const successMsg = document.getElementById("successMessage");
       const submitBtn = event.target.querySelector('button[type="submit"]');
-      
+
       // Add loading state
       submitBtn.classList.add('loading');
       submitBtn.disabled = true;
-      
+
       setTimeout(() => {
         submitBtn.classList.remove('loading');
         submitBtn.disabled = false;
-        
+
         successMsg.querySelector('span').textContent = `Application Submitted Successfully. Thank you ${name}, we will contact you at ${email} soon.`;
         successMsg.classList.add('show');
-        
+
         // Reset form
         event.target.reset();
-        
+
         // Clear all success states
         document.querySelectorAll('.success').forEach(el => el.classList.remove('success'));
-        
+
         // Auto-hide success message after 7 seconds
         setTimeout(() => {
           successMsg.classList.remove('show');
         }, 7000);
       }, 1000);
-      
+
       return false;
     }
 
@@ -1733,7 +1775,7 @@
       const navLinks = document.querySelector('.nav-links');
       const mobileToggle = document.querySelector('.mobile-toggle i');
       navLinks.classList.toggle('active');
-      
+
       if (navLinks.classList.contains('active')) {
         mobileToggle.classList.remove('fa-bars');
         mobileToggle.classList.add('fa-times');
@@ -1763,7 +1805,7 @@
     document.addEventListener('DOMContentLoaded', () => {
       const savedTheme = localStorage.getItem('theme');
       const icon = document.querySelector('.theme-icon');
-      
+
       if (savedTheme === 'dark') {
         document.documentElement.classList.add('dark');
         icon.textContent = '🌙';
@@ -1787,4 +1829,5 @@
     });
   </script>
 </body>
+
 </html>
