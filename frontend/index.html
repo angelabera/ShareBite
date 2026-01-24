@@ -108,6 +108,55 @@
               <button class="clear-notifications" id="clearNotifications">Clear All</button>
  main
             </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#features" class="nav-link">Features</a></li>
+                <li><a href="#listings" class="nav-link" id ="listingsLink">Listings</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#contact-section" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="user-actions">
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="notification-bell" id="notificationBell">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notificationBadge">3</span>
+                    <div class="notification-panel" id="notificationPanel">
+                        <div class="notification-header">
+                            <span>Notifications</span>
+                            <button class="clear-notifications" id="clearNotifications">Clear All</button>
+                        </div>
+                        <div class="notification-list" id="notificationList">
+                            <div class="notification-item">
+                                <div class="notification-title">New food donation available</div>
+                                <div class="notification-time">5 minutes ago</div>
+                            </div>
+                            <div class="notification-item">
+                                <div class="notification-title">Your listing was viewed 12 times</div>
+                                <div class="notification-time">1 hour ago</div>
+                            </div>
+                            <div class="notification-item">
+                                <div class="notification-title">Reminder: Pickup scheduled for today</div>
+                                <div class="notification-time">3 hours ago</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="role-switch" id="roleSwitch">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span id="currentRole">Donor</span>
+                </button>
+
+
+                <button class="login-btn" onclick="window.location.href='login.html'">User Login</button>
+                <button class="login-btn" onclick="window.location.href='login_ngo.html'">NGO Login</button>
+
+            </div>
+            <div class="hamburger" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
             <div class="notification-list" id="notificationList">
               <div class="notification-item">
                 <div class="notification-title">New food donation available</div>
