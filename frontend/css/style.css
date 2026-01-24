@@ -119,7 +119,7 @@ body {
 }
 
 .nav-menu.scrolled .nav-link {
-    color: var(--text-dark)
+    color: var(--text-dark);
 }
 
 .nav-container {
@@ -6887,3 +6887,6 @@ body.dark .language-option:focus {
 }
 
 
+} 
+
+}
