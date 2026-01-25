@@ -17,8 +17,11 @@ const foodListingSchema = new mongoose.Schema(
       type: Boolean,
       default: true
     },
+
     pickupTime: { type: String, required: true },
     pickupLocation: { type: String, required: true, trim: true },
+// 📍 Map-based location
+
     location: {
       type: {
         type: String,
@@ -36,27 +39,31 @@ const foodListingSchema = new mongoose.Schema(
     },
     contactInfo: { type: String, required: true, trim: true },
     photos: [{ type: String }],
+
     donorId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
     },
-    status: {
-      type: String,
-      enum: ['available', 'reserved', 'completed'],
-      default: 'available',
-    },
-    claimedBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      default: null
+status: {
+  type: String,
+  enum: ['available', 'reserved', 'completed'],
+  default: 'available',
+},
+
+claimedBy: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: 'User',
+  default: null,
+},
+
     },
   },
   { timestamps: true }
 );
 
-// Enable geospatial queries
+// 🌍 Enable geospatial queries
+
 foodListingSchema.index({ location: '2dsphere' });
 
 module.exports = mongoose.model('FoodListing', foodListingSchema);
-
