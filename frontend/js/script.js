@@ -1,56 +1,40 @@
 // ShareBite JavaScript - Interactive Food Waste Reduction Platform
 
-// Theme Toggle
-const themeToggle = document.getElementById('themeToggle');
-const body = document.body;
-const themeIcon = themeToggle.querySelector('i');
-
-themeToggle.addEventListener('click', () => {
-    body.classList.toggle('dark-mode');
-    if (body.classList.contains('dark-mode')) {
-        themeIcon.classList.remove('fa-moon');
-        themeIcon.classList.add('fa-sun');
-        showToast('Dark mode enabled');
-    } else {
-        themeIcon.classList.remove('fa-sun');
-        themeIcon.classList.add('fa-moon');
-        showToast('Light mode enabled');
-    }
-});
-
+// Note: Theme functionality is handled in theme.js to avoid conflicts
 
 
 const menuToggle = document.getElementById("menuToggle");
 const navMenu = document.getElementById("navMenu");
 
-menuToggle.addEventListener("click", () => {
-    navMenu.classList.toggle("active");
-});
-menuToggle.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        menuToggle.click();
-    }
-});
-
-
+// Wait for DOM to be ready before setting up event listeners
 document.addEventListener("DOMContentLoaded", () => {
     const menuToggle = document.getElementById("menuToggle");
     const navMenu = document.getElementById("navMenu");
 
-    menuToggle.addEventListener("click", () => {
-        navMenu.classList.toggle("active");
-    });
+    if (menuToggle && navMenu) {
+        menuToggle.addEventListener("click", () => {
+            navMenu.classList.toggle("active");
+        });
+        
+        menuToggle.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                menuToggle.click();
+            }
+        });
+    }
 });
 
 window.addEventListener("scroll", () => {
-    if (window.scrollY > 50) {
-        navMenu.classList.add("scrolled");
+    const navbar = document.querySelector('.navbar');
+    if (navbar) {
+        if (window.scrollY > 50) {
+            navbar.classList.add("scrolled");
+        } else {
+            navbar.classList.remove("scrolled");
+        }
     }
-    else {
-        navMenu.classList.remove("scrolled");
-    }
-})
+});
 
 // Notification Toggle
 const notificationBell = document.getElementById('notificationBell');
@@ -1766,32 +1750,15 @@ setupFoodCardInteractions() {
             notificationBell.style.display = 'block';
         }
 
-        // Toggle notification panel
-        notificationBell.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const isActive = notificationPanel.classList.contains('active');
-
-            if (isActive) {
-                notificationPanel.classList.remove('active');
-                notificationBell.classList.remove('active');
-            } else {
-                notificationPanel.classList.add('active');
-                notificationBell.classList.add('active');
-            }
-        });
-
-        // Close panel when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!notificationBell.contains(e.target)) {
-                notificationPanel.classList.remove('active');
-                notificationBell.classList.remove('active');
-            }
-        });
+        // Note: Notification click handlers are set up in the main script.js file
+        // to avoid duplicate event listeners
 
         // Prevent panel from closing when clicking inside
-        notificationPanel.addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
+        if (notificationPanel) {
+            notificationPanel.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        }
     }
 
     loadClaimedItems() {

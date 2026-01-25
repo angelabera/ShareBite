@@ -1205,32 +1205,15 @@ if (expiryStatus.expired) {
             notificationBell.style.display = 'block';
         }
         
-        // Toggle notification panel
-        notificationBell.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const isActive = notificationPanel.classList.contains('active');
-            
-            if (isActive) {
-                notificationPanel.classList.remove('active');
-                notificationBell.classList.remove('active');
-            } else {
-                notificationPanel.classList.add('active');
-                notificationBell.classList.add('active');
-            }
-        });
-        
-        // Close panel when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!notificationBell.contains(e.target)) {
-                notificationPanel.classList.remove('active');
-                notificationBell.classList.remove('active');
-            }
-        });
+        // Note: Notification click handlers are set up in the main script.js file
+        // to avoid duplicate event listeners
         
         // Prevent panel from closing when clicking inside
-        notificationPanel.addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
+        if (notificationPanel) {
+            notificationPanel.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        }
     }
     
     loadClaimedItems() {
