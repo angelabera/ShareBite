@@ -1286,9 +1286,11 @@ class ShareBiteFoodListing {
         });
 
         // Prevent panel from closing when clicking inside
-        notificationPanel.addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
+        if (notificationPanel) {
+            notificationPanel.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        }
     }
 
     loadClaimedItems() {

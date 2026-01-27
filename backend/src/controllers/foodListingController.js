@@ -37,7 +37,9 @@ exports.createListing = async (req, res) => {
       contactInfo,
       photos: photos || [],
       dietaryTags: dietaryTags || [],
-      donorId: req.user._id,
+
+      donorId: req.user ? req.user._id : null,
+
       location: {
         type: 'Point',
         coordinates: [parseFloat(longitude), parseFloat(latitude)],
@@ -78,7 +80,9 @@ exports.getListingById = async (req, res) => {
 exports.updateListing = async (req, res) => {
   try {
     const listing = await FoodListing.findById(req.params.id);
-    if (!listing) return res.status(404).json({ message: 'Listing not found' });
+
+   if (!listing) return res.status(404).json({ message: 'Listing not found' });
+
 
     // Prevent updates on expired food
     if (listing.expiryStatus === 'EXPIRED') {
@@ -88,7 +92,7 @@ exports.updateListing = async (req, res) => {
     }
 
     // Only donor can update
-    if (listing.donorId.toString() !== req.user._id.toString()) {
+    if (req.user && listing.donorId.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: 'Not authorized to update this listing' });
     }
 

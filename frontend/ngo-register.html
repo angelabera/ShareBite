@@ -9,6 +9,7 @@
         rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
+
     <style>
         /* Auth Page Specific Styles */
         body {
@@ -313,6 +314,21 @@
                 <label for="availability">Availability (Optional)</label>
                 <input type="text" id="availability" name="availability" placeholder="e.g., Weekends" disabled>
             </div>
+            <p class="faq-answer">
+                Absolutely! We value every bit of help. If you do not have a vehicle, you can filter for pickups that are within walking distance or use public transport if feasible. You can also partner with another volunteer who has a vehicle.
+                <br><br>
+                Regarding availability, you are completely free to choose when you want to help. There are no mandatory hours. You can simply toggle your status to "Available" on weekends or evenings when you are free, and claim requests that fit your schedule.
+            </p>
+        </div>
+    </section>
+
+
+<!-- CTA Banner -->
+    <section class="cta-banner">
+        <h2 class="cta-title">Still have a question regarding Registration?</h2>
+        <p class="cta-desc">Contact us. We will answer your query.</p>
+        <a href="index.html#contact-section" class="cta-btn">Contact Us</a>
+    </section>
 
             <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Register</button>
         </form>
@@ -322,7 +338,15 @@
             have an account? Login</a>
     </div>
 
-    <script src="js/theme.js"></script>
+    <div class="footer-bottom">
+      <p>Made with 💚 by <strong>Angela Bera</strong></p>
+      <p> © <span id="current-year"></span> ShareBite. All rights reserved ·
+        <a href="License.html">License</a> </p>
+    </div>
+  </footer>
+
+<!-- JS SCRIPTS -->
+<script src="js/theme.js"></script>
     <script src="js/api.js"></script>
     <script>
         // --- Password Strength & Toggle (Simplified Logic) ---
@@ -359,7 +383,7 @@
         // --- NGO/Volunteer Logic ---
         const toggleNGO = document.getElementById('toggleNGO');
         const toggleVolunteer = document.getElementById('toggleVolunteer');
-        const registerTypeInput = document.getElementById('registerType');
+        const slider = document.getElementById('toggleSlider');
         const ngoFields = document.querySelectorAll('.ngo-field');
         const volunteerFields = document.querySelectorAll('.volunteer-field');
         const registerTitle = document.getElementById('registerTitle');
@@ -427,5 +451,4 @@
         });
     </script>
 </body>
-
 </html>
