@@ -1,248 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Support | ShareBite - Reduce Food Waste, Feed Communities</title>
-  
+
+  <link rel="stylesheet" href="css/style.css?v=support-update">
   <link rel="stylesheet" href="./css/fontawesome/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
 
   <style>
-    /* === 1. VARIABLES & RESET (Imported from style.css) === */
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    :root {
-        /* Color Palette */
-        --primary-color: #4CAF50;
-        --primary-dark: #2E7D32;
-        --primary-light: #81C784;
-        --secondary-color: #FF6B35;
-        --secondary-dark: #E65100;
-        --accent-color: #FFC107;
-        --accent-dark: #FF8F00;
-
-        /* Neutral Colors */
-        --white: #FFFFFF;
-        --light-gray: #F5F7FA;
-        --medium-gray: #9E9E9E;
-        --dark-gray: #666666;
-        --text-dark: var(--dark-gray);
-        --text-light: #888;
-        --text-color: #333;
-        --black: #212121;
-        --card-bg: var(--white);
-        
-        /* Additional Colors */
-        --bg-light: #f8f9fa;
-        --bg-white: #ffffff;
-        --border-color: #e0e0e0;
-        --input-border: #ccc;
-        --hover-bg: #f2f2f2;
-
-        /* Gradients */
-        --primary-gradient: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
-        --secondary-gradient: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
-        --hero-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-
-        /* Typography */
-        --font-family: 'Inter', sans-serif;
-        --h1-size: 3.5rem;
-        --h2-size: 2.5rem;
-        --h3-size: 1.8rem;
-        --body-size: 1rem;
-        --border-radius: 12px;
-        --card-radius: 16px;
-
-        /* Shadows (Crucial for depth) */
-        --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.1);
-        --shadow-medium: 0 5px 25px rgba(0, 0, 0, 0.15);
-        --shadow-heavy: 0 10px 40px rgba(0, 0, 0, 0.2);
-
-        /* Transitions */
-        --transition: all 0.3s ease;
-        --transition-fast: 0.2s ease;
-        --transition-medium: 0.3s ease;
-        --transition-slow: 0.5s ease;
-    }
-
-    body {
-        font-family: 'Poppins', var(--font-family);
-        line-height: 1.6;
-        color: var(--black);
-        background: var(--bg-white);
-        overflow-x: hidden;
-        padding-top: 80px; /* Fixed Navbar Space */
-    }
-
-    .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 2rem;
-    }
-
-    a { text-decoration: none; color: inherit; }
-    ul { list-style: none; }
-
-    /* === 2. ANIMATIONS (Keyframes from style.css) === */
-    @keyframes slideInUp {
-        from { opacity: 0; transform: translateY(30px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-
-    @keyframes pulse {
-        0%, 100% { transform: scale(1); box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3); }
-        50% { transform: scale(1.1); box-shadow: 0 6px 25px rgba(76, 175, 80, 0.5); }
-    }
-
-    @keyframes socialDance {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-5px); }
-    }
-
-    @keyframes bounce {
-        0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
-        40% { transform: translateX(-50%) translateY(-10px); }
-        60% { transform: translateX(-50%) translateY(-5px); }
-    }
-
-    @keyframes slideDown {
-        from { opacity: 0; transform: translateY(-10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* === 3. NAVBAR STYLES === */
-    .navbar {
-        position: fixed;
-        top: 0;
-        width: 100%;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        z-index: 1000;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        padding: 1.2rem 0;
-        transition: var(--transition);
-    }
-
-    .nav-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 1.25rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .nav-logo-link {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: var(--primary-color);
-        font-size: 1.5rem;
-        font-weight: bold;
-    }
-
-    .nav-logo-link i { font-size: 1.8rem; }
-
-    .nav-menu { display: flex; gap: 1.25rem; }
-
-    .nav-link {
-        color: var(--text-dark);
-        font-weight: 500;
-        transition: var(--transition-slow);
-        padding: 0.5rem 0;
-        position: relative;
-    }
-
-    .nav-link::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 0;
-        height: 2px;
-        background: var(--primary-color);
-        transition: var(--transition-slow);
-    }
-
-    .nav-link:hover::after, .nav-link.active::after { width: 100%; }
-    .nav-link:hover, .nav-link.active { color: var(--primary-color); }
-
-    .user-actions { display: flex; align-items: center; gap: 1rem; }
-
-    .theme-toggle {
-        background: var(--bg-light);
-        border: none;
-        padding: 0.6rem 1rem;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: var(--transition);
-        color: var(--text-dark);
-        display: flex;
-        align-items: center;
-    }
-
-    .theme-toggle:hover { background: var(--border-color); transform: translateY(-2px); }
-
-    .login-btn {
-        padding: 6px 20px;
-        font-size: 1rem;
-        color: #fff;
-        border: none;
-        cursor: pointer;
-        border-radius: 40px;
-        background: linear-gradient(90deg, #3b82f6, #9333ea, #f43f5e);
-        background-size: 300%;
-        transition: var(--transition);
-        font-family: 'Poppins', sans-serif;
-    }
-
-    .login-btn:hover {
-        background-position: right;
-        box-shadow: 0 0 12px rgba(147, 51, 234, 0.8);
-        transform: scale(1.05);
-    }
-
-    /* Hamburger */
-    .hamburger {
-        display: none;
-        flex-direction: column;
-        cursor: pointer;
-        gap: 5px;
-    }
-
-    .hamburger span {
-        width: 25px;
-        height: 3px;
-        background: var(--text-dark);
-        border-radius: 2px;
-        transition: var(--transition);
-    }
-
-    .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(8px, 6px); }
-    .hamburger.active span:nth-child(2) { opacity: 0; }
-    .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(8px, -6px); }
-
-    /* === 4. HERO SECTION === */
+    /* Page-specific overrides/enhancements */
     .support-hero {
-        background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
-        color: white;
-        text-align: center;
-        padding: 8rem 2rem 6rem;
-        margin-top: 0;
-        position: relative;
+      background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%);
+      color: white;
+      font-size: 1.5rem;
+      font-weight: 200;
+      text-align: center;
+      padding: 8rem 2rem 6rem;
+      margin-top: 0;
+    }
+
+    :root.dark .support-hero {
+      background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
     }
 
     .support-hero-content {
@@ -272,13 +55,16 @@
         border: 1px solid rgba(255,255,255,0.3);
     }
 
-    .support-description {
-        font-size: 1.1rem;
-        opacity: 0.95;
-        line-height: 1.8;
+    .user-actions {
+      margin-left: 30px;
+      /* Adjust this number to increase/decrease space */
+      display: flex;
+      /* Ensures buttons align correctly */
+      gap: 15px;
+      /* Adds space between the buttons themselves */
+      align-items: center;
     }
 
-    /* === 5. CARDS (Using Feature Card styles) === */
     .about-sharebite {
         max-width: 1100px;
         margin: 4rem auto;
@@ -363,13 +149,36 @@
         padding: 0 2rem;
     }
 
-    .faq {
-        margin-bottom: 1.5rem;
-        border: 1px solid var(--border-color);
-        border-radius: var(--border-radius);
-        overflow: hidden;
-        background: var(--card-bg);
-        transition: var(--transition);
+    /* Force text color for inputs in light mode */
+    .contact input,
+    .contact textarea,
+    .contact select {
+      color: #111827 !important;
+      background-color: #F9FAFB !important;
+    }
+
+    /* Ensure labels are visible */
+    .contact label {
+      color: #111827 !important;
+    }
+
+    /* Fix card text colors */
+    .way-card h4,
+    .way-card p {
+      color: inherit;
+    }
+
+    body:not(.dark) .way-card h4 {
+      color: #111827;
+    }
+
+    body:not(.dark) .way-card p {
+      color: #4B5563;
+    }
+
+    :root.dark .contact-support {
+      background: #1e1e1e;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
     }
 
     .faq:hover {
@@ -395,240 +204,273 @@
         color: white;
     }
 
-    .faq p {
-        display: none;
-        padding: 1.5rem 1.8rem;
-        margin: 0;
-        color: var(--text-dark);
-        line-height: 1.7;
-        animation: slideDown 0.3s ease;
+    @media (max-width: 768px) {
+      .support-hero {
+        padding: 7rem 1.5rem 5rem;
+      }
+
+      .support-hero h1 {
+        font-size: 2.6rem;
+      }
+
+      .contact-support {
+        margin: 3.5rem auto;
+        padding: 2.2rem 1.6rem;
+      }
     }
 
     .faq.open p { display: block; }
 
     /* === 7. CONTACT SECTION (Imported from style.css) === */
     .contact {
-        padding: 5rem 2rem;
-        background: var(--light-gray);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+      padding: 5rem 2rem;
+      background: var(--light-gray);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .main-title {
-        font-size: 2.5rem;
-        font-weight: 700;
-        text-align: center;
-        color: var(--black);
-        background: var(--primary-gradient);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 3rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+      text-align: center;
+      color: var(--black);
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 3rem;
     }
 
     .contact-wrapper {
-        background: var(--white);
-        padding: 3rem;
-        border-radius: 1.5rem;
-        box-shadow: var(--shadow-heavy);
-        max-width: 1200px;
-        width: 100%;
+      background: var(--white);
+      padding: 3rem;
+      border-radius: 1.5rem;
+      box-shadow: var(--shadow-heavy);
+      max-width: 1200px;
+      width: 100%;
     }
 
     .contact-container {
-        display: flex;
-        justify-content: space-between;
-        gap: 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: stretch;
+      gap: 3rem;
     }
 
-    .contact-left, .contact-right {
-        flex: 1;
-        background: var(--white);
-        border-radius: 1rem;
-        box-shadow: var(--shadow-medium);
-        padding: 2rem 2.5rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+    /* --- Left Box (Form) --- */
+    .contact-left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: var(--white);
+      border-radius: 1rem;
+      box-shadow: var(--shadow-heavy);
+      padding: 2rem 2.5rem;
     }
 
     .contact-title {
-        font-size: 1.8rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-        background: var(--primary-gradient);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--black);
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
     }
 
-    .contact-subtitle { color: var(--medium-gray); margin-bottom: 1.5rem; }
-
-    .contact form { display: flex; flex-direction: column; gap: 1.2rem; }
-    .contact form label { font-weight: 600; color: var(--black); }
-
-    .contact form input, .contact form textarea {
-        width: 100%;
-        padding: 0.9rem 1rem;
-        border-radius: 0.6rem;
-        border: 1.5px solid var(--border-color);
-        font-size: 1rem;
-        color: var(--black);
-        background: var(--light-gray);
-        transition: 0.3s ease;
-        resize: none;
-        font-family: inherit;
+    .contact-subtitle {
+      color: var(--medium-gray);
+      margin-bottom: 1.5rem;
     }
 
-    .contact form input:focus, .contact form textarea:focus {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.15);
-        outline: none;
-        background: var(--white);
+    .contact form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .contact form label {
+      font-weight: 600;
+      color: var(--black);
+    }
+
+    .contact form input,
+    .contact form textarea {
+      width: 100%;
+      padding: 0.9rem 1rem;
+      border-radius: 0.6rem;
+      border: 1.5px solid var(--medium-gray);
+      font-size: 1rem;
+      color: var(--black);
+      background: var(--light-gray);
+      transition: 0.3s ease;
+      resize: none;
+    }
+
+    .contact form input:focus,
+    .contact form textarea:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 4px rgba(0, 128, 255, 0.15);
+      outline: none;
     }
 
     .contact form button {
-        background: var(--primary-gradient);
-        color: white;
-        font-weight: 600;
-        font-size: 1.1rem;
-        padding: 0.9rem 0;
-        border: none;
-        border-radius: 0.6rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: var(--shadow-medium);
+      background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%);
+      color: white;
+      font-weight: 600;
+      font-size: 1.1rem;
+      padding: 0.9rem 0;
+      border: none;
+      border-radius: 0.6rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
     }
 
     .contact form button:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-heavy);
+      transform: translateY(-2px);
+    }
+
+    /* --- Right Box (Info) --- */
+    .contact-right {
+      flex: 1;
+      background: var(--white);
+      border-radius: 1rem;
+      box-shadow: var(--shadow-heavy);
+      padding: 2rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .contact-right h3 {
+      color: var(--black);
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .contact-right p {
+      color: var(--medium-gray);
+      margin-bottom: 1.5rem;
+    }
+
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
     }
 
     .info-item { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.2rem; }
     
     .info-item i {
-        background: var(--primary-gradient);
-        color: white;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        font-size: 1.2rem;
-        box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+      background: var(--primary-color);
+      color: white;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-size: 1.2rem;
     }
 
-    .info-item strong { color: var(--black); display: block; }
-    .info-item p { margin: 0; color: var(--medium-gray); }
+    .info-item strong {
+      color: var(--black);
+    }
+
+    .info-item p {
+      margin: 0.2rem 0 0;
+      color: var(--medium-gray);
+    }
+
+    /* Social Links */
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
 
     .social-links { display: flex; gap: 1rem; margin-top: 2rem; }
     
     .social-links a {
-        background: var(--primary-gradient);
-        color: white;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 50%;
-        font-size: 1.2rem;
-        transition: 0.3s ease;
-        box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+      background: var(--primary-gradient);
+      color: white;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      transition: 0.3s ease;
     }
 
     .social-links a:hover {
-        transform: translateY(-3px) rotate(360deg);
-        box-shadow: var(--shadow-medium);
+      transform: translateY(-3px);
     }
 
-    /* === 8. FOOTER (Imported from style.css) === */
-    .footer {
-        background: #0D0D0D;
-        color: #cbd5e1;
-        padding: 4rem 1rem 2rem;
+    /* Section Divider */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 0;
+      margin: 2rem 0;
     }
 
-    .footer-grid {
-        display: grid;
-        grid-template-columns: 2fr 1fr 1fr 1fr;
-        gap: 2rem;
-        margin-bottom: 2rem;
+    .divider-line {
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(90deg, transparent 0%, var(--primary-color) 50%, transparent 100%);
+      max-width: 300px;
     }
 
-    .footer-logo {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin-bottom: 1rem;
-        color: var(--primary-light);
+    .divider-icon {
+      margin: 0 2rem;
+      width: 60px;
+      height: 60px;
+      background: var(--primary-gradient);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.5rem;
+      box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3);
+      animation: pulse 2s infinite;
     }
 
-    .footer-links h4 { color: #81C784; margin-bottom: 1rem; font-size: 1.05rem; }
-    .footer-links li { margin-bottom: 0.6rem; }
-    .footer-links a {
-        color: #cbd5e1;
-        font-size: 0.95rem;
-        transition: color 0.3s ease;
+    @keyframes pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+        box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3);
+      }
+
+      50% {
+        transform: scale(1.1);
+        box-shadow: 0 6px 25px rgba(76, 175, 80, 0.5);
+      }
     }
     .footer-links a:hover { color: #22c55e; }
 
-    .footer-bottom {
-        border-top: 1px solid #1e293b;
-        padding-top: 1.5rem;
-        text-align: center;
-        color: #94a3b8;
-        font-size: 0.85rem;
-        margin-top: 3rem;
+    /* Dark mode support for divider */
+    body.dark-mode .divider-line {
+      background: linear-gradient(90deg, transparent 0%, var(--accent-color) 50%, transparent 100%);
     }
 
-    
-    .footer-bottom a { color: #4CAF50; font-weight: bold; }
-
-    /* === 9. DARK MODE (Imported from style.css) === */
-    :root.dark {
-        --white: #121212;
-        --light-gray: #1E1E1E;
-        --medium-gray: #B0B0B0;
-        --dark-gray: #E0E0E0;
-        --black: #FAFAFA;
-        --bg-white: #121212;
-        --bg-light: #1E1E1E;
-        --card-bg: #1E1E1E;
-        --text-color: #f1f1f1;
-        --text-dark: #E0E0E0;
-        --border-color: #2a2a2a;
-        --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.6);
-        --shadow-medium: 0 5px 25px rgba(0, 0, 0, 0.7);
-        --shadow-heavy: 0 10px 40px rgba(0, 0, 0, 0.8);
-        --hero-gradient: linear-gradient(135deg, #1f2937 0%, #111827 100%);
-    }
-
-    :root.dark .navbar { background: rgba(18, 18, 18, 0.9); border-bottom: 1px solid #2a2a2a; }
-    :root.dark .support-hero { background: var(--hero-gradient); }
-    :root.dark .way-card, 
-    :root.dark .contact-wrapper,
-    :root.dark .contact-left, 
-    :root.dark .contact-right,
-    :root.dark .faq {
-        background: #121212;
-        color: white;
-        border-color: #333;
-    }
-    
-    :root.dark .contact input, :root.dark .contact textarea {
-        background: #2a2a2a;
-        border-color: #444;
-        color: white;
-    }
-    /* Fix for Contact Section Text in Dark Mode */
-    :root.dark .contact-right h3,
-    :root.dark .contact-title {
-        color: #ffffff; /* Forces white text */
+    body.dark-mode .divider-icon {
+      background: var(--secondary-gradient);
+      box-shadow: 0 4px 20px rgba(255, 107, 53, 0.3);
     }
 
     :root.dark .contact-right p,
@@ -641,33 +483,13 @@
 
     /* === 10. RESPONSIVE === */
     @media (max-width: 900px) {
-        .contact-container { flex-direction: column; }
-    }
-
-    @media (max-width: 768px) {
-        .hamburger { display: flex; }
-        .nav-menu {
-            position: fixed;
-            top: 80px;
-            left: 0;
-            width: 100%;
-            background: var(--bg-white);
-            flex-direction: column;
-            padding: 2rem 0;
-            transform: translateY(-150%);
-            transition: 0.3s ease;
-            box-shadow: var(--shadow-medium);
-            z-index: 999;
-        }
-        .nav-menu.active { transform: translateY(0); }
-        
-        .footer-grid { grid-template-columns: 1fr 1fr; text-align: center; }
-        .social-links { justify-content: center; }
-        
-        .support-hero h1 { font-size: 2.5rem; }
+      .contact-container {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
+
 <body>
 
   <nav class="navbar">
@@ -698,23 +520,23 @@
   </nav>
 
   <section class="support-hero">
-  <div class="container support-hero-content">
-    <h1>Support the Mission to Reduce Hunger & Food Waste</h1>
+    <div class="container support-hero-content">
+      <h1>Support the Mission to Reduce Hunger & Food Waste</h1>
 
-    <p class="support-badge">
-      Small actions. Big impact. A hunger-free future starts with you.
-    </p>
+      <p class="support-badge">
+        Small actions. Big impact. A hunger-free future starts with you.
+      </p>
 
-    <p class="support-description">
-      ShareBite is committed to minimizing food waste and ensuring surplus food
-      reaches the right hands. Through community participation, verified
-      partnerships, and responsible distribution, we empower individuals and
-      organizations to make a real difference.
-      <br><br>
-    </p>
+      <p class="support-description">
+        ShareBite is committed to minimizing food waste and ensuring surplus food
+        reaches the right hands. Through community participation, verified
+        partnerships, and responsible distribution, we empower individuals and
+        organizations to make a real difference.
+        <br><br>
+      </p>
 
-  </div>
-</section>
+    </div>
+  </section>
 
 
   <section class="about-sharebite">
@@ -755,33 +577,42 @@
   </section>
 
   <section class="faq-container">
-  <h2 style="text-align:center; margin-bottom:2.5rem;">Frequently Asked Questions</h2>
+    <h2 style="text-align:center; margin-bottom:2.5rem;">Frequently Asked Questions</h2>
 
-  <div class="faq">
-    <h3>How do I donate surplus food on ShareBite?<i class="fas fa-chevron-down"></i></h3>
-    <p>Register or log in → click "Add Listing" → enter food type, quantity, freshness time, pickup location and contact details. Nearby NGOs and volunteers will be notified and can claim the donation quickly.</p>
-  </div>
+    <div class="faq">
+      <h3>How do I donate surplus food on ShareBite?<i class="fas fa-chevron-down"></i></h3>
+      <p>Register or log in → click "Add Listing" → enter food type, quantity, freshness time, pickup location and
+        contact details. Nearby NGOs and volunteers will be notified and can claim the donation quickly.</p>
+    </div>
 
-  <div class="faq">
-    <h3>How can NGOs and volunteers join the platform?<i class="fas fa-chevron-down"></i></h3>
-    <p>NGOs register on the NGO registration page and go through a quick verification process (documents + review). Individuals can sign up as volunteers and browse/claim available listings directly (subject to donor approval and safety checks).</p>
-  </div>
+    <div class="faq">
+      <h3>How can NGOs and volunteers join the platform?<i class="fas fa-chevron-down"></i></h3>
+      <p>NGOs register on the NGO registration page and go through a quick verification process (documents + review).
+        Individuals can sign up as volunteers and browse/claim available listings directly (subject to donor approval
+        and safety checks).</p>
+    </div>
 
-  <div class="faq">
-    <h3>What kind of food is accepted and how is safety ensured?<i class="fas fa-chevron-down"></i></h3>
-    <p>We accept fresh, edible surplus food (cooked meals, bakery items, fruits, vegetables, unopened packaged food within expiry). Expired, spoiled or opened perishables are not allowed. Donors must provide preparation time & freshness window; collectors follow hygiene guidelines and can refuse suspicious donations.</p>
-  </div>
+    <div class="faq">
+      <h3>What kind of food is accepted and how is safety ensured?<i class="fas fa-chevron-down"></i></h3>
+      <p>We accept fresh, edible surplus food (cooked meals, bakery items, fruits, vegetables, unopened packaged food
+        within expiry). Expired, spoiled or opened perishables are not allowed. Donors must provide preparation time &
+        freshness window; collectors follow hygiene guidelines and can refuse suspicious donations.</p>
+    </div>
 
-  <div class="faq">
-    <h3>Is ShareBite free to use? Are there any costs involved?<i class="fas fa-chevron-down"></i></h3>
-    <p>Yes — completely free for everyone. Donors can list food, NGOs/volunteers can claim and coordinate pickups, and all core features have no charges. (Optional future donations/fundraising may appear to support platform operations.)</p>
-  </div>
+    <div class="faq">
+      <h3>Is ShareBite free to use? Are there any costs involved?<i class="fas fa-chevron-down"></i></h3>
+      <p>Yes — completely free for everyone. Donors can list food, NGOs/volunteers can claim and coordinate pickups, and
+        all core features have no charges. (Optional future donations/fundraising may appear to support platform
+        operations.)</p>
+    </div>
 
-  <div class="faq">
-    <h3>What if no one claims my donation or I have another question?<i class="fas fa-chevron-down"></i></h3>
-    <p>You’ll get reminders and can extend the availability time or cancel the listing. Many restaurants set up recurring pickups with regular partners. For any other questions, partnerships, impact tracking, or issues — use the contact form below, email support@sharebite.org, or call +91 88888 99999 during business hours.</p>
-  </div>
-</section>
+    <div class="faq">
+      <h3>What if no one claims my donation or I have another question?<i class="fas fa-chevron-down"></i></h3>
+      <p>You’ll get reminders and can extend the availability time or cancel the listing. Many restaurants set up
+        recurring pickups with regular partners. For any other questions, partnerships, impact tracking, or issues — use
+        the contact form below, email support@sharebite.org, or call +91 88888 99999 during business hours.</p>
+    </div>
+  </section>
 
   <section id="contact-section" class="contact">
     <h1 class="main-title">📞 Contact Us</h1>
@@ -835,14 +666,14 @@
             </div>
 
             <div class="info-item">
-            <i class="fa-solid fa-clock"></i>
-            <div>
+              <i class="fa-solid fa-clock"></i>
+              <div>
                 <strong>Support Hours:</strong>
                 <p>
-                Monday – Saturday | 9 AM – 7 PM IST<br>
+                  Monday – Saturday | 9 AM – 7 PM IST<br>
                 <p>Average response time: within 24 hours</p>
                 </p>
-            </div>
+              </div>
             </div>
 
           </div>
@@ -923,7 +754,7 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      
+
       // --- 1. Current Year Update ---
       const yearSpan = document.getElementById("current-year");
       if (yearSpan) {
@@ -941,14 +772,14 @@
           document.querySelectorAll(".faq").forEach(f => {
             f.classList.remove("open");
             const p = f.querySelector("p");
-            if(p) p.style.display = "none";
+            if (p) p.style.display = "none";
           });
 
           // Toggle the clicked FAQ
           if (!isOpen) {
             parent.classList.add("open");
             const p = item.nextElementSibling;
-            if(p) p.style.display = "block";
+            if (p) p.style.display = "block";
           }
         });
       });
@@ -959,7 +790,23 @@
       if (contactForm) {
         contactForm.addEventListener("submit", e => {
           e.preventDefault();
-          alert("✅ Thank you! Your message has been sent to the ShareBite support team.");
+
+          // Create success message element
+          const successMsg = document.createElement('div');
+          successMsg.style.textAlign = 'center';
+          successMsg.style.padding = '2rem 0';
+          successMsg.innerHTML = `
+            <i class="fas fa-check-circle" style="color: var(--primary-green); font-size: 3rem; margin-bottom: 1rem;"></i>
+            <h3 style="margin-bottom: 0.5rem; color: var(--black);">Message Sent!</h3>
+            <p style="color: var(--medium-gray);">Thank you! Your message has been sent to the ShareBite support team.</p>
+            <button class="btn btn-primary" onclick="alert('TODO: Reset logic if needed')" style="margin-top:1rem; display:none;">Send Another</button>
+          `;
+
+          // Hide form and show success message
+          contactForm.style.display = 'none';
+          contactForm.parentNode.insertBefore(successMsg, contactForm.nextSibling);
+
+          // Reset form in background
           e.target.reset();
         });
       }
@@ -997,25 +844,26 @@
         themeToggle.addEventListener('click', () => {
           const isDarkNow = htmlEl.classList.contains('dark');
           const newThemeIsDark = !isDarkNow;
-          
+
           applyTheme(newThemeIsDark);
-          
+
           // Save preference to LocalStorage
           localStorage.setItem('theme', newThemeIsDark ? 'dark' : 'light');
         });
       }
-      
+
       // --- 5. Mobile Menu Toggle ---
       const menuToggle = document.getElementById('menuToggle');
       const navMenu = document.getElementById('navMenu');
 
       if (menuToggle && navMenu) {
         menuToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-            menuToggle.classList.toggle('active');
+          navMenu.classList.toggle('active');
+          menuToggle.classList.toggle('active');
         });
       }
     });
   </script>
 </body>
+
 </html>
