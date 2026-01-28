@@ -2,6 +2,9 @@
 
 A beautiful, responsive web platform connecting restaurants and households with NGOs and volunteers to reduce food waste while fighting hunger in communities.
 
+---
+
+
 ## 🌟 Features
 
 ### Core Functionality
@@ -38,6 +41,27 @@ A beautiful, responsive web platform connecting restaurants and households with 
    - Add new food listings (when in Donor mode)
    - Filter and search for specific items
    - Claim food items (when in Collector mode)
+
+
+ ## 📁 Program Structure
+```
+ShareBite/
+├── backend/ # Backend API (if added)
+├── frontend/ # Frontend codebase
+│ ├── index.html # Main HTML entry
+│ ├── styles/ # CSS files
+│ └── scripts/ # JS functionality
+├── .dockerignore
+├── .env.example # Environment variable template
+├── CODE_OF_CONDUCT.md
+├── CONTRIBUTING.md
+├── INTEGRATION_GUIDE.md
+├── LICENSE.md
+├── PULL_REQUEST_TEMPLATE.md
+├── README.md
+├── SECURITY.md
+└── TESTING_GUIDE.md
+```
 
 ## 📱 Device Compatibility
 
