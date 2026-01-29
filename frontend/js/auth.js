@@ -39,10 +39,10 @@ class ShareBiteAuth {
 
         this.currentUser = userObj;
         localStorage.setItem(this.storageKey, JSON.stringify(userObj));
-        
+
         // Also store in the format expected by existing code
         localStorage.setItem('user', JSON.stringify(userObj));
-        
+
         this.updateUIForLoggedInUser();
         return userObj;
     }
@@ -53,7 +53,7 @@ class ShareBiteAuth {
         localStorage.removeItem(this.storageKey);
         localStorage.removeItem('user'); // Remove the old format too
         this.updateUIForLoggedOutUser();
-        
+
         // Show logout success message
         if (typeof Swal !== 'undefined') {
             Swal.fire({
@@ -65,7 +65,7 @@ class ShareBiteAuth {
                 showConfirmButton: false
             });
         }
-        
+
         // Redirect to home page after logout
         setTimeout(() => {
             if (window.location.pathname !== '/index.html' && !window.location.pathname.endsWith('/')) {
@@ -109,16 +109,16 @@ class ShareBiteAuth {
 
         // Check if profile section already exists
         let profileSection = userActionsContainer.querySelector('.user-profile');
-        
+
         if (!profileSection) {
             // Create profile section
             profileSection = document.createElement('div');
             profileSection.className = 'user-profile';
-            
+
             // Create the dropdown structure
             const profileDropdown = document.createElement('div');
             profileDropdown.className = 'profile-dropdown';
-            
+
             // Create the profile button
             const profileBtn = document.createElement('button');
             profileBtn.className = 'profile-btn';
@@ -126,23 +126,23 @@ class ShareBiteAuth {
             profileBtn.type = 'button';
             profileBtn.setAttribute('aria-expanded', 'false');
             profileBtn.setAttribute('aria-haspopup', 'true');
-            
+
             // Create button content with proper structure
             const userIcon = document.createElement('i');
             userIcon.className = 'fas fa-user-circle';
-            
+
             const userName = document.createElement('span');
             userName.className = 'user-name';
             userName.textContent = this.currentUser.name;
-            
+
             const dropdownIcon = document.createElement('i');
             dropdownIcon.className = 'fas fa-chevron-down dropdown-icon';
-            
+
             // Append elements to button
             profileBtn.appendChild(userIcon);
             profileBtn.appendChild(userName);
             profileBtn.appendChild(dropdownIcon);
-            
+
             // Create the dropdown menu
             const profileMenu = document.createElement('div');
             profileMenu.className = 'profile-menu';
@@ -161,12 +161,12 @@ class ShareBiteAuth {
                     Logout
                 </button>
             `;
-            
+
             // Assemble the structure
             profileDropdown.appendChild(profileBtn);
             profileDropdown.appendChild(profileMenu);
             profileSection.appendChild(profileDropdown);
-            
+
             // Insert before the hamburger menu
             const hamburger = userActionsContainer.querySelector('.hamburger');
             if (hamburger) {
@@ -200,7 +200,7 @@ class ShareBiteAuth {
                 <button class="login-btn" onclick="window.location.href='login.html'">Login as User</button>
                 <button class="login-btn" onclick="window.location.href='login_ngo.html'">Login as NGO</button>
             `;
-            
+
             if (roleSwitch) {
                 roleSwitch.insertAdjacentHTML('afterend', loginButtonsHTML);
             } else {
@@ -230,7 +230,7 @@ class ShareBiteAuth {
         const toggleDropdown = (e) => {
             e.stopPropagation();
             e.preventDefault();
-            
+
             // Close any other open dropdowns first
             document.querySelectorAll('.profile-menu.show').forEach(menu => {
                 if (menu !== profileMenu) {
@@ -239,23 +239,23 @@ class ShareBiteAuth {
                     if (otherDropdown) otherDropdown.classList.remove('show');
                 }
             });
-            
+
             // Toggle current dropdown
             const isShown = profileMenu.classList.contains('show');
             profileMenu.classList.toggle('show');
             if (profileDropdown) {
                 profileDropdown.classList.toggle('show');
             }
-            
+
             // Update aria attribute
             profileBtn.setAttribute('aria-expanded', !isShown);
-            
+
             console.log('Profile dropdown', isShown ? 'closed' : 'opened');
         };
-        
+
         profileBtn.addEventListener('click', toggleDropdown);
         profileBtn.addEventListener('touchend', toggleDropdown); // For mobile
-        
+
         // Also add mousedown for immediate response
         profileBtn.addEventListener('mousedown', (e) => {
             e.preventDefault(); // Prevent any focus issues
@@ -265,13 +265,13 @@ class ShareBiteAuth {
         logoutBtn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            
+
             // Close dropdown first
             profileMenu.classList.remove('show');
             if (profileDropdown) {
                 profileDropdown.classList.remove('show');
             }
-            
+
             this.logout();
         });
 
@@ -344,7 +344,7 @@ class ShareBiteAuth {
 // Initialize authentication system (only if not already initialized)
 if (typeof window.sharebiteAuth === 'undefined') {
     const sharebiteAuth = new ShareBiteAuth();
-    
+
     // Make it globally available
     window.sharebiteAuth = sharebiteAuth;
     window.ShareBiteAuth = sharebiteAuth;
@@ -373,3 +373,49 @@ setTimeout(() => {
         }
     }
 }, 500);
+
+// ===== INLINE EMAIL & PASSWORD VALIDATION (LOGIN PAGE ONLY) =====
+document.addEventListener("DOMContentLoaded", () => {
+    const emailInput = document.getElementById("email");
+    const emailError = document.getElementById("emailError");
+
+    const passwordInput = document.getElementById("password");
+    const passwordError = document.getElementById("passwordError");
+
+    // Stop if not on login page or if error elements don't exist
+    if (!emailInput || !passwordInput || !emailError || !passwordError) return;
+
+    // Email validation while typing
+    emailInput.addEventListener("input", () => {
+        const value = emailInput.value.trim();
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (value.length === 0) {
+            emailError.textContent = "Email is required";
+            emailError.style.display = "block";
+        } else if (!emailPattern.test(value)) {
+            emailError.textContent = "Please enter a valid email address";
+            emailError.style.display = "block";
+        } else {
+            emailError.textContent = "";
+            emailError.style.display = "none";
+        }
+    });
+
+    // Password validation while typing
+    passwordInput.addEventListener("input", () => {
+        const value = passwordInput.value.trim();
+
+        if (value.length === 0) {
+            passwordError.textContent = "Password is required";
+            passwordError.style.display = "block";
+        } else if (value.length < 6) {
+            passwordError.textContent = "Password must be at least 6 characters";
+            passwordError.style.display = "block";
+        } else {
+            passwordError.textContent = "";
+            passwordError.style.display = "none";
+        }
+    });
+});
+

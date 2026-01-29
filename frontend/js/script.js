@@ -1,104 +1,132 @@
 // ShareBite JavaScript - Interactive Food Waste Reduction Platform
 
-  
- 
+// Note: Theme functionality is handled in theme.js to avoid conflicts
 
-        // Theme Toggle
-        const themeToggle = document.getElementById('themeToggle');
-        const body = document.body;
-        const themeIcon = themeToggle.querySelector('i');
 
-        themeToggle.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
-            if (body.classList.contains('dark-mode')) {
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
-                showToast('Dark mode enabled');
-            } else {
-                themeIcon.classList.remove('fa-sun');
-                themeIcon.classList.add('fa-moon');
-                showToast('Light mode enabled');
+const menuToggle = document.getElementById("menuToggle");
+const navMenu = document.getElementById("navMenu");
+
+// Wait for DOM to be ready before setting up event listeners
+document.addEventListener("DOMContentLoaded", () => {
+    const menuToggle = document.getElementById("menuToggle");
+    const navMenu = document.getElementById("navMenu");
+
+    if (menuToggle && navMenu) {
+        menuToggle.addEventListener("click", () => {
+            navMenu.classList.toggle("active");
+        });
+        
+        menuToggle.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                menuToggle.click();
             }
         });
+    }
+});
 
-        // Notification Toggle
-        const notificationBell = document.getElementById('notificationBell');
-        const notificationPanel = document.getElementById('notificationPanel');
-
-        notificationBell.addEventListener('click', (e) => {
-            e.stopPropagation();
-            notificationPanel.classList.toggle('show');
-        });
-
-        // Close notification panel when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!notificationBell.contains(e.target)) {
-                notificationPanel.classList.remove('show');
-            }
-        });
-
-        // Clear Notifications
-        const clearNotifications = document.getElementById('clearNotifications');
-        const notificationList = document.getElementById('notificationList');
-        const notificationBadge = document.getElementById('notificationBadge');
-
-        clearNotifications.addEventListener('click', () => {
-            notificationList.innerHTML = '<div style="padding: 2rem; text-align: center; color: var(--text-secondary);">No notifications</div>';
-            notificationBadge.textContent = '0';
-            notificationBadge.style.display = 'none';
-            showToast('Notifications cleared');
-            notificationPanel.classList.remove('show');
-        });
-
-        // Role Switch
-        const roleSwitch = document.getElementById('roleSwitch');
-        const currentRole = document.getElementById('currentRole');
-
-        roleSwitch.addEventListener('click', () => {
-            if (currentRole.textContent === 'Donor') {
-                currentRole.textContent = 'Receiver';
-                showToast('Switched to Receiver mode');
-            } else {
-                currentRole.textContent = 'Donor';
-                showToast('Switched to Donor mode');
-            }
-        });
-
-        // Toast Function
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3800);
+window.addEventListener("scroll", () => {
+    const navbar = document.querySelector('.navbar');
+    if (navbar) {
+        if (window.scrollY > 50) {
+            navbar.classList.add("scrolled");
+        } else {
+            navbar.classList.remove("scrolled");
         }
+    }
+});
 
-        // Handle window resize
-        window.addEventListener('resize', () => {
-            if (window.innerWidth > 768) {
-                navMenu.classList.remove('active');
-                menuToggle.classList.remove('active');
-            }
-        });
+// Notification Toggle
+const notificationBell = document.getElementById('notificationBell');
+const notificationPanel = document.getElementById('notificationPanel');
+
+notificationBell.addEventListener('click', (e) => {
+    e.stopPropagation();
+    notificationPanel.classList.toggle('show');
+});
+
+// Close notification panel when clicking outside
+document.addEventListener('click', (e) => {
+    if (!notificationBell.contains(e.target)) {
+        notificationPanel.classList.remove('show');
+    }
+});
+
+// Clear Notifications
+const clearNotifications = document.getElementById('clearNotifications');
+const notificationList = document.getElementById('notificationList');
+const notificationBadge = document.getElementById('notificationBadge');
+
+clearNotifications.addEventListener('click', () => {
+    notificationList.innerHTML = '<div style="padding: 2rem; text-align: center; color: var(--text-secondary);">No notifications</div>';
+    notificationBadge.textContent = '0';
+    notificationBadge.style.display = 'none';
+    showToast('Notifications cleared');
+    notificationPanel.classList.remove('show');
+});
+
+// Role Switch
+const roleSwitch = document.getElementById('roleSwitch');
+const currentRole = document.getElementById('currentRole');
+
+roleSwitch.addEventListener('click', () => {
+    if (currentRole.textContent === 'Donor') {
+        currentRole.textContent = 'Receiver';
+        showToast('Switched to Receiver mode');
+    } else {
+        currentRole.textContent = 'Donor';
+        showToast('Switched to Donor mode');
+    }
+});
+
+// Toast Function
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.classList.add('show');
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3800);
+}
+
+// Handle window resize
+window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) {
+        navMenu.classList.remove('active');
+        menuToggle.classList.remove('active');
+    }
+});
 class ShareBite {
     constructor() {
         this.contactEmail = 'sharebite@support.com.ng';
         this.currentRole = 'donor';
         this.foodListings = [];
+        this.uploadedPhotoBase64 = null;
         this.filteredListings = [];
         this.currentFilter = 'all';
         this.claimedItems = this.loadClaimedItems();
         this.notifications = this.loadNotifications();
-        
+        this.api = window;
+
         this.init();
-        this.initTheme(); // add theme initialization after base init
+        this.initTheme();
+
+
+
+
+
+
+        // add theme initialization after base init
+    }
+
+    setupEventListeners() {
+        this.setupHeroButtons();
     }
 
     init() {
         this.setupEventListeners();
         this.updateContactInfo();
-        this.generateSampleListings();
+        this.loadListingsFromDB();
         this.renderFoodListings();
         this.setupNotificationSystem();
         this.updateNotificationDisplay();
@@ -150,43 +178,20 @@ class ShareBite {
         }
     }
 
-    setupEventListeners() {
-        // Navigation
+        setupEventListeners() {
         this.setupNavigation();
-        
-        // Role switching
         this.setupRoleSwitch();
-        
-        // Modal functionality
         this.setupModal();
-        
-        // Form handling
-        this.setupFormHandling();
-        
-        // Date input confirmation functionality
         this.setupDateInputConfirmation();
-        
-        // Time input confirmation functionality
         this.setupTimeInputConfirmation();
-        
-        // Filtering and search
         this.setupFilteringAndSearch();
-        
-        // Smooth scrolling
         this.setupSmoothScrolling();
-        
-        // Responsive navigation
         this.setupResponsiveNav();
-        
-        // Hero button interactions
         this.setupHeroButtons();
-        
-        // Statistics counter animation
         this.setupStatsAnimation();
-        
-        // Scroll effects
         this.setupScrollEffects();
     }
+
 
     setupNavigation() {
         const navLinks = document.querySelectorAll('.nav-link');
@@ -208,11 +213,11 @@ class ShareBite {
     setupRoleSwitch() {
         const roleSwitch = document.getElementById('roleSwitch');
         const currentRoleSpan = document.getElementById('currentRole');
-        
+
         roleSwitch.addEventListener('click', () => {
             this.currentRole = this.currentRole === 'donor' ? 'collector' : 'donor';
             currentRoleSpan.textContent = this.currentRole.charAt(0).toUpperCase() + this.currentRole.slice(1);
-            
+
             // Update UI based on role
             this.updateUIForRole();
         });
@@ -223,12 +228,12 @@ class ShareBite {
         const findBtn = document.getElementById('findFood');
         const addListingBtn = document.getElementById('addListingBtn');
         const notificationBell = document.getElementById('notificationBell');
-        
+
         if (this.currentRole === 'collector') {
             donateBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
             findBtn.innerHTML = '<i class="fas fa-heart"></i> Help Others';
             addListingBtn.style.display = 'none';
-            
+
             // Show notification bell for collectors
             if (notificationBell) {
                 notificationBell.style.display = 'block';
@@ -237,243 +242,356 @@ class ShareBite {
             donateBtn.innerHTML = '<i class="fas fa-heart"></i> Donate Food';
             findBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
             addListingBtn.style.display = 'flex';
-            
+
             // Hide notification bell for donors (unless they have notifications)
             if (notificationBell && this.notifications.length === 0) {
                 notificationBell.style.display = 'none';
             }
         }
-        
+
         // Re-render food listings to update claim button states
         this.renderFoodListings();
     }
 
-   setupModal() {
-    const modal = document.getElementById('addListingModal');
-    const addListingBtn = document.getElementById('addListingBtn');
-    const closeModalBtn = document.querySelector('.close-modal');
-    const cancelBtn = document.getElementById('cancelForm');
+    setupModal() {
+        const modal = document.getElementById('addListingModal');
+        const addListingBtn = document.getElementById('addListingBtn');
+        const closeModalBtn = document.querySelector('.close-modal');
+        const cancelBtn = document.getElementById('cancelForm');
 
-    this.currentStep = 1;
-    this.totalSteps = 3;
+        this.currentStep = 1;
+        this.totalSteps = 3;
 
-    addListingBtn.addEventListener('click', () => {
-        modal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-        this.resetFormSteps();
-    });
+        addListingBtn.addEventListener('click', () => {
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            this.resetFormSteps();
 
-    const closeModal = () => {
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-        this.resetForm();
-        this.resetFormSteps();
-    };
+            // ✅ Ensure hidden location inputs exist
+            if (!document.getElementById('latitude')) {
+                const latInput = document.createElement('input');
+                latInput.type = 'hidden';
+                latInput.id = 'latitude';
 
-    closeModalBtn.addEventListener('click', closeModal);
-    cancelBtn.addEventListener('click', closeModal);
-    
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeModal();
-        }
-    });
+                const lngInput = document.createElement('input');
+                lngInput.type = 'hidden';
+                lngInput.id = 'longitude';
 
-    this.setupFileUpload();
-    this.setupFormNavigation();
-}
+
+        document.getElementById('listingForm').append(latInput, lngInput);
+    }
+ });
+
+                document.getElementById('listingForm').append(latInput, lngInput);
+            }
+        });
+ main
+
+        const closeModal = () => {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            this.resetForm();
+            this.resetFormSteps();
+        };
+
+        closeModalBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        this.setupFileUpload();
+        this.setupFormNavigation();
+    }
+
+
 
 setupFormNavigation() {
     const nextBtn = document.getElementById('nextStep');
     const prevBtn = document.getElementById('prevStep');
-    const submitBtn = document.getElementById('submitForm');
 
-    nextBtn.addEventListener('click', () => {
-        if (this.validateCurrentStep()) {
+    setupFormNavigation() {
+        const nextBtn = document.getElementById('nextStep');
+        const prevBtn = document.getElementById('prevStep');
+ main
+
+        if (!nextBtn || !prevBtn) return;
+
+        nextBtn.addEventListener('click', () => {
+            // Step-level required field validation
+            if (!this.validateCurrentStep()) return;
+
+            // 🔴 ISSUE-416: Expiry vs Pickup validation
+            const freshUntilValue = document.getElementById('freshUntil')?.value;
+            const pickupTimeValue = document.getElementById('pickupTime')?.value;
+
+            if (freshUntilValue && pickupTimeValue) {
+                const expiry = new Date(freshUntilValue);
+
+                // Parse "04 : 00 pm" / "09 : 00 am"
+                const match = pickupTimeValue.match(/(\d+)\s*:\s*(\d+)\s*(am|pm)/i);
+
+                if (match) {
+                    let hour = parseInt(match[1], 10);
+                    const minute = parseInt(match[2], 10);
+                    const period = match[3].toLowerCase();
+
+                    if (period === 'pm' && hour !== 12) hour += 12;
+                    if (period === 'am' && hour === 12) hour = 0;
+
+                    const pickup = new Date(expiry);
+                    pickup.setHours(hour, minute, 0, 0);
+
+                    // 🚫 BLOCK if pickup is after expiry
+                    if (pickup > expiry) {
+                        this.showToast(
+                            'Pickup time cannot be later than expiry time.',
+                            'error'
+                        );
+                        return;
+                    }
+                }
+            }
+
+            // ✅ Move to next step only if all validations pass
             this.goToStep(this.currentStep + 1);
-        }
-    });
-
-    prevBtn.addEventListener('click', () => {
-        this.goToStep(this.currentStep - 1);
-    });
-}
-
-goToStep(stepNumber) {
-    if (stepNumber < 1 || stepNumber > this.totalSteps) return;
-
-    document.querySelectorAll('.form-step').forEach(step => {
-        step.classList.remove('active');
-    });
-
-    const newStep = document.querySelector(`.form-step[data-step="${stepNumber}"]`);
-    if (newStep) {
-        newStep.classList.add('active');
-    }
-
-    this.updateProgress(stepNumber);
-
-    this.updateNavigationButtons(stepNumber);
-
-    this.currentStep = stepNumber;
-}
-
-updateProgress(stepNumber) {
-    const steps = document.querySelectorAll('.progress-step');
-    
-    steps.forEach((step, index) => {
-        const stepNum = index + 1;
-        
-        if (stepNum < stepNumber) {
-            step.classList.add('completed');
-            step.classList.remove('active');
-        } else if (stepNum === stepNumber) {
-            step.classList.add('active');
-            step.classList.remove('completed');
-        } else {
-            step.classList.remove('active', 'completed');
-        }
-    });
-}
-
-updateNavigationButtons(stepNumber) {
-    const nextBtn = document.getElementById('nextStep');
-    const prevBtn = document.getElementById('prevStep');
-    const submitBtn = document.getElementById('submitForm');
-
-    prevBtn.style.display = stepNumber === 1 ? 'none' : 'flex';
-    nextBtn.style.display = stepNumber === this.totalSteps ? 'none' : 'flex';
-    submitBtn.style.display = stepNumber === this.totalSteps ? 'flex' : 'none';
-}
-
-validateCurrentStep() {
-    const currentStepEl = document.querySelector(`.form-step[data-step="${this.currentStep}"]`);
-    const requiredInputs = currentStepEl.querySelectorAll('[required]');
-    
-    for (let input of requiredInputs) {
-        if (!input.value.trim()) {
-            input.focus();
-            this.showToast(`Please fill in the required field: ${input.previousElementSibling.textContent}`, 'error');
-            return false;
-        }
-    }
-    
-    return true;
-}
-
-resetFormSteps() {
-    this.currentStep = 1;
-    this.goToStep(1);
-}
-
-setupFileUpload() {
-    const fileInput = document.getElementById('photo');
-    const uploadArea = document.getElementById('photoUpload');
-    const imagePreview = document.getElementById('imagePreview');
-
-    uploadArea.addEventListener('click', () => {
-        fileInput.click();
-    });
-
-    uploadArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadArea.classList.add('drag-over');
-    });
-
-    uploadArea.addEventListener('dragleave', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('drag-over');
-    });
-
-    uploadArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('drag-over');
-        const files = e.dataTransfer.files;
-        if (files.length > 0 && files[0].type.startsWith('image/')) {
-            fileInput.files = files;
-            this.handleFileSelect(files[0]);
-        } else {
-            this.showToast('Please upload a valid image file', 'error');
-        }
-    });
-
-    fileInput.addEventListener('change', (e) => {
-        if (e.target.files.length > 0) {
-            this.handleFileSelect(e.target.files[0]);
-        }
-    });
-}
-
-handleFileSelect(file) {
-    const imagePreview = document.getElementById('imagePreview');
-    const uploadArea = document.getElementById('photoUpload');
-    
-    if (!file.type.startsWith('image/')) {
-        this.showToast('Please select an image file', 'error');
-        return;
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-        this.showToast('Image size should be less than 5MB', 'error');
-        return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        imagePreview.innerHTML = `
-            <img src="${e.target.result}" alt="Food preview">
-            <button type="button" class="remove-image">
-                <i class="fas fa-times"></i>
-            </button>
-        `;
-        imagePreview.classList.add('active');
-        uploadArea.style.display = 'none';
-
-        // Add remove functionality
-        const removeBtn = imagePreview.querySelector('.remove-image');
-        removeBtn.addEventListener('click', () => {
-            imagePreview.innerHTML = '';
-            imagePreview.classList.remove('active');
-            uploadArea.style.display = 'block';
-            document.getElementById('photo').value = '';
         });
-    };
-    reader.readAsDataURL(file);
-}
 
+        prevBtn.addEventListener('click', () => {
+            this.goToStep(this.currentStep - 1);
+        });
+    }
+
+    goToStep(stepNumber) {
+        if (stepNumber < 1 || stepNumber > this.totalSteps) return;
+
+        // Hide all steps
+        document.querySelectorAll('.form-step').forEach(step => {
+            step.classList.remove('active');
+        });
+
+        // Show current step
+        const currentStepEl = document.querySelector(`.form-step[data-step="${stepNumber}"]`);
+        if (currentStepEl) {
+            currentStepEl.classList.add('active');
+        }
+
+        this.updateProgress(stepNumber);
+        this.updateNavigationButtons(stepNumber);
+        this.currentStep = stepNumber;
+    }
+
+    updateProgress(stepNumber) {
+        const steps = document.querySelectorAll('.progress-step');
+
+        steps.forEach((step, index) => {
+            const stepNum = index + 1;
+
+            if (stepNum < stepNumber) {
+                step.classList.add('completed');
+                step.classList.remove('active');
+            } else if (stepNum === stepNumber) {
+                step.classList.add('active');
+                step.classList.remove('completed');
+            } else {
+                step.classList.remove('active', 'completed');
+            }
+        });
+    }
+
+    updateNavigationButtons(stepNumber) {
+        const nextBtn = document.getElementById('nextStep');
+        const prevBtn = document.getElementById('prevStep');
+        const submitBtn = document.getElementById('submitForm');
+
+        if (!nextBtn || !prevBtn || !submitBtn) return;
+
+        prevBtn.style.display = stepNumber === 1 ? 'none' : 'flex';
+        nextBtn.style.display = stepNumber === this.totalSteps ? 'none' : 'flex';
+        submitBtn.style.display = stepNumber === this.totalSteps ? 'flex' : 'none';
+    }
+
+    validateCurrentStep() {
+        const currentStepEl = document.querySelector(`.form-step[data-step="${this.currentStep}"]`);
+        const requiredInputs = currentStepEl.querySelectorAll('[required]');
+
+        for (let input of requiredInputs) {
+            if (!input.value.trim()) {
+                input.focus();
+                this.showToast(
+                    `Please fill in the required field: ${input.previousElementSibling.textContent}`,
+                    'error'
+                );
+                return false;
+            }
+
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.handleFormSubmission();
+    });
+}
 
     setupFormHandling() {
-        const form = document.getElementById('listingForm');
-        
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.handleFormSubmission();
-        });
+  const form = document.getElementById('listingForm');
+  if (!form) return;
 
-        const freshUntilInput = document.getElementById('freshUntil');
-        const now = new Date();
-        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-        freshUntilInput.min = now.toISOString().slice(0, 16);
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    this.handleFormSubmission();
+  });
+
+  const useLocationBtn = document.getElementById('useCurrentLocationBtn');
+  if (useLocationBtn) {
+    useLocationBtn.addEventListener(
+      'click',
+      this.useCurrentLocation.bind(this)
+    );
+  }
+
+  const now = new Date();
+  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+
+  // Expiry time must be future
+  const freshUntilInput = document.getElementById('freshUntil');
+  if (freshUntilInput) {
+    freshUntilInput.min = now.toISOString().slice(0, 16);
+  }
+}
+
+
+async handleFormSubmission() {
+  const formData = this.getFormData();
+
+  if (!this.validateFormData(formData)) return;
+
+  try {
+    const backendData = {
+      foodType: formData.foodType,
+      quantity: formData.quantity,
+      category: formData.category,
+      description: formData.description,
+      freshUntil: formData.freshUntil,
+      pickupTime: formData.pickupTime,
+      pickupLocation: formData.location,
+      contactInfo: formData.contact,
+      dietaryTags: formData.dietaryTags,
+      photos: formData.photos,
+      latitude: Number(document.getElementById('latitude')?.value),
+      longitude: Number(document.getElementById('longitude')?.value),
+    };
+
+
+    // OPTIONAL: Pickup time must be future
+    const pickupTimeInput = document.getElementById('pickupTime');
+    if (pickupTimeInput) {
+        pickupTimeInput.min = now.toISOString().slice(0, 16);
     }
 
-    handleFormSubmission() {
+            if (input.id === 'quantity') {
+                const quantity = parseInt(input.value.trim(), 10);
+                if (isNaN(quantity) || quantity <= 0) {
+                    input.focus();
+                    this.showToast('Please enter a valid quantity greater than 0', 'error');
+                    return false;
+                }
+            }
+
+            if (input.id === 'contact') {
+                if (!this.validateContactInfo(input.value.trim())) {
+                    input.focus();
+                    this.showToast('Please enter a valid email address or phone number', 'error');
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    async handleFormSubmission() {
         const formData = this.getFormData();
-        
-        if (this.validateFormData(formData)) {
-            this.addNewListing(formData);
+
+        if (!this.validateFormData(formData)) return;
+
+        try {
+            const backendData = {
+                foodType: formData.foodType,
+                quantity: formData.quantity,
+                category: formData.category,
+                description: formData.description,
+                freshUntil: formData.freshUntil,
+                pickupTime: formData.pickupTime,
+                pickupLocation: formData.location,
+                contactInfo: formData.contact,
+                dietaryTags: formData.dietaryTags,
+                photos: formData.photos,
+                latitude: Number(document.getElementById('latitude')?.value),
+                longitude: Number(document.getElementById('longitude')?.value),
+            };
+
+            // OPTIONAL: Pickup time must be future
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            const pickupTimeInput = document.getElementById('pickupTime');
+            if (pickupTimeInput) {
+                pickupTimeInput.min = now.toISOString().slice(0, 16);
+            }
+
+            const newListing = await this.api.createFoodListing(backendData);
+            this.foodListings.unshift(newListing);
+            this.loadListingsFromDB();
             this.showSuccessMessage();
             this.closeModalAndReset();
+
+        } catch (error) {
+            console.error('Error creating listing:', error);
+            this.showToast(
+                error?.message || 'Failed to create listing',
+                'error'
+            );
         }
+
+
+        if (!backendData.latitude || !backendData.longitude) {
+            this.showToast(
+                'Please click "Use Current Location" to set pickup address',
+                'error'
+            );
+            return;
+        }
+ main
+
+
+        const newListing = await this.api.createFoodListing(backendData);
+
+        this.foodListings.unshift(newListing);
+        this.loadListingsFromDB();
+        this.showSuccessMessage();
+        this.closeModalAndReset();
+
+    } catch(error) {
+        console.error(error);
+        this.showToast('Failed to create listing', 'error');
     }
+
+
+  } catch (error) {
+    console.error(error);
+    this.showToast('Failed to create listing', 'error');
+  }
+}
+ main
 
     getFormData() {
         const selectedTags = [];
-        document.querySelectorAll('input[name="dietary"]:checked').forEach(function(checkbox) {
+        document.querySelectorAll('input[name="dietary"]:checked').forEach(function (checkbox) {
             selectedTags.push(checkbox.value);
         });
 
         return {
-            id: Date.now(),
             foodType: document.getElementById('foodType').value,
             quantity: document.getElementById('quantity').value,
             category: document.getElementById('category').value,
@@ -482,37 +600,74 @@ handleFileSelect(file) {
             pickupTime: document.getElementById('pickupTime').value,
             location: document.getElementById('location').value,
             contact: document.getElementById('contact').value,
-            photo: document.getElementById('photo').files[0],
-            createdAt: new Date(),
-            donor: 'Current User',
-            dietaryTags: selectedTags 
+            photos: this.uploadedPhotoBase64 ? [this.uploadedPhotoBase64] : [],
+            dietaryTags: selectedTags
         };
     }
-
     validateFormData(data) {
-        const requiredFields = ['foodType', 'quantity', 'category', 'freshUntil', 'pickupTime', 'location', 'contact'];
-        
+        const requiredFields = [
+            'foodType',
+            'quantity',
+            'category',
+            'freshUntil',
+            'pickupTime',
+            'location',
+            'contact'
+        ];
+
         for (let field of requiredFields) {
             if (!data[field] || data[field].trim() === '') {
-                this.showErrorMessage(`Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}.`);
+                this.showErrorMessage(
+                    `Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}.`
+                );
                 return false;
             }
         }
-        
-        const freshDate = new Date(data.freshUntil);
-        if (freshDate <= new Date()) {
-            this.showErrorMessage('Fresh until date must be in the future.');
+
+        const now = new Date();
+        const freshUntilDate = new Date(data.freshUntil);
+
+        // 1️⃣ Expiry must be in future
+        if (freshUntilDate <= now) {
+            this.showErrorMessage('Food expiry time must be in the future.');
             return false;
         }
-        
+
+        // 🔴 FIX: Parse pickup time with AM/PM correctly
+        const pickupMatch = data.pickupTime.match(/(\d+)\s*:\s*(\d+)\s*(am|pm)/i);
+
+        if (!pickupMatch) {
+            this.showErrorMessage('Invalid pickup time format.');
+            return false;
+        }
+
+        let hour = parseInt(pickupMatch[1]);
+        const minute = parseInt(pickupMatch[2]);
+        const meridiem = pickupMatch[3].toLowerCase();
+
+        if (meridiem === 'pm' && hour !== 12) hour += 12;
+        if (meridiem === 'am' && hour === 12) hour = 0;
+
+        const pickupDateTime = new Date(freshUntilDate);
+        pickupDateTime.setHours(hour, minute, 0, 0);
+
+        // 2️⃣ Pickup must be future
+        if (pickupDateTime <= now) {
+            this.showErrorMessage('Pickup time must be in the future.');
+            return false;
+        }
+
+        // 3️⃣ ISSUE-416: Pickup must be BEFORE expiry ✅
+        if (pickupDateTime > freshUntilDate) {
+            this.showErrorMessage('Pickup time cannot be later than expiry time.');
+            return false;
+        }
+
         return true;
     }
 
-    addNewListing(data) {
-        this.foodListings.unshift(data);
-        this.filterListings();
-        this.renderFoodListings();
-    }
+
+
 
     showSuccessMessage() {
         this.showToast('Food listing added successfully!', 'success');
@@ -529,7 +684,7 @@ handleFileSelect(file) {
             <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
             <span>${message}</span>
         `;
-        
+
         // Add toast styles
         toast.style.cssText = `
             position: fixed;
@@ -548,9 +703,9 @@ handleFileSelect(file) {
             animation: slideInRight 0.8s ease, fadeOut 0.8s ease 3s forwards;
             box-shadow: var(--shadow-heavy);
         `;
-        
+
         document.body.appendChild(toast);
-        
+
         setTimeout(() => {
             if (toast.parentNode) {
                 toast.parentNode.removeChild(toast);
@@ -570,14 +725,13 @@ handleFileSelect(file) {
             <i class="fas fa-cloud-upload-alt"></i>
             <span>Click to upload or drag and drop</span>
         `;
-        
+
         // Reset minimum date
         const freshUntilInput = document.getElementById('freshUntil');
         const now = new Date();
         now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
         freshUntilInput.min = now.toISOString().slice(0, 16);
     }
-
     // Date Input Confirmation functionality
     setupDateInputConfirmation() {
         const freshUntilInput = document.getElementById('freshUntil');
@@ -594,12 +748,12 @@ handleFileSelect(file) {
         // Helper function to show checkmark only after date selection
         const handleDateChange = () => {
             const currentValue = freshUntilInput.value;
-            
+
             // If value has changed from previous, reset confirmation status
             if (currentValue !== previousValue) {
                 isDateConfirmed = false;
             }
-            
+
             // Only show checkmark if:
             // 1. There's a new value
             // 2. The value has changed from previous
@@ -607,13 +761,13 @@ handleFileSelect(file) {
             if (currentValue && currentValue !== previousValue && !isDateConfirmed) {
                 checkmarkIcon.classList.remove('hidden');
             }
-            
+
             // If value is cleared, reset everything
             if (!currentValue) {
                 checkmarkIcon.classList.add('hidden');
                 isDateConfirmed = false;
             }
-            
+
             previousValue = currentValue;
         };
 
@@ -622,13 +776,13 @@ handleFileSelect(file) {
             if (freshUntilInput.value && !isDateConfirmed) {
                 // Mark as confirmed
                 isDateConfirmed = true;
-                
+
                 // Hide the checkmark
                 checkmarkIcon.classList.add('hidden');
-                
+
                 // Show success toast
                 this.showToast('Date confirmed successfully!', 'success');
-                
+
                 // Move focus to next input field if available
                 const nextInput = freshUntilInput.closest('.form-group').parentElement.nextElementSibling?.querySelector('input');
                 if (nextInput) {
@@ -691,12 +845,12 @@ handleFileSelect(file) {
         // Helper function to show checkmark only after time selection
         const handleTimeChange = () => {
             const currentValue = pickupTimeInput.value;
-            
+
             // If value has changed from previous, reset confirmation status
             if (currentValue !== previousValue) {
                 isTimeConfirmed = false;
             }
-            
+
             // Only show checkmark if:
             // 1. There's a new value
             // 2. The value has changed from previous
@@ -704,13 +858,13 @@ handleFileSelect(file) {
             if (currentValue && currentValue !== previousValue && !isTimeConfirmed) {
                 checkmarkIcon.classList.remove('hidden');
             }
-            
+
             // If value is cleared, reset everything
             if (!currentValue) {
                 checkmarkIcon.classList.add('hidden');
                 isTimeConfirmed = false;
             }
-            
+
             previousValue = currentValue;
         };
 
@@ -719,13 +873,13 @@ handleFileSelect(file) {
             if (pickupTimeInput.value && !isTimeConfirmed) {
                 // Mark as confirmed
                 isTimeConfirmed = true;
-                
+
                 // Hide the checkmark
                 checkmarkIcon.classList.add('hidden');
-                
+
                 // Show success toast
                 this.showToast('Time confirmed successfully!', 'success');
-                
+
                 // Move focus to next input field if available
                 const nextInput = pickupTimeInput.closest('.form-group').parentElement.nextElementSibling?.querySelector('input');
                 if (nextInput) {
@@ -772,75 +926,76 @@ handleFileSelect(file) {
         });
     }
 
+
     setupFilteringAndSearch() {
-    // --- Existing Category Filter Logic ---
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            filterBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            this.currentFilter = btn.getAttribute('data-filter');
-            this.filterListings();
-            this.renderFoodListings();
-        });
-    });
-
-    // --- Existing Search Input Logic ---
-    const searchInput = document.querySelector('.search-box input');
-    let searchTimeout;
-    searchInput.addEventListener('input', (e) => {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            this.searchQuery = e.target.value.toLowerCase();
-            this.filterListings();
-            this.renderFoodListings();
-        }, 300);
-    });
-
-    // --- NEW: Dropdown and Filtering Logic ---
-    const dietaryBtn = document.getElementById('dietary-filter-btn');
-    const dietaryDropdown = document.getElementById('dietary-dropdown');
-    const dietaryCheckboxes = document.querySelectorAll('input[name="dietary-filter"]');
-
-    if (dietaryBtn) {
-        // Toggle dropdown visibility
-        dietaryBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            dietaryDropdown.style.display = dietaryDropdown.style.display === 'block' ? 'none' : 'block';
-            dietaryBtn.classList.toggle('active');
-        });
-
-        // Add event listeners to checkboxes
-        dietaryCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', () => {
+        // --- Existing Category Filter Logic ---
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                this.currentFilter = btn.getAttribute('data-filter');
                 this.filterListings();
                 this.renderFoodListings();
-                
-                // Update button text to show selected count
-                const selectedCount = document.querySelectorAll('input[name="dietary-filter"]:checked').length;
-                const btnSpan = dietaryBtn.querySelector('span');
-                if (selectedCount > 0) {
-                    btnSpan.textContent = `Dietary Filters (${selectedCount})`;
-                } else {
-                    btnSpan.textContent = 'Dietary Filters';
-                }
             });
         });
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', () => {
-            if (dietaryDropdown.style.display === 'block') {
-                dietaryDropdown.style.display = 'none';
-                dietaryBtn.classList.remove('active');
-            }
+        // --- Existing Search Input Logic ---
+        const searchInput = document.querySelector('.search-box input');
+        let searchTimeout;
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                this.searchQuery = e.target.value.toLowerCase();
+                this.filterListings();
+                this.renderFoodListings();
+            }, 300);
         });
-        
-        // Prevent closing when clicking inside the dropdown
-        dietaryDropdown.addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
+
+        // --- NEW: Dropdown and Filtering Logic ---
+        const dietaryBtn = document.getElementById('dietary-filter-btn');
+        const dietaryDropdown = document.getElementById('dietary-dropdown');
+        const dietaryCheckboxes = document.querySelectorAll('input[name="dietary-filter"]');
+
+        if (dietaryBtn) {
+            // Toggle dropdown visibility
+            dietaryBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dietaryDropdown.style.display = dietaryDropdown.style.display === 'block' ? 'none' : 'block';
+                dietaryBtn.classList.toggle('active');
+            });
+
+            // Add event listeners to checkboxes
+            dietaryCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+                    this.filterListings();
+                    this.renderFoodListings();
+
+                    // Update button text to show selected count
+                    const selectedCount = document.querySelectorAll('input[name="dietary-filter"]:checked').length;
+                    const btnSpan = dietaryBtn.querySelector('span');
+                    if (selectedCount > 0) {
+                        btnSpan.textContent = `Dietary Filters (${selectedCount})`;
+                    } else {
+                        btnSpan.textContent = 'Dietary Filters';
+                    }
+                });
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', () => {
+                if (dietaryDropdown.style.display === 'block') {
+                    dietaryDropdown.style.display = 'none';
+                    dietaryBtn.classList.remove('active');
+                }
+            });
+
+            // Prevent closing when clicking inside the dropdown
+            dietaryDropdown.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        }
     }
-}
     filterListings() {
         const activeDietaryFilters = [];
         document.querySelectorAll('input[name="dietary-filter"]:checked').forEach(checkbox => {
@@ -849,56 +1004,56 @@ handleFileSelect(file) {
 
         this.filteredListings = this.foodListings.filter(listing => {
             const matchesFilter = this.currentFilter === 'all' || listing.category === this.currentFilter;
-            
-            const matchesSearch = !this.searchQuery || 
+
+            const matchesSearch = !this.searchQuery ||
                 listing.foodType.toLowerCase().includes(this.searchQuery) ||
                 listing.location.toLowerCase().includes(this.searchQuery) ||
                 listing.description.toLowerCase().includes(this.searchQuery);
 
-            const matchesDietary = activeDietaryFilters.length === 0 || 
+            const matchesDietary = activeDietaryFilters.length === 0 ||
                 (listing.dietaryTags && activeDietaryFilters.every(filter => listing.dietaryTags.includes(filter)));
-            
+
             return matchesFilter && matchesSearch && matchesDietary;
         });
     }
 
     setupSmoothScrolling() {
         const scrollIndicator = document.querySelector('.scroll-indicator');
-        
+
         scrollIndicator.addEventListener('click', () => {
             document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
         });
     }
 
     setupResponsiveNav() {
-    const hamburger = document.getElementById('menuToggle');
-    const navMenu = document.getElementById('navMenu');
-    
-    if (hamburger && navMenu) {
-        // Use a named function to prevent duplicate listeners
-        const toggleMenu = (e) => {
-            e.stopPropagation(); // Stops the click from reaching the "body" listener
-            hamburger.classList.toggle('active');
-            navMenu.classList.toggle('active');
-        };
+        const hamburger = document.getElementById('menuToggle');
+        const navMenu = document.getElementById('navMenu');
 
-        hamburger.removeEventListener('click', toggleMenu); // Clean up
-        hamburger.addEventListener('click', toggleMenu);
+        if (hamburger && navMenu) {
+            // Use a named function to prevent duplicate listeners
+            const toggleMenu = (e) => {
+                e.stopPropagation(); // Stops the click from reaching the "body" listener
+                hamburger.classList.toggle('active');
+                navMenu.classList.toggle('active');
+            };
 
-        // Close menu when clicking a link
-        navMenu.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                hamburger.classList.remove('active');
-                navMenu.classList.remove('active');
+            hamburger.removeEventListener('click', toggleMenu); // Clean up
+            hamburger.addEventListener('click', toggleMenu);
+
+            // Close menu when clicking a link
+            navMenu.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    hamburger.classList.remove('active');
+                    navMenu.classList.remove('active');
+                });
             });
-        });
+        }
     }
-}
 
     setupHeroButtons() {
         const donateBtn = document.getElementById('donateFood');
         const findBtn = document.getElementById('findFood');
-        
+
         donateBtn.addEventListener('click', () => {
             if (this.currentRole === 'donor') {
                 document.getElementById('addListingModal').style.display = 'block';
@@ -907,7 +1062,7 @@ handleFileSelect(file) {
                 document.getElementById('listings').scrollIntoView({ behavior: 'smooth' });
             }
         });
-        
+
         findBtn.addEventListener('click', () => {
             document.getElementById('listings').scrollIntoView({ behavior: 'smooth' });
         });
@@ -916,16 +1071,16 @@ handleFileSelect(file) {
     setupStatsAnimation() {
         const stats = document.querySelectorAll('.stat-number');
         let animated = false;
-        
+
         const animateStats = () => {
             if (animated) return;
-            
+
             stats.forEach(stat => {
                 const target = parseInt(stat.getAttribute('data-count'));
                 const duration = 2000;
                 const increment = target / (duration / 16);
                 let current = 0;
-                
+
                 const updateStat = () => {
                     current += increment;
                     if (current < target) {
@@ -935,13 +1090,13 @@ handleFileSelect(file) {
                         stat.textContent = target;
                     }
                 };
-                
+
                 updateStat();
             });
-            
+
             animated = true;
         };
-        
+
         // Trigger animation when hero section is in view
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -950,7 +1105,7 @@ handleFileSelect(file) {
                 }
             });
         });
-        
+
         const heroStats = document.querySelector('.hero-stats');
         if (heroStats) {
             observer.observe(heroStats);
@@ -971,7 +1126,7 @@ handleFileSelect(file) {
         window.addEventListener('scroll', handleScroll);
         // Apply initial state in case page loads scrolled (anchor/hash navigation)
         handleScroll();
-        
+
         // Animate elements on scroll
         this.setupScrollAnimations();
     }
@@ -981,7 +1136,7 @@ handleFileSelect(file) {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
         };
-        
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -989,7 +1144,7 @@ handleFileSelect(file) {
                 }
             });
         }, observerOptions);
-        
+
         // Observe elements to animate
         const elementsToAnimate = document.querySelectorAll('.feature-card, .food-card, .impact-item');
         elementsToAnimate.forEach(el => {
@@ -997,149 +1152,36 @@ handleFileSelect(file) {
         });
     }
 
-    generateSampleListings() {
-        const sampleListings = [
-            {
-                id: 1,
-                foodType: "Fresh Pizza Margherita",
-                quantity: "8 slices",
-                category: "restaurant",
-                description: "Freshly made pizza with mozzarella, tomato sauce, and basil. Perfect condition, just from lunch service.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "18:00",
-                location: "Mario's Pizzeria, 123 Main Street",
-                contact: "+1 234-567-8900",
-                createdAt: new Date(Date.now() - 3600000),
-                donor: "Mario's Pizzeria",
-                dietaryTags: ["vegetarian"],
-                photoUrl: "https://www.allrecipes.com/thmb/2rQA_OlnLbhidei70glz6HCCYAs=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/1453815-authentic-pizza-margherita-Cynthia-Ross-4x3-1-7410c69552274163a9049342b60c22ff.jpg",
-            },
-            {
-                id: 2,
-                foodType: "Assorted Sandwiches",
-                quantity: "15 sandwiches",
-                category: "event",
-                description: "Various sandwiches including turkey, ham, and vegetarian options from corporate catering event.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "16:30",
-                location: "Downtown Conference Center",
-                contact: "events@conference.com",
-                createdAt: new Date(Date.now() - 7200000),
-                donor: "Conference Center",
-                dietaryTags: ["non-vegetarian"],
-                photoUrl: "https://bangkok.mandarinorientalshop.com/cdn/shop/files/078-_3729_2048x.jpg?v=1690709512",
+    async loadListingsFromDB() {
+        try {
+            const listings = await getAllFoodListings();
 
-            },
-            {
-                id: 3,
-                foodType: "Fresh Bread & Pastries",
-                quantity: "20+ items",
-                category: "bakery",
-                description: "End-of-day fresh bread, croissants, and pastries. All baked today and still perfectly fresh.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "20:00",
-                location: "Sunrise Bakery, Oak Avenue",
-                contact: "+1 234-567-8901",
-                createdAt: new Date(Date.now() - 1800000),
-                donor: "Sunrise Bakery",
-                dietaryTags: ["dairy-free"],
-                photoUrl: "https://media.istockphoto.com/id/507021914/photo/assorted-croissand-and-bread.jpg?s=612x612&w=0&k=20&c=ruHrARluyF_yR1-hmrurOyz4sLPNeohj1zKKv8fHa8U=",
-            },
-            {
-                id: 4,
-                foodType: "Home-cooked Curry",
-                quantity: "4-6 portions",
-                category: "household",
-                description: "Vegetarian curry with rice, made too much for family dinner. Spice level: medium.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "19:00",
-                location: "Residential Area, Pine Street",
-                contact: "+1 234-567-8902",
-                createdAt: new Date(Date.now() - 900000),
-                donor: "Local Family",
-                dietaryTags: ["vegetarian", "gluten-free"],
-                photoUrl: "https://www.tasteofhome.com/wp-content/uploads/2019/04/shutterstock_610126394.jpg",
-            },
-            {
-                id: 5,
-                foodType: "Fruit & Vegetable Box",
-                quantity: "1 large box",
-                category: "restaurant",
-                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "17:00",
-                location: "Green Garden Restaurant",
-                contact: "+1 234-567-8903",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant",
-                dietaryTags: ["vegan"],
-                photoUrl: "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
-            },
-            {
-                id: 6,
-                foodType: "Grilled Chicken Meals",
-                quantity: "12 complete meals",
-                category: "restaurant",
-                description: "Grilled chicken with rice and vegetables. Prepared for cancelled catering order.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "18:30",
-                location: "Healthy Eats Cafe, Market Square",
-                contact: "+1 234-567-8904",
-                createdAt: new Date(Date.now() - 2700000),
-                donor: "Healthy Eats Cafe",
-                dietaryTags: ["non-vegetarian", "dairy-free"],
-                photoUrl: "https://i0.wp.com/smittenkitchen.com/wp-content/uploads/2019/05/exceptional-grilled-chicken-scaled.jpg?fit=1200%2C800&ssl=1",
-            },
-            {
-                id: 5,
-                foodType: "Fruit & Vegetable Box",
-                quantity: "1 large box",
-                category: "restaurant",
-                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "17:00",
-                location: "Green Garden Restaurant",
-                contact: "+1 234-567-8903",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant",
-                dietaryTags: ["vegan"],
-                photoUrl: "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
-            },
-            {
-                id: 7,
-                foodType: "Fruit & Vegetable Box",
-                quantity: "1 large box",
-                category: "restaurant",
-                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "17:00",
-                location: "Green Garden Restaurant",
-                contact: "+1 234-567-8903",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant",
-                dietaryTags: ["vegan"],
-                photoUrl: "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
-            },
-            {
-                id: 8,
-                foodType: "Fruit & Vegetable Box",
-                quantity: "1 large box",
-                category: "restaurant",
-                description: "Fresh produce includes apples, oranges, carrots, and lettuce.",
-                freshUntil: this.getRandomFutureDate(),
-                pickupTime: "17:00",
-                location: "Green Garden Restaurant",
-                contact: "+1 234-567-8903",
-                createdAt: new Date(Date.now() - 5400000),
-                donor: "Green Garden Restaurant",
-                dietaryTags: ["vegan"],
-                photoUrl: "https://www.firstchoiceproduce.com/wp-content/uploads/2020/03/small-produce-box.jpg",
-            },
-            
-        ];
-        
-        this.foodListings = sampleListings;
-        this.filteredListings = sampleListings;
+            this.foodListings = listings.map(item => ({
+                ...item,
+                id: item._id,
+                latitude: item.location?.coordinates?.[1],
+                longitude: item.location?.coordinates?.[0],
+                location: item.pickupLocation || item.location || 'Location not specified',
+                contact: item.contactInfo || item.contact || 'No contact info',
+                donor: item.donorId?.name || 'Anonymous Donor',
+                photoUrl: (item.photos && item.photos.length > 0) ? item.photos[0] : null,
+                category: item.category || 'general',
+                dietaryTags: item.dietaryTags || [],
+                createdAt: new Date(item.createdAt),
+                status: item.status || "Available",
+
+            }));
+
+            this.foodListings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            this.filteredListings = this.foodListings;
+            this.renderFoodListings();
+
+        } catch (error) {
+            console.error("Failed to load listings:", error);
+            this.foodListings = [];
+            this.renderFoodListings(); // Will render the "No listings found" state
+            this.showToast("Failed to connect to database", "error");
+        }
     }
 
     getRandomFutureDate() {
@@ -1153,7 +1195,7 @@ handleFileSelect(file) {
         const foodGrid = document.getElementById('foodGrid');
         const listingsToShow = this.filteredListings.slice(0, 6);
         if (!foodGrid) {
-            return; 
+            return;
         }
 
         if (listingsToShow.length === 0) {
@@ -1171,16 +1213,20 @@ handleFileSelect(file) {
 
         // Add event listeners to food cards
         this.setupFoodCardInteractions();
+        this.setupFoodCardAccessibility();
     }
 
     createClaimButton(listing) {
-        const isClaimed = this.claimedItems.includes(listing.id);
+
+        const isClaimedInDB = listing.status === 'reserved';
+        const isClaimedLocally = this.claimedItems.includes(listing.id);
+        const isClaimed = isClaimedInDB || isClaimedLocally;
         const isCollector = this.currentRole === 'collector';
         const username = JSON.parse(localStorage.getItem('user'))?.name;
-        
-        if(username) {
+
+        if (username) {
             if (isClaimed) {
-            return `
+                return `
                 <button class="claim-btn claimed" disabled>
                     <i class="fas fa-check-circle"></i> Claimed
                 </button>
@@ -1206,59 +1252,79 @@ handleFileSelect(file) {
             `;
         }
     }
+    createFoodCard(listing) {
+        const listingId = listing._id || listing.id;
+        const location = listing.pickupLocation || listing.location || 'Unknown Location';
+        const contact = listing.contactInfo || listing.contact;
+        const timeAgo = this.getTimeAgo(listing.createdAt);
+        const freshUntil = this.formatDateTime(listing.freshUntil);
+        const isClaimed = this.claimedItems.includes(listing.id);
 
-createFoodCard(listing) {
-    const timeAgo = this.getTimeAgo(listing.createdAt);
-    const freshUntil = this.formatDateTime(listing.freshUntil);
-    const isClaimed = this.claimedItems.includes(listing.id);
+        // Image handling
+        let imgSource = '';
+        if (listing.photoUrl) {
+            imgSource = listing.photoUrl;
+        } else if (listing.photo && typeof listing.photo === 'object' && listing.photo instanceof File) {
+            imgSource = URL.createObjectURL(listing.photo);
+        }
 
-    // *** MODIFIED LOGIC START ***
-    let imgSource = '';
+        const imageHTML = imgSource
+            ? `<img src="${imgSource}" alt="${listing.foodType}">`
+            : `<i class="fas fa-${this.getFoodIcon(listing.category)}"></i>`;
 
-    if (listing.photoUrl) {
-        // 1. Use external/sample URL if provided
-        imgSource = listing.photoUrl;
-    } else if (listing.photo && typeof listing.photo === 'object' && listing.photo instanceof File) {
-        // 2. Use temporary URL for newly uploaded file objects
-        imgSource = URL.createObjectURL(listing.photo);
-    } 
-    // If neither photoUrl nor a valid File object exists, imgSource remains empty.
-    
-    // Create the image/icon HTML based on the determined source
-    const imageHTML = imgSource 
-        ? `<img src="${imgSource}" alt="${listing.foodType}">` 
-        : `<i class="fas fa-${this.getFoodIcon(listing.category)}"></i>`;
-    // *** MODIFIED LOGIC END ***
+        // Dietary tags
+        let tagsHTML = '';
+        if (listing.dietaryTags && listing.dietaryTags.length > 0) {
+            tagsHTML = `
+            <div class="food-tags">
+                ${listing.dietaryTags.map(tag => `<span class="tag tag-${tag}">${tag}</span>`).join('')}
+            </div>
+        `;
+        }
 
-    // This logic generates the HTML for the tags
-    let tagsHTML = '';
-    if (listing.dietaryTags && listing.dietaryTags.length > 0) {
-        tagsHTML = `<div class="food-tags">` +
-            listing.dietaryTags.map(tag => `<span class="tag tag-${tag}">${tag}</span>`).join('') +
-        `</div>`;
-    }
-    
-    // The main HTML template now uses the correctly generated imageHTML
-    return `
-        <div class="food-card ${isClaimed ? 'claimed' : ''}" 
-             data-id="${listing.id}" 
+        // Navigation button (only if coords exist)
+        const navigateButtonHTML =
+            listing.latitude && listing.longitude
+                ? `
+                <button class="navigate-btn"
+                        data-lat="${listing.latitude}"
+                        data-lng="${listing.longitude}"
+                        title="Navigate to pickup location">
+                    <i class="fas fa-directions"></i>
+                </button>
+              `
+                : '';
+
+        return `
+        <div class="food-card ${isClaimed ? 'claimed' : ''}"
+             data-id="${listing.id}"
              data-tags="${listing.dietaryTags ? listing.dietaryTags.join(',') : ''}">
+             
             <div class="food-image">
                 ${imageHTML}
                 <div class="food-category">${this.capitalizeFirst(listing.category)}</div>
             </div>
+
             <div class="food-details">
                 <h3 class="food-title">${listing.foodType}</h3>
-                ${tagsHTML} 
+                ${tagsHTML}
+
                 <p class="food-description">${listing.description}</p>
+
                 <div class="food-meta">
-                    <span class="quantity"><i class="fas fa-utensils"></i> ${listing.quantity}</span>
-                    <span class="freshness"><i class="fas fa-clock"></i> ${freshUntil}</span>
+                    <span class="quantity">
+                        <i class="fas fa-utensils"></i> ${listing.quantity}
+                    </span>
+                    <span class="freshness">
+                        <i class="fas fa-clock"></i> ${freshUntil}
+                    </span>
                 </div>
+
                 <div class="food-location">
                     <i class="fas fa-map-marker-alt"></i>
-                    <span>${listing.location}</span>
+                    <span>${location}</span>
                 </div>
+
                 <div class="food-meta" style="margin-bottom: 1rem;">
                     <span style="color: var(--medium-gray); font-size: 0.9rem;">
                         <i class="fas fa-user"></i> ${listing.donor}
@@ -1267,92 +1333,296 @@ createFoodCard(listing) {
                         <i class="fas fa-clock"></i> ${timeAgo}
                     </span>
                 </div>
+
                 <div class="food-actions">
                     ${this.createClaimButton(listing)}
-                    <button class="contact-btn" data-contact="${listing.contact}">
+                    <button class="contact-btn" data-contact="${contact}" title="Copy contact">
                         <i class="fas fa-phone"></i>
                     </button>
+                    ${navigateButtonHTML}
                 </div>
             </div>
         </div>
     `;
-}
+    }
 
 
     setupFoodCardInteractions() {
+
+  // Claim buttons
+  const claimBtns = document.querySelectorAll('.claim-btn');
+
+  if (!claimBtns.length) return;
+
+  claimBtns.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      const listingId = btn.getAttribute('data-id');
+      if (!listingId) return;
+
+      this.handleClaimFood(listingId);
+    });
+  });
+}
+
+setupFoodCardInteractions() {
+    // Claim buttons
+    const claimBtns = document.querySelectorAll('.claim-btn');
+    claimBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const listingId = parseInt(btn.getAttribute('data-id'));
+            this.handleClaimFood(listingId);
+
         // Claim buttons
         const claimBtns = document.querySelectorAll('.claim-btn');
         claimBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
+            btn.addEventListener('click', () => {
                 const listingId = parseInt(btn.getAttribute('data-id'));
                 this.handleClaimFood(listingId);
             });
+ main
         });
-        
+
         // Contact buttons
         const contactBtns = document.querySelectorAll('.contact-btn');
         contactBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
+            btn.addEventListener('click', () => {
                 const contact = btn.getAttribute('data-contact');
                 this.handleContactDonor(contact);
             });
         });
+
+        // ✅ Navigate buttons (NEW)
+        const navigateBtns = document.querySelectorAll('.navigate-btn');
+        navigateBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const lat = btn.dataset.lat;
+                const lng = btn.dataset.lng;
+
+                if (!lat || !lng) {
+                    this.showToast('Location coordinates not available', 'error');
+                    return;
+                }
+
+                // Open Google Maps directions
+                window.open(
+                    `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
+                    '_blank'
+                );
+            });
+        });
     }
+
+    async useCurrentLocation() {
+        if (!navigator.geolocation) {
+            this.showToast('Geolocation not supported', 'error');
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            async (position) => {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                document.getElementById('latitude').value = latitude;
+                document.getElementById('longitude').value = longitude;
+
+
+      const latInput = document.getElementById('latitude');
+      const lonInput = document.getElementById('longitude');
+      const locationInput = document.getElementById('location');
+
+      if (latInput) latInput.value = latitude;
+      if (lonInput) lonInput.value = longitude;
+
+                try {
+                    const res = await fetch(
+                        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`,
+                        { headers: { 'User-Agent': 'ShareBite' } }
+                    );
+ main
+
+                    const data = await res.json();
+                    document.getElementById('location').value =
+                        data.display_name || 'Current location';
+                } catch (err) {
+                    document.getElementById('location').value = 'Current location';
+                }
+            },
+            () => {
+                this.showToast('Location permission denied', 'error');
+            }
+        );
+    }
+
+
+        const data = await res.json();
+        if (locationInput) {
+          locationInput.value = data.display_name || 'Current location';
+        }
+      } catch (err) {
+        if (locationInput) {
+          locationInput.value = 'Current location';
+        }
+      }
+    },
+    () => {
+      this.showToast('Location permission denied', 'error');
+
+    setupFoodCardAccessibility() {
+        const foodCards = document.querySelectorAll('.food-card');
+
+        foodCards.forEach(card => {
+            card.setAttribute('tabindex', '0');
+            card.setAttribute('role', 'button');
+            card.setAttribute('aria-label', 'View food details');
+        });
+ main
+    }
+  );
+}
+
+
+
+    setupFoodCardAccessibility() {
+  const foodCards = document.querySelectorAll('.food-card');
+
+  foodCards.forEach((card) => {
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('role', 'button');
+    card.setAttribute('aria-label', 'View food details');
+  });
+}
+
+
+    setupFileUpload() {
+        const dropzone = document.getElementById('photoUpload');
+        const fileInput = document.getElementById('photoInput');
+        if (!dropzone || !fileInput) return;
+ main
+
+        const handleFiles = (files) => {
+            const file = files[0];
+            if (!file) return;
+
+
+ 
+
+            if (!file.type.startsWith('image/')) {
+                this.showToast('Please upload an image file', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                this.uploadedPhotoBase64 = e.target.result;
+                dropzone.innerHTML = `
+                    <img src="${this.uploadedPhotoBase64}" alt="Uploaded photo" class="uploaded-photo-preview" />
+                `;
+            };
+            reader.readAsDataURL(file);
+        };
+
+        dropzone.addEventListener('click', () => fileInput.click());
+
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('drag-over');
+        });
+
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('drag-over');
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('drag-over');
+            if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                handleFiles(e.dataTransfer.files);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files.length > 0) {
+                handleFiles(e.target.files);
+            }
+        });
+    }
+
+ main
 
     handleClaimFood(listingId) {
         const listing = this.foodListings.find(l => l.id === listingId);
         if (!listing) return;
-        
+
         // Check if already claimed
-        if (this.claimedItems.includes(listingId)) {
+        if (this.claimedItems.includes(listingId) || listing.status === 'reserved') {
             this.showToast('This item has already been claimed!', 'error');
             return;
         }
-        
-        // Show confirmation dialog
-        const confirmed = confirm(`Claim "${listing.foodType}" from ${listing.donor}?\n\nPickup: ${listing.location}\nTime: ${this.formatTime(listing.pickupTime)}\nContact: ${listing.contact}`);
-        
-        if (confirmed) {
-            // Add to claimed items
-            this.claimedItems.push(listingId);
-            this.saveClaimedItems();
-            
-            // Create notification
-            const notification = {
-                id: Date.now(),
-                listingId: listingId,
-                foodType: listing.foodType,
-                donor: listing.donor,
-                location: listing.location,
-                pickupTime: listing.pickupTime,
-                contact: listing.contact,
-                claimedAt: new Date(),
-                status: 'claimed'
-            };
-            
-            this.addNotification(notification);
-            
-            // Update button and card appearance
-            const claimBtn = document.querySelector(`[data-id="${listingId}"]`);
-            const foodCard = document.querySelector(`.food-card[data-id="${listingId}"]`);
-            
-            if (claimBtn) {
-                claimBtn.classList.add('claimed');
-                claimBtn.innerHTML = '<i class="fas fa-check-circle"></i> Claimed';
-                claimBtn.disabled = true;
-            }
-            
-            if (foodCard) {
-                foodCard.classList.add('claimed');
-            }
-            
-            // Show success message
-            this.showToast(`Successfully claimed "${listing.foodType}"! Check notifications for pickup details.`, 'success');
-            
-            // Update notification display
-            this.updateNotificationDisplay();
+
+        const listingIndex = this.foodListings.findIndex(l => l.id === listingId);
+        if (listingIndex !== -1) {
+            this.foodListings[listingIndex].status = 'claimed';
         }
+
+        const confirmed = confirm(
+            `Claim "${listing.foodType}" from ${listing.donor}?\n\n` +
+            `Pickup: ${listing.location}\n` +
+            `Time: ${this.formatTime(listing.pickupTime)}\n` +
+            `Contact: ${listing.contact}`
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        // Mark as assigned and persist on backend
+        listing.status = 'assigned';
+        this.api.deleteFoodListing(listingId);
+        this.api.claimFoodListing(listingId);
+
+        this.claimedItems.push(listingId);
+        this.saveClaimedItems();
+
+        // Create notification
+        const notification = {
+            id: Date.now(),
+            listingId: listingId,
+            foodType: listing.foodType,
+            donor: listing.donor,
+            location: listing.location,
+            pickupTime: listing.pickupTime,
+            contact: listing.contact,
+            claimedAt: new Date(),
+            status: 'assigned'
+        };
+
+        this.addNotification(notification);
+
+        // Update button and card appearance
+        const claimBtn = document.querySelector(`[data-id="${listingId}"]`);
+        const foodCard = document.querySelector(`.food-card[data-id="${listingId}"]`);
+
+        if (claimBtn) {
+            claimBtn.classList.add('claimed');
+            claimBtn.innerHTML = '<i class="fas fa-check-circle"></i> Claimed';
+            claimBtn.disabled = true;
+        }
+
+        if (foodCard) {
+            foodCard.classList.add('claimed');
+        }
+
+        this.showToast(
+            `Successfully claimed "${listing.foodType}"! Check notifications for pickup details.`,
+            'success'
+        );
+
+        this.updateNotificationDisplay();
     }
+
 
     handleContactDonor(contact) {
         // Copy contact to clipboard
@@ -1371,16 +1641,18 @@ createFoodCard(listing) {
     }
 
     getFoodIcon(category) {
+        if (!category) return 'utensils';
         const icons = {
             restaurant: 'store',
             household: 'home',
             bakery: 'bread-slice',
             event: 'calendar-alt'
         };
-        return icons[category] || 'utensils';
+        return icons[category.toLowerCase()] || 'utensils';
     }
 
     capitalizeFirst(str) {
+        if (!str) return '';
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
@@ -1389,7 +1661,7 @@ createFoodCard(listing) {
         const diff = now - date;
         const minutes = Math.floor(diff / 60000);
         const hours = Math.floor(minutes / 60);
-        
+
         if (minutes < 60) {
             return `${minutes}m ago`;
         } else if (hours < 24) {
@@ -1405,7 +1677,7 @@ createFoodCard(listing) {
         const now = new Date();
         const diff = date - now;
         const hours = Math.floor(diff / (1000 * 60 * 60));
-        
+
         if (hours < 24) {
             return `${hours}h left`;
         } else {
@@ -1427,10 +1699,10 @@ createFoodCard(listing) {
         featureCards.forEach((card, index) => {
             card.style.animationDelay = `${index * 0.2}s`;
         });
-        
+
         // Add floating animation to hero elements
         this.startFloatingAnimations();
-        
+
         // Add periodic pulse to CTA buttons
         this.startButtonPulse();
     }
@@ -1470,75 +1742,74 @@ createFoodCard(listing) {
     setupNotificationSystem() {
         const notificationBell = document.getElementById('notificationBell');
         const notificationPanel = document.getElementById('notificationPanel');
-        
+
         if (!notificationBell) return;
-        
+
         // Show notification bell when in collector mode or when there are notifications
         if (this.currentRole === 'collector' || this.notifications.length > 0) {
             notificationBell.style.display = 'block';
         }
-        
-        // Toggle notification panel
-        notificationBell.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const isActive = notificationPanel.classList.contains('active');
-            
-            if (isActive) {
-                notificationPanel.classList.remove('active');
-                notificationBell.classList.remove('active');
-            } else {
-                notificationPanel.classList.add('active');
-                notificationBell.classList.add('active');
-            }
-        });
-        
-        // Close panel when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!notificationBell.contains(e.target)) {
-                notificationPanel.classList.remove('active');
-                notificationBell.classList.remove('active');
-            }
-        });
-        
+
+        // Note: Notification click handlers are set up in the main script.js file
+        // to avoid duplicate event listeners
+
         // Prevent panel from closing when clicking inside
-        notificationPanel.addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
+        if (notificationPanel) {
+            notificationPanel.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        }
     }
-    
+
     loadClaimedItems() {
         const stored = localStorage.getItem('sharebite-claimed-items');
         return stored ? JSON.parse(stored) : [];
     }
-    
+
     saveClaimedItems() {
         localStorage.setItem('sharebite-claimed-items', JSON.stringify(this.claimedItems));
     }
-    
+
     loadNotifications() {
         const stored = localStorage.getItem('sharebite-notifications');
         return stored ? JSON.parse(stored) : [];
     }
-    
+
     saveNotifications() {
         localStorage.setItem('sharebite-notifications', JSON.stringify(this.notifications));
     }
-    
+
     addNotification(notification) {
+        notification.read = false; // Mark new notifications as unread
         this.notifications.unshift(notification);
         this.saveNotifications();
         this.updateNotificationDisplay();
         this.renderNotifications();
     }
-    
+
+    markNotificationAsRead(notificationId) {
+        const notification = this.notifications.find(n => n.id === notificationId);
+        if (notification && !notification.read) {
+            notification.read = true;
+            this.saveNotifications();
+            this.updateNotificationDisplay();
+        }
+    }
+
+    markAllNotificationsAsRead() {
+        this.notifications.forEach(n => n.read = true);
+        this.saveNotifications();
+        this.updateNotificationDisplay();
+    }
+
     updateNotificationDisplay() {
         const notificationBell = document.getElementById('notificationBell');
         const notificationBadge = document.getElementById('notificationBadge');
-        
+
         if (!notificationBell || !notificationBadge) return;
-        
-        const unreadCount = this.notifications.length;
-        
+
+        const unreadCount = this.notifications.filter(n => !n.read).length;
+
         if (unreadCount > 0) {
             notificationBell.style.display = 'block';
             notificationBadge.style.display = 'flex';
@@ -1550,14 +1821,14 @@ createFoodCard(listing) {
                 notificationBell.style.display = 'none';
             }
         }
-        
+
         this.renderNotifications();
     }
-    
+
     renderNotifications() {
         const notificationList = document.getElementById('notificationList');
         if (!notificationList) return;
-        
+
         if (this.notifications.length === 0) {
             notificationList.innerHTML = `
                 <div class="no-notifications">
@@ -1568,22 +1839,23 @@ createFoodCard(listing) {
             `;
             return;
         }
-        
+
         notificationList.innerHTML = `
             <div class="notification-content">
                 ${this.notifications.map(notification => this.createNotificationItem(notification)).join('')}
             </div>
         `;
-        
+
         // Add event listeners for notification actions
         this.setupNotificationActions();
     }
-    
+
     createNotificationItem(notification) {
         const timeAgo = this.getTimeAgo(notification.claimedAt);
-        
+        const unreadClass = notification.read ? '' : 'unread';
+
         return `
-            <div class="notification-item" data-id="${notification.id}">
+            <div class="notification-item ${unreadClass}" data-id="${notification.id}">
                 <div class="notification-item-header">
                     <div class="notification-item-icon">
                         <i class="fas fa-utensils"></i>
@@ -1615,10 +1887,10 @@ createFoodCard(listing) {
             </div>
         `;
     }
-    
+
     setupNotificationActions() {
         const notificationItems = document.querySelectorAll('.notification-item');
-        
+
         notificationItems.forEach(item => {
             item.addEventListener('click', (e) => {
                 const notificationId = parseInt(item.getAttribute('data-id'));
@@ -1626,11 +1898,18 @@ createFoodCard(listing) {
             });
         });
     }
-    
+
     viewNotificationDetails(notificationId) {
         const notification = this.notifications.find(n => n.id === notificationId);
         if (!notification) return;
-        
+
+
+        notification.status = "Collected";
+        this.saveNotifications();
+
+        // Mark as read when viewed
+        this.markNotificationAsRead(notificationId);
+
         const details = `
 Food: ${notification.foodType}
 Donor: ${notification.donor}
@@ -1641,7 +1920,7 @@ Claimed: ${new Date(notification.claimedAt).toLocaleString()}
 
 Contact information has been copied to clipboard.
         `;
-        
+
         // Copy contact to clipboard
         navigator.clipboard.writeText(notification.contact).then(() => {
             alert(details);
@@ -1649,7 +1928,7 @@ Contact information has been copied to clipboard.
             alert(details);
         });
     }
-    
+
     clearAllNotifications() {
         this.notifications = [];
         this.claimedItems = [];
@@ -1746,7 +2025,7 @@ function addDynamicStyles() {
     `;
     document.head.appendChild(style);
 }
-
+    
 // Initialize the application
 document.addEventListener('DOMContentLoaded', () => {
     addDynamicStyles();
@@ -1770,7 +2049,7 @@ if ('serviceWorker' in navigator) {
 window.ShareBite = ShareBite;
 
 // Clear caches and trigger SW skipWaiting for debugging updates
-window.clearShareBiteCaches = async function() {
+window.clearShareBiteCaches = async function () {
     if ('caches' in window) {
         const keys = await caches.keys();
         await Promise.all(keys.map(k => caches.delete(k)));
@@ -1786,32 +2065,57 @@ window.clearShareBiteCaches = async function() {
 const scrollToTopBtn = document.getElementById("scrollToTopBtn");
 
 window.addEventListener("scroll", () => {
-  const scrollPosition = document.documentElement.scrollTop || document.body.scrollTop;
-  if (scrollPosition > 200) {
-    scrollToTopBtn.classList.add("show");
-  } else {
-    scrollToTopBtn.classList.remove("show");
-  }
+    const scrollPosition = document.documentElement.scrollTop || document.body.scrollTop;
+    if (scrollPosition > 200) {
+        scrollToTopBtn.classList.add("show");
+    } else {
+        scrollToTopBtn.classList.remove("show");
+    }
 });
 
 scrollToTopBtn.addEventListener("click", () => {
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth",
-  });
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+    });
 });
 
-// ===== Gallery Animation and Interactivity =====
 class GalleryManager {
+    setupKeyboardAccessibility() {
+        this.galleryItems.forEach(item => {
+            // 1️⃣ Allow Tab key to reach this card
+            item.setAttribute('tabindex', '0');
+
+            // 2️⃣ Tell screen readers this behaves like a button
+            item.setAttribute('role', 'button');
+
+            // 3️⃣ Accessible description
+            item.setAttribute('aria-label', 'Open gallery item');
+        });
+    }
     constructor() {
         this.galleryItems = document.querySelectorAll('.gallery-item');
         this.init();
+    }
+
+    setupKeyboardAccessibility() {
+        this.galleryItems.forEach(item => {
+            // 1️⃣ Allow Tab key to reach this card
+            item.setAttribute('tabindex', '0');
+
+            // 2️⃣ Tell screen readers this behaves like a button
+            item.setAttribute('role', 'button');
+
+            // 3️⃣ Accessible description
+            item.setAttribute('aria-label', 'Open gallery item');
+        });
     }
 
     init() {
         this.setupScrollAnimation();
         this.setupHoverEffects();
         this.setupClickEvents();
+        this.setupKeyboardAccessibility();
     }
 
     setupScrollAnimation() {
@@ -1819,6 +2123,7 @@ class GalleryManager {
             threshold: 0.1,
             rootMargin: '0px 0px -100px 0px'
         };
+
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -1831,6 +2136,9 @@ class GalleryManager {
         this.galleryItems.forEach(item => {
             observer.observe(item);
         });
+
+
+
     }
 
     setupHoverEffects() {
@@ -1864,13 +2172,27 @@ class GalleryManager {
 
     setupClickEvents() {
         this.galleryItems.forEach(item => {
+
+            // 🖱 Mouse click (already works)
             item.addEventListener('click', () => {
                 const category = item.getAttribute('data-category');
                 const title = item.querySelector('h3').textContent;
                 const description = item.querySelector('p').textContent;
 
-                // Optional: Open lightbox or show more details
                 this.showGalleryDetail(item, title, description, category);
+            });
+
+            // ⌨ Keyboard support (NEW)
+            item.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault(); // stop page scroll (Space key)
+
+                    const category = item.getAttribute('data-category');
+                    const title = item.querySelector('h3').textContent;
+                    const description = item.querySelector('p').textContent;
+
+                    this.showGalleryDetail(item, title, description, category);
+                }
             });
         });
     }
@@ -2166,6 +2488,7 @@ class TestimonialsCarousel {
         });
     }
 
+
     handleSwipe(startX, endX) {
         const threshold = 50;
         const diff = startX - endX;
@@ -2303,7 +2626,7 @@ class TestimonialsCarousel {
 
 
 
-    
+
     // Pause autoplay when user hovers over carousel
     pauseOnHover() {
         this.carousel.addEventListener('mouseenter', () => {
@@ -2322,7 +2645,7 @@ if (document.querySelector('.testimonials-section')) {
 }
 
 // ===== Lazy-load ShareBot Chatbot Launcher =====
-(function setupChatbotLauncher() {
+function setupChatbotLauncher() {
     // Only run on pages where DOM exists
     if (!document.body) return;
     const LAUNCHER_ID = 'chatbot-launcher';
@@ -2373,8 +2696,8 @@ if (document.querySelector('.testimonials-section')) {
         const wrapper = document.getElementById('scrollTopWrapper');
         const gap = 12; // px gap between wrapper and launcher
         // default fallback values
-    let leftPx = null;
-    let bottomPx = 140;
+        let leftPx = null;
+        let bottomPx = 140;
 
         if (wrapper) {
             // Try to align to the map icon specifically (anchor with class .scroll-link)
@@ -2490,14 +2813,95 @@ if (document.querySelector('.testimonials-section')) {
     }
 
     btn.addEventListener('click', loadAndOpen);
+
+btn.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    loadAndOpen();
+  }
+});
+})();
+
     btn.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             loadAndOpen();
         }
+
+
+
+
+
+
+
+
+
+
+
+        // some function
     });
+}
+
+    // another function
+
+
+    // end of file
+
+
+
+
+
 
     // If ShareBot loads itself or another script opens the widget, keep state in sync
     // (optional) listen for user interactions on the injected widget to update launcher state
+
     // No-op: the module exposes window.ShareBot.open/close which we call above
-})();
+
+
+// No-op: the module exposes window.ShareBot.open/close which we call above
+ main
+
+    
+
+// Add Listing Success Message
+document.addEventListener("DOMContentLoaded", () => {
+    const submitBtn = document.getElementById("submitForm");
+    const successMsg = document.getElementById("listingSuccessMsg");
+
+    if (submitBtn && successMsg) {
+        submitBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            // Show success message
+            successMsg.style.display = "block";
+
+            // Reset the form
+            submitBtn.closest("form").reset();
+
+            // Hide message after 4 seconds
+            setTimeout(() => {
+                successMsg.style.display = "none";
+            }, 4000);
+        });
+    }
+});
+
+
+ // Offline / Online status handler
+function updateOnlineStatus() {
+  const banner = document.getElementById("offline-banner");
+  if (!banner) return;
+
+  if (navigator.onLine) {
+    banner.style.display = "none";
+  } else {
+    banner.style.display = "block";
+  }
+}
+
+window.addEventListener("online", updateOnlineStatus);
+window.addEventListener("offline", updateOnlineStatus);
+window.addEventListener("load", updateOnlineStatus);
+
+
+ main
