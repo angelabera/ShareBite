@@ -525,38 +525,59 @@ body.dark .profile-menu-item:hover {
             letter-spacing: 0.5px;
             background: linear-gradient(90deg, #3b82f6, #9333ea, #f43f5e);
             background-size: 300%;
-            transition: background-position 0.4s ease, box-shadow 0.4s ease, transform 0.3s ease;
+            transition: background-position 0.4s ease, box-shadow 0.4s ease, transform 0.3s ease, text-shadow 0.3s ease;
             z-index: 1;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3), inset 0 0 0 rgba(255,255,255,0);
+            font-weight: 600;
         }
 
         .login-btn:hover {
             background-position: right;
-            box-shadow: 0 0 12px rgba(147, 51, 234, 0.8),0 0 25px rgba(59, 130, 246, 0.6);
-            transform: scale(1.07);
+            animation: loginBtnGlow 1.5s ease infinite;
+            box-shadow: 0 0 30px rgba(147, 51, 234, 0.8), 0 0 50px rgba(59, 130, 246, 1), 
+                        0 0 70px rgba(244, 63, 94, 0.6), inset 0 0 30px rgba(255, 255, 255, 0.3);
+            transform: scale(1.12) translateY(-3px);
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 30px rgba(59, 130, 246, 0.6);
         }
 
         .login-btn::before {
             content: "";
             position: absolute;
             inset: 0;
-            background: rgba(255, 255, 255, 0.15);
-            transform: scale(0);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+            transform: translateX(-100%);
             border-radius: inherit;
-            transition: transform 0.4s ease;
+            transition: transform 0.5s ease;
             z-index: 0;
         }
 
         .login-btn:hover::before {
-            transform: scale(2.5);
+            animation: shine 0.6s ease;
         }
 
         .login-btn:active {
-            animation: pulse 0.4s ease;
+            animation: buttonPulse 0.5s ease;
+            transform: scale(1.05) translateY(-1px);
         }
 
-        @keyframes pulse {
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes shimmer {
+            0% { transform: rotate(0deg) translateX(-200%); }
+            100% { transform: rotate(0deg) translateX(200%); }
+        }
+
+        @keyframes loginBtnGlow {
+            0%, 100% { box-shadow: 0 0 30px rgba(147, 51, 234, 0.8), 0 0 50px rgba(59, 130, 246, 1), 0 0 70px rgba(244, 63, 94, 0.6), inset 0 0 30px rgba(255, 255, 255, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(147, 51, 234, 1), 0 0 60px rgba(59, 130, 246, 1), 0 0 90px rgba(244, 63, 94, 0.8), inset 0 0 40px rgba(255, 255, 255, 0.5); }
+        }
+
+        @keyframes buttonPulse {
             0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.8); }
-            70% { transform: scale(1.08); box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+            70% { transform: scale(1.08); box-shadow: 0 0 0 15px rgba(59, 130, 246, 0); }
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
         }
         
@@ -1191,23 +1212,93 @@ body.dark .profile-menu-item:hover {
 .btn-primary {
     background: var(--secondary-gradient);
     color: white;
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3), inset 0 0 0 rgba(255,255,255,0);
+    position: relative;
+    overflow: hidden;
+    font-weight: 600;
+}
+
+.btn-primary::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn-primary:hover::after {
+    width: 400px;
+    height: 400px;
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: shimmer 2s infinite;
 }
 
 .btn-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-heavy);
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(255, 107, 53, 0.6), 0 0 30px rgba(255, 107, 53, 0.4), 
+                inset 0 0 20px rgba(255, 255, 255, 0.2);
 }
 
 .btn-secondary {
     background: transparent;
     color: white;
     border: 2px solid white;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    font-weight: 600;
+}
+
+.btn-secondary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+    z-index: -1;
+}
+
+.btn-secondary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.btn-secondary:hover::after {
+    opacity: 1;
+}
+
+.btn-secondary:hover::before {
+    left: 100%;
 }
 
 .btn-secondary:hover {
     background: white;
     color: var(--primary-color);
-    transform: translateY(-3px);
+    transform: translateY(-5px);
+    border-color: white;
+    box-shadow: 0 12px 40px rgba(255, 255, 255, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.1);
 }
 
 .hero-stats {
