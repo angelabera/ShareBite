@@ -1099,12 +1099,25 @@ img {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  transition: var(--transition-fast);
+  transition: 
+    transform var(--transition-fast),
+    background-color 0.3s ease,
+    box-shadow 0.2s ease;
 }
 
 .social-links a:hover {
   background: var(--primary-green);
   transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
+}
+
+.social-links a i {
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.social-links a:hover i {
+  transform: rotate(15deg) scale(1.1);
+  color: #fff;
 }
 
 .footer h4 {
@@ -1119,12 +1132,15 @@ img {
 
 .footer ul li a {
   color: #a0a0a0;
-  transition: var(--transition-fast);
+  display: inline-block;
+  transition:
+    color 0.3s ease,
+    transform var(--transition-fast);
 }
 
 .footer ul li a:hover {
   color: var(--primary-green);
-  padding-left: 5px;
+  transform: translateX(6px);
 }
 
 .footer-bottom {
