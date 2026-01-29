@@ -195,6 +195,45 @@ img {
   outline-offset: 3px;
 }
 
+/* Redirect-style buttons (used for View All Stories, Join Our Mission) */
+.btn-redirect {
+  background: var(--primary-green);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-full);
+  padding: 0.6rem 1.0rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  position: relative;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    transform 0.2s ease;
+}
+
+/* Animated underline below the button */
+.btn-redirect::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 0;
+  height: 3px;
+  background: var(--secondary-orange);
+  transition: width 0.3s ease, left 0.3s ease;
+}
+
+.btn-redirect:hover {
+  background: transparent;
+  color: var(--secondary-orange);
+  transform: translateY(-2px);
+}
+
+.btn-redirect:hover::after {
+  width: 100%;
+  left: 0;
+}
 
 /* Glass Card */
 .glass-card {
