@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Emergency Relief - ShareBite Food Network</title>
+  <link rel="icon" href="/static/web_photo/logo.jpg" type="image/jpeg" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* =========================================
+       CSS VARIABLES & RESET
+       ========================================= */
+    :root {
+      /* Brand Colors */
+      --primary-green: #4caf50;
+      --primary-dark: #2e7d32;
+      --primary-light: #81c784;
+      --secondary-orange: #ff6b35;
+      --secondary-dark: #e65100;
+      --accent-yellow: #ffc107;
+      --primary-color: #4caf50;
+      --primary-gradient: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+
+      /* Neutrals */
+      --white: #ffffff;
+      --black: #121212;
+      --text-main: #333333;
+      --text-muted: #666666;
+      --border-light: #e0e0e0;
+
+      /* Backgrounds */
+      --bg-light: #f4f7f6;
+      --bg-white: #ffffff;
+
+      /* Glassmorphism */
+      --glass-bg: rgba(255, 255, 255, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.5);
+      --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+      --glass-blur: blur(12px);
+
+      /* Shadows */
+      --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+
+      /* Transitions */
+      --transition-fast: 0.2s ease;
+      --transition-normal: 0.3s ease;
+      --transition-slow: 0.5s ease;
+
+      /* Spacing & Layout */
+      --container-width: 1200px;
+      --header-height: 80px;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      --radius-full: 50px;
+    }
+
+    /* Reset */
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-main);
+      line-height: 1.6;
+      transition: background-color 0.4s, color 0.4s;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding-top: 0;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+      transition: var(--transition-fast);
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    /* =========================================
+       UTILITY CLASSES
+       ========================================= */
+    .container {
+      max-width: var(--container-width);
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* =========================================
+       NAVBAR
+       ========================================= */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 80px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-bottom: 1px solid var(--glass-border);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      transition: padding 0.3s ease;
+    }
+
+    .nav-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-green);
+      flex-shrink: 0;
+      min-width: fit-content;
+    }
+
+    .nav-logo-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .nav-logo i {
+      font-size: 1.8rem;
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    .nav-logo:hover i {
+      transform: rotate(-10deg) scale(1.1);
+      color: var(--secondary-orange);
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: 1rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-link {
+      font-weight: 500;
+      color: var(--text-main);
+      position: relative;
+      padding: 0.5rem 0.75rem;
+      border-radius: var(--radius-full);
+      transition: color 0.3s ease, background-color 0.3s ease;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+
+    .nav-link::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--secondary-orange);
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after,
+    .nav-link.active::after {
+      width: 100%;
+    }
+
+    .nav-link:hover {
+      color: var(--secondary-orange);
+      background-color: rgba(255, 107, 53, 0.1);
+    }
+
+    .user-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .login-btn {
+      padding: 0.5rem 1.2rem;
+      border-radius: var(--radius-full);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      border: none;
+      transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .login-outline {
+      background: transparent;
+      color: var(--text-main);
+      border: 1px solid var(--border-light);
+    }
+
+    .login-outline:hover {
+      color: var(--secondary-orange);
+      border-color: var(--secondary-orange);
+      background: rgba(255, 107, 53, 0.08);
+      box-shadow: 0 4px 12px rgba(255, 107, 53, 0.15);
+    }
+
+    .login-primary {
+      background: var(--primary-green);
+      color: white;
+    }
+
+    .login-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(76, 175, 80, 0.35);
+    }
+
+    /* Mobile Hamburger */
+    .hamburger {
+      display: none;
+      cursor: pointer;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .hamburger span {
+      width: 25px;
+      height: 3px;
+      background: var(--text-main);
+      border-radius: 2px;
+      transition: var(--transition-fast);
+    }
+
+    /* =========================================
+       HEADER
+       ========================================= */
+    .emergency-header {
+      background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%);
+      color: #fff;
+      padding: 8rem 0 4rem;
+      margin-top: 80px;
+      text-align: center;
+      position: relative;
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* =========================================
+       HEADER
+       ========================================= */
+    .emergency-header {
+      background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%);
+      color: #fff;
+      padding: 6rem 2rem 5rem;
+      margin-top: 80px;
+      text-align: center;
+      position: relative;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .emergency-header h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      line-height: 1.2;
+    }
+
+    .emergency-header h1 i {
+      font-size: 2.8rem;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .emergency-header p {
+      font-size: 1.25rem;
+      opacity: 0.95;
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* =========================================
+       ALERT BANNER
+       ========================================= */
+    .alert-banner {
+      background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+      color: white;
+      padding: 1.5rem;
+      margin: 2rem auto;
+      border-radius: var(--radius-lg);
+      max-width: 900px;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      animation: slideIn 0.5s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .alert-banner i {
+      font-size: 2rem;
+      animation: flash 1.5s ease-in-out infinite;
+    }
+
+    @keyframes flash {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .alert-banner strong {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    /* =========================================
+       SECTION CARDS
+       ========================================= */
+    .section-card {
+      background: var(--white);
+      padding: 2.5rem;
+      margin: 2rem auto;
+      border-radius: var(--radius-lg);
+      max-width: 900px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-light);
+      transition: all var(--transition-normal);
+    }
+
+    .section-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .section-card h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-card h2 i {
+      color: var(--primary-green);
+      font-size: 1.8rem;
+    }
+
+    .section-card p {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+    }
+
+    /* =========================================
+       BUTTONS
+       ========================================= */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.85rem 2rem;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      transition: all var(--transition-normal);
+      margin: 0.5rem;
+    }
+
+    .btn-emergency {
+      background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%);
+      color: white;
+      box-shadow: 0 6px 18px rgba(76, 175, 80, 0.35);
+    }
+
+    .btn-emergency:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(76, 175, 80, 0.45);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%);
+      color: white;
+      box-shadow: 0 6px 18px rgba(76, 175, 80, 0.35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(76, 175, 80, 0.45);
+    }
+
+    .btn-secondary {
+      background: rgba(76, 175, 80, 0.08);
+      border: 2px solid var(--primary-green);
+      color: var(--primary-green);
+    }
+
+    .btn-secondary:hover {
+      background: var(--primary-green);
+      color: white;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(76, 175, 80, 0.35);
+    }
+
+    .status {
+      font-weight: 600;
+      margin-top: 1rem;
+      color: var(--primary-green);
+      font-size: 1.05rem;
+    }
+
+    /* =========================================
+       STATISTICS
+       ========================================= */
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+      padding: 2rem;
+      border-radius: var(--radius-lg);
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      transition: all var(--transition-normal);
+      border: 2px solid transparent;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-xl);
+      border-color: var(--secondary-orange);
+    }
+
+    .stat-card h3 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--secondary-orange);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-card p {
+      font-size: 1.1rem;
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    /* =========================================
+       FORMS
+       ========================================= */
+    .form-group {
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--text-main);
+      font-size: 0.95rem;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 0.9rem 1.2rem;
+      border: 2px solid var(--border-light);
+      border-radius: var(--radius-md);
+      background: var(--bg-white);
+      color: var(--text-main);
+      font-size: 1rem;
+      font-family: "Poppins", sans-serif;
+      transition: all var(--transition-fast);
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--primary-green);
+      box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .form-group .input-icon {
+      position: relative;
+    }
+
+    .form-group .input-icon i {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+
+    .form-group .input-icon input {
+      padding-left: 3rem;
+    }
+
+    /* =========================================
+       SLIDING MESSAGE
+       ========================================= */
+    .sliding-message {
+      position: fixed;
+      bottom: -150px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: 1.5rem 2rem;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-xl);
+      transition: bottom 0.5s ease-in-out;
+      z-index: 1000;
+      max-width: 500px;
+      text-align: center;
+    }
+
+    .sliding-message.show {
+      bottom: 30px;
+    }
+
+    .sliding-message p {
+      margin: 0;
+      font-weight: 600;
+      font-size: 1.05rem;
+    }
+
+    .sliding-message strong {
+      color: var(--accent-yellow);
+      font-size: 1.1rem;
+    }
+
+    /* =========================================
+       TESTIMONIALS
+       ========================================= */
+    .testimonial {
+      background: var(--bg-light);
+      padding: 1.5rem;
+      border-radius: var(--radius-md);
+      margin: 1rem 0;
+      border-left: 4px solid var(--primary-green);
+      font-style: italic;
+      color: var(--text-muted);
+    }
+
+    .testimonial strong {
+      color: var(--text-main);
+      font-style: normal;
+      display: block;
+      margin-top: 0.5rem;
+    }
+
+    /* =========================================
+       FOOTER
+       ========================================= */
+    .footer {
+      background: #1a1a1a;
+      color: white;
+      padding: 5rem 0 2rem;
+      margin-top: auto;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 4rem;
+    }
+
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary-green);
+      margin-bottom: 1rem;
+    }
+
+    .footer-logo i {
+      font-size: 2rem;
+    }
+
+    .footer-brand p {
+      color: #a0a0a0;
+      margin: 1.5rem 0;
+      max-width: 300px;
+      line-height: 1.8;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .social-links a {
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      color: white;
+      transition: transform var(--transition-fast), background-color 0.3s ease, box-shadow 0.2s ease;
+    }
+
+    .social-links a:hover {
+      background: var(--primary-green);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
+    }
+
+    .social-links a i {
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    .social-links a:hover i {
+      transform: rotate(15deg) scale(1.1);
+      color: #fff;
+    }
+
+    .footer-links h4 {
+      color: #fff;
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+
+    .footer-links ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .footer-links ul li {
+      margin-bottom: 0.8rem;
+    }
+
+    .footer-links ul li a {
+      color: #a0a0a0;
+      display: inline-block;
+      transition: color 0.3s ease, transform var(--transition-fast);
+      text-decoration: none;
+    }
+
+    .footer-links ul li a:hover {
+      color: var(--primary-green);
+      transform: translateX(6px);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid #333;
+      padding-top: 2rem;
+      text-align: center;
+      color: #777;
+      font-size: 0.9rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-bottom p {
+      margin: 0;
+    }
+
+    .footer-bottom a {
+      color: var(--primary-green);
+      text-decoration: none;
+      font-weight: 600;
+      transition: var(--transition-fast);
+    }
+
+    .footer-bottom a:hover {
+      color: var(--primary-light);
+      text-decoration: underline;
+    }
+
+    /* =========================================
+       RESPONSIVE
+       ========================================= */
+    @media (max-width: 992px) {
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 0 1rem;
+      }
+
+      .nav-container {
+        padding: 0 1rem;
+      }
+
+      .nav-menu {
+        position: fixed;
+        top: 80px;
+        right: -100%;
+        background: var(--white);
+        height: calc(100vh - 80px);
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        justify-content: start;
+        padding-top: 3rem;
+        transition: right 0.4s ease;
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+        z-index: 999;
+      }
+
+      .nav-menu.active {
+        right: 0;
+      }
+
+      .hamburger {
+        display: flex;
+        z-index: 1001;
+      }
+
+      .user-actions {
+        gap: 0.5rem;
+      }
+
+      .login-btn {
+        padding: 0.4rem 0.9rem;
+        font-size: 0.85rem;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .emergency-header {
+        padding: 5rem 1.5rem 4rem;
+      }
+
+      .emergency-header h1 {
+        font-size: 2.2rem;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .emergency-header h1 i {
+        font-size: 2rem;
+      }
+
+      .emergency-header p {
+        font-size: 1.1rem;
+      }
+
+      .section-card {
+        padding: 1.5rem;
+      }
+
+      .section-card h2 {
+        font-size: 1.5rem;
+      }
+
+      .stat-card h3 {
+        font-size: 2rem;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        gap: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .user-actions {
+        position: relative;
+      }
+
+      .login-btn {
+        font-size: 0.75rem;
+        padding: 0.35rem 0.7rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <a href="index.html" class="nav-logo-link">
+          <i class="fas fa-utensils"></i>
+          <span>ShareBite</span>
+        </a>
+      </div>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="index.html#home" class="nav-link">Home</a></li>
+        <li><a href="index.html#features" class="nav-link">Features</a></li>
+        <li><a href="index.html#listings" class="nav-link">Listings</a></li>
+        <li><a href="index.html#about" class="nav-link">About</a></li>
+        <li><a href="support.html" class="nav-link">Support</a></li>
+      </ul>
+      <div class="user-actions">
+        <button class="login-btn login-outline" onclick="window.location.href='login.html'">User Login</button>
+        <button class="login-btn login-primary" onclick="window.location.href='login_ngo.html'">NGO Login</button>
+      </div>
+      <div class="hamburger" id="menuToggle" tabindex="0" role="button" aria-label="Open navigation menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="emergency-header">
+    <h1><i class="fas fa-hand-holding-heart"></i> Emergency Food Relief</h1>
+    <p>Rapid response food distribution for communities in crisis. Every meal matters, every moment counts.</p>
+  </header>
+
+  <!-- Main Container -->
+  <div class="container">
+    <!-- Alert Banner -->
+    <div class="alert-banner">
+      <i class="fas fa-bolt"></i>
+      <div>
+        <strong>Urgent Alert:</strong> We are actively responding to emergencies in several regions. Your support helps us provide immediate food relief to those in need.
+      </div>
+    </div>
+
+
+
+    <!-- Request Help Section -->
+    <div class="section-card">
+      <h2><i class="fas fa-hands-helping"></i> Request Emergency Assistance</h2>
+      <p>If you're in an affected area and need urgent food assistance, click below to request help from our nearby food rescue partners. We're here to support you.</p>
+      <button class="btn btn-emergency">
+        <i class="fas fa-utensils"></i> <a href="#contactForm">Food Aid Now</a> 
+      </button>
+      <p class="status" id="requestStatus"></p>
+    </div>
+
+    <!-- Live Statistics -->
+    <div class="section-card">
+      <h2><i class="fas fa-chart-line"></i> Live Relief Impact</h2>
+      <p>See the real-time impact of our emergency food relief efforts across communities.</p>
+      <div class="stats-container">
+        <div class="stat-card">
+          <h3>12,000+</h3>
+          <p>Meals Donated</p>
+        </div>
+        <div class="stat-card">
+          <h3>95+</h3>
+          <p>Active Volunteers</p>
+        </div>
+        <div class="stat-card">
+          <h3>35</h3>
+          <p>NGO Partners</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Volunteer Section -->
+    <div class="section-card">
+      <h2><i class="fas fa-user-plus"></i> Become a Volunteer</h2>
+      <p>Join our emergency response team to help deliver food where it's needed most. Make a difference in your community.</p>
+      <form id="volunteerForm" onsubmit="registerVolunteer(event)">
+        <div class="form-group">
+          <label for="volName">Full Name *</label>
+          <div class="input-icon">
+            <i class="fas fa-user"></i>
+            <input type="text" id="volName" placeholder="Enter your full name" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="volEmail">Email Address *</label>
+          <div class="input-icon">
+            <i class="fas fa-envelope"></i>
+            <input type="email" id="volEmail" placeholder="your.email@example.com" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="volPhone">Phone Number *</label>
+          <div class="input-icon">
+            <i class="fas fa-phone"></i>
+            <input type="tel" id="volPhone" placeholder="+91 XXXXX XXXXX" required />
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-check-circle"></i> Join Now
+        </button>
+      </form>
+      <p class="status" id="volunteerStatus"></p>
+    </div>
+
+    <!-- Contact Support Section -->
+    <div class="section-card">
+      <h2><i class="fas fa-phone-volume"></i> Contact Emergency Support</h2>
+      <p>If you have questions or urgent issues, get in touch with our response team. We're available 24/7.</p>
+      
+      <form id="contactForm" onsubmit="submitContactForm(event)">
+        <div class="form-group">
+          <label for="contactName">Your Name *</label>
+          <input type="text" id="contactName" placeholder="Enter your full name" required />
+        </div>
+        
+        <div class="form-group">
+          <label for="contactEmail">Email Address *</label>
+          <input type="email" id="contactEmail" placeholder="your.email@example.com" required />
+        </div>
+        
+        <div class="form-group">
+          <label for="contactPhone">Phone Number *</label>
+          <input type="tel" id="contactPhone" placeholder="+91 XXXXX XXXXX" required />
+        </div>
+        
+        <div class="form-group">
+          <label for="urgencyLevel">Urgency Level *</label>
+          <select id="urgencyLevel" required>
+            <option value="">Select urgency level</option>
+            <option value="critical">Critical - Immediate Response Needed</option>
+            <option value="high">High - Within 24 Hours</option>
+            <option value="medium">Medium - Within 2-3 Days</option>
+            <option value="low">Low - General Inquiry</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="subject">Subject *</label>
+          <input type="text" id="subject" placeholder="Brief subject of your inquiry" required />
+        </div>
+        
+        <div class="form-group">
+          <label for="message">Message *</label>
+          <textarea id="message" placeholder="Describe your situation or inquiry in detail..." required></textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-emergency">
+          <i class="fas fa-paper-plane"></i> Send Message
+        </button>
+      </form>
+      <p class="status" id="contactStatus"></p>
+    </div>
+
+    <!-- Partnership Section -->
+    <div class="section-card">
+      <h2><i class="fas fa-handshake"></i> NGO & Local Business Partnerships</h2>
+      <p>We collaborate with local NGOs and food businesses to ensure fast and effective food distribution during emergencies. Together, we're stronger.</p>
+      <button class="btn btn-primary" onclick="redirectToMap()">
+        <i class="fas fa-map-marked-alt"></i> Find Distribution Centers
+      </button>
+    </div>
+
+
+
+    <!-- Testimonials Section -->
+    <div class="section-card">
+      <h2><i class="fas fa-comment-dots"></i> What People Say</h2>
+      <div class="testimonial">
+        "Thanks to the ShareBite Food Network, we had food even when roads were blocked after the flood. Their response was incredibly fast and organized."
+        <strong>— Riya S., Chennai</strong>
+      </div>
+      <div class="testimonial">
+        "The donation process was so easy and fulfilling. Knowing my contribution directly helps families in need makes all the difference. I'll keep supporting this cause."
+        <strong>— Arjun M., Bengaluru</strong>
+      </div>
+      <div class="testimonial">
+        "As a volunteer, I've witnessed firsthand the impact we make. Every meal delivered is a moment of relief for someone in crisis."
+        <strong>— Priya K., Mumbai</strong>
+      </div>
+    </div>
+
+    <!-- Weather Section -->
+    <div class="section-card">
+      <h2><i class="fas fa-cloud-sun"></i> Weather Forecast</h2>
+      <p>Check the current weather conditions to better coordinate relief efforts and plan distributions effectively.</p>
+      <button class="btn btn-secondary" onclick="getWeather()">
+        <i class="fas fa-temperature-high"></i> Get Current Weather
+      </button>
+      <p id="weatherResult" class="status"></p>
+    </div>
+  </div>
+
+  <!-- Sliding Message -->
+  <div class="sliding-message" id="slidingMessage">
+    <p>✓ Registration successful! Please contact us at <strong>+917679626336</strong> for the next steps.</p>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <i class="fas fa-utensils"></i>
+          <span>ShareBite</span>
+        </div>
+        <p>
+          Reducing food waste. Feeding communities.<br>
+          Join us in building a hunger-free and sustainable India.
+        </p>
+        <div class="social-links">
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html#home">Home</a></li>
+          <li><a href="index.html#features">How It Works</a></li>
+          <li><a href="index.html#listings">Food Listings</a></li>
+          <li><a href="index.html#about">About Us</a></li>
+          <li><a href="emergency_food_relief.html">Emergency Food Relief</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-links">
+        <h4>For Donors</h4>
+        <ul>
+          <li><a href="index.html#listings">List Food</a></li>
+          <li><a href="donor-guidelines.html">Donor Guidelines</a></li>
+          <li><a href="track-impact.html">Track Your Impact</a></li>
+          <li><a href="support.html">Support</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-links">
+        <h4>For Collectors</h4>
+        <ul>
+          <li><a href="index.html#listings">Find Food</a></li>
+          <li><a href="ngo-register.html">Register NGO</a></li>
+          <li><a href="volunteer_food.html">Volunteer</a></li>
+          <li><a href="support.html">Help & FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom container">
+      <p>Made with 💚 by <strong>Angela Bera</strong></p>
+      <p>
+        © <span id="current-year"></span> ShareBite. All rights reserved ·
+        <a href="License.html">License</a> ·
+        <a href="support.html">Support</a> ·
+        <a href="t&c.html">Terms and Conditions</a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Current Year Update
+      const yearSpan = document.getElementById("current-year");
+      if (yearSpan) {
+        yearSpan.textContent = new Date().getFullYear();
+      }
+
+      // Mobile Menu Toggle
+      const menuToggle = document.getElementById('menuToggle');
+      const navMenu = document.getElementById('navMenu');
+      const userActions = document.querySelector('.user-actions');
+
+      if (menuToggle && navMenu) {
+        menuToggle.addEventListener('click', () => {
+          navMenu.classList.toggle('active');
+          menuToggle.classList.toggle('active');
+          if (userActions) {
+            userActions.classList.toggle('active');
+          }
+        });
+      }
+    });
+
+
+    // Register Volunteer
+    function registerVolunteer(event) {
+      event.preventDefault();
+      
+      const volunteerName = document.getElementById("volName").value;
+      const volunteerEmail = document.getElementById("volEmail").value;
+      const volunteerPhone = document.getElementById("volPhone").value;
+
+      if (volunteerName && volunteerEmail && volunteerPhone) {
+        // Show success message
+        const slidingMessage = document.getElementById("slidingMessage");
+        slidingMessage.classList.add("show");
+        
+        // Reset form
+        document.getElementById("volunteerForm").reset();
+        
+        // Hide message after 5 seconds
+        setTimeout(() => {
+          slidingMessage.classList.remove("show");
+        }, 5000);
+      }
+    }
+
+    // Submit Contact Form
+    function submitContactForm(event) {
+      event.preventDefault();
+      
+      const name = document.getElementById("contactName").value;
+      const email = document.getElementById("contactEmail").value;
+      const phone = document.getElementById("contactPhone").value;
+      const urgency = document.getElementById("urgencyLevel").value;
+      const subject = document.getElementById("subject").value;
+      const message = document.getElementById("message").value;
+
+      if (name && email && phone && urgency && subject && message) {
+        // Simulate form submission
+        const statusElement = document.getElementById("contactStatus");
+        statusElement.textContent = "✓ Your message has been sent successfully! Our team will contact you shortly.";
+        statusElement.style.color = "var(--primary-green)";
+        
+        // Reset form
+        document.getElementById("contactForm").reset();
+        
+        // Clear status after 5 seconds
+        setTimeout(() => {
+          statusElement.textContent = "";
+        }, 5000);
+      }
+    }
+
+    // Redirect to Map
+    function redirectToMap() {
+      const query = "food+distribution+center+near+me";
+      const mapURL = `https://www.google.com/maps/search/${query}`;
+      window.open(mapURL, "_blank");
+    }
+
+    // Get Weather
+    async function getWeather() {
+      const weatherResult = document.getElementById("weatherResult");
+      weatherResult.textContent = "Loading weather data...";
+      weatherResult.style.color = "var(--text-muted)";
+      
+      try {
+        const response = await fetch("https://api.open-meteo.com/v1/forecast?latitude=28.6139&longitude=77.2090&current_weather=true");
+        const data = await response.json();
+        const temp = data.current_weather.temperature;
+        const wind = data.current_weather.windspeed;
+        weatherResult.textContent = `🌡️ Current Temperature: ${temp}°C | 💨 Wind Speed: ${wind} km/h`;
+        weatherResult.style.color = "var(--primary-green)";
+      } catch (error) {
+        weatherResult.textContent = "⚠️ Failed to fetch weather data. Please try again later.";
+        weatherResult.style.color = "var(--secondary-orange)";
+      }
+    }
+  </script>
+</body>
+</html>
