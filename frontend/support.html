@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Support | ShareBite - Reduce Food Waste, Feed Communities</title>
-  
+
   <link rel="stylesheet" href="css/style.css?v=support-update">
   <link rel="stylesheet" href="./css/fontawesome/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
 
   <style>
     /* Page-specific overrides/enhancements */
     .support-hero {
-      background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+      background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%);
       color: white;
       font-size: 1.5rem;
       font-weight: 200;
@@ -23,421 +25,471 @@
     }
 
     :root.dark .support-hero {
-      background: var(--hero-gradient);
+      background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
     }
 
     .support-hero-content {
-      max-width: 900px;
-      margin: 0 auto;
+        max-width: 900px;
+        margin: 0 auto;
+        /* Animation Added */
+        opacity: 0;
+        animation: slideInUp 1s ease forwards; 
     }
 
-    .support-description {
-      font-size: 1.05rem;
-      font-weight: 600;
-      line-height: 1.8;
-      opacity: 0.95;
-      margin-bottom: 0rem;
+    .support-hero h1 {
+        font-size: var(--h1-size);
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 1.5rem;
     }
 
     .support-badge {
-      display: inline-block;
-      background: rgba(255, 255, 255, 0.291);
-      padding: 0.4rem 1rem;
-      border-radius: 999px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      margin-bottom: 1.2rem;
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(5px);
+        padding: 0.4rem 1rem;
+        border-radius: 999px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 1.2rem;
+        border: 1px solid rgba(255,255,255,0.3);
     }
 
     .user-actions {
-      margin-left: 30px;  /* Adjust this number to increase/decrease space */
-      display: flex;      /* Ensures buttons align correctly */
-      gap: 15px;          /* Adds space between the buttons themselves */
+      margin-left: 30px;
+      /* Adjust this number to increase/decrease space */
+      display: flex;
+      /* Ensures buttons align correctly */
+      gap: 15px;
+      /* Adds space between the buttons themselves */
       align-items: center;
     }
-    
+
     .about-sharebite {
-      max-width: 1100px;
-      margin: 4rem auto;
-      padding: 0 2rem;
+        max-width: 1100px;
+        margin: 4rem auto;
+        padding: 0 2rem;
     }
 
-    .about-sharebite h2 {
-      text-align: center;
-      margin-bottom: 2.5rem;
-      font-size: 2.5rem;
+    .about-sharebite h3 {
+        font-size: var(--h2-size);
+        color: var(--black);
+        font-weight: 700;
     }
 
     .support-ways-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 2rem;
-      margin-top: 3rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
     }
 
+    /* Style based on .feature-card from style.css */
     .way-card {
-      background: var(--card-bg);
-      padding: 2rem;
-      border-radius: var(--border-radius);
-      box-shadow: var(--shadow-medium);
-      text-align: center;
-      transition: transform 0.3s;
+        background: var(--card-bg);
+        padding: 2.5rem 2rem;
+        border-radius: var(--card-radius);
+        text-align: center;
+        box-shadow: var(--shadow-light);
+        transition: var(--transition-medium);
+        position: relative;
+        overflow: hidden;
     }
 
     .way-card:hover {
-      transform: translateY(-8px);
+        transform: translateY(-10px);
+        box-shadow: var(--shadow-heavy);
     }
+
+    /* Top border animation from style.css */
+    .way-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 4px;
+        background: var(--primary-gradient);
+        transition: var(--transition-slow);
+    }
+
+    .way-card:hover::before { left: 0; }
 
     .way-card i {
-      font-size: 3rem;
-      color: var(--primary-color);
-      margin-bottom: 1.2rem;
+        font-size: 3rem;
+        margin-bottom: 1.5rem;
+        display: inline-block;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        /* Animation from style.css feature-icon */
+        transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
 
+    .way-card:hover i {
+        transform: scale(1.1) rotate(15deg);
+    }
+
+    .way-card h4 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--black);
+    }
+
+    .way-card p {
+        color: var(--medium-gray);
+        line-height: 1.6;
+    }
+
+    /* === 6. FAQ SECTION === */
     .faq-container {
-      max-width: 900px;
-      margin: 4rem auto;
-      padding: 0 2rem;
+        max-width: 900px;
+        margin: 4rem auto;
+        padding: 0 2rem;
     }
 
-    .faq {
-      margin-bottom: 1.5rem;
-      border: 1px solid var(--light-gray);
-      border-radius: var(--border-radius);
-      overflow: hidden;
+    /* Force text color for inputs in light mode */
+    .contact input,
+    .contact textarea,
+    .contact select {
+      color: #111827 !important;
+      background-color: #F9FAFB !important;
     }
 
-    .faq h3 {
-      cursor: pointer;
-      padding: 1.2rem 1.8rem;
-      background: var(--light-gray);
-      margin: 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: 600;
+    /* Ensure labels are visible */
+    .contact label {
+      color: #111827 !important;
     }
 
-    .faq p {
-      display: none;
-      padding: 1.5rem 1.8rem;
-      background: var(--card-bg);
-      margin: 0;
-      border-top: 1px solid var(--light-gray);
-      line-height: 1.7;
+    /* Fix card text colors */
+    .way-card h4,
+    .way-card p {
+      color: inherit;
     }
 
-    .faq.open p {
-      display: block;
+    body:not(.dark) .way-card h4 {
+      color: #111827;
     }
 
-    /* Contact Support Styling */
-    .contact-support .btn.btn-primary {
-      margin-top: 1rem;
-      padding: 1.1rem 2rem;
-      background: var(--primary-gradient);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      min-height: 54px;
+    body:not(.dark) .way-card p {
+      color: #4B5563;
     }
 
     :root.dark .contact-support {
       background: #1e1e1e;
-      box-shadow: 0 6px 24px rgba(0,0,0,0.4);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
     }
 
-    :root.dark .contact-support input,
-    :root.dark .contact-support textarea {
-      background: #2a2a2a;
-      border-color: #444;
-      color: #f0f0f0;
+    .faq:hover {
+        box-shadow: var(--shadow-light);
+        border-color: var(--primary-color);
     }
 
-    :root.dark .contact-support input::placeholder,
-    :root.dark .contact-support textarea::placeholder {
-      color: #888;
+    .faq h3 {
+        cursor: pointer;
+        padding: 1.2rem 1.8rem;
+        background: var(--light-gray);
+        margin: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 600;
+        color: var(--text-dark);
+        transition: var(--transition);
     }
 
-    :root.dark .contact-support h2 {
-      color: #f0f0f0;
+    .faq.open h3 {
+        background: var(--primary-color);
+        color: white;
     }
 
     @media (max-width: 768px) {
-      .support-hero { 
-        padding: 7rem 1.5rem 5rem; 
+      .support-hero {
+        padding: 7rem 1.5rem 5rem;
       }
-      .support-hero h1 { 
-        font-size: 2.6rem; 
+
+      .support-hero h1 {
+        font-size: 2.6rem;
       }
+
       .contact-support {
         margin: 3.5rem auto;
         padding: 2.2rem 1.6rem;
       }
     }
 
-    /* --- Contact Section --- */
+    .faq.open p { display: block; }
+
+    /* === 7. CONTACT SECTION (Imported from style.css) === */
     .contact {
-        padding: 5rem 2rem;
-        background: var(--light-gray);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+      padding: 5rem 2rem;
+      background: var(--light-gray);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .main-title {
-        font-size: 2.5rem;
-        font-weight: 700;
-        text-align: center;
-        color: var(--black);
-        background: var(--primary-gradient);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 3rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+      text-align: center;
+      color: var(--black);
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 3rem;
     }
 
-    /* Outer Wrapper */
     .contact-wrapper {
-        background: var(--white);
-        padding: 3rem;
-        border-radius: 1.5rem;
-        box-shadow: var(--shadow-heavy);
-        max-width: 1200px;
-        width: 100%;
+      background: var(--white);
+      padding: 3rem;
+      border-radius: 1.5rem;
+      box-shadow: var(--shadow-heavy);
+      max-width: 1200px;
+      width: 100%;
     }
 
-    /* Align Both Boxes in a Row */
     .contact-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: stretch;
-        gap: 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: stretch;
+      gap: 3rem;
     }
 
     /* --- Left Box (Form) --- */
     .contact-left {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        background: var(--white);
-        border-radius: 1rem;
-        box-shadow: var(--shadow-heavy);
-        padding: 2rem 2.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: var(--white);
+      border-radius: 1rem;
+      box-shadow: var(--shadow-heavy);
+      padding: 2rem 2.5rem;
     }
 
     .contact-title {
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: var(--black);
-        background: var(--primary-gradient);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 0.5rem;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--black);
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
     }
 
     .contact-subtitle {
-        color: var(--medium-gray);
-        margin-bottom: 1.5rem;
+      color: var(--medium-gray);
+      margin-bottom: 1.5rem;
     }
 
     .contact form {
-        display: flex;
-        flex-direction: column;
-        gap: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
     }
 
     .contact form label {
-        font-weight: 600;
-        color: var(--black);
+      font-weight: 600;
+      color: var(--black);
     }
 
     .contact form input,
     .contact form textarea {
-        width: 100%;
-        padding: 0.9rem 1rem;
-        border-radius: 0.6rem;
-        border: 1.5px solid var(--medium-gray);
-        font-size: 1rem;
-        color: var(--black);
-        background: var(--light-gray);
-        transition: 0.3s ease;
-        resize: none;
+      width: 100%;
+      padding: 0.9rem 1rem;
+      border-radius: 0.6rem;
+      border: 1.5px solid var(--medium-gray);
+      font-size: 1rem;
+      color: var(--black);
+      background: var(--light-gray);
+      transition: 0.3s ease;
+      resize: none;
     }
 
     .contact form input:focus,
     .contact form textarea:focus {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 4px rgba(0, 128, 255, 0.15);
-        outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 4px rgba(0, 128, 255, 0.15);
+      outline: none;
     }
 
     .contact form button {
-        background: var(--primary-gradient);
-        color: white;
-        font-weight: 600;
-        font-size: 1.1rem;
-        padding: 0.9rem 0;
-        border: none;
-        border-radius: 0.6rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
+      background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%);
+      color: white;
+      font-weight: 600;
+      font-size: 1.1rem;
+      padding: 0.9rem 0;
+      border: none;
+      border-radius: 0.6rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
     }
 
     .contact form button:hover {
-        transform: translateY(-2px);
+      transform: translateY(-2px);
     }
 
     /* --- Right Box (Info) --- */
     .contact-right {
-        flex: 1;
-        background: var(--white);
-        border-radius: 1rem;
-        box-shadow: var(--shadow-heavy);
-        padding: 2rem 2.5rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+      flex: 1;
+      background: var(--white);
+      border-radius: 1rem;
+      box-shadow: var(--shadow-heavy);
+      padding: 2rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
     .contact-right h3 {
-        color: var(--black);
-        font-size: 1.5rem;
-        margin-bottom: 1rem;
+      color: var(--black);
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
     }
 
     .contact-right p {
-        color: var(--medium-gray);
-        margin-bottom: 1.5rem;
+      color: var(--medium-gray);
+      margin-bottom: 1.5rem;
     }
 
     .contact-info {
-        display: flex;
-        flex-direction: column;
-        gap: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
     }
 
     .info-item {
-        display: flex;
-        align-items: flex-start;
-        gap: 1rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
     }
 
+    .info-item { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.2rem; }
+    
     .info-item i {
-        background: var(--primary-color);
-        color: white;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        font-size: 1.2rem;
+      background: var(--primary-color);
+      color: white;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-size: 1.2rem;
     }
 
     .info-item strong {
-        color: var(--black);
+      color: var(--black);
     }
 
     .info-item p {
-        margin: 0.2rem 0 0;
-        color: var(--medium-gray);
+      margin: 0.2rem 0 0;
+      color: var(--medium-gray);
     }
 
     /* Social Links */
     .social-links {
-        display: flex;
-        gap: 1rem;
-        margin-top: 2rem;
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
     }
 
+    .social-links { display: flex; gap: 1rem; margin-top: 2rem; }
+    
     .social-links a {
-        background: var(--primary-gradient);
-        color: white;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 50%;
-        font-size: 1.2rem;
-        transition: 0.3s ease;
+      background: var(--primary-gradient);
+      color: white;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      transition: 0.3s ease;
     }
 
     .social-links a:hover {
-        transform: translateY(-3px);
+      transform: translateY(-3px);
     }
 
     /* Section Divider */
     .section-divider {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 4rem 0;
-        margin: 2rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 0;
+      margin: 2rem 0;
     }
 
     .divider-line {
-        flex: 1;
-        height: 2px;
-        background: linear-gradient(90deg, transparent 0%, var(--primary-color) 50%, transparent 100%);
-        max-width: 300px;
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(90deg, transparent 0%, var(--primary-color) 50%, transparent 100%);
+      max-width: 300px;
     }
 
     .divider-icon {
-        margin: 0 2rem;
-        width: 60px;
-        height: 60px;
-        background: var(--primary-gradient);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 1.5rem;
-        box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3);
-        animation: pulse 2s infinite;
+      margin: 0 2rem;
+      width: 60px;
+      height: 60px;
+      background: var(--primary-gradient);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.5rem;
+      box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3);
+      animation: pulse 2s infinite;
     }
 
     @keyframes pulse {
-        0%, 100% {
-            transform: scale(1);
-            box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3);
-        }
-        50% {
-            transform: scale(1.1);
-            box-shadow: 0 6px 25px rgba(76, 175, 80, 0.5);
-        }
+
+      0%,
+      100% {
+        transform: scale(1);
+        box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3);
+      }
+
+      50% {
+        transform: scale(1.1);
+        box-shadow: 0 6px 25px rgba(76, 175, 80, 0.5);
+      }
     }
+    .footer-links a:hover { color: #22c55e; }
 
     /* Dark mode support for divider */
     body.dark-mode .divider-line {
-        background: linear-gradient(90deg, transparent 0%, var(--accent-color) 50%, transparent 100%);
+      background: linear-gradient(90deg, transparent 0%, var(--accent-color) 50%, transparent 100%);
     }
 
     body.dark-mode .divider-icon {
-        background: var(--secondary-gradient);
-        box-shadow: 0 4px 20px rgba(255, 107, 53, 0.3);
+      background: var(--secondary-gradient);
+      box-shadow: 0 4px 20px rgba(255, 107, 53, 0.3);
     }
 
+    :root.dark .contact-right p,
+    :root.dark .contact-subtitle {
+        color: #e0e0e0; /* Light gray for paragraph text */
+    }
+    
+    :root.dark .theme-toggle { background: #2a2a2a; color: var(--accent-color); }
+    :root.dark .hamburger span { background: var(--white); }
+
+    /* === 10. RESPONSIVE === */
     @media (max-width: 900px) {
-        .contact-container {
-            flex-direction: column;
-        }
+      .contact-container {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
+
 <body>
 
   <nav class="navbar">
@@ -463,34 +515,33 @@
         <button class="login-btn" onclick="window.location.href='login_ngo.html'">NGO Login</button>
       </div>
       <div class="hamburger" id="menuToggle" tabindex="0" role="button" aria-label="Open navigation menu">
-        <span></span><span></span><span></span>
       </div>
     </div>
   </nav>
 
   <section class="support-hero">
-  <div class="container support-hero-content">
-    <h1>Support the Mission to Reduce Hunger & Food Waste</h1>
+    <div class="container support-hero-content">
+      <h1>Support the Mission to Reduce Hunger & Food Waste</h1>
 
-    <p class="support-badge">
-      Small actions. Big impact. A hunger-free future starts with you.
-    </p>
+      <p class="support-badge">
+        Small actions. Big impact. A hunger-free future starts with you.
+      </p>
 
-    <p class="support-description">
-      ShareBite is committed to minimizing food waste and ensuring surplus food
-      reaches the right hands. Through community participation, verified
-      partnerships, and responsible distribution, we empower individuals and
-      organizations to make a real difference.
-      <br><br>
-    </p>
+      <p class="support-description">
+        ShareBite is committed to minimizing food waste and ensuring surplus food
+        reaches the right hands. Through community participation, verified
+        partnerships, and responsible distribution, we empower individuals and
+        organizations to make a real difference.
+        <br><br>
+      </p>
 
-  </div>
-</section>
+    </div>
+  </section>
 
 
   <section class="about-sharebite">
 
-    <h3 style="text-align:center; margin:3rem 0 2rem; font-size:2rem;">How You Can Support ShareBite</h3>
+    <h3 style="text-align:center; margin:3rem 0 2rem;">How You Can Support ShareBite</h3>
     <div class="support-ways-grid">
       <div class="way-card">
         <i class="fas fa-hand-holding-heart"></i>
@@ -526,33 +577,42 @@
   </section>
 
   <section class="faq-container">
-  <h2 style="text-align:center; margin-bottom:2.5rem;">Frequently Asked Questions</h2>
+    <h2 style="text-align:center; margin-bottom:2.5rem;">Frequently Asked Questions</h2>
 
-  <div class="faq">
-    <h3>How do I donate surplus food on ShareBite?<i class="fas fa-chevron-down"></i></h3>
-    <p>Register or log in → click "Add Listing" → enter food type, quantity, freshness time, pickup location and contact details. Nearby NGOs and volunteers will be notified and can claim the donation quickly.</p>
-  </div>
+    <div class="faq">
+      <h3>How do I donate surplus food on ShareBite?<i class="fas fa-chevron-down"></i></h3>
+      <p>Register or log in → click "Add Listing" → enter food type, quantity, freshness time, pickup location and
+        contact details. Nearby NGOs and volunteers will be notified and can claim the donation quickly.</p>
+    </div>
 
-  <div class="faq">
-    <h3>How can NGOs and volunteers join the platform?<i class="fas fa-chevron-down"></i></h3>
-    <p>NGOs register on the NGO registration page and go through a quick verification process (documents + review). Individuals can sign up as volunteers and browse/claim available listings directly (subject to donor approval and safety checks).</p>
-  </div>
+    <div class="faq">
+      <h3>How can NGOs and volunteers join the platform?<i class="fas fa-chevron-down"></i></h3>
+      <p>NGOs register on the NGO registration page and go through a quick verification process (documents + review).
+        Individuals can sign up as volunteers and browse/claim available listings directly (subject to donor approval
+        and safety checks).</p>
+    </div>
 
-  <div class="faq">
-    <h3>What kind of food is accepted and how is safety ensured?<i class="fas fa-chevron-down"></i></h3>
-    <p>We accept fresh, edible surplus food (cooked meals, bakery items, fruits, vegetables, unopened packaged food within expiry). Expired, spoiled or opened perishables are not allowed. Donors must provide preparation time & freshness window; collectors follow hygiene guidelines and can refuse suspicious donations.</p>
-  </div>
+    <div class="faq">
+      <h3>What kind of food is accepted and how is safety ensured?<i class="fas fa-chevron-down"></i></h3>
+      <p>We accept fresh, edible surplus food (cooked meals, bakery items, fruits, vegetables, unopened packaged food
+        within expiry). Expired, spoiled or opened perishables are not allowed. Donors must provide preparation time &
+        freshness window; collectors follow hygiene guidelines and can refuse suspicious donations.</p>
+    </div>
 
-  <div class="faq">
-    <h3>Is ShareBite free to use? Are there any costs involved?<i class="fas fa-chevron-down"></i></h3>
-    <p>Yes — completely free for everyone. Donors can list food, NGOs/volunteers can claim and coordinate pickups, and all core features have no charges. (Optional future donations/fundraising may appear to support platform operations.)</p>
-  </div>
+    <div class="faq">
+      <h3>Is ShareBite free to use? Are there any costs involved?<i class="fas fa-chevron-down"></i></h3>
+      <p>Yes — completely free for everyone. Donors can list food, NGOs/volunteers can claim and coordinate pickups, and
+        all core features have no charges. (Optional future donations/fundraising may appear to support platform
+        operations.)</p>
+    </div>
 
-  <div class="faq">
-    <h3>What if no one claims my donation or I have another question?<i class="fas fa-chevron-down"></i></h3>
-    <p>You’ll get reminders and can extend the availability time or cancel the listing. Many restaurants set up recurring pickups with regular partners. For any other questions, partnerships, impact tracking, or issues — use the contact form below, email support@sharebite.org, or call +91 88888 99999 during business hours.</p>
-  </div>
-</section>
+    <div class="faq">
+      <h3>What if no one claims my donation or I have another question?<i class="fas fa-chevron-down"></i></h3>
+      <p>You’ll get reminders and can extend the availability time or cancel the listing. Many restaurants set up
+        recurring pickups with regular partners. For any other questions, partnerships, impact tracking, or issues — use
+        the contact form below, email support@sharebite.org, or call +91 88888 99999 during business hours.</p>
+    </div>
+  </section>
 
   <section id="contact-section" class="contact">
     <h1 class="main-title">📞 Contact Us</h1>
@@ -605,16 +665,15 @@
               </div>
             </div>
 
-            <!-- ✅ Support Availability Info -->
             <div class="info-item">
-            <i class="fa-solid fa-clock"></i>
-            <div>
+              <i class="fa-solid fa-clock"></i>
+              <div>
                 <strong>Support Hours:</strong>
                 <p>
-                Monday – Saturday | 9 AM – 7 PM IST<br>
+                  Monday – Saturday | 9 AM – 7 PM IST<br>
                 <p>Average response time: within 24 hours</p>
                 </p>
-            </div>
+              </div>
             </div>
 
           </div>
@@ -684,7 +743,7 @@
     </div>
 
     <div class="footer-bottom">
-      <p>Made with 💚 by <strong>Angela Bera</strong></p>
+      <a>Made with 💚 by <strong>Angela Bera</strong></a>
       <p>
         © <span id="current-year"></span> ShareBite. All rights reserved ·
         <a href="License.html">License</a> ·
@@ -695,7 +754,7 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      
+
       // --- 1. Current Year Update ---
       const yearSpan = document.getElementById("current-year");
       if (yearSpan) {
@@ -713,14 +772,14 @@
           document.querySelectorAll(".faq").forEach(f => {
             f.classList.remove("open");
             const p = f.querySelector("p");
-            if(p) p.style.display = "none";
+            if (p) p.style.display = "none";
           });
 
           // Toggle the clicked FAQ
           if (!isOpen) {
             parent.classList.add("open");
             const p = item.nextElementSibling;
-            if(p) p.style.display = "block";
+            if (p) p.style.display = "block";
           }
         });
       });
@@ -731,7 +790,23 @@
       if (contactForm) {
         contactForm.addEventListener("submit", e => {
           e.preventDefault();
-          alert("✅ Thank you! Your message has been sent to the ShareBite support team.");
+
+          // Create success message element
+          const successMsg = document.createElement('div');
+          successMsg.style.textAlign = 'center';
+          successMsg.style.padding = '2rem 0';
+          successMsg.innerHTML = `
+            <i class="fas fa-check-circle" style="color: var(--primary-green); font-size: 3rem; margin-bottom: 1rem;"></i>
+            <h3 style="margin-bottom: 0.5rem; color: var(--black);">Message Sent!</h3>
+            <p style="color: var(--medium-gray);">Thank you! Your message has been sent to the ShareBite support team.</p>
+            <button class="btn btn-primary" onclick="alert('TODO: Reset logic if needed')" style="margin-top:1rem; display:none;">Send Another</button>
+          `;
+
+          // Hide form and show success message
+          contactForm.style.display = 'none';
+          contactForm.parentNode.insertBefore(successMsg, contactForm.nextSibling);
+
+          // Reset form in background
           e.target.reset();
         });
       }
@@ -769,25 +844,26 @@
         themeToggle.addEventListener('click', () => {
           const isDarkNow = htmlEl.classList.contains('dark');
           const newThemeIsDark = !isDarkNow;
-          
+
           applyTheme(newThemeIsDark);
-          
+
           // Save preference to LocalStorage
           localStorage.setItem('theme', newThemeIsDark ? 'dark' : 'light');
         });
       }
-      
+
       // --- 5. Mobile Menu Toggle ---
       const menuToggle = document.getElementById('menuToggle');
       const navMenu = document.getElementById('navMenu');
 
       if (menuToggle && navMenu) {
         menuToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-            menuToggle.classList.toggle('active');
+          navMenu.classList.toggle('active');
+          menuToggle.classList.toggle('active');
         });
       }
     });
   </script>
 </body>
+
 </html>

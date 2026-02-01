@@ -5,1016 +5,314 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - ShareBite</title>
-    
-    <link rel="stylesheet" href="css/style.css?v=support-update">
-    <link rel="stylesheet" href="./css/fontawesome/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
     <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
 
     <style>
-
-        /* === 1. GLOBAL VARIABLES === */
-    :root {
-        --primary-color: #4CAF50;
-        --primary-dark: #388E3C;
-        --secondary-color: #FF6B35;
-        --bg-body: #F0F2F5;
-        --bg-panel: #ffffff;
-        --text-main: #2D3748;
-        --text-muted: #718096;
-        --border-color: #E2E8F0;
-        --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-        --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
-    }
-
-    body.dark-mode {
-        --bg-body: #121212;
-        --bg-panel: #1E1E1E;
-        --text-main: #F7FAFC;
-        --text-muted: #A0AEC0;
-        --border-color: #4A5568;
-    }
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        }
-
-    body {
-        font-family: 'Poppins', sans-serif;
-        background-color: var(--bg-body);
-        color: var(--text-main);
-        transition: background-color 0.3s ease, color 0.3s ease;
-        overflow-x: hidden;
-        padding-top: 80px; /* Space for fixed navbar */
-        }
-
-    a { text-decoration: none; color: inherit; }
-    ul { list-style: none; }
-
-    /* === 2. NAVBAR STYLES === */
-    .navbar {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 80px;
-        z-index: 1000;
-        box-shadow: var(--shadow-sm);
-        border-bottom: 1px solid var(--border-color);
-        transition: background-color 0.3s ease, border-color 0.3s ease;
-    }
-
-    body.dark-mode .navbar {
-        background: rgba(30, 30, 30, 0.95);
-    }
-
-    .nav-container {
-        max-width: 1280px;
-        margin: 0 auto;
-        padding: 0 2rem;
-        height: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .nav-logo {
-        display: flex;
-        align-items: center;
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--primary-color);
-        gap: 0.5rem;
-        margin-right: 1rem;
-    }
-
-    .user-actions {
-        margin-left: 30px;  
-        display: flex;      
-        gap: 15px;          
-        align-items: center;
-    }
-
-    /* Logo */
-    .nav-logo-link {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--primary-color);
-        text-decoration: none;
-    }
-
-    /* Navigation Menu */
-    .nav-menu {
-        display: flex;
-        gap: 2rem;
-        align-items: center;
-        list-style: none;
-        margin: 0;
-        padding: 0;
-    }
-
-    .nav-link {
-        font-weight: 500;
-        color: var(--text-main);
-        text-decoration: none;
-        transition: color 0.3s ease;
-        position: relative;
-    }
-
-    .nav-link:hover,
-    .nav-link.active {
-        color: var(--primary-color);
-    }
-
-    .user-actions {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        margin-left: 20px;
-    }
-
-    .theme-toggle {
-        background: none;
-        border: none;
-        font-size: 1.2rem;
-        color: var(--text-main);
-        cursor: pointer;
-        padding: 8px;
-        border-radius: 50%;
-        transition: background 0.2s;
-    }
-
-    .theme-toggle:hover {
-        background: rgba(0,0,0,0.05);
-    }
-
-    .login-btn {
-        padding: 8px 20px;
-        border-radius: 50px;
-        font-weight: 600;
-        font-size: 0.9rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        text-decoration: none;
-    }
-
-    /* User Login Button (Outline) */
-    .login-btn:first-of-type {
-        background: transparent;
-        border: 1px solid var(--primary-color);
-        color: var(--primary-color);
-    }
-
-    .login-btn:first-of-type:hover {
-        background: rgba(76, 175, 80, 0.1);
-    }
-
-    /* NGO Login Button (Solid) */
-    .login-btn:last-of-type {
-        background: var(--primary-color);
-        border: 1px solid var(--primary-color);
-        color: white;
-    }
-
-    .login-btn:last-of-type:hover {
-        background: var(--primary-dark);
-        border-color: var(--primary-dark);
-    }
-
-    /* Hamburger Menu (Mobile) */
-    .hamburger {
-        display: none;
-        flex-direction: column;
-        gap: 5px;
-        cursor: pointer;
-    }
-
-    .hamburger span {
-        width: 25px;
-        height: 3px;
-        background: var(--text-main);
-        border-radius: 2px;
-    }
-
-    /* === 3. FOOTER STYLES === */
-    .footer {
-        background-color: var(--bg-panel);
-        padding: 4rem 0 2rem;
-        border-top: 1px solid var(--border-color);
-        margin-top: auto;
-        margin-top: 3rem;
-    }
-
-    .footer .container {
-        max-width: 1280px;
-        margin: 0 auto;
-        padding: 0 2rem;
-    }
-
-    .footer-grid {
-        display: grid;
-        grid-template-columns: 1.5fr 1fr 1fr 1fr;
-        gap: 3rem;
-        margin-bottom: 3rem;
-    }
-
-    /* Footer Brand */
-    .footer-brand .footer-logo {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-size: 1.4rem;
-        font-weight: 700;
-        color: var(--primary-color);
-        margin-bottom: 1rem;
-    }
-
-    .footer-brand p {
-        color: var(--text-muted);
-        font-size: 0.95rem;
-        line-height: 1.6;
-        margin-bottom: 1.5rem;
-    }
-
-    /* Social Links */
-    .social-links {
-        display: flex;
-        gap: 15px;
-    }
-
-    .social-links a {
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        background: var(--bg-body);
-        color: var(--text-main);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        border: 1px solid var(--border-color);
-    }
-
-    .social-links a:hover {
-        background: var(--primary-color);
-        color: white;
-        border-color: var(--primary-color);
-        transform: translateY(-3px);
-    }
-
-    /* Footer Links Columns */
-    .footer-links h4 {
-        font-size: 1.1rem;
-        margin-bottom: 1.5rem;
-        color: var(--text-main);
-        font-weight: 600;
-    }
-
-    .footer-links ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-
-    .footer-links ul li {
-        margin-bottom: 0.8rem;
-    }
-
-    .footer-links a {
-        color: var(--text-muted);
-        font-size: 0.95rem;
-        text-decoration: none;
-        transition: color 0.2s;
-    }
-
-    .footer-links a:hover {
-        color: var(--primary-color);
-        padding-left: 5px;
-    }
-
-        /* Footer Bottom */
-    .footer-bottom {
-        max-width: 1280px;
-        margin: 0 auto;
-        padding: 1.5rem 2rem 0;
-        border-top: 1px solid var(--border-color);
-        display: flex;
-        flex-direction: column; 
-        justify-content: center;
-        align-items: center;    
-        gap: 0.5rem;            
-        text-align: center;
-        color: var(--text-muted);
-        font-size: 0.9rem;
-    }
-
-    .footer-bottom a {
-        color: var(--text-main);
-        text-decoration: none;
-        margin-left: 5px;
-    }
-
-    .footer-bottom a:hover {
-        color: var(--primary-color);
-    }
-
-    /* Responsive Footer & Navbar */
-    @media (max-width: 968px) {
-        .nav-menu { display: none; } /* Hide menu on mobile, needs JS to toggle */
-        .hamburger { display: flex; }
-        .user-actions { display: none; } 
-        .footer-grid {
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-        }
-    }
-
-    @media (max-width: 600px) {
-        .footer-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .footer-bottom {
-            flex-direction: column;
-            gap: 1rem;
-            text-align: center;
-        }
-    }
-
-        /* ================= NAVBAR STYLES ================= */
-        /* Imported from style.css file */
-
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            gap: 0.5rem;
-            margin-right: 1rem;
-        }
-
-        .user-actions {
-            margin-left: 30px;  
-            display: flex;      
-            gap: 15px;          
-            align-items: center;
-        }
-
-        /* ================= 1. ABOUT & INFO SECTION ================= */
-        .info-section {
-            padding: 4rem 2rem 2rem;
-            max-width: 1100px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .section-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 1rem;
-            color: var(--text-main);
-
-            animation: none !important;
-            transform: none !important;
-            transition: none !important;
-        }
-
-        .section-subtitle {
-            color: var(--text-muted);
-            max-width: 700px;
-            text-align: center;
-            margin: 0 auto 3rem;
-            line-height: 1.6;
-            font-size: 1.1rem;
-        }
-
-        /* --- HOW IT WORKS (DONATION CYCLE) --- */
-        .process-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-bottom: 5rem;
-        }
-
-        .process-card {
-            background: var(--bg-panel);
-            padding: 2rem;
-            border-radius: 16px;
-            box-shadow: var(--shadow-light);
-            text-align: center;
-            position: relative;
-            border: 1px solid var(--input-border);
-
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-        }
-
-        .process-card:hover {
-            transform: translateY(-10px); 
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-            border-color: var(--primary-color);
-        }
-
-        .process-card .process-icon {
-            transition: all 0.3s ease;
-        }
-        
-        .process-card:hover .process-icon {
-            transform: scale(1.1);
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        .process-icon {
-            width: 70px;
-            height: 70px;
-            background: rgba(76, 175, 80, 0.1);
-            color: var(--primary-color);
-            border-radius: 50%;
+        /* Auth Page Specific Styles */
+        body {
+            background: linear-gradient(135deg, #e0f7fa 0%, #e8f5e9 100%);
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
-            margin: 0 auto 1.5rem;
+            padding: 2rem;
+            position: relative;
         }
 
-        .process-card h3 {
-            font-size: 1.2rem;
-            margin-bottom: 0.8rem;
+        body.dark-mode {
+            background: linear-gradient(135deg, #121212 0%, #0d1b0e 100%);
         }
 
-        .process-card p {
-            font-size: 0.95rem;
-            color: var(--text-muted);
-            line-height: 1.5;
+        .auth-card {
+            width: 100%;
+            max-width: 500px;
+            padding: 2.5rem;
+            animation: slideUp 0.6s ease-out;
+            position: relative;
+            z-index: 10;
         }
 
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
 
-        /* Arrow between cards (Desktop) */
-        @media (min-width: 900px) {
-            .process-card:not(:last-child)::after {
-                content: '\f061'; 
-                font-family: 'Font Awesome 5 Free';
-                font-weight: 900;
-                position: absolute;
-                right: -1.5rem;
-                top: 50%;
-                transform: translateY(-50%);
-                color: var(--text-muted);
-                opacity: 0.5;
-                font-size: 1.2rem;
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
 
-        /* ================= 3. REGISTRATION FORM AREA ================= */
-        .register-container {
-            display: flex;
-            justify-content: center;
-            padding: 0 2rem 5rem;
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
         }
 
-        .register-wrapper {
-            display: flex;
-            width: 100%;
-            max-width: 1100px;
-            background: var(--bg-panel);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
-            overflow: hidden; 
-            height: 1050px; /* FIXED HEIGHT - NO MOVEMENT */
-            position: relative;
+        .auth-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-green);
         }
 
-        /* Visual Side */
-        .visual-side {
-            flex: 1;
-            background: linear-gradient(135deg, rgba(76, 175, 80, 0.9), rgba(56, 142, 60, 0.8)), 
-                        url('https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&q=80');
-            background-size: cover;
-            background-position: center;
-            padding: 3rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            color: white;
-            height: 100%; 
-        }
-
-        .visual-content h2 { font-size: 2.5rem; font-weight: 700; line-height: 1.2; margin-bottom: 1rem; }
-        .visual-content p { font-size: 1.1rem; opacity: 0.9; }
-
-        /* Form Side */
-        .form-side {
-            flex: 1.3;
-            padding: 3rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start; 
-            height: 100%; 
-        }
-
-        /* Toggle Switch */
-        .toggle-container {
-            background: var(--input-bg);
-            padding: 4px;
-            border-radius: 12px;
-            display: flex;
-            position: relative;
-            margin: 0 auto 2rem;
-            border: 1px solid var(--input-border);
-            width: 100%;
-            max-width: 300px;
-            height: 50px;
-            flex-shrink: 0;
-        }
-
-        .toggle-btn {
-            flex: 1;
-            border: none;
-            background: transparent;
-            font-weight: 600;
+        .auth-header p {
             color: var(--text-muted);
-            cursor: pointer;
-            z-index: 2;
-            transition: color 0.3s;
-            border-radius: 8px;
-            font-size: 1rem;
-        }
-        .toggle-btn.active { color: white; }
-
-        .toggle-slider {
-            position: absolute;
-            top: 4px; left: 4px;
-            width: calc(50% - 4px);
-            height: calc(100% - 8px);
-            background: var(--primary-color);
-            border-radius: 8px;
-            transition: transform 0.3s ease;
-            z-index: 1;
+            font-size: 0.95rem;
         }
 
-        /* Form Elements */
-        #registerForm {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.5rem;
-            width: 100%;
+        /* Form Elements overrides for this page */
+        .form-group {
+            margin-bottom: 1.2rem;
+            position: relative;
         }
-        .full-width { grid-column: span 2; }
-        
-        .form-group label { font-size: 0.9rem; font-weight: 500; margin-bottom: 0.05rem; display: block; color: var(--text-main); }
-        .form-group input, .form-group textarea {
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
             width: 100%;
-            padding: 0.9rem 1rem;
-            border: 1px solid var(--input-border);
-            border-radius: 8px;
-            background: var(--input-bg);
+            padding: 0.8rem 1rem;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            background: rgba(255, 255, 255, 0.8);
+            transition: var(--transition-fast);
             color: var(--text-main);
             font-family: inherit;
-            font-size: 0.95rem;
         }
-        .form-group input:focus, .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            background: var(--bg-panel);
+
+        body.dark-mode .form-group input,
+        body.dark-mode .form-group textarea,
+        body.dark-mode .form-group select {
+            background: rgba(0, 0, 0, 0.2);
+            border-color: var(--border-light);
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-green);
             box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+            outline: none;
+            background: #fff;
         }
 
-        .btn-submit {
-            grid-column: span 2;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 1.1rem;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            margin-top: 1rem;
-            transition: background 0.3s;
+        body.dark-mode .form-group input:focus {
+            background: rgba(0, 0, 0, 0.4);
         }
-        .btn-submit:hover { background: var(--primary-dark); }
 
-        .login-link {
-            grid-column: span 2;
-            text-align: center;
-            margin-top: 1rem;
-            color: var(--secondary-color);
-            font-size: 0.9rem;
-        }
-        .login-link:hover { text-decoration: underline; }
-
-        /* Password Wrapper */
-        .password-wrapper { position: relative; }
         .toggle-password {
             position: absolute;
-            right: 12px; top: 50%; transform: translateY(-50%);
-            background: none; border: none;
-            color: var(--text-muted); cursor: pointer; padding: 5px;
-        }
-
-        .volunteer-field { display: none; }
-
-        /* ================= BENEFITS SECTION ================= */
-        .benefits-section {
-            padding: 3rem 2rem;
-            background: var(--bg-body);
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .benefits-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-
-        .benefit-card {
-            background: var(--bg-panel);
-            padding: 2rem; 
-            border-radius: 12px;
-            box-shadow: var(--shadow-light);
-            text-align: center;
-            border: 1px solid var(--input-border); 
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-        }
-
-        .benefit-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1); 
-            border-color: var(--primary-color); 
-        }
-
-        /* Icon Animation */
-        .benefit-card .benefit-icon {
-            font-size: 2rem;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-            display: inline-block;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s ease;
-        }
-
-        .benefit-card:hover .benefit-icon {
-            transform: scale(1.2); 
-            color: var(--primary-dark); 
-        }
-
-        .benefit-icon {
-            font-size: 2rem;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-        }
-
-        .benefit-title {
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .benefit-desc {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-        }
-        
-        /* ================= CTA BANNER ================= */
-        .cta-banner {
-            background: var(--primary-color);
-            color: white;
-            text-align: center;
-            padding: 3rem 2rem;
-            margin: 4rem auto;
-            max-width: 900px;
-            border-radius: 16px;
-            box-shadow: var(--shadow-card);
-        }
-
-        .cta-title {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .cta-desc {
-            font-size: 1.1rem;
-            margin-bottom: 1.5rem;
-            opacity: 0.9;
-        }
-
-        .cta-btn {
-            background: white;
-            color: var(--primary-color);
-            font-weight: 600;
-            padding: 1rem 2rem;
-            border-radius: 999px;
-            transition: transform 0.3s;
-        }
-
-        .cta-btn:hover {
-            transform: scale(1.05);
-        }
-
-        /* ================= FAQ SECTION ================= */
-        .faq-section {
-            padding: 0rem 2rem;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .faq-title {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 2.5rem;
-        }
-
-        .faq-item {
-            background: var(--bg-panel);
-            border-radius: 12px;
-            margin-bottom: 1rem;
-            box-shadow: var(--shadow-light);
-            overflow: hidden;
-        }
-
-        .faq-question {
-            padding: 1.2rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            right: 1rem;
+            top: 2.3rem;
+            /* Adjusted for label height */
+            background: none;
+            border: none;
             cursor: pointer;
-            font-weight: 600;
-        }
-
-        .faq-answer {
-            padding: 0 1.5rem 1.5rem;
-            display: none;
             color: var(--text-muted);
         }
 
-        .faq-item.open .faq-answer {
-            display: block;
+        /* Toggle Switch for NGO/Volunteer */
+        .register-toggle {
+            display: flex;
+            background: var(--bg-light);
+            padding: 0.3rem;
+            border-radius: var(--radius-full);
+            margin-bottom: 2rem;
+            position: relative;
+            border: 1px solid var(--border-light);
         }
 
-        .faq-icon {
-            transition: transform 0.3s;
+        .toggle-option {
+            flex: 1;
+            text-align: center;
+            padding: 0.6rem;
+            cursor: pointer;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: var(--transition-normal);
+            border: none;
+            background: transparent;
+            font-size: 0.9rem;
         }
 
-        .faq-item.open .faq-icon {
-            transform: rotate(180deg);
+        .toggle-option.active {
+            background: var(--white);
+            color: var(--primary-green);
+            box-shadow: var(--shadow-sm);
         }
 
-        /* ================= FOOTER ================= */
-
-        /* Responsive */
-        @media (max-width: 900px) {
-            .register-wrapper { flex-direction: column; }
-            .visual-side { display: none; }
-            .footer .container { grid-template-columns: 1fr 1fr; }
-            .process-grid { grid-template-columns: 1fr; }
-            .process-card::after { display: none; }
+        body.dark-mode .toggle-option.active {
+            background: var(--bg-light);
+            /* Slightly lighter than card */
+            color: var(--primary-green);
         }
-        @media (max-width: 600px) {
-            #registerForm { grid-template-columns: 1fr; }
-            .full-width { grid-column: span 1; }
-            .footer .container { grid-template-columns: 1fr; }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            transition: var(--transition-fast);
+            z-index: 20;
+        }
+
+        .back-button:hover {
+            transform: translateX(-3px);
+            background: var(--white);
+        }
+
+        .theme-toggle-fixed {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 20;
+        }
+
+        /* Decoration */
+        .circle-decor {
+            position: absolute;
+            border-radius: 50%;
+            z-index: 0;
+            opacity: 0.6;
+        }
+
+        .c1 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(76, 175, 80, 0.2) 0%, transparent 70%);
+            top: -100px;
+            left: -100px;
+        }
+
+        .c2 {
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(255, 107, 53, 0.15) 0%, transparent 70%);
+            bottom: -50px;
+            right: -50px;
         }
     </style>
 </head>
 
 <body>
+    <!-- Background Decoration -->
+    <div class="circle-decor c1"></div>
+    <div class="circle-decor c2"></div>
 
-<!-- NAVBAR -->
-    <nav class="navbar">
-    <div class="nav-container">
-      <div class="nav-logo">
-        <a href="index.html" class="nav-logo-link">
-          <i class="fas fa-utensils"></i>
-          <span>ShareBite</span>
-        </a>
-      </div>
-      <ul class="nav-menu" id="navMenu">
-        <li><a href="index.html#home" class="nav-link">Home</a></li>
-        <li><a href="index.html#features" class="nav-link">Features</a></li>
-        <li><a href="index.html#listings" class="nav-link">Listings</a></li>
-        <li><a href="index.html#about" class="nav-link">About</a></li>
-        <li><a href="support.html" class="nav-link">Support</a></li>
-      </ul>
-      <div class="user-actions">
-        <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
-          <i class="fas fa-moon"></i>
-        </button>
-        <button class="login-btn" onclick="window.location.href='login.html'">User Login</button>
-        <button class="login-btn" onclick="window.location.href='login_ngo.html'">NGO Login</button>
-      </div>
-      <div class="hamburger" id="menuToggle" tabindex="0" role="button" aria-label="Open navigation menu">
-        <span></span><span></span><span></span>
-      </div>
-    </div>
-  </nav>
+    <a href="index.html" class="back-button" title="Back to Home">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M12 19l-7-7 7-7" />
+        </svg>
+    </a>
 
-<!-- HERO Section -->
-    <section class="info-section">
-        <h1 class="section-title">Join the ShareBite Network</h1>
-        <p class="section-subtitle">
-            We are building a hunger-free community by connecting those who have surplus food with those who need it.
-            Whether you are an organization or an individual, you are the bridge that makes this possible.
-        </p>
+    <button id="theme-toggle" class="theme-toggle theme-toggle-fixed" title="Toggle dark mode">🌙</button>
 
-        <h3 style="margin-bottom: 2rem; color: var(--primary-color);">How the Donation Cycle Works</h3>
-        <div class="process-grid">
-            <div class="process-card">
-                <div class="process-icon"><i class="fas fa-hand-holding-heart"></i></div>
-                <h3>1. Donors List Food</h3>
-                <p>Restaurants, bakeries, and households list their surplus fresh food on ShareBite using their "Donor" account.</p>
-            </div>
-            <div class="process-card">
-                <div class="process-icon"><i class="fas fa-truck-fast"></i></div>
-                <h3>2. You Collect It</h3>
-                <p><strong>NGOs & Volunteers</strong> (You!) receive alerts, claim the listing, and pick up the food from the donor.</p>
-            </div>
-            <div class="process-card">
-                <div class="process-icon"><i class="fas fa-users"></i></div>
-                <h3>3. Feed the Community</h3>
-                <p>The food is distributed to shelters, community centers, or individuals in need. Waste is reduced, smiles are created.</p>
-            </div>
-        </div>
-    </section>
-
-<!-- Benefits Section -->
-    <section class="benefits-section">
-        <div class="section-title">
-            <h4>Why Join ShareBite?</h4>
-        </div>
-        <div class="section-subtitle">
-            <p>Join a network that turns surplus into sustenance. We empower you with the tools to find food nearby and deliver it to those who need it most. Together, we make localized impact not just possible, but efficient and scalable.</p>
+    <div class="glass-card auth-card">
+        <div class="auth-header">
+            <h1 id="registerTitle">Register Your NGO</h1>
+            <p id="registerSubtitle">Join ShareBite and help us reduce food waste.</p>
         </div>
 
-        <div class="benefits-grid">
-            <div class="benefit-card">
-                <i class="fas fa-globe-americas benefit-icon"></i>
-                <h3>Local Focus</h3>
-                <p style="color:var(--text-muted); font-size:0.9rem;">Connect with donors in your specific radius.</p>
-            </div>
-            <div class="benefit-card">
-                <i class="fas fa-shield-alt benefit-icon"></i>
-                <h3>Verified Network</h3>
-                <p style="color:var(--text-muted); font-size:0.9rem;">Safety and trust are our top priorities.</p>
-            </div>
-            <div class="benefit-card">
-                <i class="fas fa-chart-pie benefit-icon"></i>
-                <h3>Track Impact</h3>
-                <p style="color:var(--text-muted); font-size:0.9rem;">Visual dashboard of your contributions.</p>
-            </div>
-            <div class="benefit-card">
-                <i class="fas fa-bolt benefit-icon"></i>
-                <h3>Fast Alerts</h3>
-                <p style="color:var(--text-muted); font-size:0.9rem;">Real-time notifications for new food listings.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- NGO/Volunteer Registration form-->
-    <div class="register-container" id="register-anchor">
-        <div class="register-wrapper">
-            
-            <div class="visual-side">
-                <div class="visual-content">
-                    <h2 id="visual-title">Partner for<br>Change.</h2>
-                    <p id="visual-desc">Connect with local businesses and distribute surplus food. Verified NGOs are the backbone of our mission.</p>
-                </div>
-                <div class="visual-footer">
-                    © ShareBite Community
-                </div>
-            </div>
-
-            <div class="form-side">
-                <div style="text-align:center; margin-bottom:2rem;">
-                    <h2 id="registerTitle" style="font-size:1.8rem; margin-bottom:0.5rem;">Create NGO Account</h2>
-                    <p id="registerSubtitle" style="color:var(--text-muted);">Join to start receiving donations.</p>
-                </div>
-
-                <div class="toggle-container">
-                    <div class="toggle-slider" id="toggleSlider"></div>
-                    <button type="button" class="toggle-btn active" id="toggleNGO">NGO</button>
-                    <button type="button" class="toggle-btn" id="toggleVolunteer">Volunteer</button>
-                </div>
-
-                <form id="registerForm">
-                    <input type="hidden" id="registerType" name="registerType" value="ngo">
-
-                    <div class="form-group full-width ngo-field">
-                        <label for="ngoName">Organization Name</label>
-                        <input type="text" id="ngoName" name="ngoName" placeholder="e.g. Hope Foundation">
-                    </div>
-
-                    <div class="form-group full-width volunteer-field">
-                        <label for="fullName">Full Name</label>
-                        <input type="text" id="fullName" name="fullName" placeholder="Your Name" disabled>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Email Address</label>
-                        <input type="email" name="email" required placeholder="name@example.com">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Phone Number</label>
-                        <input type="tel" name="phone" required placeholder="10-digit number">
-                    </div>
-
-                    <div class="form-group full-width">
-                        <label id="contact-person-label">Contact Person</label>
-                        <input type="text" id="contactPerson" name="contactPerson" required placeholder="Representative Name">
-                    </div>
-
-                    <div class="form-group full-width">
-                        <label>Address / Location</label>
-                        <input type="text" name="address" required placeholder="Main area of operation">
-                    </div>
-
-                    <div class="form-group full-width">
-                        <label>Website / Social Media (Optional)</label>
-                        <input type="text" name="website" placeholder="Enter your website or social media link">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Password</label>
-                        <div class="password-wrapper">
-                            <input type="password" id="password" name="password" required placeholder="••••••">
-                            <button type="button" class="toggle-password" onclick="togglePwd('password', this)"><i class="fas fa-eye"></i></button>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Confirm Password</label>
-                        <div class="password-wrapper">
-                            <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="••••••">
-                            <button type="button" class="toggle-password" onclick="togglePwd('confirmPassword', this)"><i class="fas fa-eye"></i></button>
-                        </div>
-                    </div>
-
-                    <div class="form-group full-width">
-                        <label>Mission / Description</label>
-                        <textarea name="description" rows="3" placeholder="Tell us briefly about your organization..."></textarea>
-                    </div>
-
-                    <button type="submit" class="btn-submit">Complete Registration</button>
-                    <a href="login_ngo.html" class="login-link">Already have an account? Login</a>
-                </form>
-            </div>
-        </div>
-    </div>
-
-<!-- FAQ Section -->
-    <section class="faq-section">
-        <h2 class="faq-title">Frequently Asked Questions</h2>
-
-        <div class="faq-item">
-            <div class="faq-question">
-                <span>How does the food collection and distribution process work?</span>
-                <i class="fas fa-chevron-down faq-icon"></i>
-            </div>
-            <p class="faq-answer">
-                The process is designed to be simple and efficient. First, a donor (restaurant, bakery, or household) lists their surplus food on the ShareBite app, providing details like food type, quantity, and pickup time. 
-                <br><br>
-                Once listed, nearby NGOs and registered Volunteers receive an instant notification. You can review the details and "Claim" the listing if you are available to pick it up. After claiming, you will get the donor's contact details to coordinate the pickup. Finally, you deliver the food to the nearest shelter or community center and mark the request as "Completed" in the app.
-            </p>
+        <div class="register-toggle">
+            <button type="button" class="toggle-option active" id="toggleNGO">NGO</button>
+            <button type="button" class="toggle-option" id="toggleVolunteer">Volunteer</button>
         </div>
 
-        <div class="faq-item">
-            <div class="faq-question">
-                <span>What are the safety and hygiene guidelines for donated food?</span>
-                <i class="fas fa-chevron-down faq-icon"></i>
-            </div>
-            <p class="faq-answer">
-                Safety is our top priority. All donors are required to certify that the food is fresh, untouched, and packed in clean containers. We strictly do not accept expired food, leftovers from plates, or food that has been unrefrigerated for too long.
-                <br><br>
-                As a volunteer or NGO, you should perform a visual and smell check upon pickup. If the food appears spoiled or unsafe, you have the right to reject the pickup and report the issue through the app. We also recommend using insulated bags for transport to maintain food temperature.
-            </p>
-        </div>
+        <form id="registerForm">
+            <input type="hidden" id="registerType" name="registerType" value="ngo">
 
-        <div class="faq-item">
-            <div class="faq-question">
-                <span>Do I need specific documents or qualifications to join as an NGO?</span>
-                <i class="fas fa-chevron-down faq-icon"></i>
+            <div class="form-group ngo-field" id="ngo-name-group">
+                <label for="ngoName">NGO Name</label>
+                <input type="text" id="ngoName" name="ngoName" placeholder="Enter NGO name" required>
             </div>
-            <p class="faq-answer">
-                Yes, to ensure transparency and trust, organizations must provide valid registration documents. We require a copy of your NGO registration certificate (Trust, Society, or Section 8 Company), a valid PAN card of the organization, and proof of your registered office address.
-                <br><br>
-                For individual volunteers, no formal qualification is needed, but you must submit a valid government-issued ID (like Aadhar, Driving License, or Voter ID) for identity verification. Once submitted, our team verifies these documents within 24-48 hours before activating your account.
-            </p>
-        </div>
 
-        <div class="faq-item">
-            <div class="faq-question">
-                <span>Can I volunteer if I don't have a vehicle or can only help on weekends?</span>
-                <i class="fas fa-chevron-down faq-icon"></i>
+            <div class="form-group volunteer-field" id="volunteer-name-group" style="display:none;">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required disabled>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter email address" required
+                    pattern="^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$">
+            </div>
+
+            <div class="form-group">
+                <label for="contactPerson" id="contact-person-label">Contact Person</label>
+                <input type="text" id="contactPerson" name="contactPerson" placeholder="Enter contact person's name"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone</label>
+                <input type="tel" id="phone" name="phone" placeholder="Enter phone number" required pattern="^\d{10}$">
+            </div>
+
+            <div class="form-group">
+                <label for="address">Address / Location</label>
+                <input type="text" id="address" name="address" placeholder="Enter address or main area" required>
+            </div>
+
+            <div class="form-group" id="password-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Min 6 chars" required minlength="6">
+                <button type="button" id="togglePassword" class="toggle-password" title="Show Password">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                </button>
+            </div>
+            <div id="password-strength"
+                style="display: none; margin-top: -0.5rem; margin-bottom: 1rem; text-align: right; font-size: 0.8rem;">
+                Strength: <span id="strength-text" style="color: red;">Weak</span>
+            </div>
+
+            <div class="form-group" id="confirm-password-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Re-enter password"
+                    required>
+                <button type="button" id="toggleConfirmPassword" class="toggle-password" title="Show Password">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="form-group ngo-field" id="website-group">
+                <label for="website">Website (Optional)</label>
+                <input type="url" id="website" name="website" placeholder="https://">
+            </div>
+
+            <div class="form-group ngo-field" id="description-group">
+                <label for="description">Mission Statement</label>
+                <textarea id="description" name="description" placeholder="Describe your NGO" rows="2"></textarea>
+            </div>
+
+            <div class="form-group volunteer-field" id="availability-group" style="display:none;">
+                <label for="availability">Availability (Optional)</label>
+                <input type="text" id="availability" name="availability" placeholder="e.g., Weekends" disabled>
             </div>
             <p class="faq-answer">
                 Absolutely! We value every bit of help. If you do not have a vehicle, you can filter for pickups that are within walking distance or use public transport if feasible. You can also partner with another volunteer who has a vehicle.
@@ -1032,56 +330,12 @@
         <a href="index.html#contact-section" class="cta-btn">Contact Us</a>
     </section>
 
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Register</button>
+        </form>
 
-<!-- Footer -->
-    <footer class="footer">
-    <div class="container footer-grid">
-      <div class="footer-brand">
-        <div class="footer-logo">
-          <i class="fas fa-utensils"></i>
-          <span>ShareBite</span>
-        </div>
-        <p>
-          Reducing food waste. Feeding communities.<br>
-          Join us in building a hunger-free and sustainable India.
-        </p>
-        <div class="social-links">
-          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-          <a href="#" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
-          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-        </div>
-      </div>
-
-      <div class="footer-links">
-        <h4>Quick Links</h4>
-        <ul>
-          <li><a href="index.html#home">Home</a></li>
-          <li><a href="index.html#features">How It Works</a></li>
-          <li><a href="index.html#listings">Food Listings</a></li>
-          <li><a href="index.html#about">About Us</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-links">
-        <h4>For Donors</h4>
-        <ul>
-          <li><a href="index.html#listings">List Food</a></li>
-          <li><a href="donor-guidelines.html">Donor Guidelines</a></li>
-          <li><a href="track-impact.html">Track Your Impact</a></li>
-          <li><a href="support.html">Support</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-links">
-        <h4>For Collectors</h4>
-        <ul>
-          <li><a href="index.html#listings">Find Food</a></li>
-          <li><a href="ngo-register.html">Register NGO</a></li>
-          <li><a href="volunteer_food.html">Volunteer</a></li>
-          <li><a href="support.html">Help & FAQ</a></li>
-        </ul>
-      </div>
+        <a href="login_ngo.html" class="text-center"
+            style="display: block; margin-top: 1.5rem; font-size: 0.9rem; color: var(--secondary-orange); font-weight: 500;">Already
+            have an account? Login</a>
     </div>
 
     <div class="footer-bottom">
@@ -1095,128 +349,105 @@
 <script src="js/theme.js"></script>
     <script src="js/api.js"></script>
     <script>
-        // FIX: Check for the element before setting text to prevent crashes
-        const yearElement = document.getElementById('current-year');
-        if (yearElement) {
-            yearElement.textContent = new Date().getFullYear();
-        }
+        // --- Password Strength & Toggle (Simplified Logic) ---
+        const pwdInput = document.getElementById("password");
+        const strengthDiv = document.getElementById("password-strength");
+        const strengthText = document.getElementById("strength-text");
 
-        // 1. PATH SELECTION & SCROLL
-        function selectPath(type) {
-            switchRegistrationMode(type);
-            document.getElementById('register-anchor').scrollIntoView({ behavior: 'smooth' });
-        }
+        pwdInput.addEventListener("focus", () => strengthDiv.style.display = "block");
+        pwdInput.addEventListener("input", () => {
+            let strength = 0;
+            const val = pwdInput.value;
+            if (val.length >= 6) strength++;
+            if (/[A-Z]/.test(val)) strength++;
+            if (/[0-9]/.test(val)) strength++;
+            if (/[^A-Za-z0-9]/.test(val)) strength++;
 
-        // 2. TOGGLE PASSWORD
-        function togglePwd(id, btn) {
-            const input = document.getElementById(id);
-            const isPwd = input.type === 'password';
-            input.type = isPwd ? 'text' : 'password';
-            btn.innerHTML = isPwd ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
-        }
+            if (strength <= 1) { strengthText.textContent = "Weak"; strengthText.style.color = "#ef5350"; }
+            else if (strength <= 3) { strengthText.textContent = "Medium"; strengthText.style.color = "#ffa726"; }
+            else { strengthText.textContent = "Strong"; strengthText.style.color = "#66bb6a"; }
+        });
 
-        // 3. NGO/VOLUNTEER SWITCH LOGIC
+        // Toggle Passwords
+        function setupToggle(btnId, inputId) {
+            const btn = document.getElementById(btnId);
+            const input = document.getElementById(inputId);
+            btn.addEventListener('click', () => {
+                const type = input.type === 'password' ? 'text' : 'password';
+                input.type = type;
+            });
+        }
+        setupToggle('togglePassword', 'password');
+        setupToggle('toggleConfirmPassword', 'confirmPassword');
+
+        // --- NGO/Volunteer Logic ---
         const toggleNGO = document.getElementById('toggleNGO');
         const toggleVolunteer = document.getElementById('toggleVolunteer');
         const slider = document.getElementById('toggleSlider');
         const ngoFields = document.querySelectorAll('.ngo-field');
-        const volFields = document.querySelectorAll('.volunteer-field');
-        
-        const regTitle = document.getElementById('registerTitle');
-        const regSub = document.getElementById('registerSubtitle');
-        const visualTitle = document.getElementById('visual-title');
-        const visualDesc = document.getElementById('visual-desc');
-        const contactLabel = document.getElementById('contact-person-label');
-        const contactInput = document.getElementById('contactPerson');
-        const ngoName = document.getElementById('ngoName');
-        const fullName = document.getElementById('fullName');
+        const volunteerFields = document.querySelectorAll('.volunteer-field');
+        const registerTitle = document.getElementById('registerTitle');
+        const registerSubtitle = document.getElementById('registerSubtitle');
+        const contactPersonLabel = document.getElementById('contact-person-label');
+        const contactPersonInput = document.getElementById('contactPerson');
+        const ngoNameInput = document.getElementById('ngoName');
+        const fullNameInput = document.getElementById('fullName');
 
-        function switchRegistrationMode(mode) {
+        function switchMode(mode) {
             if (mode === 'ngo') {
-                // UI
                 toggleNGO.classList.add('active');
                 toggleVolunteer.classList.remove('active');
-                slider.style.transform = 'translateX(0)';
-                
-                // Text
-                regTitle.textContent = "Create NGO Account";
-                regSub.textContent = "Join to start receiving donations.";
-                visualTitle.innerHTML = "Partner for<br>Change.";
-                visualDesc.textContent = "Connect with local businesses and distribute surplus food. Verified NGOs are the backbone of our mission.";
-                contactLabel.textContent = "Contact Person";
-                contactInput.placeholder = "Representative Name";
+                registerTypeInput.value = 'ngo';
+                registerTitle.textContent = 'Register Your NGO';
+                registerSubtitle.textContent = 'Join ShareBite and help us reduce food waste.';
+                contactPersonLabel.textContent = 'Contact Person';
+                contactPersonInput.placeholder = "Enter contact person's name";
 
-                // Fields
                 ngoFields.forEach(f => f.style.display = 'block');
-                volFields.forEach(f => f.style.display = 'none');
-                
-                // State
-                ngoName.disabled = false; fullName.disabled = true;
-                document.getElementById('registerType').value = 'ngo';
+                volunteerFields.forEach(f => f.style.display = 'none');
 
+                ngoNameInput.required = true; ngoNameInput.disabled = false;
+                fullNameInput.required = false; fullNameInput.disabled = true;
             } else {
-                // UI
                 toggleNGO.classList.remove('active');
                 toggleVolunteer.classList.add('active');
-                slider.style.transform = 'translateX(100%)';
-                
-                // Text
-                regTitle.textContent = "Volunteer Signup";
-                regSub.textContent = "Help us collect and distribute food.";
-                visualTitle.innerHTML = "Be a Hero<br>In Your City.";
-                visualDesc.textContent = "Got a bike or a car? Spare an hour? Help pick up food from donors and drop it off at NGOs.";
-                contactLabel.textContent = "Availability";
-                contactInput.placeholder = "e.g. Weekends, Evenings";
+                registerTypeInput.value = 'volunteer';
+                registerTitle.textContent = 'Register as Volunteer';
+                registerSubtitle.textContent = 'Join the community and help redistribute food.';
+                contactPersonLabel.textContent = 'Nickname (Optional)';
+                contactPersonInput.placeholder = "Nickname";
 
-                // Fields
                 ngoFields.forEach(f => f.style.display = 'none');
-                volFields.forEach(f => f.style.display = 'block');
-                
-                // State
-                ngoName.disabled = true; fullName.disabled = false;
-                document.getElementById('registerType').value = 'volunteer';
+                volunteerFields.forEach(f => f.style.display = 'block');
+
+                ngoNameInput.required = false; ngoNameInput.disabled = true;
+                fullNameInput.required = true; fullNameInput.disabled = false;
             }
         }
 
-        // These listeners will now work because the script didn't crash above
-        if(toggleNGO && toggleVolunteer) {
-            toggleNGO.addEventListener('click', () => switchRegistrationMode('ngo'));
-            toggleVolunteer.addEventListener('click', () => switchRegistrationMode('volunteer'));
-        }
+        toggleNGO.addEventListener('click', () => switchMode('ngo'));
+        toggleVolunteer.addEventListener('click', () => switchMode('volunteer'));
 
-        // 4. FORM SUBMIT
-        const form = document.getElementById('registerForm');
-        if (form) {
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const pass = document.getElementById('password').value;
-                const confirm = document.getElementById('confirmPassword').value;
+        // Form Submit
+        const registerForm = document.getElementById('registerForm');
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const type = registerTypeInput.value;
+            const password = document.getElementById('password').value;
+            const confirm = document.getElementById('confirmPassword').value;
 
-                if (pass !== confirm) {
-                    alert("Passwords do not match!");
-                    return;
-                }
-                // Mock submission
-                alert("Registration Successful! Redirecting to login...");
-                const type = document.getElementById('registerType').value;
-                window.location.href = type === 'ngo' ? 'login_ngo.html' : 'login.html';
-            });
-        }
+            if (password !== confirm) { alert("Passwords do not match!"); return; }
 
-        // 5. THEME TOGGLE
-        const themeBtn = document.getElementById('themeToggle');
-        if (themeBtn) {
-            themeBtn.addEventListener('click', () => {
-                document.body.classList.toggle('dark-mode');
-            });
-        }
-
-        //6. FAQ Accordion
-        document.querySelectorAll('.faq-question').forEach(item => {
-            item.addEventListener('click', () => {
-                const parent = item.parentElement;
-                parent.classList.toggle('open');
-            });
+            // Simulation of API call logic from original file
+            if (type === 'ngo') {
+                // registerNGO call...
+                alert("NGO Registration Simulation Successful!");
+                window.location.href = "login_ngo.html";
+            } else {
+                // registerUser call...
+                alert("Volunteer Registration Simulation Successful!");
+                window.location.href = "login_ngo.html"; // Redirecting to login
+            }
         });
     </script>
 </body>

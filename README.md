@@ -2,6 +2,9 @@
 
 A beautiful, responsive web platform connecting restaurants and households with NGOs and volunteers to reduce food waste while fighting hunger in communities.
 
+---
+
+
 ## 🌟 Features
 
 ### Core Functionality
@@ -28,6 +31,74 @@ A beautiful, responsive web platform connecting restaurants and households with 
 - **Local Storage Ready**: Architecture supports data persistence
 - **PWA Ready**: Service worker registration included
 
+
+## 📸 UI Screenshots
+
+### 🏠 Home Page
+The landing page highlights ShareBite’s mission to reduce food waste and feed communities.
+
+<img width="1900" height="922" alt="Screenshot 2026-01-28 220751" src="https://github.com/user-attachments/assets/f5c1184b-1fdf-4063-96ef-5fd7a43f9b68" />
+
+
+---
+
+### ⚙️ How It Works
+A simple three-step flow explaining how donors and NGOs collaborate.
+
+
+<img width="1891" height="911" alt="Screenshot 2026-01-28 220822" src="https://github.com/user-attachments/assets/bb1c1026-e814-4a37-a7da-0afd938a4da4" />
+
+---
+
+### 📋 Food Listings
+Browse available food listings with category filters, search, and map view.
+
+
+<img width="1901" height="918" alt="Screenshot 2026-01-28 220847" src="https://github.com/user-attachments/assets/c21caf7b-ec6f-44be-ae7e-70c72672cc1b" />
+
+
+---
+
+### 🗺️ Map View
+Interactive map showing active food listings, donors, and NGOs by location.
+
+<img width="1914" height="921" alt="Screenshot 2026-01-28 220905" src="https://github.com/user-attachments/assets/d62cac2d-dd82-4fa2-b7af-5e74735c7a84" />
+
+
+---
+
+### 🔐 User Login
+Login screen for donors and general users with dark-mode support.
+
+
+<img width="1916" height="919" alt="Screenshot 2026-01-28 220919" src="https://github.com/user-attachments/assets/7eb11901-48fe-44bf-8674-ba7d075430ff" />
+
+
+---
+
+### 🏢 NGO Login
+Dedicated login interface for NGO partners to manage contributions.
+
+
+<img width="1919" height="923" alt="Screenshot 2026-01-28 220943" src="https://github.com/user-attachments/assets/39a81917-9cdc-4d75-926b-b60c75571a66" />
+
+---
+
+### ❤️ Impact Gallery
+Highlights real-world impact, volunteers, and community distribution moments.
+
+
+<img width="1900" height="922" alt="Screenshot 2026-01-28 221006" src="https://github.com/user-attachments/assets/a463d334-8c8e-47ae-8c4b-2d1cd0abafa6" />
+
+---
+
+### ➕ Add Food Listing
+Step-by-step modal for donors to add food details, pickup info, and photos.
+
+
+<img width="1909" height="854" alt="Screenshot 2026-01-28 221130" src="https://github.com/user-attachments/assets/05c29fb2-ae85-4af0-a666-eae318c2591f" />
+
+
 ## 🚀 Getting Started
 
 1. **Clone/Download** the project to your local machine
@@ -38,6 +109,27 @@ A beautiful, responsive web platform connecting restaurants and households with 
    - Add new food listings (when in Donor mode)
    - Filter and search for specific items
    - Claim food items (when in Collector mode)
+
+
+ ## 📁 Program Structure
+```
+ShareBite/
+├── backend/ # Backend API (if added)
+├── frontend/ # Frontend codebase
+│ ├── index.html # Main HTML entry
+│ ├── styles/ # CSS files
+│ └── scripts/ # JS functionality
+├── .dockerignore
+├── .env.example # Environment variable template
+├── CODE_OF_CONDUCT.md
+├── CONTRIBUTING.md
+├── INTEGRATION_GUIDE.md
+├── LICENSE.md
+├── PULL_REQUEST_TEMPLATE.md
+├── README.md
+├── SECURITY.md
+└── TESTING_GUIDE.md
+```
 
 ## 📱 Device Compatibility
 
