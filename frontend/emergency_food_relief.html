@@ -59,6 +59,23 @@
       --radius-full: 50px;
     }
 
+    /* Dark Mode Variables */
+    [data-theme="dark"] {
+      --white: #1a1a1a;
+      --black: #ffffff;
+      --text-main: #e0e0e0;
+      --text-muted: #a0a0a0;
+      --border-light: #333333;
+      --bg-light: #121212;
+      --bg-white: #1e1e1e;
+      --glass-bg: rgba(30, 30, 30, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
+      --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.6);
+    }
+
     /* Reset */
     *,
     *::before,
@@ -256,6 +273,37 @@
       box-shadow: 0 8px 20px rgba(76, 175, 80, 0.35);
     }
 
+    /* Theme Toggle Button */
+    .theme-toggle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--bg-white);
+      border: 2px solid var(--border-light);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      margin-left: 0.5rem;
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.1);
+      border-color: var(--primary-green);
+      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+    }
+
+    .theme-toggle i {
+      font-size: 1.1rem;
+      color: var(--text-main);
+      transition: transform 0.3s ease;
+    }
+
+    .theme-toggle:hover i {
+      transform: rotate(20deg);
+    }
+
     /* Mobile Hamburger */
     .hamburger {
       display: none;
@@ -270,19 +318,6 @@
       background: var(--text-main);
       border-radius: 2px;
       transition: var(--transition-fast);
-    }
-
-    /* =========================================
-       HEADER
-       ========================================= */
-    .emergency-header {
-      background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%);
-      color: #fff;
-      padding: 8rem 0 4rem;
-      margin-top: 80px;
-      text-align: center;
-      position: relative;
-      box-shadow: var(--shadow-lg);
     }
 
     /* =========================================
@@ -374,7 +409,7 @@
        SECTION CARDS
        ========================================= */
     .section-card {
-      background: var(--white);
+      background: var(--bg-white);
       padding: 2.5rem;
       margin: 2rem auto;
       border-radius: var(--radius-lg);
@@ -489,6 +524,10 @@
       box-shadow: var(--shadow-md);
       transition: all var(--transition-normal);
       border: 2px solid transparent;
+    }
+
+    [data-theme="dark"] .stat-card {
+      background: linear-gradient(135deg, #2d2416 0%, #3d3020 100%);
     }
 
     .stat-card:hover {
@@ -631,6 +670,10 @@
       color: white;
       padding: 5rem 0 2rem;
       margin-top: auto;
+    }
+
+    [data-theme="dark"] .footer {
+      background: #0a0a0a;
     }
 
     .footer-grid {
@@ -777,7 +820,7 @@
         position: fixed;
         top: 80px;
         right: -100%;
-        background: var(--white);
+        background: var(--bg-white);
         height: calc(100vh - 80px);
         width: 100%;
         flex-direction: column;
@@ -805,6 +848,16 @@
       .login-btn {
         padding: 0.4rem 0.9rem;
         font-size: 0.85rem;
+      }
+
+      .theme-toggle {
+        width: 36px;
+        height: 36px;
+        margin-left: 0.25rem;
+      }
+
+      .theme-toggle i {
+        font-size: 1rem;
       }
 
       @keyframes fadeIn {
@@ -867,6 +920,15 @@
         font-size: 0.75rem;
         padding: 0.35rem 0.7rem;
       }
+
+      .theme-toggle {
+        width: 32px;
+        height: 32px;
+      }
+
+      .theme-toggle i {
+        font-size: 0.9rem;
+      }
     }
   </style>
 </head>
@@ -890,6 +952,9 @@
       <div class="user-actions">
         <button class="login-btn login-outline" onclick="window.location.href='login.html'">User Login</button>
         <button class="login-btn login-primary" onclick="window.location.href='login_ngo.html'">NGO Login</button>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+          <i class="fas fa-moon" id="themeIcon"></i>
+        </button>
       </div>
       <div class="hamburger" id="menuToggle" tabindex="0" role="button" aria-label="Open navigation menu">
         <span></span>
@@ -1158,6 +1223,35 @@
             userActions.classList.toggle('active');
           }
         });
+      }
+
+      // Theme Toggle Functionality
+      const themeToggle = document.getElementById('themeToggle');
+      const themeIcon = document.getElementById('themeIcon');
+      const html = document.documentElement;
+
+      // Check for saved theme preference or default to light mode
+      const currentTheme = localStorage.getItem('theme') || 'light';
+      html.setAttribute('data-theme', currentTheme);
+      updateThemeIcon(currentTheme);
+
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateThemeIcon(newTheme);
+      });
+
+      function updateThemeIcon(theme) {
+        if (theme === 'dark') {
+          themeIcon.classList.remove('fa-moon');
+          themeIcon.classList.add('fa-sun');
+        } else {
+          themeIcon.classList.remove('fa-sun');
+          themeIcon.classList.add('fa-moon');
+        }
       }
     });
 
