@@ -1267,3 +1267,77 @@ img {
 .hidden {
   display: none !important;
 }
+
+/* =========================================
+            BACK TO TOP BUTTON
+   ========================================= */
+
+  #backToTop {
+    position: fixed;
+    bottom: 1.30rem;
+    right: 6rem;
+    z-index: 1000;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    font-weight: 600;
+    line-height: 1;
+    color: #ffffff;
+    background: linear-gradient(
+      135deg,
+      #22c55e,
+      #16a34a
+    );
+    border: none;
+    cursor: pointer;
+    /* Hides it by default */
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(12px) scale(0.95);
+    box-shadow:
+      0 10px 25px rgba(34, 197, 94, 0.35),
+      0 4px 10px rgba(0, 0, 0, 0.15);
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease,
+      box-shadow 0.3s ease,
+      background 0.3s ease;
+}
+
+#backToTop.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+#backToTop:hover,
+#backToTop:focus-visible {
+  transform: translateY(-4px) scale(1.05);
+  background: linear-gradient(
+    135deg,
+    #16a34a,
+    #15803d
+  );
+  box-shadow:
+    0 14px 30px rgba(34, 197, 94, 0.45),
+    0 6px 14px rgba(0, 0, 0, 0.2);
+  outline: 3px solid rgba(255, 255, 255, 0.9);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #backToTop {
+    transition: none;
+    transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  #backToTop {
+    bottom: 6.5rem;
+  }
+}
