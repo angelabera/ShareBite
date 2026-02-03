@@ -2714,7 +2714,7 @@ window.addEventListener("load", updateOnlineStatus);
 
         // Toggle visibility on scroll
         const toggleBackToTopVisibility = () => {
-            if (window.scrollY > 450) {
+            if (window.scrollY > 300) {
             backToTopButton.classList.add("visible");
             } else {
             backToTopButton.classList.remove("visible");
