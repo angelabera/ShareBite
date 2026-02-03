@@ -80,6 +80,39 @@
             color: var(--text-color-dark);
         }
 
+        /* Back button styles */
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--input-border-light);
+            color: var(--text-color-light);
+            transition: all 0.2s ease;
+            z-index: 20;
+        }
+
+        .back-button:hover {
+            transform: translateX(-3px);
+            background: var(--card-bg-light);
+        }
+
+        body.dark-mode .back-button {
+            background: rgba(255,255,255,0.02);
+            border-color: var(--input-border-dark);
+            color: var(--text-color-dark);
+        }
+
+        body.dark-mode .back-button:hover {
+            background: var(--card-bg-dark);
+        }
+
         .theme-toggle:hover {
             transform: scale(1.1) rotate(15deg);
             border-color: var(--primary-green);
@@ -283,6 +316,13 @@
 </head>
 
 <body>
+
+    <a href="index.html" class="back-button" title="Back to Home">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M12 19l-7-7 7-7" />
+        </svg>
+    </a>
 
     <button id="theme-toggle" class="theme-toggle" title="Toggle dark mode">🌙</button>
 
