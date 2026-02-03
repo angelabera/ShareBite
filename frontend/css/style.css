@@ -1267,3 +1267,91 @@ img {
 .hidden {
   display: none !important;
 }
+
+/* =========================================
+   BACK TO TOP BUTTON
+   ========================================= */
+.back-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, var(--primary-green), var(--primary-dark));
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: 
+    opacity 0.3s ease,
+    visibility 0.3s ease,
+    transform 0.3s ease,
+    background 0.3s ease,
+    box-shadow 0.3s ease;
+  z-index: 999;
+}
+
+.back-to-top.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary-green));
+  box-shadow: 0 8px 25px rgba(76, 175, 80, 0.5);
+  transform: translateY(-5px);
+}
+
+.back-to-top:active {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+}
+
+.back-to-top i {
+  transition: transform 0.3s ease;
+}
+
+.back-to-top:hover i {
+  transform: translateY(-3px);
+  animation: bounceUp 0.6s ease infinite;
+}
+
+@keyframes bounceUp {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Dark Mode Support */
+body.dark-mode .back-to-top {
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.5);
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+  .back-to-top {
+    bottom: 20px;
+    right: 20px;
+    width: 45px;
+    height: 45px;
+    font-size: 1rem;
+  }
+}
+
+/* Accessibility - Keyboard Focus */
+.back-to-top:focus-visible {
+  outline: 3px solid var(--secondary-orange);
+  outline-offset: 3px;
+}
