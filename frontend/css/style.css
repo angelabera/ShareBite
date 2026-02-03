@@ -1338,6 +1338,10 @@ img {
 
 @media (max-width: 480px) {
   #backToTop {
-    bottom: 6.5rem;
+    bottom: 5.5rem;
+    right: 1.95rem;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
   }
 }
