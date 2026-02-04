@@ -283,57 +283,7 @@
   <script src="js/auth.js"></script>
   <script src="js/theme.js"></script>
   <script src="js/api.js"></script>
-  <script>
-    // Mobile Menu Toggle
-    const hamburger = document.getElementById('hamburger');
-    const navMenu = document.getElementById('navMenu');
-
-    hamburger.addEventListener('click', () => {
-      navMenu.classList.toggle('active');
-    });
-  </script>
-
-  <!-- Back to Top Button -->
-<button id="backToTopBtn" class="back-to-top" aria-label="Scroll to top">
-  <i class="fas fa-arrow-up"></i>
-</button>
-
-<script>
-  // Back to Top Button Functionality
-  (function() {
-    const backToTopBtn = document.getElementById('backToTopBtn');
-    
-    if (!backToTopBtn) return;
-
-    // Show/hide button based on scroll position
-    window.addEventListener('scroll', () => {
-      if (window.pageYOffset > 300) {
-        backToTopBtn.classList.add('show');
-      } else {
-        backToTopBtn.classList.remove('show');
-      }
-    });
-
-    // Smooth scroll to top when clicked
-    backToTopBtn.addEventListener('click', () => {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-    });
-
-    // Keyboard accessibility
-    backToTopBtn.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
-      }
-    });
-  })();
-</script>
+  <script src="js/script.js"></script>
 
 </body>
 
