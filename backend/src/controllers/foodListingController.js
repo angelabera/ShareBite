@@ -8,36 +8,6 @@ exports.createListing = async (req, res) => {
   }
 
   try {
-     const {
-  foodType,
-  quantity,
-  category,
-  description,
-  freshUntil,
-  pickupTime,
-  pickupLocation,
-  contactInfo,
-  photos,
-  dietaryTags,
-  latitude,
-  longitude,
-  city
-} = req.body;
-if (
-  latitude === undefined ||
-  longitude === undefined ||
-  isNaN(parseFloat(latitude)) ||
-  isNaN(parseFloat(longitude)) ||
-  !city
-) {
-  return res.status(400).json({
-    message: 'Valid latitude, longitude, and city are required'
-  });
-}
-
-
-
-    const listing = await FoodListing.create({
     const {
       foodType,
       quantity,
@@ -51,12 +21,18 @@ if (
       dietaryTags,
       latitude,
       longitude,
+      city
     } = req.body;
 
-    // ✅ Validate map coordinates
-    if (!latitude || !longitude) {
+    if (
+      latitude === undefined ||
+      longitude === undefined ||
+      isNaN(parseFloat(latitude)) ||
+      isNaN(parseFloat(longitude)) ||
+      !city
+    ) {
       return res.status(400).json({
-        message: 'Pickup location coordinates are required',
+        message: 'Valid latitude, longitude, and city are required'
       });
     }
 
@@ -67,24 +43,16 @@ if (
       description,
       freshUntil,
       pickupTime,
-      pickupLocation, // human-readable address
+      pickupLocation,
       contactInfo,
       photos: photos || [],
       dietaryTags: dietaryTags || [],
       donorId: req.user._id,
-     // ✅ ADD THIS
-  location: {
-    type: 'Point',
-      coordinates: [parseFloat(longitude), parseFloat(latitude)],
-    city
-  }
-}); 
-
-      // 📍 GeoJSON location for maps
       location: {
         type: 'Point',
-        coordinates: [longitude, latitude], // IMPORTANT ORDER
-      },
+        coordinates: [parseFloat(longitude), parseFloat(latitude)],
+        city
+      }
     });
 
     res.status(201).json(listing);
@@ -122,13 +90,11 @@ exports.updateListing = async (req, res) => {
   try {
     const listing = await FoodListing.findById(req.params.id);
     if (!listing) return res.status(404).json({ message: 'Listing not found' });
-     //Prevent updates on expired food
+    //Prevent updates on expired food
     if (listing.expiryStatus === 'EXPIRED') {
       return res.status(400).json({
         message: 'Cannot update an expired food listing'
       });
-    if (!listing) {
-      return res.status(404).json({ message: 'Listing not found' });
     }
 
     // Only donor can update

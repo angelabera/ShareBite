@@ -57,25 +57,9 @@ const foodListingSchema = new mongoose.Schema(
     //  ADD LOCATION HERE
     // 📍 Map-based location
     location: {
-      type: {
-        type: String,
-        enum: ['Point'],
-        default: 'Point'
-      },
-      coordinates: {
-        type: [Number], // [longitude, latitude]
-        required: true
-      },
-      city: {
-        type: String,
-        required: true
-      }
-        default: 'Point',
-      },
-      coordinates: {
-        type: [Number], // [longitude, latitude]
-        required: true,
-      },
+      type: { type: String, enum: ['Point'], default: 'Point' },
+      coordinates: { type: [Number], required: true }, // [longitude, latitude]
+      city: { type: String, required: true }
     },
 
     contactInfo: { type: String, required: true, trim: true },
@@ -86,22 +70,12 @@ const foodListingSchema = new mongoose.Schema(
       type: String, 
       enum: ['available', 'reserved', 'completed'], 
       default: 'available' 
+    },
 
-    donorId: {
+    claimedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
-    },
-
-    status: {
-      type: String,
-      enum: ['available', 'reserved', 'completed'],
-      default: 'available',
-    },
-    claimedBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        default: null
+      default: null
     },
   },
   { timestamps: true }
