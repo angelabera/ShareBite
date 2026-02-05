@@ -2695,3 +2695,36 @@ window.addEventListener("online", updateOnlineStatus);
 window.addEventListener("offline", updateOnlineStatus);
 window.addEventListener("load", updateOnlineStatus);
 
+// Back to Top Button
+
+(
+    function () {
+        const backToTopButton = document.getElementById("backToTop");
+
+        // Exit silently if button is not present
+        if (!backToTopButton) return;
+
+        // Click → smooth scroll to top
+        backToTopButton.addEventListener("click", () => {
+            window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+            });
+        });
+
+        // Toggle visibility on scroll
+        const toggleBackToTopVisibility = () => {
+            if (window.scrollY > 300) {
+            backToTopButton.classList.add("visible");
+            } else {
+            backToTopButton.classList.remove("visible");
+            }
+        };
+
+        // Listen to scroll
+        window.addEventListener("scroll", toggleBackToTopVisibility);
+
+        // Run once on load (covers refresh + anchor cases)
+        toggleBackToTopVisibility();
+})();
+

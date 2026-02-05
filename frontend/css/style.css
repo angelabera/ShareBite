@@ -1269,89 +1269,79 @@ img {
 }
 
 /* =========================================
-   BACK TO TOP BUTTON
+            BACK TO TOP BUTTON
    ========================================= */
-.back-to-top {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  width: 50px;
-  height: 50px;
-  background: linear-gradient(135deg, var(--primary-green), var(--primary-dark));
-  color: white;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(20px);
-  transition: 
-    opacity 0.3s ease,
-    visibility 0.3s ease,
-    transform 0.3s ease,
-    background 0.3s ease,
-    box-shadow 0.3s ease;
-  z-index: 999;
-}
 
-.back-to-top.show {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.back-to-top:hover {
-  background: linear-gradient(135deg, var(--primary-dark), var(--primary-green));
-  box-shadow: 0 8px 25px rgba(76, 175, 80, 0.5);
-  transform: translateY(-5px);
-}
-
-.back-to-top:active {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
-}
-
-.back-to-top i {
-  transition: transform 0.3s ease;
-}
-
-.back-to-top:hover i {
-  transform: translateY(-3px);
-  animation: bounceUp 0.6s ease infinite;
-}
-
-@keyframes bounceUp {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
-}
-
-/* Dark Mode Support */
-body.dark-mode .back-to-top {
-  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.5);
-}
-
-/* Mobile Adjustments */
-@media (max-width: 768px) {
-  .back-to-top {
-    bottom: 20px;
-    right: 20px;
+  #backToTop {
+    position: fixed;
+    bottom: 1.30rem;
+    right: 6rem;
+    z-index: 1000;
     width: 45px;
     height: 45px;
-    font-size: 1rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    font-weight: 600;
+    line-height: 1;
+    color: #ffffff;
+    background: linear-gradient(
+      135deg,
+      #22c55e,
+      #16a34a
+    );
+    border: none;
+    cursor: pointer;
+    /* Hides it by default */
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(12px) scale(0.95);
+    box-shadow:
+      0 10px 25px rgba(34, 197, 94, 0.35),
+      0 4px 10px rgba(0, 0, 0, 0.15);
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease,
+      box-shadow 0.3s ease,
+      background 0.3s ease;
+}
+
+#backToTop.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+#backToTop:hover,
+#backToTop:focus-visible {
+  transform: translateY(-4px) scale(1.05);
+  background: linear-gradient(
+    135deg,
+    #16a34a,
+    #15803d
+  );
+  box-shadow:
+    0 14px 30px rgba(34, 197, 94, 0.45),
+    0 6px 14px rgba(0, 0, 0, 0.2);
+  outline: 3px solid rgba(255, 255, 255, 0.9);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #backToTop {
+    transition: none;
+    transform: none;
   }
 }
 
-/* Accessibility - Keyboard Focus */
-.back-to-top:focus-visible {
-  outline: 3px solid var(--secondary-orange);
-  outline-offset: 3px;
+@media (max-width: 480px) {
+  #backToTop {
+    bottom: 5.5rem;
+    right: 1.95rem;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
 }
