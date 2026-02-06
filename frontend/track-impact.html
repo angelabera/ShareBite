@@ -3,54 +3,2217 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Track Impact - ShareBite</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
+    <title>Track Impact - ShareBite Food Network</title>
+    <link rel="icon" href="/static/web_photo/logo.jpg" type="image/jpeg" />
+    <link rel="shortcut icon" href="/static/web_photo/logo.jpg" type="image/jpeg" />
+    <link rel="apple-touch-icon" href="/static/web_photo/logo.jpg" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
+        /* =========================================
+           CSS VARIABLES & RESET
+           ========================================= */
+        :root {
+            /* Brand Colors */
+            --primary-green: #4caf50;
+            --primary-dark: #2e7d32;
+            --primary-light: #81c784;
+            --secondary-orange: #ff6b35;
+            --secondary-dark: #e65100;
+            --accent-yellow: #ffc107;
+            --accent-purple: #8b5cf6;
+            --accent-blue: #3b82f6;
+
+            /* Neutrals */
+            --white: #ffffff;
+            --black: #0f172a;
+            --text-main: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border-light: #e2e8f0;
+            --border-medium: #cbd5e1;
+
+            /* Backgrounds */
+            --bg-light: #f8fafc;
+            --bg-gray: #f1f5f9;
+            --bg-white: #ffffff;
+
+            /* Glassmorphism */
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+
+            /* Shadows */
+            --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+            /* Transitions */
+            --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+            /* Spacing & Layout */
+            --container-width: 1280px;
+            --header-height: 80px;
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --radius-full: 9999px;
+        }
+
+        /* Dark Mode Variables */
+        [data-theme="dark"] {
+            --white: #0f172a;
+            --black: #f8fafc;
+            --text-main: #e2e8f0;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --border-light: #334155;
+            --border-medium: #475569;
+            --bg-light: #0a0f1a;
+            --bg-gray: #1e293b;
+            --bg-white: #1e293b;
+            --glass-bg: rgba(30, 41, 59, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Reset */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
+            font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            line-height: 1.6;
+            transition: background-color 0.4s, color 0.4s;
+            overflow-x: hidden;
+            min-height: 100vh;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f5f7fa;
-            font-family: 'Poppins', sans-serif;
+            flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition-fast);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        /* =========================================
+           UTILITY CLASSES
+           ========================================= */
+        .container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .text-center {
             text-align: center;
         }
-        .container {
-            max-width: 600px;
-            padding: 2rem;
+
+        .hidden {
+            display: none !important;
         }
-        .coming-soon-title {
-            font-size: 2.5rem;
+
+        /* =========================================
+           NAVBAR
+           ========================================= */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 80px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-light);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            transition: padding 0.3s ease;
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
             font-weight: 700;
-            color: #4CAF50;
+            color: var(--primary-green);
+            flex-shrink: 0;
+        }
+
+        .nav-logo-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .nav-logo i {
+            font-size: 1.8rem;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-logo:hover i {
+            transform: rotate(-10deg) scale(1.1);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 0.5rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: var(--text-secondary);
+            position: relative;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary-green);
+            background-color: rgba(16, 185, 129, 0.1);
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .login-btn {
+            padding: 0.6rem 1.4rem;
+            border-radius: var(--radius-full);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .login-outline {
+            background: transparent;
+            color: var(--text-main);
+            border: 1.5px solid var(--border-medium);
+        }
+
+        .login-outline:hover {
+            border-color: var(--primary-green);
+            color: var(--primary-green);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .login-primary {
+            background: var(--primary-green);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .login-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-white);
+            border: 1.5px solid var(--border-light);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.05);
+            border-color: var(--primary-green);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+        }
+
+        .theme-toggle i {
+            font-size: 1.1rem;
+            color: var(--text-main);
+            transition: transform 0.3s ease;
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: var(--text-main);
+            border-radius: 2px;
+            transition: var(--transition-fast);
+        }
+
+        /* =========================================
+           IMPACT HERO SECTION
+           ========================================= */
+        .impact-hero {
+            background: linear-gradient(135deg, 
+                rgba(16, 185, 129, 0.03) 0%, 
+                rgba(249, 115, 22, 0.03) 100%);
+            padding: 8rem 0 4rem;
+            margin-top: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .impact-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(16, 185, 129, 0.05) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 50%, rgba(249, 115, 22, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .impact-hero-content {
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.2rem;
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-full);
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--primary-green);
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .hero-badge i {
+            font-size: 1rem;
+        }
+
+        .impact-hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+            letter-spacing: -0.02em;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-orange) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .impact-hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7;
+        }
+
+        /* =========================================
+           STATS OVERVIEW
+           ========================================= */
+        .stats-overview {
+            padding: 4rem 0;
+            margin-top: -2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+
+        .stat-card {
+            background: var(--bg-white);
+            padding: 2rem;
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-green), var(--primary-light));
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary-green);
+        }
+
+        .stat-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-icon-wrapper {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-icon {
+            font-size: 1.5rem;
+            color: var(--primary-green);
+        }
+
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            padding: 0.4rem 0.8rem;
+            border-radius: var(--radius-full);
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary-green);
+        }
+
+        .stat-trend i {
+            font-size: 0.75rem;
+        }
+
+        .stat-value {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+
+        .stat-label {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .stat-sublabel {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* =========================================
+           VISUAL IMPACT SECTION
+           ========================================= */
+        .visual-impact {
+            padding: 4rem 0;
+            background: var(--bg-white);
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+        }
+
+        .section-label {
+            display: inline-block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--primary-green);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
             margin-bottom: 1rem;
         }
-        .coming-soon-text {
-            font-size: 1.2rem;
-            color: #555;
-            margin-bottom: 2rem;
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
         }
-        .home-link {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            background-color: #FF6B35;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
+
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .impact-card {
+            background: var(--bg-light);
+            padding: 2.5rem;
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-light);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .impact-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .impact-card-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .impact-card-icon i {
+            font-size: 2rem;
+            color: var(--primary-green);
+        }
+
+        .impact-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.75rem;
+        }
+
+        .impact-card p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .impact-metric {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-green);
+            line-height: 1;
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* =========================================
+           FOOD DISTRIBUTION CHART
+           ========================================= */
+        .distribution-section {
+            padding: 4rem 0;
+            background: var(--bg-light);
+        }
+
+        .distribution-card {
+            background: var(--bg-white);
+            padding: 3rem;
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .distribution-content {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .donut-container {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            margin: 0 auto;
+        }
+
+        .donut-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .donut-value {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--text-main);
+            line-height: 1;
+        }
+
+        .donut-label {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .distribution-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem;
+            background: var(--bg-light);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-light);
+            transition: all 0.2s ease;
+        }
+
+        .legend-item:hover {
+            border-color: var(--primary-green);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .legend-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .legend-text {
             font-weight: 600;
-            transition: background-color 0.3s ease;
+            color: var(--text-main);
         }
-        .home-link:hover {
-            background-color: #E65100;
+
+        .legend-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .legend-count {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .legend-percentage {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* =========================================
+           RECENT ACTIVITIES
+           ========================================= */
+        .activities-section {
+            padding: 4rem 0;
+            background: var(--bg-white);
+        }
+
+        .activities-card {
+            background: var(--bg-light);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+        }
+
+        .activity-item {
+            padding: 1.75rem 2rem;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            transition: all 0.2s ease;
+            background: var(--bg-white);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-item:hover {
+            background: var(--bg-light);
+            padding-left: 2.25rem;
+        }
+
+        .activity-icon-wrapper {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .activity-icon-wrapper.donated {
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .activity-icon-wrapper.claimed {
+            background: rgba(249, 115, 22, 0.1);
+        }
+
+        .activity-icon-wrapper.milestone {
+            background: rgba(251, 191, 36, 0.1);
+        }
+
+        .activity-icon-wrapper i {
+            font-size: 1.5rem;
+        }
+
+        .activity-icon-wrapper.donated i {
+            color: var(--primary-green);
+        }
+
+        .activity-icon-wrapper.claimed i {
+            color: var(--secondary-orange);
+        }
+
+        .activity-icon-wrapper.milestone i {
+            color: var(--accent-yellow);
+        }
+
+        .activity-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.25rem;
+            font-size: 1rem;
+        }
+
+        .activity-meta {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .activity-time {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+
+        /* =========================================
+           ACHIEVEMENTS SECTION
+           ========================================= */
+        .achievements-section {
+            padding: 4rem 0;
+            background: var(--bg-light);
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .achievement-card {
+            background: var(--bg-white);
+            padding: 2.5rem;
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-light);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            opacity: 0.6;
+            filter: grayscale(0.8);
+            transition: all 0.3s ease;
+        }
+
+        .achievement-card:hover {
+            opacity: 0.75;
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .achievement-lock {
+            position: absolute;
+            top: 1.25rem;
+            right: 1.25rem;
+            width: 32px;
+            height: 32px;
+            background: var(--bg-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-light);
+        }
+
+        .achievement-lock i {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .achievement-icon-wrapper {
+            width: 96px;
+            height: 96px;
+            background: var(--bg-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 2px solid var(--border-light);
+        }
+
+        .achievement-icon-wrapper i {
+            font-size: 2.5rem;
+            color: var(--text-muted);
+        }
+
+        .achievement-name {
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        .achievement-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .achievement-requirement {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: var(--bg-light);
+            border-radius: var(--radius-full);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .achievement-progress-bar {
+            height: 8px;
+            background: var(--bg-light);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .achievement-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--text-muted), var(--border-medium));
+            border-radius: var(--radius-full);
+            transition: width 0.5s ease;
+        }
+
+        .achievement-progress-text {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* =========================================
+           FOOTER
+           ========================================= */
+        .footer {
+            background: var(--black);
+            color: white;
+            padding: 5rem 0 2rem;
+            margin-top: auto;
+        }
+
+        [data-theme="dark"] .footer {
+            background: #000000;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .footer-brand {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo i {
+            font-size: 2rem;
+        }
+
+        .footer-brand p {
+            color: #a0a0a0;
+            margin: 1.5rem 0;
+            max-width: 300px;
+            line-height: 1.8;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: white;
+            transition: all 0.2s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--primary-green);
+            transform: translateY(-3px);
+        }
+
+        .footer-links h4 {
+            color: #fff;
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .footer-links ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links ul li a {
+            color: #a0a0a0;
+            transition: all 0.2s ease;
+        }
+
+        .footer-links ul li a:hover {
+            color: var(--primary-green);
+            transform: translateX(4px);
+            display: inline-block;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #333;
+            padding-top: 2rem;
+            text-align: center;
+            color: #777;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-bottom p {
+            margin: 0;
+        }
+
+        .footer-bottom a {
+            color: var(--primary-green);
+            font-weight: 600;
+            transition: var(--transition-fast);
+        }
+
+        .footer-bottom a:hover {
+            color: var(--primary-light);
+        }
+
+        /* =========================================
+           RESPONSIVE
+           ========================================= */
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .impact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .achievements-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .distribution-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 1rem;
+            }
+
+            .nav-container {
+                padding: 0 1rem;
+            }
+
+            .nav-menu {
+                position: fixed;
+                top: 80px;
+                right: -100%;
+                background: var(--bg-white);
+                height: calc(100vh - 80px);
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+                justify-content: start;
+                padding-top: 3rem;
+                transition: right 0.4s ease;
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+                z-index: 999;
+            }
+
+            .nav-menu.active {
+                right: 0;
+            }
+
+            .hamburger {
+                display: flex;
+                z-index: 1001;
+            }
+
+            .impact-hero {
+                padding: 6rem 0 3rem;
+            }
+
+            .impact-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .achievements-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .cta-content h2 {
+                font-size: 2rem;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .impact-hero h1 {
+                font-size: 2rem;
+            }
+
+            .stat-value {
+                font-size: 2.5rem;
+            }
+
+            .donut-container {
+                width: 220px;
+                height: 220px;
+            }
+
+            .donut-value {
+                font-size: 2.5rem;
+            }
+
+            .achievement-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .achievement-icon-wrapper {
+                width: 80px;
+                height: 80px;
+            }
+
+            .achievement-icon-wrapper i {
+                font-size: 2rem;
+            }
+        }
+
+        /* =========================================
+           ANIMATIONS
+           ========================================= */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .loading {
+            animation: pulse 2s ease-in-out infinite;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="coming-soon-title">Coming Soon!</h1>
-        <p class="coming-soon-text">We are working hard to bring you the "Track Impact" page. Stay tuned!</p>
-        <a href="index.html" class="home-link">Go back to Home</a>
-    </div>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html" class="nav-logo-link">
+                    <i class="fas fa-utensils"></i>
+                    <span>ShareBite</span>
+                </a>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html#home" class="nav-link">Home</a></li>
+                <li><a href="index.html#features" class="nav-link">Features</a></li>
+                <li><a href="index.html#listings" class="nav-link">Listings</a></li>
+                <li><a href="index.html#about" class="nav-link">About</a></li>
+                <li><a href="support.html" class="nav-link">Support</a></li>
+                <li><a href="track-impact.html" class="nav-link active">Track Impact</a></li>
+            </ul>
+            <div class="user-actions">
+                <button class="login-btn login-outline" onclick="window.location.href='login.html'">User Login</button>
+                <button class="login-btn login-primary" onclick="window.location.href='login_ngo.html'">NGO Login</button>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
+            </div>
+            <div class="hamburger" id="menuToggle" tabindex="0" role="button" aria-label="Open navigation menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Impact Hero Section -->
+    <section class="impact-hero">
+        <div class="container">
+            <div class="impact-hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Real-Time Impact Tracking</span>
+                </div>
+                <h1>Your <span class="gradient-text">Impact Dashboard</span></h1>
+                <p>Every meal shared creates ripples of positive change. Track your contribution to building a hunger-free and sustainable community.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Overview -->
+    <section class="stats-overview">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon-wrapper">
+                            <i class="fas fa-utensils stat-icon"></i>
+                        </div>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>12%</span>
+                        </div>
+                    </div>
+                    <div class="stat-value">247</div>
+                    <div class="stat-label">Meals Donated</div>
+                    <div class="stat-sublabel">This month</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon-wrapper">
+                            <i class="fas fa-users stat-icon"></i>
+                        </div>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>8%</span>
+                        </div>
+                    </div>
+                    <div class="stat-value">156</div>
+                    <div class="stat-label">People Helped</div>
+                    <div class="stat-sublabel">Across communities</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon-wrapper">
+                            <i class="fas fa-leaf stat-icon"></i>
+                        </div>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>15%</span>
+                        </div>
+                    </div>
+                    <div class="stat-value">182kg</div>
+                    <div class="stat-label">Food Waste Prevented</div>
+                    <div class="stat-sublabel">Environmental impact</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon-wrapper">
+                            <i class="fas fa-globe stat-icon"></i>
+                        </div>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-down"></i>
+                            <span>20%</span>
+                        </div>
+                    </div>
+                    <div class="stat-value">365kg</div>
+                    <div class="stat-label">CO₂ Emissions Saved</div>
+                    <div class="stat-sublabel">Carbon footprint reduced</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Visual Impact Section -->
+    <section class="visual-impact">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Impact Breakdown</span>
+                <h2 class="section-title">Your Contribution in Numbers</h2>
+                <p class="section-subtitle">See the real-world impact of your generosity across multiple dimensions</p>
+            </div>
+
+            <div class="impact-grid">
+                <div class="impact-card">
+                    <div class="impact-card-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3>Community Reach</h3>
+                    <p>Your donations have reached 12 different communities, providing nutritious meals to families in need.</p>
+                    <div class="impact-metric">
+                        <div class="metric-value">12</div>
+                        <div class="metric-label">Communities<br>Impacted</div>
+                    </div>
+                </div>
+
+                <div class="impact-card">
+                    <div class="impact-card-icon">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <h3>Environmental Impact</h3>
+                    <p>By preventing food waste, you've helped reduce methane emissions equivalent to planting 45 trees.</p>
+                    <div class="impact-metric">
+                        <div class="metric-value">45</div>
+                        <div class="metric-label">Trees Worth<br>of Impact</div>
+                    </div>
+                </div>
+
+                <div class="impact-card">
+                    <div class="impact-card-icon">
+                        <i class="fas fa-hands-helping"></i>
+                    </div>
+                    <h3>Volunteer Hours</h3>
+                    <p>Your efforts have inspired 8 volunteers to join the cause, creating a ripple effect of kindness.</p>
+                    <div class="impact-metric">
+                        <div class="metric-value">8</div>
+                        <div class="metric-label">Volunteers<br>Inspired</div>
+                    </div>
+                </div>
+
+                <div class="impact-card">
+                    <div class="impact-card-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>Time Saved</h3>
+                    <p>Recipients saved an average of 3 hours per meal, allowing them to focus on education and work.</p>
+                    <div class="impact-metric">
+                        <div class="metric-value">468</div>
+                        <div class="metric-label">Hours<br>Saved</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Food Distribution Section -->
+    <section class="distribution-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Distribution Analysis</span>
+                <h2 class="section-title">Food Category Breakdown</h2>
+                <p class="section-subtitle">Understanding what types of food make the biggest difference</p>
+            </div>
+
+            <div class="distribution-card">
+                <div class="distribution-content">
+                    <div class="donut-container">
+                        <svg width="280" height="280" viewBox="0 0 280 280">
+                            <circle cx="140" cy="140" r="100" fill="none" stroke="#4caf50" stroke-width="50" 
+                                    stroke-dasharray="235 628" transform="rotate(-90 140 140)"/>
+                            <circle cx="140" cy="140" r="100" fill="none" stroke="#ff6b35" stroke-width="50" 
+                                    stroke-dasharray="170 693" stroke-dashoffset="-235" transform="rotate(-90 140 140)"/>
+                            <circle cx="140" cy="140" r="100" fill="none" stroke="#ffc107" stroke-width="50" 
+                                    stroke-dasharray="105 758" stroke-dashoffset="-405" transform="rotate(-90 140 140)"/>
+                            <circle cx="140" cy="140" r="100" fill="none" stroke="#cbd5e1" stroke-width="50" 
+                                    stroke-dasharray="118 745" stroke-dashoffset="-510" transform="rotate(-90 140 140)"/>
+                        </svg>
+                        <div class="donut-center">
+                            <div class="donut-value">247</div>
+                            <div class="donut-label">Total Items</div>
+                        </div>
+                    </div>
+
+                    <div class="distribution-legend">
+                        <div class="legend-item">
+                            <div class="legend-left">
+                                <div class="legend-color" style="background: #4caf50;"></div>
+                                <span class="legend-text">Prepared Meals</span>
+                            </div>
+                            <div class="legend-right">
+                                <span class="legend-count">92</span>
+                                <span class="legend-percentage">37%</span>
+                            </div>
+                        </div>
+
+                        <div class="legend-item">
+                            <div class="legend-left">
+                                <div class="legend-color" style="background: #ff6b35;"></div>
+                                <span class="legend-text">Fresh Produce</span>
+                            </div>
+                            <div class="legend-right">
+                                <span class="legend-count">68</span>
+                                <span class="legend-percentage">27%</span>
+                            </div>
+                        </div>
+
+                        <div class="legend-item">
+                            <div class="legend-left">
+                                <div class="legend-color" style="background: #ffc107;"></div>
+                                <span class="legend-text">Baked Goods</span>
+                            </div>
+                            <div class="legend-right">
+                                <span class="legend-count">42</span>
+                                <span class="legend-percentage">17%</span>
+                            </div>
+                        </div>
+
+                        <div class="legend-item">
+                            <div class="legend-left">
+                                <div class="legend-color" style="background: #cbd5e1;"></div>
+                                <span class="legend-text">Other Items</span>
+                            </div>
+                            <div class="legend-right">
+                                <span class="legend-count">45</span>
+                                <span class="legend-percentage">19%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recent Activities -->
+    <section class="activities-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Latest Updates</span>
+                <h2 class="section-title">Recent Activity</h2>
+                <p class="section-subtitle">Your latest contributions and milestones</p>
+            </div>
+
+            <div class="activities-card">
+                <div class="activity-item">
+                    <div class="activity-icon-wrapper donated">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">Donated 5 servings of Vegetable Curry</div>
+                        <div class="activity-meta">Community Kitchen • Helped 5 families</div>
+                    </div>
+                    <div class="activity-time">2 hours ago</div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon-wrapper milestone">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">Reached 200 meals milestone</div>
+                        <div class="activity-meta">Keep up the amazing work!</div>
+                    </div>
+                    <div class="activity-time">1 day ago</div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon-wrapper donated">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">Donated Fresh Vegetables (3kg)</div>
+                        <div class="activity-meta">Local Food Bank • Prevented 3kg waste</div>
+                    </div>
+                    <div class="activity-time">3 days ago</div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon-wrapper claimed">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">Your donation was claimed by Sarah M.</div>
+                        <div class="activity-meta">Homemade Pasta • 4 servings</div>
+                    </div>
+                    <div class="activity-time">5 days ago</div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon-wrapper donated">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">Donated Baked Bread (6 loaves)</div>
+                        <div class="activity-meta">Shelter Support Program</div>
+                    </div>
+                    <div class="activity-time">1 week ago</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Achievements Section -->
+    <section class="achievements-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Milestones</span>
+                <h2 class="section-title">Unlock Your Achievements</h2>
+                <p class="section-subtitle">Continue making a difference to unlock these badges of honor</p>
+            </div>
+
+            <div class="achievements-grid">
+                <div class="achievement-card">
+                    <div class="achievement-lock">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="achievement-icon-wrapper">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <div class="achievement-name">First Step</div>
+                    <div class="achievement-description">Make your first donation to start your journey</div>
+                    <div class="achievement-requirement">Required: 1 donation</div>
+                    <div class="achievement-progress-bar">
+                        <div class="achievement-progress-fill" style="width: 0%;"></div>
+                    </div>
+                    <div class="achievement-progress-text">0 / 1 donations</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="achievement-lock">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="achievement-icon-wrapper">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <div class="achievement-name">Weekly Warrior</div>
+                    <div class="achievement-description">Donate for 7 consecutive days</div>
+                    <div class="achievement-requirement">Required: 7 day streak</div>
+                    <div class="achievement-progress-bar">
+                        <div class="achievement-progress-fill" style="width: 0%;"></div>
+                    </div>
+                    <div class="achievement-progress-text">0 / 7 days</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="achievement-lock">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="achievement-icon-wrapper">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="achievement-name">Century Champion</div>
+                    <div class="achievement-description">Donate 100+ meals to your community</div>
+                    <div class="achievement-requirement">Required: 100 meals</div>
+                    <div class="achievement-progress-bar">
+                        <div class="achievement-progress-fill" style="width: 0%;"></div>
+                    </div>
+                    <div class="achievement-progress-text">0 / 100 meals</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="achievement-lock">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="achievement-icon-wrapper">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="achievement-name">Community Hero</div>
+                    <div class="achievement-description">Help 100+ people through donations</div>
+                    <div class="achievement-requirement">Required: 100 people</div>
+                    <div class="achievement-progress-bar">
+                        <div class="achievement-progress-fill" style="width: 0%;"></div>
+                    </div>
+                    <div class="achievement-progress-text">0 / 100 people</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="achievement-lock">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="achievement-icon-wrapper">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <div class="achievement-name">Food Savior</div>
+                    <div class="achievement-description">Prevent 500kg of food waste</div>
+                    <div class="achievement-requirement">Required: 500kg waste</div>
+                    <div class="achievement-progress-bar">
+                        <div class="achievement-progress-fill" style="width: 0%;"></div>
+                    </div>
+                    <div class="achievement-progress-text">0 / 500kg</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="achievement-lock">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="achievement-icon-wrapper">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="achievement-name">Legend Status</div>
+                    <div class="achievement-description">Donate 500+ meals and inspire others</div>
+                    <div class="achievement-requirement">Required: 500 meals</div>
+                    <div class="achievement-progress-bar">
+                        <div class="achievement-progress-fill" style="width: 0%;"></div>
+                    </div>
+                    <div class="achievement-progress-text">0 / 500 meals</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-grid">
+            <div class="footer-brand">
+                <div class="footer-logo">
+                    <i class="fas fa-utensils"></i>
+                    <span>ShareBite</span>
+                </div>
+                <p>
+                    Reducing food waste. Feeding communities.<br>
+                    Join us in building a hunger-free and sustainable India.
+                </p>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html#home">Home</a></li>
+                    <li><a href="index.html#features">How It Works</a></li>
+                    <li><a href="index.html#listings">Food Listings</a></li>
+                    <li><a href="index.html#about">About Us</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-links">
+                <h4>For Donors</h4>
+                <ul>
+                    <li><a href="index.html#listings">List Food</a></li>
+                    <li><a href="donor-guidelines.html">Donor Guidelines</a></li>
+                    <li><a href="track-impact.html">Track Your Impact</a></li>
+                    <li><a href="support.html">Support</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-links">
+                <h4>For Collectors</h4>
+                <ul>
+                    <li><a href="index.html#listings">Find Food</a></li>
+                    <li><a href="ngo-register.html">Register NGO</a></li>
+                    <li><a href="volunteer_food.html">Volunteer</a></li>
+                    <li><a href="support.html">Help & FAQ</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom container">
+            <p>Made with 💚 by <strong>Angela Bera</strong></p>
+            <p>
+                © <span id="current-year"></span> ShareBite. All rights reserved ·
+                <a href="License.html">License</a> ·
+                <a href="support.html">Support</a> ·
+                <a href="t&c.html">Terms</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // ==========================================
+        // REAL-TIME DATA MANAGEMENT SYSTEM
+        // ==========================================
+        
+        // Base statistics
+        let statsData = {
+            meals: 247,
+            people: 156,
+            waste: 182,
+            co2: 365,
+            preparedMeals: 92,
+            freshProduce: 68,
+            bakedGoods: 42,
+            otherItems: 45
+        };
+
+        // Achievement data
+        const achievements = [
+            { id: 'first-step', target: 1, current: 0, metric: 'donations' },
+            { id: 'weekly-warrior', target: 7, current: 0, metric: 'days' },
+            { id: 'century-champion', target: 100, current: 0, metric: 'meals' },
+            { id: 'community-hero', target: 100, current: 0, metric: 'people' },
+            { id: 'food-savior', target: 500, current: 0, metric: 'kg' },
+            { id: 'legend-status', target: 500, current: 0, metric: 'meals' }
+        ];
+
+        // Activity templates
+        const activityTemplates = [
+            {
+                type: 'donated',
+                icon: 'fa-hand-holding-heart',
+                titles: [
+                    'Donated {amount} servings of Vegetable Curry',
+                    'Donated Fresh Vegetables ({weight}kg)',
+                    'Donated Homemade Pasta ({amount} servings)',
+                    'Donated Baked Bread ({amount} loaves)',
+                    'Donated Rice and Dal ({amount} servings)',
+                    'Donated Fresh Fruits ({weight}kg)'
+                ],
+                metas: [
+                    'Community Kitchen • Helped {people} families',
+                    'Local Food Bank • Prevented {weight}kg waste',
+                    'Shelter Support Program',
+                    'School Lunch Initiative',
+                    'Senior Citizen Center'
+                ]
+            },
+            {
+                type: 'claimed',
+                icon: 'fa-users',
+                titles: [
+                    'Your donation was claimed by {name}',
+                    '{name} received your donation',
+                    'Donation collected by {name}'
+                ],
+                metas: [
+                    'Homemade Pasta • {amount} servings',
+                    'Fresh Vegetables • {weight}kg',
+                    'Prepared Meals • {amount} portions'
+                ]
+            },
+            {
+                type: 'milestone',
+                icon: 'fa-trophy',
+                titles: [
+                    'Reached {number} meals milestone',
+                    'Helped {number}+ people this month',
+                    'Prevented {number}kg of food waste',
+                    'You\'re in the top 10% of donors!'
+                ],
+                metas: [
+                    'Keep up the amazing work!',
+                    'You\'re making a real difference',
+                    'Community thanks you!'
+                ]
+            }
+        ];
+
+        const names = ['Sarah M.', 'John D.', 'Priya S.', 'Rahul K.', 'Lisa T.', 'Amit P.', 'Maya R.', 'David L.'];
+
+        // Initialize on page load
+        document.addEventListener("DOMContentLoaded", () => {
+            // Current Year Update
+            const yearSpan = document.getElementById("current-year");
+            if (yearSpan) {
+                yearSpan.textContent = new Date().getFullYear();
+            }
+
+            // Mobile Menu Toggle
+            const menuToggle = document.getElementById('menuToggle');
+            const navMenu = document.getElementById('navMenu');
+
+            if (menuToggle && navMenu) {
+                menuToggle.addEventListener('click', () => {
+                    navMenu.classList.toggle('active');
+                    menuToggle.classList.toggle('active');
+                });
+            }
+
+            // Theme Toggle Functionality
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const html = document.documentElement;
+
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            html.setAttribute('data-theme', currentTheme);
+            updateThemeIcon(currentTheme);
+
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = html.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                
+                html.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateThemeIcon(newTheme);
+            });
+
+            function updateThemeIcon(theme) {
+                if (theme === 'dark') {
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                } else {
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon');
+                }
+            }
+
+            // Initialize animations
+            initScrollAnimations();
+            
+            // Start real-time updates
+            startRealTimeUpdates();
+            
+            // Add interactive hover effects
+            addInteractiveEffects();
+            
+            // Add live timestamp
+            updateLiveTimestamp();
+            setInterval(updateLiveTimestamp, 60000); // Update every minute
+        });
+
+        // ==========================================
+        // REAL-TIME UPDATE FUNCTIONS
+        // ==========================================
+
+        function startRealTimeUpdates() {
+            // Update stats every 8 seconds
+            setInterval(() => {
+                updateStats();
+            }, 8000);
+
+            // Update distribution chart every 12 seconds
+            setInterval(() => {
+                updateDistributionChart();
+            }, 12000);
+
+            // Add new activity every 15 seconds
+            setInterval(() => {
+                addNewActivity();
+            }, 15000);
+
+            // Pulse effect on cards every 20 seconds
+            setInterval(() => {
+                pulseRandomCard();
+            }, 20000);
+        }
+
+        function updateStats() {
+            // Random increments
+            const mealInc = Math.random() > 0.6 ? Math.floor(Math.random() * 3) + 1 : 0;
+            const peopleInc = Math.random() > 0.7 ? Math.floor(Math.random() * 2) + 1 : 0;
+            const wasteInc = Math.random() > 0.65 ? Math.floor(Math.random() * 2) + 1 : 0;
+            const co2Inc = Math.random() > 0.6 ? Math.floor(Math.random() * 3) + 1 : 0;
+
+            if (mealInc > 0) {
+                statsData.meals += mealInc;
+                animateStatUpdate('meals', statsData.meals);
+            }
+
+            if (peopleInc > 0) {
+                statsData.people += peopleInc;
+                animateStatUpdate('people', statsData.people);
+            }
+
+            if (wasteInc > 0) {
+                statsData.waste += wasteInc;
+                animateStatUpdate('waste', statsData.waste + 'kg');
+            }
+
+            if (co2Inc > 0) {
+                statsData.co2 += co2Inc;
+                animateStatUpdate('co2', statsData.co2 + 'kg');
+            }
+
+            // Update trends
+            updateTrends();
+        }
+
+        function animateStatUpdate(type, value) {
+            const statValues = document.querySelectorAll('.stat-value');
+            let targetElement;
+
+            switch(type) {
+                case 'meals': targetElement = statValues[0]; break;
+                case 'people': targetElement = statValues[1]; break;
+                case 'waste': targetElement = statValues[2]; break;
+                case 'co2': targetElement = statValues[3]; break;
+            }
+
+            if (targetElement) {
+                // Flash animation
+                targetElement.style.transform = 'scale(1.1)';
+                targetElement.style.color = 'var(--primary-green)';
+                targetElement.style.transition = 'all 0.3s ease';
+                
+                setTimeout(() => {
+                    targetElement.textContent = value;
+                    targetElement.style.transform = 'scale(1)';
+                    setTimeout(() => {
+                        targetElement.style.color = '';
+                    }, 300);
+                }, 150);
+
+                // Show notification
+                showMiniNotification(`+${type === 'meals' || type === 'people' ? 1 : 1 + 'kg'} ${type}!`);
+            }
+        }
+
+        function updateTrends() {
+            const trends = document.querySelectorAll('.stat-trend span');
+            trends.forEach((trend, index) => {
+                let randomChange;
+                if (index === 3) { // CO2 trend is down (good thing)
+                    randomChange = Math.floor(Math.random() * 8) + 15;
+                } else {
+                    randomChange = Math.floor(Math.random() * 10) + 5;
+                }
+                
+                trend.style.transition = 'opacity 0.3s ease';
+                trend.style.opacity = '0';
+                
+                setTimeout(() => {
+                    trend.textContent = randomChange + '%';
+                    trend.style.opacity = '1';
+                }, 150);
+            });
+        }
+
+        function updateDistributionChart() {
+            // Small random changes to distribution
+            const totalChange = Math.floor(Math.random() * 3) + 1;
+            const categories = ['preparedMeals', 'freshProduce', 'bakedGoods', 'otherItems'];
+            const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+            
+            statsData[randomCategory] += totalChange;
+            
+            const total = statsData.preparedMeals + statsData.freshProduce + statsData.bakedGoods + statsData.otherItems;
+            
+            // Update legend counts
+            const legendCounts = document.querySelectorAll('.legend-count');
+            const legendPercentages = document.querySelectorAll('.legend-percentage');
+            
+            legendCounts[0].textContent = statsData.preparedMeals;
+            legendPercentages[0].textContent = Math.round((statsData.preparedMeals / total) * 100) + '%';
+            
+            legendCounts[1].textContent = statsData.freshProduce;
+            legendPercentages[1].textContent = Math.round((statsData.freshProduce / total) * 100) + '%';
+            
+            legendCounts[2].textContent = statsData.bakedGoods;
+            legendPercentages[2].textContent = Math.round((statsData.bakedGoods / total) * 100) + '%';
+            
+            legendCounts[3].textContent = statsData.otherItems;
+            legendPercentages[3].textContent = Math.round((statsData.otherItems / total) * 100) + '%';
+            
+            // Update donut center
+            const donutValue = document.querySelector('.donut-value');
+            if (donutValue) {
+                donutValue.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    donutValue.textContent = total;
+                    donutValue.style.transform = 'scale(1)';
+                }, 200);
+            }
+
+            // Animate the updated legend item
+            const legendItems = document.querySelectorAll('.legend-item');
+            const categoryIndex = categories.indexOf(randomCategory);
+            if (legendItems[categoryIndex]) {
+                legendItems[categoryIndex].style.transform = 'scale(1.02)';
+                legendItems[categoryIndex].style.borderColor = 'var(--primary-green)';
+                setTimeout(() => {
+                    legendItems[categoryIndex].style.transform = 'scale(1)';
+                    legendItems[categoryIndex].style.borderColor = '';
+                }, 500);
+            }
+        }
+
+        function addNewActivity() {
+            const activityList = document.querySelector('.activities-card');
+            if (!activityList) return;
+
+            // Random activity type
+            const template = activityTemplates[Math.floor(Math.random() * activityTemplates.length)];
+            const title = template.titles[Math.floor(Math.random() * template.titles.length)]
+                .replace('{amount}', Math.floor(Math.random() * 6) + 3)
+                .replace('{weight}', Math.floor(Math.random() * 4) + 2)
+                .replace('{name}', names[Math.floor(Math.random() * names.length)])
+                .replace('{number}', Math.floor(Math.random() * 50) + 150);
+            
+            const meta = template.metas[Math.floor(Math.random() * template.metas.length)]
+                .replace('{people}', Math.floor(Math.random() * 6) + 2)
+                .replace('{weight}', Math.floor(Math.random() * 4) + 2)
+                .replace('{amount}', Math.floor(Math.random() * 6) + 3);
+
+            const newActivity = document.createElement('div');
+            newActivity.className = 'activity-item';
+            newActivity.style.opacity = '0';
+            newActivity.style.transform = 'translateX(-20px)';
+            newActivity.style.transition = 'all 0.5s ease';
+            
+            newActivity.innerHTML = `
+                <div class="activity-icon-wrapper ${template.type}">
+                    <i class="fas ${template.icon}"></i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-title">${title}</div>
+                    <div class="activity-meta">${meta}</div>
+                </div>
+                <div class="activity-time">Just now</div>
+            `;
+
+            activityList.insertBefore(newActivity, activityList.firstChild);
+
+            // Trigger animation
+            setTimeout(() => {
+                newActivity.style.opacity = '1';
+                newActivity.style.transform = 'translateX(0)';
+            }, 10);
+
+            // Update "Just now" to relative time for other activities
+            const allActivities = activityList.querySelectorAll('.activity-item');
+            allActivities.forEach((activity, index) => {
+                if (index > 0) {
+                    const timeElement = activity.querySelector('.activity-time');
+                    if (timeElement && timeElement.textContent === 'Just now') {
+                        timeElement.textContent = '2 minutes ago';
+                    }
+                }
+            });
+
+            // Remove oldest if more than 6
+            if (allActivities.length > 6) {
+                const lastActivity = allActivities[allActivities.length - 1];
+                lastActivity.style.opacity = '0';
+                lastActivity.style.transform = 'translateX(20px)';
+                setTimeout(() => {
+                    lastActivity.remove();
+                }, 500);
+            }
+        }
+
+        function pulseRandomCard() {
+            const impactCards = document.querySelectorAll('.impact-card');
+            if (impactCards.length > 0) {
+                const randomCard = impactCards[Math.floor(Math.random() * impactCards.length)];
+                randomCard.style.transform = 'scale(1.02)';
+                randomCard.style.boxShadow = '0 12px 24px rgba(76, 175, 80, 0.15)';
+                
+                setTimeout(() => {
+                    randomCard.style.transform = '';
+                    randomCard.style.boxShadow = '';
+                }, 1000);
+            }
+        }
+
+        function showMiniNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: linear-gradient(135deg, var(--primary-green), var(--primary-dark));
+                color: white;
+                padding: 0.75rem 1.25rem;
+                border-radius: 50px;
+                font-size: 0.875rem;
+                font-weight: 600;
+                z-index: 10000;
+                opacity: 0;
+                transform: translateX(100px);
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateX(0)';
+            }, 10);
+
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(100px)';
+                setTimeout(() => notification.remove(), 300);
+            }, 2500);
+        }
+
+        function updateLiveTimestamp() {
+            // Add live indicator to hero section
+            const heroContent = document.querySelector('.impact-hero-content');
+            let liveIndicator = document.getElementById('live-indicator');
+            
+            if (!liveIndicator && heroContent) {
+                liveIndicator = document.createElement('div');
+                liveIndicator.id = 'live-indicator';
+                liveIndicator.style.cssText = `
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    font-size: 0.875rem;
+                    color: var(--text-muted);
+                    margin-top: 1rem;
+                `;
+                liveIndicator.innerHTML = `
+                    <span style="
+                        width: 8px;
+                        height: 8px;
+                        background: #4caf50;
+                        border-radius: 50%;
+                        display: inline-block;
+                        animation: pulse 2s ease-in-out infinite;
+                    "></span>
+                    <span>Live Data • Last updated: <strong>Just now</strong></span>
+                `;
+                heroContent.appendChild(liveIndicator);
+                
+                // Add pulse animation
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes pulse {
+                        0%, 100% { opacity: 1; transform: scale(1); }
+                        50% { opacity: 0.5; transform: scale(1.2); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+
+        // ==========================================
+        // INTERACTIVE EFFECTS
+        // ==========================================
+
+        function addInteractiveEffects() {
+            // Stat cards - click to see details
+            const statCards = document.querySelectorAll('.stat-card');
+            statCards.forEach(card => {
+                card.style.cursor = 'pointer';
+                card.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 200);
+                    
+                    const label = this.querySelector('.stat-label').textContent;
+                    showMiniNotification(`${label} tracking active`);
+                });
+            });
+
+            // Legend items - click to highlight
+            const legendItems = document.querySelectorAll('.legend-item');
+            legendItems.forEach(item => {
+                item.style.cursor = 'pointer';
+                item.addEventListener('click', function() {
+                    legendItems.forEach(i => i.style.borderColor = '');
+                    this.style.borderColor = 'var(--primary-green)';
+                    this.style.transform = 'scale(1.02)';
+                    
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 300);
+                });
+            });
+
+            // Impact cards - hover for more info
+            const impactCards = document.querySelectorAll('.impact-card');
+            impactCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px)';
+                    this.style.boxShadow = '0 12px 24px rgba(76, 175, 80, 0.15)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = '';
+                    this.style.boxShadow = '';
+                });
+            });
+
+            // Achievement cards - show progress tooltip
+            const achievementCards = document.querySelectorAll('.achievement-card');
+            achievementCards.forEach(card => {
+                card.style.cursor = 'pointer';
+                card.addEventListener('click', function() {
+                    const name = this.querySelector('.achievement-name').textContent;
+                    showMiniNotification(`Start donating to unlock: ${name}`);
+                });
+            });
+        }
+
+        function initScrollAnimations() {
+            const observerOptions = {
+                threshold: 0.2,
+                rootMargin: '0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
+                        entry.target.style.opacity = '0';
+                        entry.target.style.transform = 'translateY(30px)';
+                        
+                        setTimeout(() => {
+                            entry.target.style.transition = 'all 0.6s ease';
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                            entry.target.classList.add('animated');
+                        }, 100);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.stat-card, .impact-card, .achievement-card, .legend-item').forEach(el => {
+                observer.observe(el);
+            });
+        }
+    </script>
 </body>
 </html>
