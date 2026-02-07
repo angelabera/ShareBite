@@ -205,7 +205,9 @@
       </div>
 
       <div class="text-center" style="margin-top: 3rem;">
-        <button class="btn-redirect">View All Stories</button>
+<button class="btn-redirect" onclick="window.location.href='./stories.html'">
+  View All Stories
+</button>
       </div>
     </div>
   </section>
@@ -280,18 +282,15 @@
     </div>
   </footer>
 
+  <button id="backToTop" aria-label="Back to top" type="button">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
   <script src="js/auth.js"></script>
   <script src="js/theme.js"></script>
   <script src="js/api.js"></script>
-  <script>
-    // Mobile Menu Toggle
-    const hamburger = document.getElementById('hamburger');
-    const navMenu = document.getElementById('navMenu');
+  <script src="js/script.js"></script>
 
-    hamburger.addEventListener('click', () => {
-      navMenu.classList.toggle('active');
-    });
-  </script>
 </body>
 
 </html>
