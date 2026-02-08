@@ -17,6 +17,16 @@
         --ring: rgba(13, 110, 253, 0.12);
       }
 
+      /* Dark Mode Styles */
+      html.dark,
+      body.dark-mode {
+        --bg: #121212;
+        --text: #f1f1f1;
+        --muted: #a0a0a0;
+        --card: #1e1e1e;
+        --ring: rgba(76, 175, 80, 0.12);
+      }
+
       * {
         box-sizing: border-box;
       }
@@ -302,6 +312,9 @@
           <i class="fas fa-utensils" aria-hidden="true"></i>
           <span>ShareBite</span>
         </a>
+        <button id="theme-toggle" class="theme-toggle" title="Toggle Dark Mode" style="margin-left: auto; background: transparent; border: 1px solid rgba(0, 0, 0, 0.1); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text);">
+          <i class="fas fa-moon"></i>
+        </button>
       </header>
 
       <section class="content">
@@ -390,6 +403,7 @@
       </div>
     </main>
 
+    <script src="js/theme.js"></script>
     <script>
       (function () {
         const back = document.getElementById("goBackBtn");

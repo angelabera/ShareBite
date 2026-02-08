@@ -1,19 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Find the toggle button, accommodating both IDs used in the project
-    const themeToggle = document.getElementById('theme-toggle')  ;
+    // Find the toggle button, accommodating both ID formats (themeToggle and theme-toggle)
+    let themeToggle = document.getElementById('themeToggle') || document.getElementById('theme-toggle');
     if (!themeToggle) return;
 
-    const root = document.documentElement; // The <html> element
     const body = document.body; // The <body> element
 
-    // This function applies the theme class to both html and body
+    // This function applies the theme class to body only
     const applyTheme = (theme) => {
         if (theme === 'dark') {
-            root.classList.add('dark');
-            body.classList.add('dark-mode'); // Add dark-mode to body for auth pages
+            body.classList.add('dark-mode');
         } else {
-            root.classList.remove('dark');
-            body.classList.remove('dark-mode'); // Remove dark-mode from body
+            body.classList.remove('dark-mode');
         }
         updateIcon(theme);
     };
@@ -36,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // This function handles the click event
     const toggleTheme = () => {
-        const isDark = root.classList.contains('dark') || body.classList.contains('dark-mode');
+        const isDark = body.classList.contains('dark-mode');
         const newTheme = isDark ? 'light' : 'dark';
         localStorage.setItem('sharebite-theme', newTheme);
         applyTheme(newTheme);
