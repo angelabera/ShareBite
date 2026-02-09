@@ -13,15 +13,217 @@
   <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
 
   <style>
-    /* Page-specific overrides/enhancements */
+    /* ===== CSS VARIABLE FALLBACKS ===== */
+    :root {
+      --primary-green: #4CAF50;
+      --primary-dark: #2E7D32;
+      --primary-color: #4CAF50;
+      --primary-gradient: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+      --black: #111827;
+      --white: #ffffff;
+      --light-gray: #F9FAFB;
+      --medium-gray: #6B7280;
+      --text-dark: #1F2937;
+      --card-bg: #ffffff;
+      --card-radius: 12px;
+      --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
+      --shadow-heavy: 0 4px 20px rgba(0, 0, 0, 0.15);
+      --transition: all 0.3s ease;
+      --transition-medium: all 0.4s ease;
+      --transition-slow: all 0.6s ease;
+      --h1-size: 3rem;
+      --h2-size: 2rem;
+    }
+
+    :root.dark {
+      --black: #F9FAFB;
+      --white: #1F2937;
+      --light-gray: #111827;
+      --medium-gray: #9CA3AF;
+      --text-dark: #E5E7EB;
+      --card-bg: #1F2937;
+    }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3);
+      }
+      50% {
+        transform: scale(1.05);
+        box-shadow: 0 8px 30px rgba(76, 175, 80, 0.5);
+      }
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    /* ===== NAVIGATION (UNCHANGED) ===== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: var(--white);
+      box-shadow: var(--shadow-light);
+      z-index: 1000;
+      padding: 1rem 0;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-logo-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--primary-green);
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-link {
+      text-decoration: none;
+      color: var(--text-dark);
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      color: var(--primary-green);
+    }
+
+    .user-actions {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .theme-toggle {
+      background: var(--light-gray);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+
+    .theme-toggle:hover {
+      background: var(--primary-green);
+      color: white;
+    }
+
+    .login-btn {
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-light);
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+    }
+
+    /* ===== HERO SECTION - REDESIGNED ===== */
     .support-hero {
       background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%);
       color: white;
-      font-size: 1.5rem;
-      font-weight: 200;
       text-align: center;
-      padding: 8rem 2rem 6rem;
+      padding: 9rem 2rem 5rem;
       margin-top: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .support-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="2" fill="white" opacity="0.1"/></svg>');
+      opacity: 0.3;
     }
 
     :root.dark .support-hero {
@@ -29,202 +231,326 @@
     }
 
     .support-hero-content {
-        max-width: 900px;
-        margin: 0 auto;
-        /* Animation Added */
-        opacity: 0;
-        animation: slideInUp 1s ease forwards; 
+      max-width: 850px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      animation: fadeIn 1s ease forwards;
     }
 
     .support-hero h1 {
-        font-size: var(--h1-size);
-        font-weight: 700;
-        line-height: 1.2;
-        margin-bottom: 1.5rem;
+      font-size: 3.2rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 1.2rem;
+      animation: slideInUp 0.8s ease forwards;
     }
 
     .support-badge {
-        display: inline-block;
-        background: rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(5px);
-        padding: 0.4rem 1rem;
-        border-radius: 999px;
-        font-size: 0.9rem;
-        font-weight: 600;
-        margin-bottom: 1.2rem;
-        border: 1px solid rgba(255,255,255,0.3);
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(10px);
+      padding: 0.6rem 1.5rem;
+      border-radius: 999px;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      border: 2px solid rgba(255,255,255,0.4);
+      animation: slideInUp 1s ease forwards;
+      animation-delay: 0.2s;
+      opacity: 0;
+      animation-fill-mode: forwards;
     }
 
-    .user-actions {
-      margin-left: 30px;
-      /* Adjust this number to increase/decrease space */
-      display: flex;
-      /* Ensures buttons align correctly */
-      gap: 15px;
-      /* Adds space between the buttons themselves */
-      align-items: center;
+    .support-description {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      opacity: 0.95;
+      max-width: 700px;
+      margin: 0 auto;
+      animation: slideInUp 1.2s ease forwards;
+      animation-delay: 0.4s;
+      opacity: 0;
+      animation-fill-mode: forwards;
     }
 
+    /* ===== STATS SECTION - NEW ===== */
+    .stats-section {
+      background: var(--white);
+      padding: 3rem 2rem 4rem;
+      margin-top: -2rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .stats-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      padding: 2.5rem 2rem;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: var(--shadow-heavy);
+      transition: var(--transition-medium);
+      border: 2px solid transparent;
+      animation: slideInUp 0.6s ease forwards;
+    }
+
+    .stat-card:nth-child(1) { animation-delay: 0.1s; opacity: 0; animation-fill-mode: forwards; }
+    .stat-card:nth-child(2) { animation-delay: 0.2s; opacity: 0; animation-fill-mode: forwards; }
+    .stat-card:nth-child(3) { animation-delay: 0.3s; opacity: 0; animation-fill-mode: forwards; }
+    .stat-card:nth-child(4) { animation-delay: 0.4s; opacity: 0; animation-fill-mode: forwards; }
+
+    .stat-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--primary-green);
+      box-shadow: 0 8px 30px rgba(76, 175, 80, 0.2);
+    }
+
+    .stat-icon {
+      font-size: 3rem;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+      display: inline-block;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-green);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 1rem;
+      color: var(--medium-gray);
+      font-weight: 500;
+    }
+
+    /* ===== SUPPORT WAYS SECTION - REDESIGNED ===== */
     .about-sharebite {
-        max-width: 1100px;
-        margin: 4rem auto;
-        padding: 0 2rem;
+      max-width: 1200px;
+      margin: 5rem auto;
+      padding: 0 2rem;
     }
 
-    .about-sharebite h3 {
-        font-size: var(--h2-size);
-        color: var(--black);
-        font-weight: 700;
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .section-header h2 {
+      font-size: 2.5rem;
+      color: var(--black);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-header h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 4px;
+      background: var(--primary-gradient);
+      border-radius: 2px;
+    }
+
+    .section-subtitle {
+      color: var(--medium-gray);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 1.5rem auto 0;
+      line-height: 1.6;
     }
 
     .support-ways-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 2rem;
-        margin-top: 3rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2.5rem;
     }
 
-    /* Style based on .feature-card from style.css */
     .way-card {
-        background: var(--card-bg);
-        padding: 2.5rem 2rem;
-        border-radius: var(--card-radius);
-        text-align: center;
-        box-shadow: var(--shadow-light);
-        transition: var(--transition-medium);
-        position: relative;
-        overflow: hidden;
+      background: var(--card-bg);
+      padding: 3rem 2.5rem;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: var(--shadow-light);
+      transition: var(--transition-medium);
+      position: relative;
+      overflow: hidden;
+      border: 2px solid transparent;
+    }
+
+    .way-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: var(--primary-gradient);
+      transform: scaleX(0);
+      transition: var(--transition-slow);
     }
 
     .way-card:hover {
-        transform: translateY(-10px);
-        box-shadow: var(--shadow-heavy);
+      transform: translateY(-12px);
+      box-shadow: 0 12px 40px rgba(76, 175, 80, 0.15);
+      border-color: rgba(76, 175, 80, 0.2);
     }
 
-    /* Top border animation from style.css */
-    .way-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 4px;
-        background: var(--primary-gradient);
-        transition: var(--transition-slow);
+    .way-card:hover::before {
+      transform: scaleX(1);
     }
 
-    .way-card:hover::before { left: 0; }
+    .way-icon-wrapper {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 1.5rem;
+      background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(46, 125, 50, 0.1) 100%);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-medium);
+    }
+
+    .way-card:hover .way-icon-wrapper {
+      background: var(--primary-gradient);
+      transform: rotate(10deg) scale(1.1);
+    }
 
     .way-card i {
-        font-size: 3rem;
-        margin-bottom: 1.5rem;
-        display: inline-block;
-        background: var(--primary-gradient);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        /* Animation from style.css feature-icon */
-        transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      font-size: 2.5rem;
+      color: var(--primary-green);
+      transition: var(--transition-medium);
     }
 
     .way-card:hover i {
-        transform: scale(1.1) rotate(15deg);
+      color: white;
     }
 
     .way-card h4 {
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin-bottom: 1rem;
-        color: var(--black);
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--black);
     }
 
     .way-card p {
-        color: var(--medium-gray);
-        line-height: 1.6;
+      color: var(--medium-gray);
+      line-height: 1.7;
+      font-size: 1rem;
     }
 
-    /* === 6. FAQ SECTION === */
+    /* ===== FAQ SECTION - REDESIGNED ===== */
+    .faq-section {
+      background: var(--light-gray);
+      padding: 6rem 2rem;
+    }
+
     .faq-container {
-        max-width: 900px;
-        margin: 4rem auto;
-        padding: 0 2rem;
+      max-width: 900px;
+      margin: 0 auto;
     }
 
-    /* Force text color for inputs in light mode */
-    .contact input,
-    .contact textarea,
-    .contact select {
-      color: #111827 !important;
-      background-color: #F9FAFB !important;
-    }
-
-    /* Ensure labels are visible */
-    .contact label {
-      color: #111827 !important;
-    }
-
-    /* Fix card text colors */
-    .way-card h4,
-    .way-card p {
-      color: inherit;
-    }
-
-    body:not(.dark) .way-card h4 {
-      color: #111827;
-    }
-
-    body:not(.dark) .way-card p {
-      color: #4B5563;
-    }
-
-    :root.dark .contact-support {
-      background: #1e1e1e;
-      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+    .faq {
+      background: var(--white);
+      border-radius: 16px;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+      border: 2px solid transparent;
+      transition: var(--transition);
+      box-shadow: var(--shadow-light);
     }
 
     .faq:hover {
-        box-shadow: var(--shadow-light);
-        border-color: var(--primary-color);
+      box-shadow: var(--shadow-heavy);
+      border-color: rgba(76, 175, 80, 0.3);
     }
 
     .faq h3 {
-        cursor: pointer;
-        padding: 1.2rem 1.8rem;
-        background: var(--light-gray);
-        margin: 0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-weight: 600;
-        color: var(--text-dark);
-        transition: var(--transition);
+      cursor: pointer;
+      padding: 1.5rem 2rem;
+      background: var(--card-bg);
+      margin: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      color: var(--text-dark);
+      transition: var(--transition);
+      font-size: 1.1rem;
+      user-select: none;
+    }
+
+    .faq-icon-wrapper {
+      width: 35px;
+      height: 35px;
+      background: var(--light-gray);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-medium);
+    }
+
+    .faq h3 i {
+      transition: transform 0.3s ease;
+      font-size: 0.9rem;
+      color: var(--primary-green);
     }
 
     .faq.open h3 {
-        background: var(--primary-color);
-        color: white;
+      background: var(--primary-gradient);
+      color: white;
     }
 
-    @media (max-width: 768px) {
-      .support-hero {
-        padding: 7rem 1.5rem 5rem;
-      }
-
-      .support-hero h1 {
-        font-size: 2.6rem;
-      }
-
-      .contact-support {
-        margin: 3.5rem auto;
-        padding: 2.2rem 1.6rem;
-      }
+    .faq.open .faq-icon-wrapper {
+      background: rgba(255, 255, 255, 0.2);
     }
 
-    .faq.open p { display: block; }
+    .faq.open h3 i {
+      transform: rotate(180deg);
+      color: white;
+    }
 
-    /* === 7. CONTACT SECTION (Imported from style.css) === */
+    .faq p {
+      padding: 1rem 2rem 1.8rem 2rem;
+      margin: 0;
+      color: var(--medium-gray);
+      line-height: 1.8;
+      display: none;
+      background: var(--white);
+      font-size: 1rem;
+      border-top: 1px solid #F3F4F6;
+    }
+
+    .faq.open p {
+      display: block;
+      animation: slideInUp 0.3s ease;
+    }
+
+    /* ===== CONTACT SECTION - REDESIGNED ===== */
     .contact {
-      padding: 5rem 2rem;
-      background: var(--light-gray);
+      padding: 6rem 2rem;
+      background: var(--white);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -235,256 +561,384 @@
       font-weight: 700;
       text-align: center;
       color: var(--black);
-      background: var(--primary-gradient);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .main-subtitle {
+      text-align: center;
+      color: var(--medium-gray);
+      font-size: 1.1rem;
+      margin-bottom: 4rem;
+      max-width: 600px;
     }
 
     .contact-wrapper {
-      background: var(--white);
-      padding: 3rem;
-      border-radius: 1.5rem;
-      box-shadow: var(--shadow-heavy);
+      background: var(--card-bg);
+      padding: 0;
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
       max-width: 1200px;
       width: 100%;
+      overflow: hidden;
     }
 
     .contact-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: stretch;
-      gap: 3rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
     }
 
-    /* --- Left Box (Form) --- */
     .contact-left {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+      padding: 3rem 3.5rem;
       background: var(--white);
-      border-radius: 1rem;
-      box-shadow: var(--shadow-heavy);
-      padding: 2rem 2.5rem;
     }
 
     .contact-title {
-      font-size: 1.8rem;
+      font-size: 2rem;
       font-weight: 700;
       color: var(--black);
-      background: var(--primary-gradient);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
       margin-bottom: 0.5rem;
     }
 
     .contact-subtitle {
       color: var(--medium-gray);
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
+      font-size: 1.05rem;
     }
 
     .contact form {
       display: flex;
       flex-direction: column;
-      gap: 1.2rem;
+      gap: 1.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
     }
 
     .contact form label {
       font-weight: 600;
       color: var(--black);
+      font-size: 0.95rem;
     }
 
     .contact form input,
     .contact form textarea {
       width: 100%;
-      padding: 0.9rem 1rem;
-      border-radius: 0.6rem;
-      border: 1.5px solid var(--medium-gray);
+      padding: 1rem 1.2rem;
+      border-radius: 12px;
+      border: 2px solid #E5E7EB;
       font-size: 1rem;
       color: var(--black);
-      background: var(--light-gray);
+      background: var(--white);
       transition: 0.3s ease;
       resize: none;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .contact form textarea {
+      min-height: 140px;
     }
 
     .contact form input:focus,
     .contact form textarea:focus {
       border-color: var(--primary-color);
-      box-shadow: 0 0 0 4px rgba(0, 128, 255, 0.15);
+      box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.1);
       outline: none;
     }
 
     .contact form button {
-      background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%);
+      background: var(--primary-gradient);
       color: white;
       font-weight: 600;
       font-size: 1.1rem;
-      padding: 0.9rem 0;
+      padding: 1rem 0;
       border: none;
-      border-radius: 0.6rem;
+      border-radius: 12px;
       cursor: pointer;
       transition: all 0.3s ease;
+      margin-top: 0.5rem;
     }
 
     .contact form button:hover {
       transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
     }
 
-    /* --- Right Box (Info) --- */
     .contact-right {
-      flex: 1;
-      background: var(--white);
-      border-radius: 1rem;
-      box-shadow: var(--shadow-heavy);
-      padding: 2rem 2.5rem;
+      background: var(--primary-gradient);
+      padding: 3rem 3.5rem;
+      color: white;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: center;
     }
 
     .contact-right h3 {
-      color: var(--black);
-      font-size: 1.5rem;
+      color: white;
+      font-size: 2rem;
       margin-bottom: 1rem;
+      font-weight: 700;
     }
 
-    .contact-right p {
-      color: var(--medium-gray);
-      margin-bottom: 1.5rem;
+    .contact-right > p {
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 2.5rem;
+      font-size: 1.05rem;
+      line-height: 1.6;
     }
 
     .contact-info {
       display: flex;
       flex-direction: column;
-      gap: 1.2rem;
+      gap: 1.8rem;
     }
 
     .info-item {
       display: flex;
       align-items: flex-start;
-      gap: 1rem;
+      gap: 1.2rem;
     }
 
-    .info-item { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.2rem; }
-    
     .info-item i {
-      background: var(--primary-color);
+      background: rgba(255, 255, 255, 0.2);
       color: white;
-      width: 40px;
-      height: 40px;
+      width: 45px;
+      height: 45px;
+      min-width: 45px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 50%;
+      border-radius: 12px;
       font-size: 1.2rem;
     }
 
     .info-item strong {
-      color: var(--black);
+      color: white;
+      display: block;
+      margin-bottom: 0.4rem;
+      font-size: 1.05rem;
     }
 
     .info-item p {
-      margin: 0.2rem 0 0;
-      color: var(--medium-gray);
+      margin: 0;
+      color: rgba(255, 255, 255, 0.85);
+      line-height: 1.6;
     }
 
-    /* Social Links */
     .social-links {
       display: flex;
       gap: 1rem;
-      margin-top: 2rem;
+      margin-top: 2.5rem;
     }
 
-    .social-links { display: flex; gap: 1rem; margin-top: 2rem; }
-    
     .social-links a {
-      background: var(--primary-gradient);
+      background: rgba(255, 255, 255, 0.2);
       color: white;
-      width: 40px;
-      height: 40px;
+      width: 45px;
+      height: 45px;
       display: flex;
       justify-content: center;
       align-items: center;
-      border-radius: 50%;
+      border-radius: 12px;
       font-size: 1.2rem;
       transition: 0.3s ease;
+      text-decoration: none;
+      backdrop-filter: blur(10px);
     }
 
     .social-links a:hover {
+      background: white;
+      color: var(--primary-green);
       transform: translateY(-3px);
     }
 
-    /* Section Divider */
-    .section-divider {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 4rem 0;
-      margin: 2rem 0;
-    }
-
-    .divider-line {
-      flex: 1;
-      height: 2px;
-      background: linear-gradient(90deg, transparent 0%, var(--primary-color) 50%, transparent 100%);
-      max-width: 300px;
-    }
-
-    .divider-icon {
-      margin: 0 2rem;
-      width: 60px;
-      height: 60px;
-      background: var(--primary-gradient);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    /* ===== FOOTER (UNCHANGED) ===== */
+    .footer {
+      background: var(--text-dark);
       color: white;
+      padding: 3rem 2rem 1rem;
+    }
+
+    .footer-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 2rem;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
       font-size: 1.5rem;
-      box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3);
-      animation: pulse 2s infinite;
+      font-weight: 700;
+      color: var(--primary-green);
+      margin-bottom: 1rem;
     }
 
-    @keyframes pulse {
-
-      0%,
-      100% {
-        transform: scale(1);
-        box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3);
-      }
-
-      50% {
-        transform: scale(1.1);
-        box-shadow: 0 6px 25px rgba(76, 175, 80, 0.5);
-      }
-    }
-    .footer-links a:hover { color: #22c55e; }
-
-    /* Dark mode support for divider */
-    body.dark-mode .divider-line {
-      background: linear-gradient(90deg, transparent 0%, var(--accent-color) 50%, transparent 100%);
+    .footer-brand p {
+      color: #D1D5DB;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
     }
 
-    body.dark-mode .divider-icon {
-      background: var(--secondary-gradient);
-      box-shadow: 0 4px 20px rgba(255, 107, 53, 0.3);
+    .footer-links h4 {
+      color: white;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
     }
 
-    :root.dark .contact-right p,
-    :root.dark .contact-subtitle {
-        color: #e0e0e0; /* Light gray for paragraph text */
+    .footer-links ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
     }
-    
-    :root.dark .theme-toggle { background: #2a2a2a; color: var(--accent-color); }
-    :root.dark .hamburger span { background: var(--white); }
 
-    /* === 10. RESPONSIVE === */
-    @media (max-width: 900px) {
+    .footer-links li {
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-links a {
+      color: #D1D5DB;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .footer-links a:hover {
+      color: var(--primary-green);
+    }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: center;
+      color: #9CA3AF;
+    }
+
+    .footer-bottom a {
+      color: #D1D5DB;
+      text-decoration: none;
+    }
+
+    .footer-bottom a:hover {
+      color: var(--primary-green);
+    }
+
+    /* ===== DARK MODE OVERRIDES ===== */
+    :root.dark .contact input,
+    :root.dark .contact textarea {
+      color: #E5E7EB;
+      background-color: #111827;
+      border-color: #374151;
+    }
+
+    :root.dark .contact-left {
+      background: #1F2937;
+    }
+
+    :root.dark .contact form input:focus,
+    :root.dark .contact form textarea:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2);
+    }
+
+    :root.dark .contact label {
+      color: #E5E7EB;
+    }
+
+    :root.dark .stats-section {
+      background: #1F2937;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
       .contact-container {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .support-hero {
+        padding: 8rem 1.5rem 4rem;
+      }
+
+      .support-hero h1 {
+        font-size: 2rem;
+      }
+
+      .stats-container {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .section-header h2 {
+        font-size: 2rem;
+      }
+
+      .support-ways-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-menu {
+        position: fixed;
+        top: 70px;
+        left: -100%;
         flex-direction: column;
+        background: var(--white);
+        width: 100%;
+        padding: 2rem;
+        box-shadow: var(--shadow-heavy);
+        transition: var(--transition);
+      }
+
+      .nav-menu.active {
+        left: 0;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      .user-actions {
+        gap: 10px;
+      }
+
+      .login-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+
+      .contact-left,
+      .contact-right {
+        padding: 2.5rem 2rem;
+      }
+
+      .main-title {
+        font-size: 2rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stats-container {
+        grid-template-columns: 1fr;
+      }
+
+      .support-hero h1 {
+        font-size: 1.8rem;
       }
     }
   </style>
@@ -515,177 +969,236 @@
         <button class="login-btn" onclick="window.location.href='login_ngo.html'">NGO Login</button>
       </div>
       <div class="hamburger" id="menuToggle" tabindex="0" role="button" aria-label="Open navigation menu">
+        <span style="width: 25px; height: 3px; background: var(--text-dark); display: block;"></span>
+        <span style="width: 25px; height: 3px; background: var(--text-dark); display: block;"></span>
+        <span style="width: 25px; height: 3px; background: var(--text-dark); display: block;"></span>
       </div>
     </div>
   </nav>
 
   <section class="support-hero">
     <div class="container support-hero-content">
-      <h1>Support the Mission to Reduce Hunger & Food Waste</h1>
+      <h1>Support the Mission to End Hunger & Food Waste</h1>
 
       <p class="support-badge">
-        Small actions. Big impact. A hunger-free future starts with you.
+        ✨ Small actions. Big impact. Together we make a difference.
       </p>
 
       <p class="support-description">
-        ShareBite is committed to minimizing food waste and ensuring surplus food
-        reaches the right hands. Through community participation, verified
-        partnerships, and responsible distribution, we empower individuals and
-        organizations to make a real difference.
-        <br><br>
+        Join thousands of donors, volunteers, and organizations working together to create a world where no food goes to waste and no one goes hungry. Every contribution counts towards building a sustainable future.
       </p>
-
     </div>
   </section>
 
+  <section class="stats-section">
+    <div class="stats-container">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-utensils"></i>
+        </div>
+        <span class="stat-number">50K+</span>
+        <span class="stat-label">Meals Donated</span>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <span class="stat-number">2,500+</span>
+        <span class="stat-label">Active Volunteers</span>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-building"></i>
+        </div>
+        <span class="stat-number">150+</span>
+        <span class="stat-label">Partner NGOs</span>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-heart"></i>
+        </div>
+        <span class="stat-number">100+</span>
+        <span class="stat-label">Cities Covered</span>
+      </div>
+    </div>
+  </section>
 
   <section class="about-sharebite">
-
-    <h3 style="text-align:center; margin:3rem 0 2rem;">How You Can Support ShareBite</h3>
+    <div class="section-header">
+      <h2>How You Can Support ShareBite</h2>
+      <p class="section-subtitle">Multiple ways to contribute and make a real impact in your community. Choose what works best for you.</p>
+    </div>
     <div class="support-ways-grid">
       <div class="way-card">
-        <i class="fas fa-hand-holding-heart"></i>
+        <div class="way-icon-wrapper">
+          <i class="fas fa-hand-holding-heart"></i>
+        </div>
         <h4>Donate Surplus Food</h4>
         <p>List your excess food directly on our platform — restaurants, households, and events welcome.</p>
       </div>
       <div class="way-card">
-        <i class="fas fa-users"></i>
+        <div class="way-icon-wrapper">
+          <i class="fas fa-users"></i>
+        </div>
         <h4>Become a Volunteer</h4>
         <p>Join as a collector/volunteer to pick up and deliver food in your city.</p>
       </div>
       <div class="way-card">
-        <i class="fas fa-handshake"></i>
+        <div class="way-icon-wrapper">
+          <i class="fas fa-handshake"></i>
+        </div>
         <h4>Partner as an NGO</h4>
         <p>Register your organization to receive verified donations regularly.</p>
       </div>
       <div class="way-card">
-        <i class="fas fa-bullhorn"></i>
+        <div class="way-icon-wrapper">
+          <i class="fas fa-bullhorn"></i>
+        </div>
         <h4>Spread Awareness</h4>
         <p>Share our mission on social media, organize drives, or host awareness events.</p>
       </div>
       <div class="way-card">
-        <i class="fas fa-donate"></i>
+        <div class="way-icon-wrapper">
+          <i class="fas fa-donate"></i>
+        </div>
         <h4>Financial Support</h4>
         <p>Contribute funds to help us cover logistics, verification, and awareness campaigns.</p>
       </div>
       <div class="way-card">
-        <i class="fas fa-store"></i>
+        <div class="way-icon-wrapper">
+          <i class="fas fa-store"></i>
+        </div>
         <h4>Corporate Partnership</h4>
         <p>Businesses can sponsor pickups, provide branding, or integrate with employee CSR programs.</p>
       </div>
     </div>
   </section>
 
-  <section class="faq-container">
-    <h2 style="text-align:center; margin-bottom:2.5rem;">Frequently Asked Questions</h2>
+  <section class="faq-section">
+    <div class="faq-container">
+      <div class="section-header">
+        <h2>Frequently Asked Questions</h2>
+        <p class="section-subtitle">Find answers to common questions about how ShareBite works and how you can get involved.</p>
+      </div>
 
-    <div class="faq">
-      <h3>How do I donate surplus food on ShareBite?<i class="fas fa-chevron-down"></i></h3>
-      <p>Register or log in → click "Add Listing" → enter food type, quantity, freshness time, pickup location and
-        contact details. Nearby NGOs and volunteers will be notified and can claim the donation quickly.</p>
-    </div>
+      <div class="faq">
+        <h3>
+          <span>How do I donate surplus food on ShareBite?</span>
+          <div class="faq-icon-wrapper">
+            <i class="fas fa-chevron-down"></i>
+          </div>
+        </h3>
+        <p>Register or log in → click "Add Listing" → enter food type, quantity, freshness time, pickup location and contact details. Nearby NGOs and volunteers will be notified and can claim the donation quickly.</p>
+      </div>
 
-    <div class="faq">
-      <h3>How can NGOs and volunteers join the platform?<i class="fas fa-chevron-down"></i></h3>
-      <p>NGOs register on the NGO registration page and go through a quick verification process (documents + review).
-        Individuals can sign up as volunteers and browse/claim available listings directly (subject to donor approval
-        and safety checks).</p>
-    </div>
+      <div class="faq">
+        <h3>
+          <span>How can NGOs and volunteers join the platform?</span>
+          <div class="faq-icon-wrapper">
+            <i class="fas fa-chevron-down"></i>
+          </div>
+        </h3>
+        <p>NGOs register on the NGO registration page and go through a quick verification process (documents + review). Individuals can sign up as volunteers and browse/claim available listings directly (subject to donor approval and safety checks).</p>
+      </div>
 
-    <div class="faq">
-      <h3>What kind of food is accepted and how is safety ensured?<i class="fas fa-chevron-down"></i></h3>
-      <p>We accept fresh, edible surplus food (cooked meals, bakery items, fruits, vegetables, unopened packaged food
-        within expiry). Expired, spoiled or opened perishables are not allowed. Donors must provide preparation time &
-        freshness window; collectors follow hygiene guidelines and can refuse suspicious donations.</p>
-    </div>
+      <div class="faq">
+        <h3>
+          <span>What kind of food is accepted and how is safety ensured?</span>
+          <div class="faq-icon-wrapper">
+            <i class="fas fa-chevron-down"></i>
+          </div>
+        </h3>
+        <p>We accept fresh, edible surplus food (cooked meals, bakery items, fruits, vegetables, unopened packaged food within expiry). Expired, spoiled or opened perishables are not allowed. Donors must provide preparation time & freshness window; collectors follow hygiene guidelines and can refuse suspicious donations.</p>
+      </div>
 
-    <div class="faq">
-      <h3>Is ShareBite free to use? Are there any costs involved?<i class="fas fa-chevron-down"></i></h3>
-      <p>Yes — completely free for everyone. Donors can list food, NGOs/volunteers can claim and coordinate pickups, and
-        all core features have no charges. (Optional future donations/fundraising may appear to support platform
-        operations.)</p>
-    </div>
+      <div class="faq">
+        <h3>
+          <span>Is ShareBite free to use? Are there any costs involved?</span>
+          <div class="faq-icon-wrapper">
+            <i class="fas fa-chevron-down"></i>
+          </div>
+        </h3>
+        <p>Yes — completely free for everyone. Donors can list food, NGOs/volunteers can claim and coordinate pickups, and all core features have no charges. (Optional future donations/fundraising may appear to support platform operations.)</p>
+      </div>
 
-    <div class="faq">
-      <h3>What if no one claims my donation or I have another question?<i class="fas fa-chevron-down"></i></h3>
-      <p>You’ll get reminders and can extend the availability time or cancel the listing. Many restaurants set up
-        recurring pickups with regular partners. For any other questions, partnerships, impact tracking, or issues — use
-        the contact form below, email support@sharebite.org, or call +91 88888 99999 during business hours.</p>
+      <div class="faq">
+        <h3>
+          <span>What if no one claims my donation or I have another question?</span>
+          <div class="faq-icon-wrapper">
+            <i class="fas fa-chevron-down"></i>
+          </div>
+        </h3>
+        <p>You'll get reminders and can extend the availability time or cancel the listing. Many restaurants set up recurring pickups with regular partners. For any other questions, partnerships, impact tracking, or issues — use the contact form below, email <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="fb888e8b8b94898fbb88939a899e99928f9ed594899c">[email&#160;protected]</a>, or call +91 88888 99999 during business hours.</p>
+      </div>
     </div>
   </section>
 
   <section id="contact-section" class="contact">
-    <h1 class="main-title">📞 Contact Us</h1>
+    <h1 class="main-title">📞 Get In Touch With Us</h1>
+    <p class="main-subtitle">Have a question or want to get involved? We'd love to hear from you. Our team typically responds within 24 hours.</p>
+    
     <div class="contact-wrapper">
       <div class="contact-container">
         <div class="contact-left">
-          <h2 class="contact-title">💬 Do You Have a Question?</h2>
-          <p class="contact-subtitle">Fill out the form below to get started</p>
+          <h2 class="contact-title">Send Us a Message</h2>
+          <p class="contact-subtitle">Fill out the form and we'll get back to you shortly</p>
 
           <form id="contact-form">
-            <label for="contact-name">Full Name:</label>
-            <input type="text" id="contact-name" placeholder="Enter your full name" />
+            <div class="form-group">
+              <label for="contact-name">Full Name</label>
+              <input type="text" id="contact-name" placeholder="John Doe" required />
+            </div>
 
-            <label for="contact-email">Email:</label>
-            <input type="email" id="contact-email" placeholder="Enter your email" />
+            <div class="form-group">
+              <label for="contact-email">Email Address</label>
+              <input type="email" id="contact-email" placeholder="john@example.com" required />
+            </div>
 
-            <label for="contact-msg">Message:</label>
-            <textarea id="contact-msg" placeholder="Type in your Message"></textarea>
+            <div class="form-group">
+              <label for="contact-msg">Your Message</label>
+              <textarea id="contact-msg" placeholder="Tell us how we can help you..." required></textarea>
+            </div>
 
-            <button type="submit">Submit</button>
+            <button type="submit">Send Message</button>
           </form>
         </div>
 
         <div class="contact-right">
-          <h3>Get In Touch</h3>
-          <p>We love to hear from you. Our team is always here to answer your questions.</p>
+          <h3>Contact Information</h3>
+          <p>We're here to help and answer any questions you might have. We look forward to hearing from you!</p>
 
           <div class="contact-info">
             <div class="info-item">
               <i class="fa-solid fa-house"></i>
               <div>
-                <strong>Address:</strong>
-                <p>ShareBite Building, Noida, India </p>
+                <strong>Our Location</strong>
+                <p>ShareBite Building, Noida, India</p>
               </div>
             </div>
 
             <div class="info-item">
               <i class="fa-solid fa-phone"></i>
               <div>
-                <strong>Phone No.:</strong>
+                <strong>Phone Number</strong>
                 <p>+91 8888889999</p>
               </div>
             </div>
 
-            <div class="info-item">
-              <i class="fa-solid fa-envelope"></i>
-              <div>
-                <strong>Email:</strong>
-                <p id="contact-email-address">sharebite@support.com.ng</p>
-              </div>
-            </div>
 
             <div class="info-item">
               <i class="fa-solid fa-clock"></i>
               <div>
-                <strong>Support Hours:</strong>
-                <p>
-                  Monday – Saturday | 9 AM – 7 PM IST<br>
-                <p>Average response time: within 24 hours</p>
-                </p>
+                <strong>Support Hours</strong>
+                <p>Monday – Saturday<br>9 AM – 7 PM IST</p>
               </div>
             </div>
-
           </div>
 
           <div class="social-links">
             <a href="#" aria-label="GitHub" title="GitHub"><i class="fa-brands fa-github" aria-hidden="true"></i></a>
-            <a href="#" aria-label="LinkedIn" title="LinkedIn"><i class="fa-brands fa-linkedin"
-                aria-hidden="true"></i></a>
-            <a href="tel:+234812387000000" aria-label="Call +234 812 387 000 000" title="Call +234 812 387 000 000"><i
-                class="fa-solid fa-phone" aria-hidden="true"></i></a>
-            <a href="mailto:amrng@support.com.ng" aria-label="Email amrng@support.com.ng"
-              title="Email amrng@support.com.ng"><i class="fa-solid fa-envelope" aria-hidden="true"></i></a>
+            <a href="#" aria-label="LinkedIn" title="LinkedIn"><i class="fa-brands fa-linkedin" aria-hidden="true"></i></a>
+            <a href="tel:+918888889999" aria-label="Call +91 8888889999" title="Call +91 8888889999"><i class="fa-solid fa-phone" aria-hidden="true"></i></a>
+            <a href="/cdn-cgi/l/email-protection#cdbea5acbfa8afa4b9a88dbeb8bdbda2bfb9e3aea2a0" aria-label="Email sharebite@support.com" title="Email sharebite@support.com"><i class="fa-solid fa-envelope" aria-hidden="true"></i></a>
           </div>
         </div>
       </div>
@@ -743,7 +1256,7 @@
     </div>
 
     <div class="footer-bottom">
-      <a>Made with 💚 by <strong>Angela Bera</strong></a>
+      <p>Made with 💚 by <strong>Angela Bera</strong></p>
       <p>
         © <span id="current-year"></span> ShareBite. All rights reserved ·
         <a href="License.html">License</a> ·
@@ -784,8 +1297,7 @@
         });
       });
 
-      // --- 3. Contact Form Submission (Mock) ---
-      // IMPORTANT: Matches the id="contact-form" in the HTML
+      // --- 3. Contact Form Submission ---
       const contactForm = document.getElementById("contact-form");
       if (contactForm) {
         contactForm.addEventListener("submit", e => {
@@ -793,13 +1305,11 @@
 
           // Create success message element
           const successMsg = document.createElement('div');
-          successMsg.style.textAlign = 'center';
-          successMsg.style.padding = '2rem 0';
+          successMsg.style.cssText = 'text-align: center; padding: 3rem 2rem; animation: slideInUp 0.5s ease;';
           successMsg.innerHTML = `
-            <i class="fas fa-check-circle" style="color: var(--primary-green); font-size: 3rem; margin-bottom: 1rem;"></i>
-            <h3 style="margin-bottom: 0.5rem; color: var(--black);">Message Sent!</h3>
-            <p style="color: var(--medium-gray);">Thank you! Your message has been sent to the ShareBite support team.</p>
-            <button class="btn btn-primary" onclick="alert('TODO: Reset logic if needed')" style="margin-top:1rem; display:none;">Send Another</button>
+            <i class="fas fa-check-circle" style="color: #4CAF50; font-size: 4rem; margin-bottom: 1.5rem; display: block;"></i>
+            <h3 style="margin-bottom: 1rem; color: var(--black); font-size: 1.8rem;">Message Sent Successfully!</h3>
+            <p style="color: var(--medium-gray); font-size: 1.1rem; max-width: 400px; margin: 0 auto;">Thank you for reaching out! Our support team will get back to you within 24 hours.</p>
           `;
 
           // Hide form and show success message
@@ -819,11 +1329,9 @@
       function applyTheme(isDark) {
         if (isDark) {
           htmlEl.classList.add('dark');
-          // Switch to Sun icon for dark mode
           if (themeToggle) themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
         } else {
           htmlEl.classList.remove('dark');
-          // Switch to Moon icon for light mode
           if (themeToggle) themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
         }
       }

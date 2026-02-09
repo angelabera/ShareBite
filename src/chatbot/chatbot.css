@@ -339,3 +339,43 @@
 
 /* ================= Accessibility & Hidden State ================= */
 #sharebot-widget[hidden] { display: none; }
+
+/* ================= Quick Help Topics ================= */
+.sharebot-quick {
+  padding: 12px 15px 0;
+}
+
+.sharebot-quick-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2e7d32;
+  margin-bottom: 8px;
+}
+
+.sharebot-quick-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sharebot-quick-item {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #c8e6c9;
+  padding: 8px 14px;
+  border-radius: 999px; /* pill shape */
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sharebot-quick-item:hover {
+  background: #2e7d32;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.sharebot-quick-item:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.3);
+}
