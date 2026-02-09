@@ -7,7 +7,26 @@
   <meta property="og:title" content="ShareBite">
   <meta property="og:description"
     content="Reduce Food Waste, Feed Communities | Connect restaurants and households with NGOs and volunteers to redistribute fresh leftover food and fight hunger while reducing waste.">
-  <meta property="og:image" content="https://angelabera.github.io/ShareBite/logo/sharebite_logo.png">
+  
+
+    <!-- CAROUSEL START -->
+<div class="carousel-container">
+  <button class="carousel-btn prev">&#10094;</button>
+
+  <div class="carousel-slide">
+    <img src="assets/food1.jpg" class="carousel-image active" />
+    <img src="assets/food2.jpg" class="carousel-image" />
+    <img src="assets/food3.jpg" class="carousel-image" />
+    <img src="assets/food4.jpg" class="carousel-image">
+    <img src="assets/food5.jpg" class="carousel-image">
+  </div>
+
+  <button class="carousel-btn next">&#10095;</button>
+</div>
+<!-- CAROUSEL END -->
+
+  
+    <meta property="og:image" content="https://angelabera.github.io/ShareBite/logo/sharebite_logo.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:type" content="website">
@@ -27,6 +46,9 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+  <link rel="stylesheet" href="css/carousel.css">
+  
+
 </head>
 
 <body>
@@ -292,6 +314,8 @@
       navMenu.classList.toggle('active');
     });
   </script>
+  
+<script src="js/carousel.js"></script>
 </body>
 
 </html>
