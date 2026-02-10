@@ -47,11 +47,13 @@ exports.createListing = async (req, res) => {
       contactInfo,
       photos: photos || [],
       dietaryTags: dietaryTags || [],
-      donorId: req.user._id,
+
+      donorId: req.user ? req.user._id : null,
+
       location: {
         type: 'Point',
         coordinates: [parseFloat(longitude), parseFloat(latitude)],
-        city
+        city: city || 'Unknown'
       }
     });
 
@@ -61,7 +63,6 @@ exports.createListing = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
-
 
 exports.getAllListings = async (req, res) => {
   try {
@@ -89,8 +90,11 @@ exports.getListingById = async (req, res) => {
 exports.updateListing = async (req, res) => {
   try {
     const listing = await FoodListing.findById(req.params.id);
-    if (!listing) return res.status(404).json({ message: 'Listing not found' });
-    //Prevent updates on expired food
+
+   if (!listing) return res.status(404).json({ message: 'Listing not found' });
+
+
+    // Prevent updates on expired food
     if (listing.expiryStatus === 'EXPIRED') {
       return res.status(400).json({
         message: 'Cannot update an expired food listing'
@@ -98,7 +102,7 @@ exports.updateListing = async (req, res) => {
     }
 
     // Only donor can update
-    if (listing.donorId.toString() !== req.user._id.toString()) {
+    if (req.user && listing.donorId.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: 'Not authorized to update this listing' });
     }
 
@@ -115,7 +119,17 @@ exports.updateListing = async (req, res) => {
       updateData.location = {
         type: 'Point',
         coordinates: [longitude, latitude],
+        city: req.body.city // Ensure city is updated if provided in body (included in ...rest but location structure is specific)
       };
+
+      // If city is meant to be adjacent to coordinates in the location object as per schema (based on createListing), 
+      // we need to ensure it's there. 
+      // However, looking at createListing: 
+      // location: { type: 'Point', coordinates: [...], city }
+      // So yes, city is inside location.
+      if (req.body.city) {
+        updateData.location.city = req.body.city;
+      }
     }
 
     const updatedListing = await FoodListing.findByIdAndUpdate(
@@ -130,7 +144,6 @@ exports.updateListing = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
-
 
 exports.deleteListing = async (req, res) => {
   try {
@@ -149,36 +162,33 @@ exports.deleteListing = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
 exports.getNearbyListings = async (req, res) => {
   try {
-    //const { lat, lng, distance = 5000 } = req.query;
-const lat = parseFloat(req.query.lat);
-const lng = parseFloat(req.query.lng);
-const distance = req.query.distance
-  ? parseFloat(req.query.distance)
-  : 5000;
+    const lat = parseFloat(req.query.lat);
+    const lng = parseFloat(req.query.lng);
+    const distance = req.query.distance
+      ? parseFloat(req.query.distance)
+      : 5000;
 
-
-   if (isNaN(lat) || isNaN(lng) || isNaN(distance)) {
-  return res.status(400).json({
-    message: 'lat, lng, and distance must be valid numbers',
-  });
-}
-
+    if (isNaN(lat) || isNaN(lng) || isNaN(distance)) {
+      return res.status(400).json({
+        message: 'lat, lng, and distance must be valid numbers',
+      });
+    }
 
     const listings = await FoodListing.find({
-  location: {
-    $near: {
-      $geometry: {
-        type: 'Point',
-        coordinates: [lng, lat], // longitude FIRST
+      location: {
+        $near: {
+          $geometry: {
+            type: 'Point',
+            coordinates: [lng, lat], // longitude FIRST
+          },
+          $maxDistance: distance,
+        },
       },
-      $maxDistance: distance,
-    },
-  },
-  status: 'available',
-});
-
+      status: 'available',
+    });
 
     res.json(listings);
   } catch (err) {
@@ -186,6 +196,7 @@ const distance = req.query.distance
     res.status(500).json({ message: 'Server error' });
   }
 };
+
 exports.getCityListings = async (req, res) => {
   try {
     const { city } = req.query;

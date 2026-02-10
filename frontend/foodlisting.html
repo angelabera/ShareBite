@@ -2,175 +2,190 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ShareBite - Food Listing</title>
-    <meta name="sharebite-build" content="v-darkmode-fix-1">
-    <link rel="stylesheet" href="css/style.css?v=darkmode-fix-1">
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> -->
-        <link rel="stylesheet" href="./css/fontawesome/all.min.css">
- 
-    <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- Leaflet Map -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShareBite - Food Listing</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/fontawesome/all.min.css">
+  <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Leaflet Map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
 </head>
 
 <body>
 
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <i class="fas fa-utensils"></i>
-                <span>ShareBite</span>
-            </div>
-            <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="index.html#features" class="nav-link">Features</a></li>
-                <li><a href="foodlisting.html" class="nav-link">Listings</a></li>
-                <li><a href="index.html#about" class="nav-link">About</a></li>
-                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
-            </ul>
-            <div class="user-actions">
-                <!-- Added dark mode toggle -->
-                <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
-                    <i class="fas fa-moon"></i>
-                </button>
-                
-                <!-- Notification Bell -->
-                <div class="notification-bell" id="notificationBell" style="display: none;">
-                    <i class="fas fa-bell"></i>
-                    <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
-                    <div class="notification-panel" id="notificationPanel">
-                        <div class="notification-header">Claimed Food Items</div>
-                        <div id="notificationList">
-                             <div class="no-notifications">No claimed items yet</div>
-                        </div>
-                    </div>
-                </div>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="nav-logo">
+        <i class="fas fa-utensils"></i>
+        <span>ShareBite</span>
+      </a>
 
-                <button class="role-switch" id="roleSwitch">
-                    <i class="fas fa-exchange-alt"></i>
-                    <span id="currentRole">Donor</span>
-                </button>
-                <button class="login-btn" onclick="window.location.href='login.html'">Login as User</button>
-                <button class="login-btn" onclick="window.location.href='login_ngo.html'">Login as NGO</button>
-            </div>
-            <div class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </div>
-    </nav>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="index.html#features" class="nav-link">How It Works</a></li>
+        <li><a href="foodlisting.html" class="nav-link active">Listings</a></li>
+        <li><a href="index.html#about" class="nav-link">About</a></li>
+      </ul>
 
-    <!-- Food Listings Section -->
-    <section id="listings" class="listings">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Food Listings</h2>
-                <p class="section-subtitle">Available food waiting to be collected</p>
-            </div>
+      <div class="user-actions">
+        <button id="themeToggle" class="theme-toggle" title="Toggle Dark Mode">
+          <i class="fas fa-moon"></i>
+        </button>
 
-            <!-- Filter Bar -->
-            <div class="filter-bar">
-                <div class="filter-group">
-                    <button class="filter-btn active" data-filter="all">All</button>
-                    <button class="filter-btn" data-filter="restaurant">
-                        Restaurant
-                    </button>
-                    <button class="filter-btn" data-filter="household">
-                        Household
-                    </button>
-                    <button class="filter-btn" data-filter="bakery">Bakery</button>
-                </div>
-                <div class="dropdown-check-container">
-                    <button class="dropdown-btn" id="dietary-filter-btn">
-                        <span>Dietary Filters</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="dropdown-content" id="dietary-dropdown">
-                        <label><input type="checkbox" name="dietary-filter" value="vegetarian"> Vegetarian</label>
-                        <label><input type="checkbox" name="dietary-filter" value="vegan"> Vegan</label>
-                        <label><input type="checkbox" name="dietary-filter" value="gluten-free"> Gluten-Free</label>
-                        <label><input type="checkbox" name="dietary-filter" value="dairy-free"> Dairy-Free</label>
-                        <label><input type="checkbox" name="dietary-filter" value="non-vegetarian"> Non-Vegetarian</label>
-                    </div>
-                </div>
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search by location or food type..." />
-                </div>
-                <button class="add-listing-btn" id="addListingBtn">
-                    <i class="fas fa-plus"></i>
-                    Add Listing
-                </button>
+        <!-- Notification Bell -->
+        <div class="notification-bell" id="notificationBell" style="display: none;">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+          <div class="notification-panel" id="notificationPanel">
+            <div class="notification-header">Claimed Food Items</div>
+            <div id="notificationList">
+              <div class="text-center p-3 text-muted">No claimed items yet</div>
             </div>
-
-            <!-- Food Cards Grid -->
-            <div class="food-grid" id="foodGrid">
-                <!-- Sample listings will be generated by JavaScript -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Add Listing Modal -->
-    <div class="modal" id="addListingModal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>Add Food Listing</h3>
-          <button class="close-modal">&times;</button>
+          </div>
         </div>
 
+        <button class="role-switch" id="roleSwitch">
+          <i class="fas fa-exchange-alt"></i>
+          <span id="currentRole">Donor</span>
+        </button>
+
+        <button class="login-btn" onclick="window.location.href='login.html'">Login</button>
+      </div>
+
+      <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Food Listings Section -->
+  <section id="listings" class="listings">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Food Listings</h2>
+        <p class="section-subtitle">Available fresh food waiting to be collected</p>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="filter-bar">
+        <div class="filter-group">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="restaurant">Restaurant</button>
+          <button class="filter-btn" data-filter="household">Household</button>
+          <button class="filter-btn" data-filter="bakery">Bakery</button>
+        </div>
+
+        <div class="dropdown-check-container" style="position: relative;">
+          <button class="filter-btn" id="dietary-filter-btn">
+            <span>Dietary Filters</span>
+            <i class="fas fa-chevron-down" style="margin-left: 5px;"></i>
+          </button>
+          <div class="glass-card" id="dietary-dropdown"
+            style="display:none; position: absolute; top: 100%; left: 0; padding: 1rem; z-index: 10; margin-top: 5px; min-width: 200px;">
+            <label style="display:block; margin-bottom: 0.5rem;"><input type="checkbox" name="dietary-filter"
+                value="vegetarian"> Vegetarian</label>
+            <label style="display:block; margin-bottom: 0.5rem;"><input type="checkbox" name="dietary-filter"
+                value="vegan"> Vegan</label>
+            <label style="display:block; margin-bottom: 0.5rem;"><input type="checkbox" name="dietary-filter"
+                value="gluten-free"> Gluten-Free</label>
+            <label style="display:block; margin-bottom: 0.5rem;"><input type="checkbox" name="dietary-filter"
+                value="dairy-free"> Dairy-Free</label>
+            <label style="display:block; margin-bottom: 0.5rem;"><input type="checkbox" name="dietary-filter"
+                value="non-vegetarian"> Non-Vegetarian</label>
+          </div>
+        </div>
+
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search location or food..." />
+        </div>
+
+        <button class="view-map-btn" onclick="window.location.href='map.html'"
+          style="background: var(--bg-white); color: var(--text-dark); border: 1px solid var(--border-light); padding: 0.8rem 1.5rem; border-radius: var(--radius-sm); cursor: pointer; margin-right: 10px; font-weight: 500; transition: all 0.3s ease;">
+          <i class="fas fa-map-marked-alt" style="color: var(--primary);"></i> Map View
+        </button>
+        <button class="add-listing-btn" id="addListingBtn">
+          <i class="fas fa-plus"></i> Add Listing
+        </button>
+      </div>
+
+      <!-- Food Cards Grid -->
+      <div class="food-grid" id="foodGrid">
+        <!-- Javascript will populate this -->
+        <div class="text-center w-100" style="grid-column: 1/-1; padding: 2rem;">
+          <i class="fas fa-spinner fa-spin fa-2x text-primary"></i>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Add Listing Modal -->
+  <div class="modal" id="addListingModal"
+    style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center;">
+    <div class="glass-card"
+      style="width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; padding: 0; background: var(--bg-white);">
+      <div class="modal-header"
+        style="padding: 1.5rem; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin: 0;">Add Food Listing</h3>
+        <button class="close-modal"
+          style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
+      </div>
+
+      <div class="modal-body" style="padding: 1.5rem;">
         <!-- Progress Bar -->
-        <div class="form-progress">
-          <div class="progress-step active" data-step="1">
-            <div class="step-circle">1</div>
-            <span class="step-label">Food Details</span>
+        <div class="form-progress"
+          style="display: flex; justify-content: space-between; margin-bottom: 2rem; position: relative;">
+          <div class="progress-step active" data-step="1" style="text-align: center; z-index: 1;">
+            <div class="step-circle"
+              style="width: 30px; height: 30px; background: var(--primary-green); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 5px;">
+              1</div>
+            <span class="step-label" style="font-size: 0.8rem;">Details</span>
           </div>
-          <div class="progress-line"></div>
-          <div class="progress-step" data-step="2">
-            <div class="step-circle">2</div>
-            <span class="step-label">Pickup Info</span>
+          <div class="progress-step" data-step="2" style="text-align: center; z-index: 1;">
+            <div class="step-circle"
+              style="width: 30px; height: 30px; background: var(--border-light); color: var(--text-muted); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 5px;">
+              2</div>
+            <span class="step-label" style="font-size: 0.8rem;">Pickup</span>
           </div>
-          <div class="progress-line"></div>
-          <div class="progress-step" data-step="3">
-            <div class="step-circle">3</div>
-            <span class="step-label">Photo & Review</span>
+          <div class="progress-step" data-step="3" style="text-align: center; z-index: 1;">
+            <div class="step-circle"
+              style="width: 30px; height: 30px; background: var(--border-light); color: var(--text-muted); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 5px;">
+              3</div>
+            <span class="step-label" style="font-size: 0.8rem;">Photo</span>
+          </div>
+          <!-- Line -->
+          <div
+            style="position: absolute; top: 15px; left: 0; width: 100%; height: 2px; background: var(--border-light); z-index: 0;">
           </div>
         </div>
 
-        <form class="listing-form" id="listingForm">
+        <form class="listing-form" id="listingForm" novalidate>
           <!-- Step 1: Food Details -->
           <div class="form-step active" data-step="1">
-            <h4 class="step-title">Tell us about the food</h4>
-            <div class="form-group">
-              <label for="foodType">Food Type *</label>
-              <input
-                type="text"
-                id="foodType"
-                required
-                placeholder="e.g., Pizza, Sandwiches, Fruits"
-              />
+            <h4 style="margin-bottom: 1rem;">Tell us about the food</h4>
+            <div class="form-group" style="margin-bottom: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Food Type *</label>
+              <input type="text" id="foodType" placeholder="e.g., Pizza, Sandwiches"
+                style="width: 100%; padding: 0.8rem; border: 1px solid var(--border-light); border-radius: var(--radius-sm);" />
             </div>
-            <div class="form-row">
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
               <div class="form-group">
-                <label for="quantity">Quantity *</label>
-                <input
-                  type="text"
-                  id="quantity"
-                  required
-                  placeholder="e.g., 10 portions"
-                />
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Quantity *</label>
+                <input type="text" id="quantity" placeholder="e.g., 10 portions"
+                  style="width: 100%; padding: 0.8rem; border: 1px solid var(--border-light); border-radius: var(--radius-sm);" />
               </div>
               <div class="form-group">
-                <label for="category">Category *</label>
-                <select id="category" required>
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Category *</label>
+                <select id="category"
+                  style="width: 100%; padding: 0.8rem; border: 1px solid var(--border-light); border-radius: var(--radius-sm);">
                   <option value="">Select Category</option>
                   <option value="restaurant">Restaurant</option>
                   <option value="household">Household</option>
@@ -179,131 +194,155 @@
                 </select>
               </div>
             </div>
-            <div class="form-group">
-              <label for="description">Description</label>
-              <textarea
-                id="description"
-                rows="3"
-                placeholder="Additional details about the food..."
-              ></textarea>
-            </div>
-            <div class="form-group">
-              <label>Dietary Information (optional)</label>
-              <div class="checkbox-group">
-                  <div><input type="checkbox" id="tag-vegetarian" name="dietary" value="vegetarian"><label for="tag-vegetarian">Vegetarian</label></div>
-                  <div><input type="checkbox" id="tag-vegan" name="dietary" value="vegan"><label for="tag-vegan">Vegan</label></div>
-                  <div><input type="checkbox" id="tag-gluten-free" name="dietary" value="gluten-free"><label for="tag-gluten-free">Gluten-Free</label></div>
-                  <div><input type="checkbox" id="tag-nut-free" name="dietary" value="nut-free"><label for="tag-nut-free">Nut-Free</label></div>
-              </div>
+
+            <div class="form-group" style="margin-top: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Description</label>
+              <textarea id="description" rows="3" placeholder="Additional details..."
+                style="width: 100%; padding: 0.8rem; border: 1px solid var(--border-light); border-radius: var(--radius-sm); font-family: inherit;"></textarea>
             </div>
           </div>
 
           <!-- Step 2: Pickup Info -->
-          <div class="form-step" data-step="2">
-            <h4 class="step-title">When and where to pick up?</h4>
-            <div class="form-row">
+          <div class="form-step" data-step="2" style="display: none;">
+            <h4 style="margin-bottom: 1rem;">Pickup Details</h4>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
               <div class="form-group">
-                <label for="freshUntil">Fresh Until *</label>
-                <div class="input-container-relative">
-                  <input type="datetime-local" id="freshUntil" class="datetime-input" required />
-                  <span class="checkmark-icon">✓</span>
-                </div>
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Fresh Until *</label>
+                <input type="datetime-local" id="freshUntil"
+                  style="width: 100%; padding: 0.8rem; border: 1px solid var(--border-light); border-radius: var(--radius-sm);" />
               </div>
               <div class="form-group">
-                <label for="pickupTime">Preferred Pickup Time *</label>
-                <div class="input-container-relative">
-                  <input type="time" id="pickupTime" class="datetime-input" required />
-                  <span class="checkmark-icon-time">✓</span>
-                </div>
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Time *</label>
+                <input type="time" id="pickupTime"
+                  style="width: 100%; padding: 0.8rem; border: 1px solid var(--border-light); border-radius: var(--radius-sm);" />
               </div>
             </div>
-            <div class="form-group">
-              <label for="location">Pickup Location *</label>
-              <input type="text" id="location" required placeholder="Address or landmark" />
-            
-              
-            
-              <div id="map" style="display:none; margin-top:10px; height: 250px; width: 100%; border-radius: 8px;"></div>
-            
-              <!-- Hidden inputs to send to backend -->
+
+            <div class="form-group" style="margin-top: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Location *</label>
+              <input type="text" id="location" placeholder="Address or landmark"
+                style="width: 100%; padding: 0.8rem; border: 1px solid var(--border-light); border-radius: var(--radius-sm);" />
+              <div id="map"
+                style="display:none; margin-top:10px; height: 400px; width: 100%; border-radius: 8px; border: 2px solid var(--border-light); z-index: 1;">
+              </div>
               <input type="hidden" id="latitude" />
               <input type="hidden" id="longitude" />
             </div>
-            
-            <div class="form-group">
-              <label for="contact">Contact Information *</label>
-              <input
-                type="text"
-                id="contact"
-                required
-                placeholder="Phone number or email"
-              />
+
+            <div class="form-group" style="margin-top: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Contact *</label>
+              <input type="text" id="contact" placeholder="Phone/Email"
+                style="width: 100%; padding: 0.8rem; border: 1px solid var(--border-light); border-radius: var(--radius-sm);" />
             </div>
           </div>
 
-          <!-- Step 3: Photo & Review -->
-          <div class="form-step" data-step="3">
-            <h4 class="step-title">Add a photo (optional)</h4>
-            <div class="form-group">
-              <label for="photo">Food Photo</label>
-              <input
-                type="file"
-                id="photo"
-                accept="image/*"
-                style="display: none"
-              />
-              <div class="file-upload-area" id="photoUpload">
-                <i class="fas fa-cloud-upload-alt"></i>
-                <span>Drag & drop your image here or click to browse</span>
-                <small>Supports: JPG, PNG, GIF (Max 5MB)</small>
-              </div>
-              <div id="imagePreview" class="image-preview"></div>
+          <!-- Step 3: Photo -->
+          <div class="form-step" data-step="3" style="display: none;">
+            <h4 style="margin-bottom: 1rem;">Add Photo (Optional)</h4>
+            <div class="field-upload-area" id="photoUpload"
+              style="border: 2px dashed var(--border-light); padding: 2rem; text-align: center; border-radius: var(--radius-md); cursor: pointer;">
+              <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: var(--text-muted);"></i>
+              <p>Click to upload image</p>
+              <input type="file" id="photo" accept="image/*" style="display: none" />
             </div>
+            <div id="imagePreview"
+              style="margin-top: 1rem; max-height: 200px; overflow: hidden; border-radius: var(--radius-sm);"></div>
           </div>
 
-          <div class="form-navigation">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              id="prevStep"
-              style="display: none"
-            >
-              <i class="fas fa-arrow-left"></i> Previous
-            </button>
-            <button type="button" class="btn btn-secondary" id="cancelForm">
-              Cancel
-            </button>
-            <button type="button" class="btn btn-primary" id="nextStep">
-              Next <i class="fas fa-arrow-right"></i>
-            </button>
-            <button
-              type="submit"
-              class="btn btn-primary"
-              id="submitForm"
-              style="display: none"
-            >
-              <i class="fas fa-check"></i> Add Listing
-            </button>
+          <div class="form-navigation" style="margin-top: 2rem; display: flex; justify-content: space-between;">
+            <button type="button" class="btn" id="prevStep"
+              style="display: none; background: var(--border-light);">Previous</button>
+            <button type="button" class="btn" id="cancelForm"
+              style="margin-left: auto; margin-right: 1rem; background: transparent; color: var(--text-muted);">Cancel</button>
+            <button type="button" class="btn btn-primary" id="nextStep">Next</button>
+            <button type="button" class="btn btn-primary" id="submitForm" style="display: none;">Submit Listing</button>
           </div>
         </form>
       </div>
     </div>
+  </div>
 
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-      <div class="loading-spinner">
-        <div class="spinner"></div>
-        <p>Loading ShareBite...</p>
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay"
+    style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-white); z-index: 5000; justify-content: center; align-items: center;">
+    <div class="text-center">
+      <i class="fas fa-spinner fa-spin fa-3x text-primary"></i>
+      <p style="margin-top: 1rem;">Loading...</p>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/foodlisting.js"></script>
+
+  <!-- Navigation Script -->
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('navMenu');
+    hamburger.addEventListener('click', () => {
+      navMenu.classList.toggle('active');
+    });
+
+
+  </script>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo">
+          <i class="fas fa-utensils"></i>
+          <span>ShareBite</span>
+        </div>
+        <p>Making a difference, one meal at a time. Join us in the fight against food waste and hunger.</p>
+        <div class="social-links">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+
+      <div>
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#features">How It Works</a></li>
+          <li><a href="foodlisting.html">Listings</a></li>
+          <li><a href="index.html#about">About Us</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>For Donors</h4>
+        <ul>
+          <li><a href="foodlisting.html">List Food</a></li>
+          <li><a href="donor-guidelines.html">Guidelines</a></li>
+          <li><a href="track-impact.html">Track Impact</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>For Collectors</h4>
+        <ul>
+          <li><a href="foodlisting.html">Find Food</a></li>
+          <li><a href="ngo-register.html">Register NGO</a></li>
+          <li><a href="login.html">Volunteer Login</a></li>
+        </ul>
       </div>
     </div>
 
-    <script src="js/api.js"></script>
-    <script src="js/theme.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/foodlisting.js"></script>
-    
-    <!-- ShareBite Chatbot -->
-    <script type="module" src="../src/chatbot/ChatbotWidget.js"></script>
+    <div class="footer-bottom">
+      <p>Made with 💚 by <strong>Angela Bera</strong></p>
+      <p>&copy; 2026 ShareBite. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <button id="backToTop" aria-label="Back to top" type="button">
+  <i class="fas fa-arrow-up" aria-hidden="true"></i>
+</button>
+
+  <script src="js/script.js"></script>
+  
 </body>
 
 </html>

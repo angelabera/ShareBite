@@ -1,69 +1,73 @@
 // ShareBite JavaScript - Interactive Food Waste Reduction Platform
 
-// Theme Toggle
-const themeToggle = document.getElementById('themeToggle');
-const body = document.body;
-const themeIcon = themeToggle.querySelector('i');
+// Note: Theme functionality is handled in theme.js to avoid conflicts
 
-themeToggle.addEventListener('click', () => {
-    body.classList.toggle('dark-mode');
-    if (body.classList.contains('dark-mode')) {
-        themeIcon.classList.remove('fa-moon');
-        themeIcon.classList.add('fa-sun');
-        showToast('Dark mode enabled');
-    } else {
-        themeIcon.classList.remove('fa-sun');
-        themeIcon.classList.add('fa-moon');
-        showToast('Light mode enabled');
-    }
-});
-
-
-
-const menuToggle = document.getElementById("menuToggle");
-const navMenu = document.getElementById("navMenu");
-
-menuToggle.addEventListener("click", () => {
-    navMenu.classList.toggle("active");
-});
-menuToggle.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        menuToggle.click();
-    }
-});
-
-
+// Wait for DOM to be ready before setting up event listeners
 document.addEventListener("DOMContentLoaded", () => {
+    /* Navigation Menu */
     const menuToggle = document.getElementById("menuToggle");
     const navMenu = document.getElementById("navMenu");
 
-    menuToggle.addEventListener("click", () => {
-        navMenu.classList.toggle("active");
-    });
+    if (menuToggle && navMenu) {
+        menuToggle.addEventListener("click", () => {
+            navMenu.classList.toggle("active");
+        });
+        
+        menuToggle.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                menuToggle.click();
+            }
+        });
+    }
+
+    //App Initialization
+    addDynamicStyles();
+    new ShareBite();
+
+    //Listing Succes Message
+    const submitBtn = document.getElementById("submitForm");
+    const successMsg = document.getElementById("listingSuccessMsg");
+
+    if (submitBtn && successMsg) {
+        submitBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            successMsg.style.display = "block";
+            submitBtn.closest("form").reset();
+            setTimeout(() => {
+                successMsg.style.display = "none";
+            }, 4000);
+        });
+    }
 });
 
+// Navbar scroll effect
 window.addEventListener("scroll", () => {
+    const navbar = document.querySelector(".navbar");
+
+    if (!navbar) return;
+
     if (window.scrollY > 50) {
-        navMenu.classList.add("scrolled");
+        navbar.classList.add("scrolled");
+    } else {
+        navbar.classList.remove("scrolled");
     }
-    else {
-        navMenu.classList.remove("scrolled");
-    }
-})
+});
 
 // Notification Toggle
 const notificationBell = document.getElementById('notificationBell');
 const notificationPanel = document.getElementById('notificationPanel');
 
-notificationBell.addEventListener('click', (e) => {
-    e.stopPropagation();
-    notificationPanel.classList.toggle('show');
-});
+if (notificationBell && notificationPanel) {
+    notificationBell.addEventListener('click', (e) => {
+        e.stopPropagation();
+        notificationPanel.classList.toggle('show');
+    });
+}
 
 // Close notification panel when clicking outside
 document.addEventListener('click', (e) => {
-    if (!notificationBell.contains(e.target)) {
+    if (notificationBell && notificationPanel && !notificationBell.contains(e.target)) {
         notificationPanel.classList.remove('show');
     }
 });
@@ -73,27 +77,31 @@ const clearNotifications = document.getElementById('clearNotifications');
 const notificationList = document.getElementById('notificationList');
 const notificationBadge = document.getElementById('notificationBadge');
 
-clearNotifications.addEventListener('click', () => {
-    notificationList.innerHTML = '<div style="padding: 2rem; text-align: center; color: var(--text-secondary);">No notifications</div>';
-    notificationBadge.textContent = '0';
-    notificationBadge.style.display = 'none';
-    showToast('Notifications cleared');
-    notificationPanel.classList.remove('show');
-});
+if (clearNotifications && notificationList && notificationBadge) {
+    clearNotifications.addEventListener('click', () => {
+        notificationList.innerHTML = '<div style="padding: 2rem; text-align: center; color: var(--text-secondary);">No notifications</div>';
+        notificationBadge.textContent = '0';
+        notificationBadge.style.display = 'none';
+        showToast('Notifications cleared');
+        notificationPanel.classList.remove('show');
+    });
+}
 
 // Role Switch
 const roleSwitch = document.getElementById('roleSwitch');
 const currentRole = document.getElementById('currentRole');
 
-roleSwitch.addEventListener('click', () => {
-    if (currentRole.textContent === 'Donor') {
-        currentRole.textContent = 'Receiver';
-        showToast('Switched to Receiver mode');
-    } else {
-        currentRole.textContent = 'Donor';
-        showToast('Switched to Donor mode');
-    }
-});
+if (roleSwitch && currentRole) {
+    roleSwitch.addEventListener('click', () => {
+        if (currentRole.textContent === 'Donor') {
+            currentRole.textContent = 'Receiver';
+            showToast('Switched to Receiver mode');
+        } else {
+            currentRole.textContent = 'Donor';
+            showToast('Switched to Donor mode');
+        }
+    });
+}
 
 // Toast Function
 function showToast(message) {
@@ -107,7 +115,10 @@ function showToast(message) {
 
 // Handle window resize
 window.addEventListener('resize', () => {
-    if (window.innerWidth > 768) {
+    const menuToggle = document.getElementById('menuToggle');
+    const navMenu = document.getElementById('navMenu');
+
+    if (window.innerWidth > 768 && navMenu && menuToggle) {
         navMenu.classList.remove('active');
         menuToggle.classList.remove('active');
     }
@@ -230,6 +241,8 @@ class ShareBite {
         const roleSwitch = document.getElementById('roleSwitch');
         const currentRoleSpan = document.getElementById('currentRole');
 
+        if (!roleSwitch || !currentRoleSpan) return;
+
         roleSwitch.addEventListener('click', () => {
             this.currentRole = this.currentRole === 'donor' ? 'collector' : 'donor';
             currentRoleSpan.textContent = this.currentRole.charAt(0).toUpperCase() + this.currentRole.slice(1);
@@ -275,27 +288,32 @@ class ShareBite {
         const closeModalBtn = document.querySelector('.close-modal');
         const cancelBtn = document.getElementById('cancelForm');
 
+        if (!modal || !addListingBtn || !closeModalBtn || !cancelBtn) {
+        return;
+        }
+
         this.currentStep = 1;
         this.totalSteps = 3;
 
         addListingBtn.addEventListener('click', () => {
-            modal.style.display = 'block';
-            document.body.style.overflow = 'hidden';
-            this.resetFormSteps();
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+    this.resetFormSteps();
 
-            // ✅ Ensure hidden location inputs exist
-            if (!document.getElementById('latitude')) {
-                const latInput = document.createElement('input');
-                latInput.type = 'hidden';
-                latInput.id = 'latitude';
+    // Ensure hidden location inputs exist
+    if (!document.getElementById('latitude')) {
+        const latInput = document.createElement('input');
+        latInput.type = 'hidden';
+        latInput.id = 'latitude';
 
-                const lngInput = document.createElement('input');
-                lngInput.type = 'hidden';
-                lngInput.id = 'longitude';
+        const lngInput = document.createElement('input');
+        lngInput.type = 'hidden';
+        lngInput.id = 'longitude';
 
-                document.getElementById('listingForm').append(latInput, lngInput);
-            }
-        });
+        document.getElementById('listingForm').append(latInput, lngInput);
+    }
+});
+
 
         const closeModal = () => {
             modal.style.display = 'none';
@@ -317,183 +335,189 @@ class ShareBite {
         this.setupFormNavigation();
     }
 
-    setupFormNavigation() {
-        const nextBtn = document.getElementById('nextStep');
-        const prevBtn = document.getElementById('prevStep');
 
-        if (!nextBtn || !prevBtn) return;
 
-        nextBtn.addEventListener('click', () => {
-            // Step-level required field validation
-            if (!this.validateCurrentStep()) return;
+setupFormNavigation() {
+    const nextBtn = document.getElementById('nextStep');
+    const prevBtn = document.getElementById('prevStep');
 
-            // 🔴 ISSUE-416: Expiry vs Pickup validation
-            const freshUntilValue = document.getElementById('freshUntil')?.value;
-            const pickupTimeValue = document.getElementById('pickupTime')?.value;
+    if (!nextBtn || !prevBtn) return;
 
-            if (freshUntilValue && pickupTimeValue) {
-                const expiry = new Date(freshUntilValue);
+    nextBtn.addEventListener('click', () => {
+        // Step-level required field validation
+        if (!this.validateCurrentStep()) return;
 
-                // Parse "04 : 00 pm" / "09 : 00 am"
-                const match = pickupTimeValue.match(/(\d+)\s*:\s*(\d+)\s*(am|pm)/i);
+        // 🔴 ISSUE-416: Expiry vs Pickup validation
+        const freshUntilValue = document.getElementById('freshUntil')?.value;
+        const pickupTimeValue = document.getElementById('pickupTime')?.value;
 
-                if (match) {
-                    let hour = parseInt(match[1], 10);
-                    const minute = parseInt(match[2], 10);
-                    const period = match[3].toLowerCase();
+        if (freshUntilValue && pickupTimeValue) {
+            const expiry = new Date(freshUntilValue);
 
-                    if (period === 'pm' && hour !== 12) hour += 12;
-                    if (period === 'am' && hour === 12) hour = 0;
+            // Parse "04 : 00 pm" / "09 : 00 am"
+            const match = pickupTimeValue.match(/(\d+)\s*:\s*(\d+)\s*(am|pm)/i);
 
-                    const pickup = new Date(expiry);
-                    pickup.setHours(hour, minute, 0, 0);
+            if (match) {
+                let hour = parseInt(match[1], 10);
+                const minute = parseInt(match[2], 10);
+                const period = match[3].toLowerCase();
 
-                    // 🚫 BLOCK if pickup is after expiry
-                    if (pickup > expiry) {
-                        this.showToast(
-                            'Pickup time cannot be later than expiry time.',
-                            'error'
-                        );
-                        return;
-                    }
+                if (period === 'pm' && hour !== 12) hour += 12;
+                if (period === 'am' && hour === 12) hour = 0;
+
+                const pickup = new Date(expiry);
+                pickup.setHours(hour, minute, 0, 0);
+
+                // 🚫 BLOCK if pickup is after expiry
+                if (pickup > expiry) {
+                    this.showToast(
+                        'Pickup time cannot be later than expiry time.',
+                        'error'
+                    );
+                    return;
                 }
             }
+        }
 
-            // ✅ Move to next step only if all validations pass
-            this.goToStep(this.currentStep + 1);
-        });
+        // ✅ Move to next step only if all validations pass
+        this.goToStep(this.currentStep + 1);
+    });
 
-        prevBtn.addEventListener('click', () => {
-            this.goToStep(this.currentStep - 1);
-        });
+    prevBtn.addEventListener('click', () => {
+        this.goToStep(this.currentStep - 1);
+    });
+}
+
+goToStep(stepNumber) {
+    if (stepNumber < 1 || stepNumber > this.totalSteps) return;
+
+    // Hide all steps
+    document.querySelectorAll('.form-step').forEach(step => {
+        step.classList.remove('active');
+    });
+
+    // Show current step
+    const currentStepEl = document.querySelector(`.form-step[data-step="${stepNumber}"]`);
+    if (currentStepEl) {
+        currentStepEl.classList.add('active');
     }
 
-    goToStep(stepNumber) {
-        if (stepNumber < 1 || stepNumber > this.totalSteps) return;
+    this.updateProgress(stepNumber);
+    this.updateNavigationButtons(stepNumber);
+    this.currentStep = stepNumber;
+}
 
-        // Hide all steps
-        document.querySelectorAll('.form-step').forEach(step => {
+updateProgress(stepNumber) {
+    const steps = document.querySelectorAll('.progress-step');
+
+    steps.forEach((step, index) => {
+        const stepNum = index + 1;
+
+        if (stepNum < stepNumber) {
+            step.classList.add('completed');
             step.classList.remove('active');
-        });
-
-        // Show current step
-        const currentStepEl = document.querySelector(`.form-step[data-step="${stepNumber}"]`);
-        if (currentStepEl) {
-            currentStepEl.classList.add('active');
+        } else if (stepNum === stepNumber) {
+            step.classList.add('active');
+            step.classList.remove('completed');
+        } else {
+            step.classList.remove('active', 'completed');
         }
+    });
+}
 
-        this.updateProgress(stepNumber);
-        this.updateNavigationButtons(stepNumber);
-        this.currentStep = stepNumber;
-    }
+updateNavigationButtons(stepNumber) {
+    const nextBtn = document.getElementById('nextStep');
+    const prevBtn = document.getElementById('prevStep');
+    const submitBtn = document.getElementById('submitForm');
 
-    updateProgress(stepNumber) {
-        const steps = document.querySelectorAll('.progress-step');
+    if (!nextBtn || !prevBtn || !submitBtn) return;
 
-        steps.forEach((step, index) => {
-            const stepNum = index + 1;
+    prevBtn.style.display = stepNumber === 1 ? 'none' : 'flex';
+    nextBtn.style.display = stepNumber === this.totalSteps ? 'none' : 'flex';
+    submitBtn.style.display = stepNumber === this.totalSteps ? 'flex' : 'none';
+}
 
-            if (stepNum < stepNumber) {
-                step.classList.add('completed');
-                step.classList.remove('active');
-            } else if (stepNum === stepNumber) {
-                step.classList.add('active');
-                step.classList.remove('completed');
-            } else {
-                step.classList.remove('active', 'completed');
-            }
-        });
-    }
+validateCurrentStep() {
+    const currentStepEl = document.querySelector(`.form-step[data-step="${this.currentStep}"]`);
+    const requiredInputs = currentStepEl.querySelectorAll('[required]');
 
-    updateNavigationButtons(stepNumber) {
-        const nextBtn = document.getElementById('nextStep');
-        const prevBtn = document.getElementById('prevStep');
-        const submitBtn = document.getElementById('submitForm');
-
-        if (!nextBtn || !prevBtn || !submitBtn) return;
-
-        prevBtn.style.display = stepNumber === 1 ? 'none' : 'flex';
-        nextBtn.style.display = stepNumber === this.totalSteps ? 'none' : 'flex';
-        submitBtn.style.display = stepNumber === this.totalSteps ? 'flex' : 'none';
-    }
-
-    validateCurrentStep() {
-        const currentStepEl = document.querySelector(`.form-step[data-step="${this.currentStep}"]`);
-        const requiredInputs = currentStepEl.querySelectorAll('[required]');
-
-        for (let input of requiredInputs) {
-            if (!input.value.trim()) {
-                input.focus();
-                this.showToast(
-                    `Please fill in the required field: ${input.previousElementSibling.textContent}`,
-                    'error'
-                );
-                return false;
-            }
-
-            if (input.id === 'quantity') {
-                const quantity = parseInt(input.value.trim(), 10);
-                if (isNaN(quantity) || quantity <= 0) {
-                    input.focus();
-                    this.showToast('Please enter a valid quantity greater than 0', 'error');
-                    return false;
-                }
-            }
-
-            if (input.id === 'contact') {
-                if (!this.validateContactInfo(input.value.trim())) {
-                    input.focus();
-                    this.showToast('Please enter a valid email address or phone number', 'error');
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    async handleFormSubmission() {
-        const formData = this.getFormData();
-
-        if (!this.validateFormData(formData)) return;
-
-        try {
-            const backendData = {
-                foodType: formData.foodType,
-                quantity: formData.quantity,
-                category: formData.category,
-                description: formData.description,
-                freshUntil: formData.freshUntil,
-                pickupTime: formData.pickupTime,
-                pickupLocation: formData.location,
-                contactInfo: formData.contact,
-                dietaryTags: formData.dietaryTags,
-                photos: formData.photos,
-                latitude: Number(document.getElementById('latitude')?.value),
-                longitude: Number(document.getElementById('longitude')?.value),
-            };
-
-            // OPTIONAL: Pickup time must be future
-            const now = new Date();
-            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-            const pickupTimeInput = document.getElementById('pickupTime');
-            if (pickupTimeInput) {
-                pickupTimeInput.min = now.toISOString().slice(0, 16);
-            }
-
-            const newListing = await this.api.createFoodListing(backendData);
-            this.foodListings.unshift(newListing);
-            this.loadListingsFromDB();
-            this.showSuccessMessage();
-            this.closeModalAndReset();
-
-        } catch (error) {
-            console.error('Error creating listing:', error);
+    for (let input of requiredInputs) {
+        if (!input.value.trim()) {
+            input.focus();
             this.showToast(
-                error?.message || 'Failed to create listing',
+                `Please fill in the required field: ${input.previousElementSibling.textContent}`,
                 'error'
             );
+            return false;
         }
 
+        if (input.id === 'quantity') {
+            const quantity = parseInt(input.value.trim(), 10);
+            if (isNaN(quantity) || quantity <= 0) {
+                input.focus();
+                this.showToast('Please enter a valid quantity greater than 0', 'error');
+                return false;
+            }
+        }
+
+        if (input.id === 'contact') {
+            if (!this.validateContactInfo(input.value.trim())) {
+                input.focus();
+                this.showToast('Please enter a valid email address or phone number', 'error');
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+setupFormHandling() {
+    const form = document.getElementById('listingForm');
+    if (!form) return;
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.handleFormSubmission();
+    });
+
+    const useLocationBtn = document.getElementById('useCurrentLocationBtn');
+    if (useLocationBtn) {
+        useLocationBtn.addEventListener(
+            'click',
+            this.useCurrentLocation.bind(this)
+        );
+    }
+
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+
+    // Expiry time must be future
+    const freshUntilInput = document.getElementById('freshUntil');
+    if (freshUntilInput) {
+        freshUntilInput.min = now.toISOString().slice(0, 16);
+    }
+}
+
+async handleFormSubmission() {
+    const formData = this.getFormData();
+
+    if (!this.validateFormData(formData)) return;
+
+    try {
+        const backendData = {
+            foodType: formData.foodType,
+            quantity: formData.quantity,
+            category: formData.category,
+            description: formData.description,
+            freshUntil: formData.freshUntil,
+            pickupTime: formData.pickupTime,
+            pickupLocation: formData.location,
+            contactInfo: formData.contact,
+            dietaryTags: formData.dietaryTags,
+            photos: formData.photos,
+            latitude: Number(document.getElementById('latitude')?.value),
+            longitude: Number(document.getElementById('longitude')?.value),
+        };
 
         if (!backendData.latitude || !backendData.longitude) {
             this.showToast(
@@ -503,19 +527,20 @@ class ShareBite {
             return;
         }
 
-
         const newListing = await this.api.createFoodListing(backendData);
-
         this.foodListings.unshift(newListing);
         this.loadListingsFromDB();
         this.showSuccessMessage();
         this.closeModalAndReset();
 
-    } catch(error) {
-        console.error(error);
-        this.showToast('Failed to create listing', 'error');
+    } catch (error) {
+        console.error('Error creating listing:', error);
+        this.showToast(
+            error?.message || 'Failed to create listing',
+            'error'
+        );
     }
-
+}
 
     getFormData() {
         const selectedTags = [];
@@ -597,6 +622,7 @@ class ShareBite {
 
         return true;
     }
+
 
 
 
@@ -857,9 +883,11 @@ class ShareBite {
         });
     }
 
+
     setupFilteringAndSearch() {
         // --- Existing Category Filter Logic ---
         const filterBtns = document.querySelectorAll('.filter-btn');
+        if (filterBtns.length > 0) {
         filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 filterBtns.forEach(b => b.classList.remove('active'));
@@ -869,9 +897,11 @@ class ShareBite {
                 this.renderFoodListings();
             });
         });
+    }
 
         // --- Existing Search Input Logic ---
         const searchInput = document.querySelector('.search-box input');
+        if (searchInput) {
         let searchTimeout;
         searchInput.addEventListener('input', (e) => {
             clearTimeout(searchTimeout);
@@ -881,13 +911,14 @@ class ShareBite {
                 this.renderFoodListings();
             }, 300);
         });
+    }
 
         // --- NEW: Dropdown and Filtering Logic ---
         const dietaryBtn = document.getElementById('dietary-filter-btn');
         const dietaryDropdown = document.getElementById('dietary-dropdown');
         const dietaryCheckboxes = document.querySelectorAll('input[name="dietary-filter"]');
 
-        if (dietaryBtn) {
+        if (dietaryBtn && dietaryDropdown) {
             // Toggle dropdown visibility
             dietaryBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -896,6 +927,7 @@ class ShareBite {
             });
 
             // Add event listeners to checkboxes
+            if (dietaryCheckboxes.length > 0) {
             dietaryCheckboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', () => {
                     this.filterListings();
@@ -911,7 +943,7 @@ class ShareBite {
                     }
                 });
             });
-
+        }
             // Close dropdown when clicking outside
             document.addEventListener('click', () => {
                 if (dietaryDropdown.style.display === 'block') {
@@ -949,7 +981,6 @@ class ShareBite {
 
     setupSmoothScrolling() {
         const scrollIndicator = document.querySelector('.scroll-indicator');
-
         scrollIndicator.addEventListener('click', () => {
             document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
         });
@@ -1277,88 +1308,98 @@ class ShareBite {
     }
 
 
-    setupFoodCardInteractions() {
-        // Claim buttons
-        const claimBtns = document.querySelectorAll('.claim-btn');
-        claimBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const listingId = parseInt(btn.getAttribute('data-id'));
-                this.handleClaimFood(listingId);
-            });
+setupFoodCardInteractions() {
+    // Claim buttons
+    const claimBtns = document.querySelectorAll('.claim-btn');
+    claimBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const listingId = parseInt(btn.getAttribute('data-id'));
+            this.handleClaimFood(listingId);
         });
+    });
 
-        // Contact buttons
-        const contactBtns = document.querySelectorAll('.contact-btn');
-        contactBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const contact = btn.getAttribute('data-contact');
-                this.handleContactDonor(contact);
-            });
+    // Contact buttons
+    const contactBtns = document.querySelectorAll('.contact-btn');
+    contactBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const contact = btn.getAttribute('data-contact');
+            this.handleContactDonor(contact);
         });
+    });
 
-        // ✅ Navigate buttons (NEW)
-        const navigateBtns = document.querySelectorAll('.navigate-btn');
-        navigateBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const lat = btn.dataset.lat;
-                const lng = btn.dataset.lng;
+    // ✅ Navigate buttons (NEW)
+    const navigateBtns = document.querySelectorAll('.navigate-btn');
+    navigateBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const lat = btn.dataset.lat;
+            const lng = btn.dataset.lng;
 
-                if (!lat || !lng) {
-                    this.showToast('Location coordinates not available', 'error');
-                    return;
-                }
-
-                // Open Google Maps directions
-                window.open(
-                    `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
-                    '_blank'
-                );
-            });
-        });
-    }
-
-    async useCurrentLocation() {
-        if (!navigator.geolocation) {
-            this.showToast('Geolocation not supported', 'error');
-            return;
-        }
-
-        navigator.geolocation.getCurrentPosition(
-            async (position) => {
-                const latitude = position.coords.latitude;
-                const longitude = position.coords.longitude;
-
-                document.getElementById('latitude').value = latitude;
-                document.getElementById('longitude').value = longitude;
-
-                try {
-                    const res = await fetch(
-                        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`,
-                        { headers: { 'User-Agent': 'ShareBite' } }
-                    );
-
-                    const data = await res.json();
-                    document.getElementById('location').value =
-                        data.display_name || 'Current location';
-                } catch (err) {
-                    document.getElementById('location').value = 'Current location';
-                }
-            },
-            () => {
-                this.showToast('Location permission denied', 'error');
+            if (!lat || !lng) {
+                this.showToast('Location coordinates not available', 'error');
+                return;
             }
-        );
-    }
 
-    setupFoodCardAccessibility() {
-        const foodCards = document.querySelectorAll('.food-card');
-
-        foodCards.forEach(card => {
-            card.setAttribute('tabindex', '0');
-            card.setAttribute('role', 'button');
-            card.setAttribute('aria-label', 'View food details');
+            // Open Google Maps directions
+            window.open(
+                `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
+                '_blank'
+            );
         });
+    });
+}
+
+async useCurrentLocation() {
+    if (!navigator.geolocation) {
+        this.showToast('Geolocation not supported', 'error');
+        return;
     }
+
+    navigator.geolocation.getCurrentPosition(
+        async (position) => {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+
+            const latInput = document.getElementById('latitude');
+            const lonInput = document.getElementById('longitude');
+            const locationInput = document.getElementById('location');
+
+            if (latInput) latInput.value = latitude;
+            if (lonInput) lonInput.value = longitude;
+
+            try {
+                const res = await fetch(
+                    `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`,
+                    { headers: { 'User-Agent': 'ShareBite' } }
+                );
+
+                const data = await res.json();
+                if (locationInput) {
+                    locationInput.value = data.display_name || 'Current location';
+                }
+            } catch (err) {
+                if (locationInput) {
+                    locationInput.value = 'Current location';
+                }
+            }
+        },
+        () => {
+            this.showToast('Location permission denied', 'error');
+        }
+    );
+}
+
+setupFoodCardAccessibility() {
+    const foodCards = document.querySelectorAll('.food-card');
+
+    foodCards.forEach(card => {
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('role', 'button');
+        card.setAttribute('aria-label', 'View food details');
+    });
+}
+
+
+
 
 
     setupFileUpload() {
@@ -1369,6 +1410,9 @@ class ShareBite {
         const handleFiles = (files) => {
             const file = files[0];
             if (!file) return;
+
+
+ 
 
             if (!file.type.startsWith('image/')) {
                 this.showToast('Please upload an image file', 'error');
@@ -1410,7 +1454,6 @@ class ShareBite {
             }
         });
     }
-
 
     handleClaimFood(listingId) {
         const listing = this.foodListings.find(l => l.id === listingId);
@@ -1610,32 +1653,15 @@ class ShareBite {
             notificationBell.style.display = 'block';
         }
 
-        // Toggle notification panel
-        notificationBell.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const isActive = notificationPanel.classList.contains('active');
-
-            if (isActive) {
-                notificationPanel.classList.remove('active');
-                notificationBell.classList.remove('active');
-            } else {
-                notificationPanel.classList.add('active');
-                notificationBell.classList.add('active');
-            }
-        });
-
-        // Close panel when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!notificationBell.contains(e.target)) {
-                notificationPanel.classList.remove('active');
-                notificationBell.classList.remove('active');
-            }
-        });
+        // Note: Notification click handlers are set up in the main script.js file
+        // to avoid duplicate event listeners
 
         // Prevent panel from closing when clicking inside
-        notificationPanel.addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
+        if (notificationPanel) {
+            notificationPanel.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        }
     }
 
     loadClaimedItems() {
@@ -1903,12 +1929,6 @@ function addDynamicStyles() {
     document.head.appendChild(style);
 }
 
-// Initialize the application
-document.addEventListener('DOMContentLoaded', () => {
-    addDynamicStyles();
-    new ShareBite();
-});
-
 // Service Worker registration for PWA capabilities (optional)
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -1938,25 +1958,6 @@ window.clearShareBiteCaches = async function () {
     }
 };
 
-// ===== Scroll to Top Button =====
-const scrollToTopBtn = document.getElementById("scrollToTopBtn");
-
-window.addEventListener("scroll", () => {
-    const scrollPosition = document.documentElement.scrollTop || document.body.scrollTop;
-    if (scrollPosition > 200) {
-        scrollToTopBtn.classList.add("show");
-    } else {
-        scrollToTopBtn.classList.remove("show");
-    }
-});
-
-scrollToTopBtn.addEventListener("click", () => {
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-    });
-});
-
 class GalleryManager {
     setupKeyboardAccessibility() {
         this.galleryItems.forEach(item => {
@@ -1973,19 +1974,6 @@ class GalleryManager {
     constructor() {
         this.galleryItems = document.querySelectorAll('.gallery-item');
         this.init();
-    }
-
-    setupKeyboardAccessibility() {
-        this.galleryItems.forEach(item => {
-            // 1️⃣ Allow Tab key to reach this card
-            item.setAttribute('tabindex', '0');
-
-            // 2️⃣ Tell screen readers this behaves like a button
-            item.setAttribute('role', 'button');
-
-            // 3️⃣ Accessible description
-            item.setAttribute('aria-label', 'Open gallery item');
-        });
     }
 
     init() {
@@ -2365,6 +2353,7 @@ class TestimonialsCarousel {
         });
     }
 
+
     handleSwipe(startX, endX) {
         const threshold = 50;
         const diff = startX - endX;
@@ -2484,24 +2473,6 @@ class TestimonialsCarousel {
 
         updateNumber();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     // Pause autoplay when user hovers over carousel
     pauseOnHover() {
@@ -2689,36 +2660,16 @@ function setupChatbotLauncher() {
     }
 
     btn.addEventListener('click', loadAndOpen);
-    btn.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            loadAndOpen();
-        }
 
-
-
-
-
-
-
-
-
-
-
-        // some function
-    });
+btn.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    loadAndOpen();
+  }
+});
 }
 
-    // another function
-
-
-    // end of file
-
-
-
-
-
-
+setupChatbotLauncher();
     // If ShareBot loads itself or another script opens the widget, keep state in sync
     // (optional) listen for user interactions on the injected widget to update launcher state
 
@@ -2727,27 +2678,53 @@ function setupChatbotLauncher() {
 
 // No-op: the module exposes window.ShareBot.open/close which we call above
 
-// Add Listing Success Message
-document.addEventListener("DOMContentLoaded", () => {
-    const submitBtn = document.getElementById("submitForm");
-    const successMsg = document.getElementById("listingSuccessMsg");
 
-    if (submitBtn && successMsg) {
-        submitBtn.addEventListener("click", (e) => {
-            e.preventDefault();
+ // Offline / Online status handler
+function updateOnlineStatus() {
+  const banner = document.getElementById("offline-banner");
+  if (!banner) return;
 
-            // Show success message
-            successMsg.style.display = "block";
+  if (navigator.onLine) {
+    banner.style.display = "none";
+  } else {
+    banner.style.display = "block";
+  }
+}
 
-            // Reset the form
-            submitBtn.closest("form").reset();
+window.addEventListener("online", updateOnlineStatus);
+window.addEventListener("offline", updateOnlineStatus);
+window.addEventListener("load", updateOnlineStatus);
 
-            // Hide message after 4 seconds
-            setTimeout(() => {
-                successMsg.style.display = "none";
-            }, 4000);
+// Back to Top Button
+
+(
+    function () {
+        const backToTopButton = document.getElementById("backToTop");
+
+        // Exit silently if button is not present
+        if (!backToTopButton) return;
+
+        // Click → smooth scroll to top
+        backToTopButton.addEventListener("click", () => {
+            window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+            });
         });
-    }
-});
 
+        // Toggle visibility on scroll
+        const toggleBackToTopVisibility = () => {
+            if (window.scrollY > 300) {
+            backToTopButton.classList.add("visible");
+            } else {
+            backToTopButton.classList.remove("visible");
+            }
+        };
+
+        // Listen to scroll
+        window.addEventListener("scroll", toggleBackToTopVisibility);
+
+        // Run once on load (covers refresh + anchor cases)
+        toggleBackToTopVisibility();
+})();
 
