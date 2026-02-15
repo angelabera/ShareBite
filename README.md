@@ -199,6 +199,17 @@ This is a showcase project demonstrating modern web development techniques. Feel
 - Report bugs or issues
 - Submit enhancement ideas
 
+## 📂 Project Structure
+
+frontend/  → Frontend UI (HTML, CSS, JavaScript)  
+backend/   → Planned backend (not implemented yet)  
+src/       → Shared utilities and assets  
+
+## 📸 Screenshots
+![Home Page](screenshots/home.png)
+
+
+
 ## 📄 License
 
 This project is created for educational and demonstration purposes. Feel free to use and modify as needed.
