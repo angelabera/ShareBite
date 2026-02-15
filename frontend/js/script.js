@@ -103,14 +103,18 @@ if (roleSwitch && currentRole) {
     });
 }
 
-// Toast Function
+// Toast Function (uses shared module when available)
 function showToast(message) {
+    if (typeof window.ShareBiteShared !== 'undefined' && window.ShareBiteShared.toast) {
+        window.ShareBiteShared.toast.showToast(message, 'success');
+        return;
+    }
     const toast = document.getElementById('toast');
-    toast.textContent = message;
-    toast.classList.add('show');
-    setTimeout(() => {
-        toast.classList.remove('show');
-    }, 3800);
+    if (toast) {
+        toast.textContent = message;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3800);
+    }
 }
 
 // Handle window resize
@@ -131,15 +135,30 @@ class ShareBite {
         this.uploadedPhotoBase64 = null;
         this.filteredListings = [];
         this.currentFilter = 'all';
-        this.claimedItems = this.loadClaimedItems();
-        this.notifications = this.loadNotifications();
+        var shared = window.ShareBiteShared || {};
+        this.claimedItems = shared.storage ? shared.storage.loadClaimedItems() : [];
+        this.notifications = shared.storage ? shared.storage.loadNotifications() : [];
         this.api = window;
+        // Bind shared format/helpers so this.formatTime(), this.getFoodIcon(), etc. still work
+        if (shared.format) {
+            this.formatTime = shared.format.formatTime.bind(shared.format);
+            this.getTimeAgo = shared.format.getTimeAgo.bind(shared.format);
+            this.formatDateTime = shared.format.formatDateTime.bind(shared.format);
+        } else {
+            this.formatTime = function (t) { var m = (String(t).trim()).match(/(\d+)\s*:\s*(\d+)\s*(am|pm)?/i); if (m) { var h = parseInt(m[1], 10); var mn = parseInt(m[2], 10); var p = (m[3] || '').toLowerCase(); if (p === 'pm' && h !== 12) h += 12; if (p === 'am' && h === 12) h = 0; var d = new Date(); d.setHours(h, mn, 0, 0); return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); } var parts = String(t).split(':'); if (parts.length >= 2) { var d2 = new Date(); d2.setHours(parseInt(parts[0], 10), parseInt(parts[1], 10), 0, 0); return d2.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); } return t; };
+            this.getTimeAgo = function (d) { var now = new Date(); var dt = d instanceof Date ? d : new Date(d); var diff = now - dt; var mins = Math.floor(diff / 60000); var hrs = Math.floor(mins / 60); if (mins < 60) return mins + 'm ago'; if (hrs < 24) return hrs + 'h ago'; return Math.floor(hrs / 24) + 'd ago'; };
+            this.formatDateTime = function (s) { var date = new Date(s); var now = new Date(); var hours = Math.floor((date - now) / (1000 * 60 * 60)); return hours < 24 ? hours + 'h left' : Math.floor(hours / 24) + 'd left'; };
+        }
+        if (shared.helpers) {
+            this.getFoodIcon = shared.helpers.getFoodIcon.bind(shared.helpers);
+            this.capitalizeFirst = shared.helpers.capitalizeFirst.bind(shared.helpers);
+        } else {
+            this.getFoodIcon = function (cat) { if (!cat) return 'utensils'; var i = { restaurant: 'store', household: 'home', bakery: 'bread-slice', event: 'calendar-alt' }; return i[String(cat).toLowerCase()] || 'utensils'; };
+            this.capitalizeFirst = function (str) { if (!str) return ''; return String(str).charAt(0).toUpperCase() + String(str).slice(1); };
+        }
 
         this.init();
         this.initTheme();
-
-
-
 
 
 
@@ -175,33 +194,26 @@ class ShareBite {
     }
 
     initTheme() {
-        const stored = localStorage.getItem('sharebite-theme');
-        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const theme = stored || (prefersDark ? 'dark' : 'light');
-        this.applyTheme(theme);
-        this.setupThemeToggle();
-    }
-
-    setupThemeToggle() {
-        const btn = document.getElementById('themeToggle');
-        if (!btn) return;
-        btn.addEventListener('click', () => {
-            const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
-            this.applyTheme(newTheme);
-            localStorage.setItem('sharebite-theme', newTheme);
-        });
-    }
-
-    applyTheme(theme) {
-        const root = document.documentElement;
-        if (theme === 'dark') {
-            root.classList.add('dark');
-            const icon = document.querySelector('#themeToggle i');
-            if (icon) { icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); }
-        } else {
-            root.classList.remove('dark');
-            const icon = document.querySelector('#themeToggle i');
-            if (icon) { icon.classList.remove('fa-sun'); icon.classList.add('fa-moon'); }
+        if (window.ShareBiteShared && window.ShareBiteShared.theme) {
+            window.ShareBiteShared.theme.initTheme();
+            var btn = document.getElementById('themeToggle') || document.getElementById('theme-toggle');
+            if (btn && btn.id === 'themeToggle') window.ShareBiteShared.theme.setupThemeToggle();
+            return;
+        }
+        var stored = localStorage.getItem('sharebite-theme');
+        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = stored || (prefersDark ? 'dark' : 'light');
+        document.documentElement.classList.toggle('dark', theme === 'dark');
+        var btn = document.getElementById('themeToggle') || document.getElementById('theme-toggle');
+        if (btn) {
+            var icon = btn.querySelector('i');
+            if (icon) icon.classList.toggle('fa-sun', theme === 'dark'), icon.classList.toggle('fa-moon', theme !== 'dark');
+            btn.addEventListener('click', function () {
+                var newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+                document.documentElement.classList.toggle('dark', newTheme === 'dark');
+                localStorage.setItem('sharebite-theme', newTheme);
+                if (icon) icon.classList.toggle('fa-sun', newTheme === 'dark'), icon.classList.toggle('fa-moon', newTheme !== 'dark');
+            });
         }
     }
 
@@ -635,39 +647,17 @@ async handleFormSubmission() {
     }
 
     showToast(message, type) {
-        const toast = document.createElement('div');
-        toast.className = `toast toast-${type}`;
-        toast.innerHTML = `
-            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
-            <span>${message}</span>
-        `;
-
-        // Add toast styles
-        toast.style.cssText = `
-            position: fixed;
-            top: 100px;
-            right: 80px;
-            max-width: 400px;
-            height: 300px;
-            background: ${type === 'success' ? 'var(--primary-color)' : 'var(--secondary-color)'};
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: var(--border-radius);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            z-index: 3000;
-            animation: slideInRight 0.8s ease, fadeOut 0.8s ease 3s forwards;
-            box-shadow: var(--shadow-heavy);
-        `;
-
+        if (window.ShareBiteShared && window.ShareBiteShared.toast) {
+            window.ShareBiteShared.toast.showToast(message, type || 'success');
+            return;
+        }
+        var toast = document.createElement('div');
+        toast.className = 'toast toast-' + (type || 'success');
+        toast.innerHTML = '<i class="fas fa-' + (type === 'success' ? 'check-circle' : 'exclamation-circle') + '"></i><span>' + String(message).replace(/</g, '&lt;') + '</span>';
+        toast.style.cssText = 'position:fixed;top:100px;right:80px;max-width:400px;min-height:auto;background:var(--primary-color);color:white;padding:1rem 1.5rem;border-radius:var(--border-radius);display:flex;align-items:center;gap:0.5rem;z-index:3000;box-shadow:var(--shadow-heavy);';
+        if (type === 'error') toast.style.background = 'var(--secondary-color)';
         document.body.appendChild(toast);
-
-        setTimeout(() => {
-            if (toast.parentNode) {
-                toast.parentNode.removeChild(toast);
-            }
-        }, 3000);
+        setTimeout(function () { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 3000);
     }
 
     closeModalAndReset() {
@@ -1543,59 +1533,6 @@ setupFoodCardAccessibility() {
         });
     }
 
-    getFoodIcon(category) {
-        if (!category) return 'utensils';
-        const icons = {
-            restaurant: 'store',
-            household: 'home',
-            bakery: 'bread-slice',
-            event: 'calendar-alt'
-        };
-        return icons[category.toLowerCase()] || 'utensils';
-    }
-
-    capitalizeFirst(str) {
-        if (!str) return '';
-        return str.charAt(0).toUpperCase() + str.slice(1);
-    }
-
-    getTimeAgo(date) {
-        const now = new Date();
-        const diff = now - date;
-        const minutes = Math.floor(diff / 60000);
-        const hours = Math.floor(minutes / 60);
-
-        if (minutes < 60) {
-            return `${minutes}m ago`;
-        } else if (hours < 24) {
-            return `${hours}h ago`;
-        } else {
-            const days = Math.floor(hours / 24);
-            return `${days}d ago`;
-        }
-    }
-
-    formatDateTime(dateTimeString) {
-        const date = new Date(dateTimeString);
-        const now = new Date();
-        const diff = date - now;
-        const hours = Math.floor(diff / (1000 * 60 * 60));
-
-        if (hours < 24) {
-            return `${hours}h left`;
-        } else {
-            const days = Math.floor(hours / 24);
-            return `${days}d left`;
-        }
-    }
-
-    formatTime(timeString) {
-        const [hours, minutes] = timeString.split(':');
-        const date = new Date();
-        date.setHours(hours, minutes);
-        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    }
-
     startAnimations() {
         // Add stagger animation to feature cards
         const featureCards = document.querySelectorAll('.feature-card');
@@ -1665,21 +1602,29 @@ setupFoodCardAccessibility() {
     }
 
     loadClaimedItems() {
-        const stored = localStorage.getItem('sharebite-claimed-items');
-        return stored ? JSON.parse(stored) : [];
+        return (window.ShareBiteShared && window.ShareBiteShared.storage)
+            ? window.ShareBiteShared.storage.loadClaimedItems() : (localStorage.getItem('sharebite-claimed-items') ? JSON.parse(localStorage.getItem('sharebite-claimed-items')) : []);
     }
 
     saveClaimedItems() {
-        localStorage.setItem('sharebite-claimed-items', JSON.stringify(this.claimedItems));
+        if (window.ShareBiteShared && window.ShareBiteShared.storage) {
+            window.ShareBiteShared.storage.saveClaimedItems(this.claimedItems);
+        } else {
+            localStorage.setItem('sharebite-claimed-items', JSON.stringify(this.claimedItems));
+        }
     }
 
     loadNotifications() {
-        const stored = localStorage.getItem('sharebite-notifications');
-        return stored ? JSON.parse(stored) : [];
+        return (window.ShareBiteShared && window.ShareBiteShared.storage)
+            ? window.ShareBiteShared.storage.loadNotifications() : (localStorage.getItem('sharebite-notifications') ? JSON.parse(localStorage.getItem('sharebite-notifications')) : []);
     }
 
     saveNotifications() {
-        localStorage.setItem('sharebite-notifications', JSON.stringify(this.notifications));
+        if (window.ShareBiteShared && window.ShareBiteShared.storage) {
+            window.ShareBiteShared.storage.saveNotifications(this.notifications);
+        } else {
+            localStorage.setItem('sharebite-notifications', JSON.stringify(this.notifications));
+        }
     }
 
     addNotification(notification) {
