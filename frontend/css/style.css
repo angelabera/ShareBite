@@ -339,7 +339,8 @@ img {
 .theme-toggle,
 .notification-bell,
 .role-switch,
-.cursor-toggle {
+.cursor-toggle,
+.language-selector-button {
   background: transparent;
   border: 1px solid var(--border-light);
   width: 40px;
@@ -350,6 +351,7 @@ img {
   justify-content: center;
   cursor: pointer;
   color: var(--text-main);
+  padding: 0;
   transition:
     background-color 0.3s ease,
     border-color 0.3s ease,
@@ -367,7 +369,8 @@ img {
 
 .theme-toggle:hover,
 .notification-bell:hover,
-.cursor-toggle:hover {
+.cursor-toggle:hover,
+.language-selector-button:hover {
   background: var(--bg-light);
   border-color: var(--primary-green);
   color: var(--primary-green);
@@ -393,6 +396,100 @@ img {
   border-color: var(--primary-green);
   color: white;
   transform: translateY(-2px);
+}
+
+/* Language Selector */
+.language-selector {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.language-flag {
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.language-name {
+  display: none;
+}
+
+.language-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  min-width: 220px;
+  max-width: 250px;
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10000;
+  overflow: hidden;
+}
+
+.language-dropdown.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.language-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid var(--border-light);
+  background: var(--white);
+  color: var(--text-main);
+  font-size: 0.95rem;
+}
+
+.language-option:last-child {
+  border-bottom: none;
+}
+
+.language-option:hover {
+  background: var(--bg-light);
+  color: var(--primary-green);
+  padding-left: 1.25rem;
+}
+
+.language-option.active {
+  background: rgba(76, 175, 80, 0.08);
+  color: var(--primary-green);
+  font-weight: 600;
+}
+
+.language-option.active::before {
+  content: '✓';
+  display: inline-block;
+  margin-right: 0.75rem;
+  color: var(--primary-green);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.lang-flag {
+  font-size: 1.2rem;
+  min-width: 1.5rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.lang-name {
+  flex: 1;
+  white-space: nowrap;
+}
+  flex: 1;
 }
 
 /* Notification Bell */

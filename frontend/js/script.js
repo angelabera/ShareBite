@@ -5,7 +5,7 @@
 // Wait for DOM to be ready before setting up event listeners
 document.addEventListener("DOMContentLoaded", () => {
     /* Navigation Menu */
-    const menuToggle = document.getElementById("menuToggle");
+    const menuToggle = document.getElementById("hamburger");
     const navMenu = document.getElementById("navMenu");
 
     if (menuToggle && navMenu) {
@@ -19,6 +19,70 @@ document.addEventListener("DOMContentLoaded", () => {
                 menuToggle.click();
             }
         });
+    }
+
+    /* Language Selector Setup */
+    const languageSelector = document.getElementById('languageSelector');
+    if (languageSelector) {
+        const selectorButton = languageSelector.querySelector('.language-selector-button');
+        const dropdown = languageSelector.querySelector('.language-dropdown');
+        const options = languageSelector.querySelectorAll('.language-option');
+
+        // Toggle dropdown on button click
+        if (selectorButton) {
+            selectorButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropdown.classList.toggle('show');
+            });
+        }
+
+        // Handle language option clicks
+        options.forEach(option => {
+            option.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const langCode = option.getAttribute('data-lang');
+                
+                // Use the language switcher
+                if (window.languageSwitcher) {
+                    const success = languageSwitcher.setLanguage(langCode);
+                    if (success) {
+                        // Update active state
+                        options.forEach(opt => opt.classList.remove('active'));
+                        option.classList.add('active');
+                        
+                        // Update button display
+                        const flag = option.querySelector('.lang-flag');
+                        if (flag) {
+                            selectorButton.querySelector('.language-flag').textContent = flag.textContent;
+                        }
+                        
+                        // Close dropdown
+                        dropdown.classList.remove('show');
+                    }
+                }
+            });
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!languageSelector.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        // Set initial active state
+        const currentLang = localStorage.getItem('sharebite_language') || 'en';
+        const activeOption = languageSelector.querySelector(`[data-lang="${currentLang}"]`);
+        if (activeOption) {
+            options.forEach(opt => opt.classList.remove('active'));
+            activeOption.classList.add('active');
+            const flag = activeOption.querySelector('.lang-flag');
+            if (flag) {
+                selectorButton.querySelector('.language-flag').textContent = flag.textContent;
+            }
+        }
     }
 
     //App Initialization

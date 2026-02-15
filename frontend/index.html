@@ -51,10 +51,42 @@
           <i class="fas fa-moon"></i>
         </button>
 
-        <!-- Language Selector Placeholder -->
-        <button class="theme-toggle" title="Language">
-          <i class="fas fa-globe"></i>
-        </button>
+        <!-- Language Selector -->
+        <div id="languageSelector" class="language-selector">
+          <button class="language-selector-button" title="Change Language">
+            <span class="language-flag">EN</span>
+          </button>
+          <div class="language-dropdown">
+            <div class="language-option" data-lang="en">
+              <span class="lang-flag">ᴇɴ</span>
+              <span class="lang-name">English</span>
+            </div>
+            <div class="language-option" data-lang="hi">
+              <span class="lang-flag">ʜɪ</span>
+              <span class="lang-name">हिन्दी</span>
+            </div>
+            <div class="language-option" data-lang="bn">
+              <span class="lang-flag">🇧🇳</span>
+              <span class="lang-name">বাংলা</span>
+            </div>
+            <div class="language-option" data-lang="mr">
+              <span class="lang-flag">ᴍʀ</span>
+              <span class="lang-name">मराठी</span>
+            </div>
+            <div class="language-option" data-lang="ta">
+              <span class="lang-flag">ᴛᴀ</span>
+              <span class="lang-name">தமிழ்</span>
+            </div>
+            <div class="language-option" data-lang="te">
+              <span class="lang-flag">ᴛᴇ</span>
+              <span class="lang-name">తెలుగు</span>
+            </div>
+            <div class="language-option" data-lang="gu">
+              <span class="lang-flag">ɢᴜ</span>
+              <span class="lang-name">ગુજરાતી</span>
+            </div>
+          </div>
+        </div>
 
         <button class="login-btn login-outline" onclick="window.location.href='login.html'">Login</button>
         <button class="login-btn login-primary" onclick="window.location.href='login_ngo.html'">Partner with us</button>
@@ -288,6 +320,7 @@
 
   <script src="js/auth.js"></script>
   <script src="js/theme.js"></script>
+  <script src="js/languages.js"></script>
   <script src="js/api.js"></script>
   <script src="js/script.js"></script>
 
