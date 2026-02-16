@@ -54,7 +54,7 @@
 }
 
 /* Dark Mode Variables */
-body.dark-mode {
+html.dark {
   --white: #1e1e1e;
   /* Dark card bg */
   --bg-light: #121212;
