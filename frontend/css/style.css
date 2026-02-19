@@ -198,7 +198,27 @@ img {
   outline: 2px solid var(--primary-green);
   outline-offset: 3px;
 }
+.view-map-btn {
+  background: var(--bg-white);
+  color: var(--text-dark);
+  border: 1px solid var(--border-light);
+  padding: 0.8rem 1.5rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  margin-right: 10px;
+  font-weight: 500;
+}
 
+.view-map-btn i {
+  color: var(--primary);
+}
+
+/* Dark mode */
+html.dark .view-map-btn {
+  background: var(--bg-dark);
+  color: var(--text-light);
+  border: 1px solid var(--border-light);
+}
 /* Redirect-style buttons (used for View All Stories, Join Our Mission) */
 .btn-redirect {
   background: var(--primary-green);
