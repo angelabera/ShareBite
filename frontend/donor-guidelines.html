@@ -358,12 +358,17 @@
         }
 
         /* Footer */
-        .footer {
-            background-color: #111827;
-            /* Always dark */
-            color: var(--dark-text-muted);
-            padding: 60px 0 20px 0;
-        }
+        /* Footer */
+.footer {
+    /* Use surface color instead of page background */
+    background-color: var(--dark-surface); /* #1F2937 → visible contrast */
+    color: var(--dark-text-muted);
+    padding: 60px 0 20px 0;
+
+    /* ✨ Visual separation from main content */
+    border-top: 1px solid var(--border-dark);
+    box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.25);
+}
 
         .footer-content {
             display: grid;
