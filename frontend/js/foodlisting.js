@@ -858,11 +858,13 @@ class ShareBiteFoodListing {
 
         // CASE 1: No food listings at all (backend empty / first load)
         if (!this.foodListings || this.foodListings.length === 0) {
+            const emptyStateMsg = window.languageSwitcher ? window.languageSwitcher.getTranslation('listings.emptyState') : 'No food listings available right now 🍽️';
+            const emptyStateSubtext = window.languageSwitcher ? window.languageSwitcher.getTranslation('listings.emptyStateSubtext') : 'Check back later!';
             foodGrid.innerHTML = `
          <div class="empty-state">
             <i class="fas fa-utensils" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem;"></i>
-            <p>No food listings available right now 🍽️</p>
-            <span>Check back later!</span>
+            <p>${emptyStateMsg}</p>
+            <span>${emptyStateSubtext}</span>
         </div>
 `       ;
             return;
@@ -870,10 +872,11 @@ class ShareBiteFoodListing {
 
         // CASE 2: Listings exist, but filters remove all
         if (this.filteredListings.length === 0) {
+            const noListingsMsg = window.languageSwitcher ? window.languageSwitcher.getTranslation('listings.noListingsFiltered') : 'No listings found';
             foodGrid.innerHTML = `
       <div class="no-listings">
         <i class="fas fa-search" style="font-size: 3rem; color: var(--medium-gray); margin-bottom: 1rem;"></i>
-        <h3>No listings found</h3>
+        <h3>${noListingsMsg}</h3>
         <p>Try adjusting your filters or search terms.</p>
       </div>
     `;
@@ -1774,7 +1777,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     addDynamicStyles();
-    new ShareBiteFoodListing();
+    
+    // Initialize and store the food listing manager globally for language switching
+    window.foodListingManager = new ShareBiteFoodListing();
 });
 
 // Service Worker registration for PWA capabilities (optional)

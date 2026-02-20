@@ -37,6 +37,43 @@
           <i class="fas fa-moon"></i>
         </button>
 
+        <!-- Language Selector -->
+        <div id="languageSelector" class="language-selector">
+          <button class="language-selector-button" title="Change Language">
+            <span class="language-flag">EN</span>
+          </button>
+          <div class="language-dropdown">
+            <div class="language-option" data-lang="en">
+              <span class="lang-flag">ᴇɴ</span>
+              <span class="lang-name">English</span>
+            </div>
+            <div class="language-option" data-lang="hi">
+              <span class="lang-flag">ʜɪ</span>
+              <span class="lang-name">हिन्दी</span>
+            </div>
+            <div class="language-option" data-lang="bn">
+              <span class="lang-flag">🇧🇳</span>
+              <span class="lang-name">বাংলা</span>
+            </div>
+            <div class="language-option" data-lang="mr">
+              <span class="lang-flag">ᴍʀ</span>
+              <span class="lang-name">मराठी</span>
+            </div>
+            <div class="language-option" data-lang="ta">
+              <span class="lang-flag">ᴛᴀ</span>
+              <span class="lang-name">தமிழ்</span>
+            </div>
+            <div class="language-option" data-lang="te">
+              <span class="lang-flag">ᴛᴇ</span>
+              <span class="lang-name">తెలుగు</span>
+            </div>
+            <div class="language-option" data-lang="gu">
+              <span class="lang-flag">ɢᴜ</span>
+              <span class="lang-name">ગુજરાતી</span>
+            </div>
+          </div>
+        </div>
+
         <!-- Notification Bell -->
         <div class="notification-bell" id="notificationBell" style="display: none;">
           <i class="fas fa-bell"></i>
@@ -275,6 +312,7 @@
   <script src="js/api.js"></script>
   <script src="js/theme.js"></script>
   <script src="js/auth.js"></script>
+  <script src="js/languages.js"></script>
   <script src="js/foodlisting.js"></script>
 
   <!-- Navigation Script -->
@@ -285,7 +323,57 @@
       navMenu.classList.toggle('active');
     });
 
+    // Language selector setup
+    function setupLanguageSelector() {
+      const languageSelector = document.getElementById('languageSelector');
+      const selectorButton = document.querySelector('.language-selector-button');
+      const dropdown = document.querySelector('.language-dropdown');
+      const languageOptions = document.querySelectorAll('.language-option');
+      const languageFlag = document.querySelector('.language-flag');
 
+      // Initialize language flag based on localStorage
+      if (window.languageSwitcher) {
+        const currentLang = window.languageSwitcher.currentLanguage || 'en';
+        const currentOption = document.querySelector(`[data-lang="${currentLang}"]`);
+        if (currentOption) {
+          const langFlag = currentOption.querySelector('.lang-flag').textContent;
+          languageFlag.textContent = langFlag;
+          currentOption.classList.add('active');
+        }
+      }
+
+      selectorButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle('active');
+      });
+
+      languageOptions.forEach(option => {
+        option.addEventListener('click', () => {
+          const lang = option.getAttribute('data-lang');
+          const langName = option.querySelector('.lang-flag').textContent;
+          languageFlag.textContent = langName;
+          if (window.languageSwitcher) {
+            window.languageSwitcher.setLanguage(lang);
+            console.log('Language set to:', lang);
+          }
+          languageOptions.forEach(opt => opt.classList.remove('active'));
+          option.classList.add('active');
+          dropdown.classList.remove('active');
+        });
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!languageSelector.contains(e.target)) {
+          dropdown.classList.remove('active');
+        }
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setupLanguageSelector);
+    } else {
+      setupLanguageSelector();
+    }
   </script>
 
   <footer class="footer">
