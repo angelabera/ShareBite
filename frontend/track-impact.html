@@ -7,50 +7,159 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f5f7fa;
-            font-family: 'Poppins', sans-serif;
-            text-align: center;
-        }
-        .container {
-            max-width: 600px;
-            padding: 2rem;
-        }
-        .coming-soon-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #4CAF50;
-            margin-bottom: 1rem;
-        }
-        .coming-soon-text {
-            font-size: 1.2rem;
-            color: #555;
-            margin-bottom: 2rem;
-        }
-        .home-link {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            background-color: #FF6B35;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: background-color 0.3s ease;
-        }
-        .home-link:hover {
-            background-color: #E65100;
-        }
-    </style>
+    body {
+        margin: 0;
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #f5f7fa, #e8f5e9);
+    }
+
+    .impact-wrapper {
+        max-width: 1100px;
+        margin: 60px auto;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .impact-title {
+        font-size: 2.8rem;
+        color: #2e7d32;
+        margin-bottom: 10px;
+    }
+
+    .impact-subtitle {
+        font-size: 1.2rem;
+        color: #555;
+        margin-bottom: 40px;
+    }
+
+    .impact-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 25px;
+        margin-bottom: 40px;
+    }
+
+    .impact-card {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        transition: transform 0.3s ease;
+    }
+
+    .impact-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .impact-card h2 {
+        font-size: 2.5rem;
+        color: #4CAF50;
+        margin: 0;
+    }
+
+    .impact-card p {
+        margin-top: 10px;
+        font-weight: 500;
+        color: #666;
+    }
+
+    .impact-summary {
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+        margin-bottom: 30px;
+    }
+
+    .home-link {
+        display: inline-block;
+        padding: 12px 24px;
+        background-color: #FF6B35;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .home-link:hover {
+        background-color: #E65100;
+    }
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="coming-soon-title">Coming Soon!</h1>
-        <p class="coming-soon-text">We are working hard to bring you the "Track Impact" page. Stay tuned!</p>
-        <a href="index.html" class="home-link">Go back to Home</a>
+    <div class="impact-wrapper">
+        <h1 class="impact-title">🌍 Track Your Impact</h1>
+        <p class="impact-subtitle">
+            See how your contributions are making a real difference
+        </p>
+
+        <!-- Impact Cards -->
+        <div class="impact-grid">
+            <div class="impact-card">
+                <h2 id="mealsSaved">0</h2>
+                <p>Total Meals Saved</p>
+            </div>
+
+            <div class="impact-card">
+                <h2 id="foodDonated">0</h2>
+                <p>Total Food Donated (kg)</p>
+            </div>
+
+            <div class="impact-card">
+                <h2 id="donationsCount">0</h2>
+                <p>Successful Donations</p>
+            </div>
+
+            <div class="impact-card">
+                <h2 id="co2Reduced">0</h2>
+                <p>CO₂ Emissions Reduced (kg)</p>
+            </div>
+        </div>
+
+        <!-- Impact Summary -->
+        <div class="impact-summary">
+            <h3>Your Contribution Summary</h3>
+            <p id="impactMessage">
+                Thank you for helping reduce food waste and support communities.
+            </p>
+        </div>
+
+        <a href="index.html" class="home-link">Back to Home</a>
     </div>
+
+    <script>
+    // Simulated impact data (can be replaced with API later)
+    const impactData = {
+        mealsSaved: 1280,
+        foodDonated: 950,
+        donationsCount: 76,
+        co2Reduced: 540
+    };
+
+    function animateValue(id, endValue, duration = 1500) {
+        const element = document.getElementById(id);
+        let start = 0;
+        const increment = endValue / (duration / 16);
+
+        function update() {
+            start += increment;
+            if (start >= endValue) {
+                element.textContent = endValue;
+            } else {
+                element.textContent = Math.floor(start);
+                requestAnimationFrame(update);
+            }
+        }
+        update();
+    }
+
+    window.onload = () => {
+        animateValue("mealsSaved", impactData.mealsSaved);
+        animateValue("foodDonated", impactData.foodDonated);
+        animateValue("donationsCount", impactData.donationsCount);
+        animateValue("co2Reduced", impactData.co2Reduced);
+    };
+</script>
 </body>
 </html>
