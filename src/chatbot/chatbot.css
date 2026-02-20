@@ -1,17 +1,13 @@
-
-  /* ===================================================== */
-
 /* ================= Container ================= */
 #sharebot-container {
   position: fixed;
   right: 20px;
   bottom: 20px;
   z-index: 99999;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
-    Arial, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
-/* ================= Floating Bubble ================= */
+/* ================= Floating Bubble (FAB) ================= */
 #sharebot-bubble {
   width: 60px;
   height: 60px;
@@ -19,26 +15,19 @@
   background: linear-gradient(135deg, #66bb6a, #1b5e20);
   border: none;
   color: #fff;
-  display: flex;
+  display: flex; /* Changed from default to flex for center alignment */
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  position: relative;
   box-shadow: 0 12px 30px rgba(46, 125, 50, 0.45);
   animation: pulseGlow 2.8s infinite;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 @keyframes pulseGlow {
-  0% {
-    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.45);
-  }
-  70% {
-    box-shadow: 0 0 0 14px rgba(76, 175, 80, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
-  }
+  0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.45); }
+  70% { box-shadow: 0 0 0 14px rgba(76, 175, 80, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
 }
 
 #sharebot-bubble:hover {
@@ -46,20 +35,14 @@
   box-shadow: 0 18px 45px rgba(27, 94, 32, 0.6);
 }
 
-#sharebot-bubble.hidden {
-  display: none;
-}
-
-.sharebot-emoji {
-  font-size: 28px;
-}
+.sharebot-emoji { font-size: 28px; }
 
 /* ================= Widget ================= */
 #sharebot-widget {
   width: 380px;
   max-width: calc(100vw - 32px);
   height: 540px;
-  max-height: calc(100vh - 110px);
+  max-height: calc(100vh - 120px); /* Adjusted for better spacing on various screens */
   background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(16px);
   border-radius: 18px;
@@ -71,14 +54,8 @@
 }
 
 @keyframes widgetIn {
-  from {
-    opacity: 0;
-    transform: translateY(40px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  from { opacity: 0; transform: translateY(40px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 /* ================= Header ================= */
@@ -89,167 +66,289 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.15),
-    0 4px 14px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
 }
 
-.sharebot-brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.sharebot-logo {
-  font-size: 22px;
-}
-
-.sharebot-brand strong {
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: 0.4px;
-}
-
+.sharebot-brand { display: flex; align-items: center; gap: 10px; }
+.sharebot-logo { font-size: 22px; }
+/* Redesigned Close Button for Issue #432 */
 .sharebot-close {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.2);
   border: none;
   color: #fff;
-  font-size: 20px;
-  padding: 6px 10px;
-  border-radius: 10px;
+  font-size: 18px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.15s ease;
+  transition: all 0.2s ease;
+}
+.sharebot-close:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform: rotate(90deg); /* Subtle animation on hover */
+}
+
+/* ================= Messages Area (Scroll Fix) ================= */
+.sharebot-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #fdfdfd;
+  overflow: hidden; /* Contains the scroll area */
+}
+
+.sharebot-messages {
+  flex: 1;
+  overflow-y: auto; /* Correct property for scrolling */
+  padding: 15px;
+  scroll-behavior: smooth;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Scrollbar Styling */
+.sharebot-messages::-webkit-scrollbar { width: 5px; }
+.sharebot-messages::-webkit-scrollbar-thumb {
+  background: #c1d9c7;
+  border-radius: 10px;
+}
+
+/* ================= Message Bubbles ================= */
+.sharebot-message { display: flex; margin: 8px 0; animation: msgIn 0.25s ease; }
+.sharebot-bot { justify-content: flex-start; }
+.sharebot-user { justify-content: flex-end; }
+
+.sharebot-bubble {
+  padding: 10px 14px;
+  max-width: 85%;
+  font-size: 14px;
+  line-height: 1.5;
+  border-radius: 15px;
+  word-wrap: break-word; /* Prevents long links from breaking the UI */
+}
+.sharebot-bot .sharebot-bubble {
+  background: #f0f4f1;
+  color: #333;
+  border-bottom-left-radius: 2px;
+}
+
+.sharebot-user .sharebot-bubble {
+  background: #2e7d32;
+  color: #fff;
+  border-bottom-right-radius: 2px;
+}
+/* ================= Input Area ================= */
+.sharebot-input-area {
+  padding: 15px;
+  display: flex;
+  gap: 10px;
+  border-top: 1px solid #eee;
+}
+
+.sharebot-input-area input {
+  flex: 1;
+  padding: 10px 15px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  outline: none;
+}
+
+.sharebot-input-area button {
+  background: #2e7d32;
+  color: white;
+  border: none;
+  padding: 0 15px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+/* ================= Accessibility & Hidden State ================= */
+#sharebot-widget[hidden] { display: none; }/* ================= Container ================= */
+#sharebot-container {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 99999;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ================= Floating Bubble (FAB) ================= */
+#sharebot-bubble {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #66bb6a, #1b5e20);
+  border: none;
+  color: #fff;
+  display: flex; /* Changed from default to flex for center alignment */
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 12px 30px rgba(46, 125, 50, 0.45);
+  animation: pulseGlow 2.8s infinite;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.45); }
+  70% { box-shadow: 0 0 0 14px rgba(76, 175, 80, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+}
+
+#sharebot-bubble:hover {
+  transform: translateY(-4px) scale(1.1);
+  box-shadow: 0 18px 45px rgba(27, 94, 32, 0.6);
+}
+
+.sharebot-emoji { font-size: 28px; }
+
+/* ================= Widget ================= */
+#sharebot-widget {
+  width: 380px;
+  max-width: calc(100vw - 32px);
+  height: 540px;
+  max-height: calc(100vh - 120px); /* Adjusted for better spacing on various screens */
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(16px);
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.35);
+  animation: widgetIn 0.35s ease;
+}
+
+@keyframes widgetIn {
+  from { opacity: 0; transform: translateY(40px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ================= Header ================= */
+.sharebot-header {
+  background: linear-gradient(135deg, #43a047, #1b5e20);
+  color: #fff;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+}
+
+.sharebot-brand { display: flex; align-items: center; gap: 10px; }
+.sharebot-logo { font-size: 22px; }
+
+/* Redesigned Close Button for Issue #432 */
+.sharebot-close {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .sharebot-close:hover {
   background: rgba(255, 255, 255, 0.35);
-  transform: scale(1.1);
+  transform: rotate(90deg); /* Subtle animation on hover */
 }
 
-/* ================= Main ================= */
+/* ================= Messages Area (Scroll Fix) ================= */
 .sharebot-main {
-  padding: 14px;
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(180deg, #f6faf7, #ffffff);
+  background: #fdfdfd;
+  overflow: hidden; /* Contains the scroll area */
 }
 
-/* ================= Messages ================= */
 .sharebot-messages {
   flex: 1;
-  overflow-y: auto;
-  padding-right: 6px;
+  overflow-y: auto; /* Correct property for scrolling */
+  padding: 15px;
   scroll-behavior: smooth;
-}
-
-/* Scrollbar */
-.sharebot-messages::-webkit-scrollbar {
-  width: 6px;
-}
-.sharebot-messages::-webkit-scrollbar-thumb {
-  background: #b7d8c1;
-  border-radius: 4px;
-}
-
-/* ================= Message Bubble ================= */
-.sharebot-message {
   display: flex;
-  margin: 10px 0;
-  animation: msgIn 0.25s ease;
+  flex-direction: column;
 }
 
-@keyframes msgIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Scrollbar Styling */
+.sharebot-messages::-webkit-scrollbar { width: 5px; }
+.sharebot-messages::-webkit-scrollbar-thumb {
+  background: #c1d9c7;
+  border-radius: 10px;
 }
 
-.sharebot-bot {
-  justify-content: flex-start;
-}
-
-.sharebot-user {
-  justify-content: flex-end;
-}
+/* ================= Message Bubbles ================= */
+.sharebot-message { display: flex; margin: 8px 0; animation: msgIn 0.25s ease; }
+.sharebot-bot { justify-content: flex-start; }
+.sharebot-user { justify-content: flex-end; }
 
 .sharebot-bubble {
-  position: relative;
-  padding: 12px 15px;
-  max-width: 82%;
+  padding: 10px 14px;
+  max-width: 85%;
   font-size: 14px;
-  line-height: 1.6;
-  border-radius: 18px;
+  line-height: 1.5;
+  border-radius: 15px;
+  word-wrap: break-word; /* Prevents long links from breaking the UI */
 }
 
-/* Bot bubble */
 .sharebot-bot .sharebot-bubble {
-  background: #eef6f1;
-  color: #1c1c1c;
-  border-bottom-left-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  background: #f0f4f1;
+  color: #333;
+  border-bottom-left-radius: 2px;
 }
 
-/* Bot tail */
-.sharebot-bot .sharebot-bubble::before {
-  content: "";
-  position: absolute;
-  left: -6px;
-  bottom: 8px;
-  width: 12px;
-  height: 12px;
-  background: #eef6f1;
-  border-radius: 50%;
-}
-
-/* User bubble */
 .sharebot-user .sharebot-bubble {
-  background: linear-gradient(135deg, #4caf50, #1b5e20);
-  color: #fff;
-  border-bottom-right-radius: 6px;
-  box-shadow: 0 6px 18px rgba(27, 94, 32, 0.45);
-}
-
-/* User tail */
-.sharebot-user .sharebot-bubble::after {
-  content: "";
-  position: absolute;
-  right: -6px;
-  bottom: 8px;
-  width: 12px;
-  height: 12px;
   background: #2e7d32;
-  border-radius: 50%;
+  color: #fff;
+  border-bottom-right-radius: 2px;
 }
 
-/* ================= Text Formatting ================= */
-.sharebot-bot .sharebot-bubble b {
-  color: #2e7d32;
-}
-.sharebot-bot .sharebot-bubble i {
-  color: #555;
-}
-.sharebot-bot .sharebot-bubble a {
-  color: #2e7d32;
-  font-weight: 600;
-  text-decoration: underline;
+/* ================= Input Area ================= */
+.sharebot-input-area {
+  padding: 15px;
+  display: flex;
+  gap: 10px;
+  border-top: 1px solid #eee;
 }
 
-/* ================= Quick Replies ================= */
+.sharebot-input-area input {
+  flex: 1;
+  padding: 10px 15px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  outline: none;
+}
+
+.sharebot-input-area button {
+  background: #2e7d32;
+  color: white;
+  border: none;
+  padding: 0 15px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+/* ================= Accessibility & Hidden State ================= */
+#sharebot-widget[hidden] { display: none; }
+
+/* ================= Quick Help Topics ================= */
 .sharebot-quick {
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px dashed #d9e8df;
+  padding: 12px 15px 0;
 }
 
 .sharebot-quick-label {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
-  color: #666;
+  color: #2e7d32;
   margin-bottom: 8px;
 }
 
@@ -260,89 +359,23 @@
 }
 
 .sharebot-quick-item {
-  background: #ffffff;
-  border: 1px solid #cfe3d6;
-  padding: 6px 16px;
-  border-radius: 999px;
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #c8e6c9;
+  padding: 8px 14px;
+  border-radius: 999px; /* pill shape */
   font-size: 13px;
   cursor: pointer;
-  color: #2e7d32;
   transition: all 0.2s ease;
 }
 
 .sharebot-quick-item:hover {
-  background: linear-gradient(135deg, #4caf50, #2e7d32);
-  color: #fff;
-  transform: translateY(-2px);
+  background: #2e7d32;
+  color: #ffffff;
+  transform: translateY(-1px);
 }
 
-/* ================= Input ================= */
-.sharebot-input-area {
-  padding: 12px;
-  display: flex;
-  gap: 8px;
-  border-top: 1px solid #e0e0e0;
-  background: #fafafa;
-}
-
-.sharebot-input-area input {
-  flex: 1;
-  padding: 12px 16px;
-  border-radius: 999px;
-  border: 1px solid #dcdcdc;
-  font-size: 14px;
+.sharebot-quick-item:focus {
   outline: none;
-  transition: border 0.2s ease, box-shadow 0.2s ease;
-}
-
-.sharebot-input-area input:focus {
-  border-color: #4caf50;
-  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
-}
-
-.sharebot-input-area button {
-  background: linear-gradient(135deg, #43a047, #1b5e20);
-  border: none;
-  color: #fff;
-  padding: 12px 20px;
-  border-radius: 999px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.2s ease;
-}
-
-.sharebot-input-area button:hover {
-  box-shadow: 0 8px 22px rgba(27, 94, 32, 0.45);
-}
-
-.sharebot-input-area button:active {
-  transform: scale(0.92);
-}
-
-/* ================= Responsive ================= */
-@media (max-width: 420px) {
-  #sharebot-container {
-    right: 12px;
-    bottom: 110px;
-  }
-
-  #sharebot-widget {
-    width: calc(100vw - 24px);
-    height: calc(100vh - 90px);
-    border-radius: 16px;
-  }
-
-  .sharebot-emoji {
-    font-size: 24px;
-  }
-
-  .sharebot-bubble {
-    max-width: 92%;
-    font-size: 13px;
-  }
-}
-
-/* ================= Accessibility ================= */
-#sharebot-widget[hidden] {
-  display: none;
+  box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.3);
 }

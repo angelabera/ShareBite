@@ -1,56 +1,299 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Track Impact - ShareBite</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f5f7fa;
-            font-family: 'Poppins', sans-serif;
-            text-align: center;
-        }
-        .container {
-            max-width: 600px;
-            padding: 2rem;
-        }
-        .coming-soon-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #4CAF50;
-            margin-bottom: 1rem;
-        }
-        .coming-soon-text {
-            font-size: 1.2rem;
-            color: #555;
-            margin-bottom: 2rem;
-        }
-        .home-link {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            background-color: #FF6B35;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: background-color 0.3s ease;
-        }
-        .home-link:hover {
-            background-color: #E65100;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Track Impact – ShareBite</title>
+  <link rel="icon" type="image/svg+xml" href="logo/logo.svg" />
+
+  <style>
+    :root {
+      --primary-green: #4caf50;
+      --secondary-orange: #ff6b35;
+
+      --bg-light: #f5f7fa;
+      --card-light: #ffffff;
+      --text-light: #333;
+      --muted-light: #555;
+      --border-light: #e0e0e0;
+      --shadow-light: 0 6px 18px rgba(0, 0, 0, 0.05);
+
+      --bg-dark: #0f172a;
+      --card-dark: #1e293b;
+      --text-dark: #e5e7eb;
+      --muted-dark: #9ca3af;
+      --border-dark: #334155;
+      --shadow-dark: 0 8px 24px rgba(0, 0, 0, 0.45);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-light);
+      transition: background-color 0.35s ease, color 0.35s ease;
+    }
+
+    body.dark-mode {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    header {
+      background: var(--card-light);
+      border-bottom: 1px solid var(--border-light);
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.35s, border-color 0.35s;
+    }
+
+    body.dark-mode header {
+      background: var(--card-dark);
+      border-color: var(--border-dark);
+    }
+
+    header a {
+      text-decoration: none;
+      font-weight: 600;
+      color: var(--primary-green);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border-light);
+      color: var(--text-light);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: all 0.3s;
+    }
+
+    body.dark-mode .theme-toggle {
+      border-color: var(--border-dark);
+      color: var(--text-dark);
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.1) rotate(12deg);
+      border-color: var(--primary-green);
+      color: var(--primary-green);
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      margin-bottom: 0.5rem;
+      color: var(--primary-green);
+    }
+
+    .subtitle {
+      color: var(--muted-light);
+      margin-bottom: 2.5rem;
+    }
+
+    body.dark-mode .subtitle {
+      color: var(--muted-dark);
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .metric-card {
+      background: var(--card-light);
+      padding: 1.6rem;
+      border-radius: 14px;
+      box-shadow: var(--shadow-light);
+      text-align: center;
+      transition: background 0.35s, box-shadow 0.35s;
+    }
+
+    body.dark-mode .metric-card {
+      background: var(--card-dark);
+      box-shadow: var(--shadow-dark);
+    }
+
+    .metric-card dt {
+      color: var(--muted-light);
+      font-size: 0.95rem;
+    }
+
+    body.dark-mode .metric-card dt {
+      color: var(--muted-dark);
+    }
+
+    .metric-card dd {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--secondary-orange);
+    }
+
+    section {
+      margin-bottom: 3rem;
+    }
+
+    .placeholder {
+      background: var(--card-light);
+      border-radius: 14px;
+      padding: 2rem;
+      text-align: center;
+      color: var(--muted-light);
+      box-shadow: var(--shadow-light);
+    }
+
+    body.dark-mode .placeholder {
+      background: var(--card-dark);
+      color: var(--muted-dark);
+      box-shadow: var(--shadow-dark);
+    }
+
+    .explanation {
+      max-width: 720px;
+      color: var(--muted-light);
+      line-height: 1.7;
+    }
+
+    body.dark-mode .explanation {
+      color: var(--muted-dark);
+    }
+
+    .cta {
+      text-align: center;
+      margin-top: 3rem;
+    }
+
+    .cta a {
+      display: inline-block;
+      padding: 0.95rem 2rem;
+      background: var(--secondary-orange);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.85rem;
+      color: var(--muted-light);
+    }
+
+    body.dark-mode footer {
+      color: var(--muted-dark);
+    }
+  </style>
 </head>
+
 <body>
-    <div class="container">
-        <h1 class="coming-soon-title">Coming Soon!</h1>
-        <p class="coming-soon-text">We are working hard to bring you the "Track Impact" page. Stay tuned!</p>
-        <a href="index.html" class="home-link">Go back to Home</a>
+  <header>
+    <a href="index.html">← Home</a>
+    <div class="header-right">
+      <strong>ShareBite Impact</strong>
+      <button
+        id="theme-toggle"
+        class="theme-toggle"
+        title="Toggle dark mode"
+        aria-label="Toggle dark mode"
+      >
+        🌙
+      </button>
     </div>
+  </header>
+
+  <main>
+    <h1>Our Impact</h1>
+    <p class="subtitle">
+      Every donation turns surplus food into real meals for people who need them.
+    </p>
+
+    <section>
+      <dl class="metrics">
+        <div class="metric-card">
+          <dt>Meals Donated</dt>
+          <dd>25,000+</dd>
+        </div>
+        <div class="metric-card">
+          <dt>Partner NGOs</dt>
+          <dd>18</dd>
+        </div>
+        <div class="metric-card">
+          <dt>Cities Covered</dt>
+          <dd>12</dd>
+        </div>
+        <div class="metric-card">
+          <dt>Active Since</dt>
+          <dd>2024</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section>
+      <h2>Impact Over Time</h2>
+      <div class="placeholder" aria-live="polite">
+        Visual charts and timelines will appear here as data grows.
+      </div>
+    </section>
+
+    <section>
+      <h2>How We Measure Impact</h2>
+      <p class="explanation">
+        Impact is calculated using standardized meal-equivalent estimates,
+        partner NGO distribution reports, and verified delivery confirmations.
+      </p>
+    </section>
+
+    <div class="cta">
+      <a href="donate.html">Support the Mission</a>
+    </div>
+  </main>
+
+  <footer>
+    © 2026 ShareBite. All rights reserved.
+  </footer>
+
+  <script>
+    const toggleBtn = document.getElementById("theme-toggle");
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+    if (
+      localStorage.theme === "dark" ||
+      (!localStorage.theme && prefersDark)
+    ) {
+      document.body.classList.add("dark-mode");
+      toggleBtn.textContent = "☀️";
+    }
+
+    toggleBtn.addEventListener("click", () => {
+      document.body.classList.toggle("dark-mode");
+      const isDark = document.body.classList.contains("dark-mode");
+      toggleBtn.textContent = isDark ? "☀️" : "🌙";
+      localStorage.theme = isDark ? "dark" : "light";
+    });
+  </script>
 </body>
 </html>

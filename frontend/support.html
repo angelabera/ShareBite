@@ -1,391 +1,1377 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Support | ShareBite</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <title>Support | ShareBite - Reduce Food Waste, Feed Communities</title>
+
+  <link rel="stylesheet" href="css/style.css?v=support-update">
+  <link rel="stylesheet" href="./css/fontawesome/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
+
   <style>
-    /* Custom styles for the Support page, using project CSS variables for color consistency */
-    .support-header {
-      /* Removed padding-top: 80px; as nav is gone */
-      padding-top: 3rem; 
-      background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
-      color: var(--white);
+    /* ===== CSS VARIABLE FALLBACKS ===== */
+    :root {
+      --primary-green: #4CAF50;
+      --primary-dark: #2E7D32;
+      --primary-color: #4CAF50;
+      --primary-gradient: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+      --black: #111827;
+      --white: #ffffff;
+      --light-gray: #F9FAFB;
+      --medium-gray: #6B7280;
+      --text-dark: #1F2937;
+      --card-bg: #ffffff;
+      --card-radius: 12px;
+      --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
+      --shadow-heavy: 0 4px 20px rgba(0, 0, 0, 0.15);
+      --transition: all 0.3s ease;
+      --transition-medium: all 0.4s ease;
+      --transition-slow: all 0.6s ease;
+      --h1-size: 3rem;
+      --h2-size: 2rem;
+    }
+
+    :root.dark {
+      --black: #F9FAFB;
+      --white: #1F2937;
+      --light-gray: #111827;
+      --medium-gray: #9CA3AF;
+      --text-dark: #E5E7EB;
+      --card-bg: #1F2937;
+    }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3);
+      }
+      50% {
+        transform: scale(1.05);
+        box-shadow: 0 8px 30px rgba(76, 175, 80, 0.5);
+      }
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    /* ===== NAVIGATION (UNCHANGED) ===== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: var(--white);
+      box-shadow: var(--shadow-light);
+      z-index: 1000;
+      padding: 1rem 0;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-logo-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--primary-green);
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-link {
+      text-decoration: none;
+      color: var(--text-dark);
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      color: var(--primary-green);
+    }
+
+    .user-actions {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .theme-toggle {
+      background: var(--light-gray);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+
+    .theme-toggle:hover {
+      background: var(--primary-green);
+      color: white;
+    }
+
+    .login-btn {
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-light);
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+    }
+
+    /* ===== HERO SECTION - REDESIGNED ===== */
+    .support-hero {
+      background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%);
+      color: white;
       text-align: center;
-      padding-bottom: 3rem;
-    }
-
-    :root.dark .support-header {
-      background: var(--hero-gradient);
-      color: #F1F1F1; 
-    }
-    
-    .support-header h1 {
-      font-size: var(--h1-size);
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      color: inherit; 
-    }
-
-    .support-header p {
-      font-size: 1.2rem;
-      opacity: 0.9;
-      color: inherit;
-    }
-
-    .content-wrapper {
-        max-width: 1200px;
-        margin: 30px auto;
-        padding: 0 2rem;
-    }
-
-    .support-container {
-      max-width: 900px; 
-      margin: 30px auto;
-      padding: 2rem;
-      background: var(--card-bg);
-      border-radius: var(--card-radius);
-      box-shadow: var(--shadow-medium);
+      padding: 9rem 2rem 5rem;
+      margin-top: 0;
       position: relative;
-    }
-
-    .section-title-custom {
-      font-size: var(--h2-size);
-      font-weight: 700;
-      color: var(--black);
-      margin-bottom: 2rem;
-      border-bottom: 2px solid var(--primary-light);
-      padding-bottom: 0.5rem;
-    }
-
-    /* FAQ Styling */
-    .faq {
-      margin: 1.5rem 0;
-      border: 1px solid var(--light-gray);
-      border-radius: var(--border-radius);
       overflow: hidden;
-      transition: box-shadow 0.3s ease;
+    }
+
+    .support-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="2" fill="white" opacity="0.1"/></svg>');
+      opacity: 0.3;
+    }
+
+    :root.dark .support-hero {
+      background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+    }
+
+    .support-hero-content {
+      max-width: 850px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      animation: fadeIn 1s ease forwards;
+    }
+
+    .support-hero h1 {
+      font-size: 3.2rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 1.2rem;
+      animation: slideInUp 0.8s ease forwards;
+    }
+
+    .support-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(10px);
+      padding: 0.6rem 1.5rem;
+      border-radius: 999px;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      border: 2px solid rgba(255,255,255,0.4);
+      animation: slideInUp 1s ease forwards;
+      animation-delay: 0.2s;
+      opacity: 0;
+      animation-fill-mode: forwards;
+    }
+
+    .support-description {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      opacity: 0.95;
+      max-width: 700px;
+      margin: 0 auto;
+      animation: slideInUp 1.2s ease forwards;
+      animation-delay: 0.4s;
+      opacity: 0;
+      animation-fill-mode: forwards;
+    }
+
+    /* ===== STATS SECTION - NEW ===== */
+    .stats-section {
+      background: var(--white);
+      padding: 3rem 2rem 4rem;
+      margin-top: -2rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .stats-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      padding: 2.5rem 2rem;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: var(--shadow-heavy);
+      transition: var(--transition-medium);
+      border: 2px solid transparent;
+      animation: slideInUp 0.6s ease forwards;
+    }
+
+    .stat-card:nth-child(1) { animation-delay: 0.1s; opacity: 0; animation-fill-mode: forwards; }
+    .stat-card:nth-child(2) { animation-delay: 0.2s; opacity: 0; animation-fill-mode: forwards; }
+    .stat-card:nth-child(3) { animation-delay: 0.3s; opacity: 0; animation-fill-mode: forwards; }
+    .stat-card:nth-child(4) { animation-delay: 0.4s; opacity: 0; animation-fill-mode: forwards; }
+
+    .stat-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--primary-green);
+      box-shadow: 0 8px 30px rgba(76, 175, 80, 0.2);
+    }
+
+    .stat-icon {
+      font-size: 3rem;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+      display: inline-block;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-green);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 1rem;
+      color: var(--medium-gray);
+      font-weight: 500;
+    }
+
+    /* ===== SUPPORT WAYS SECTION - REDESIGNED ===== */
+    .about-sharebite {
+      max-width: 1200px;
+      margin: 5rem auto;
+      padding: 0 2rem;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .section-header h2 {
+      font-size: 2.5rem;
+      color: var(--black);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-header h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 4px;
+      background: var(--primary-gradient);
+      border-radius: 2px;
+    }
+
+    .section-subtitle {
+      color: var(--medium-gray);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 1.5rem auto 0;
+      line-height: 1.6;
+    }
+
+    .support-ways-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2.5rem;
+    }
+
+    .way-card {
+      background: var(--card-bg);
+      padding: 3rem 2.5rem;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: var(--shadow-light);
+      transition: var(--transition-medium);
+      position: relative;
+      overflow: hidden;
+      border: 2px solid transparent;
+    }
+
+    .way-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: var(--primary-gradient);
+      transform: scaleX(0);
+      transition: var(--transition-slow);
+    }
+
+    .way-card:hover {
+      transform: translateY(-12px);
+      box-shadow: 0 12px 40px rgba(76, 175, 80, 0.15);
+      border-color: rgba(76, 175, 80, 0.2);
+    }
+
+    .way-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .way-icon-wrapper {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 1.5rem;
+      background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(46, 125, 50, 0.1) 100%);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-medium);
+    }
+
+    .way-card:hover .way-icon-wrapper {
+      background: var(--primary-gradient);
+      transform: rotate(10deg) scale(1.1);
+    }
+
+    .way-card i {
+      font-size: 2.5rem;
+      color: var(--primary-green);
+      transition: var(--transition-medium);
+    }
+
+    .way-card:hover i {
+      color: white;
+    }
+
+    .way-card h4 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--black);
+    }
+
+    .way-card p {
+      color: var(--medium-gray);
+      line-height: 1.7;
+      font-size: 1rem;
+    }
+
+    /* ===== FAQ SECTION - REDESIGNED ===== */
+    .faq-section {
+      background: var(--light-gray);
+      padding: 6rem 2rem;
+    }
+
+    .faq-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .faq {
+      background: var(--white);
+      border-radius: 16px;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+      border: 2px solid transparent;
+      transition: var(--transition);
+      box-shadow: var(--shadow-light);
     }
 
     .faq:hover {
-      box-shadow: var(--shadow-light);
+      box-shadow: var(--shadow-heavy);
+      border-color: rgba(76, 175, 80, 0.3);
     }
 
     .faq h3 {
       cursor: pointer;
-      padding: 1rem 1.5rem;
-      background: var(--light-gray);
-      color: var(--black);
-      font-size: 1.1rem;
-      font-weight: 600;
+      padding: 1.5rem 2rem;
+      background: var(--card-bg);
       margin: 0;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      transition: background 0.3s ease;
+      font-weight: 600;
+      color: var(--text-dark);
+      transition: var(--transition);
+      font-size: 1.1rem;
+      user-select: none;
     }
 
-    .faq h3:hover {
-      background: rgba(76, 175, 80, 0.1);
-      color: var(--primary-dark);
+    .faq-icon-wrapper {
+      width: 35px;
+      height: 35px;
+      background: var(--light-gray);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-medium);
     }
 
-    .faq-icon {
+    .faq h3 i {
       transition: transform 0.3s ease;
-      color: var(--primary-color);
+      font-size: 0.9rem;
+      color: var(--primary-green);
     }
 
-    .faq h3.open .faq-icon {
+    .faq.open h3 {
+      background: var(--primary-gradient);
+      color: white;
+    }
+
+    .faq.open .faq-icon-wrapper {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .faq.open h3 i {
       transform: rotate(180deg);
+      color: white;
     }
 
     .faq p {
-      display: none;
-      padding: 1.5rem;
-      border-top: 1px solid var(--light-gray);
+      padding: 1rem 2rem 1.8rem 2rem;
       margin: 0;
-      background: var(--card-bg);
       color: var(--medium-gray);
+      line-height: 1.8;
+      display: none;
+      background: var(--white);
+      font-size: 1rem;
+      border-top: 1px solid #F3F4F6;
+    }
+
+    .faq.open p {
+      display: block;
+      animation: slideInUp 0.3s ease;
+    }
+
+    /* ===== CONTACT SECTION - REDESIGNED ===== */
+    .contact {
+      padding: 6rem 2rem;
+      background: var(--white);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .main-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      text-align: center;
+      color: var(--black);
+      margin-bottom: 1rem;
+    }
+
+    .main-subtitle {
+      text-align: center;
+      color: var(--medium-gray);
+      font-size: 1.1rem;
+      margin-bottom: 4rem;
+      max-width: 600px;
+    }
+
+    .contact-wrapper {
+      background: var(--card-bg);
+      padding: 0;
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+      max-width: 1200px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .contact-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+
+    .contact-left {
+      padding: 3rem 3.5rem;
+      background: var(--white);
+    }
+
+    .contact-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--black);
+      margin-bottom: 0.5rem;
+    }
+
+    .contact-subtitle {
+      color: var(--medium-gray);
+      margin-bottom: 2rem;
+      font-size: 1.05rem;
+    }
+
+    .contact form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .contact form label {
+      font-weight: 600;
+      color: var(--black);
+      font-size: 0.95rem;
+    }
+
+    .contact form input,
+    .contact form textarea {
+      width: 100%;
+      padding: 1rem 1.2rem;
+      border-radius: 12px;
+      border: 2px solid #E5E7EB;
+      font-size: 1rem;
+      color: var(--black);
+      background: var(--white);
+      transition: 0.3s ease;
+      resize: none;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .contact form textarea {
+      min-height: 140px;
+    }
+
+    .contact form input:focus,
+    .contact form textarea:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.1);
+      outline: none;
+    }
+
+    .contact form button {
+      background: var(--primary-gradient);
+      color: white;
+      font-weight: 600;
+      font-size: 1.1rem;
+      padding: 1rem 0;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 0.5rem;
+    }
+
+    .contact form button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
+    }
+
+    .contact-right {
+      background: var(--primary-gradient);
+      padding: 3rem 3.5rem;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .contact-right h3 {
+      color: white;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+
+    .contact-right > p {
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 2.5rem;
+      font-size: 1.05rem;
       line-height: 1.6;
     }
 
-    /* Contact Form Styling */
-    .contact-form-support {
-      margin-top: 0;
-      padding: 2rem;
-      border-radius: var(--border-radius);
-      background: var(--light-gray);
-    }
-    
-    .contact-form-support input, 
-    .contact-form-support textarea {
-      width: 100%;
-      margin: 10px 0;
-      padding: 12px;
-      border: 1px solid var(--medium-gray);
-      border-radius: 8px;
-      background: var(--white);
-      color: var(--black);
-      font-size: 1rem;
-      transition: border-color 0.3s;
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 1.8rem;
     }
 
-    .contact-form-support input:focus, 
-    .contact-form-support textarea:focus {
-        outline: none;
-        border-color: var(--secondary-color);
-        box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.2);
+    .info-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.2rem;
     }
 
-    .contact-form-support button {
-      background: var(--secondary-gradient);
+    .info-item i {
+      background: rgba(255, 255, 255, 0.2);
       color: white;
-      border: none;
-      cursor: pointer;
-      font-size: 1.1rem;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      padding: 1rem;
-      border-radius: 8px;
+      width: 45px;
+      height: 45px;
+      min-width: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      font-size: 1.2rem;
     }
 
-    .contact-form-support button:hover {
-      background: var(--primary-gradient);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-medium);
+    .info-item strong {
+      color: white;
+      display: block;
+      margin-bottom: 0.4rem;
+      font-size: 1.05rem;
     }
 
-    /* Dark Mode Adjustments */
-    :root.dark .section-title-custom {
-      color: var(--black);
-      border-bottom: 2px solid var(--primary-dark);
+    .info-item p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.85);
+      line-height: 1.6;
     }
 
-    :root.dark .faq {
-      border: 1px solid #3a3a3a;
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2.5rem;
     }
 
-    :root.dark .faq h3 {
-      background: #2a2a2a;
-      color: var(--black);
+    .social-links a {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      width: 45px;
+      height: 45px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 12px;
+      font-size: 1.2rem;
+      transition: 0.3s ease;
+      text-decoration: none;
+      backdrop-filter: blur(10px);
     }
 
-    :root.dark .faq h3:hover {
-      background: rgba(95, 73, 10, 0.2);
+    .social-links a:hover {
+      background: white;
+      color: var(--primary-green);
+      transform: translateY(-3px);
     }
 
-    :root.dark .faq p {
-      background: var(--card-bg);
-      border-top: 1px solid #3a3a3a;
-      color: var(--medium-gray);
+    /* ===== FOOTER (UNCHANGED) ===== */
+    .footer {
+      background: var(--text-dark);
+      color: white;
+      padding: 3rem 2rem 1rem;
     }
 
-    :root.dark .contact-form-support {
-        background: #2a2a2a;
-    }
-
-    :root.dark .contact-form-support input,
-    :root.dark .contact-form-support textarea {
-        background: #1c1c1c;
-        border-color: #333;
-        color: var(--black);
-    }
-    
-    :root.dark .contact-form-support input::placeholder,
-    :root.dark .contact-form-support textarea::placeholder {
-        color: var(--medium-gray); 
-        opacity: 0.8; 
-    }
-
-    :root.dark .footer { 
-        background: #0d0d0d;
-        color: var(--black); 
-        padding: 0.5rem 0; 
-    }
-    :root.dark .footer-bottom p {
-        color: var(--medium-gray);
-    }
-
-    /* New style for simplified footer alignment */
-    .simplified-footer-container {
+    .footer-grid {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 0 2rem;
-      text-align: center;
-      color: var(--medium-gray);
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 2rem;
     }
 
-    .simplified-footer-container p {
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-green);
+      margin-bottom: 1rem;
+    }
+
+    .footer-brand p {
+      color: #D1D5DB;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-links h4 {
+      color: white;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .footer-links ul {
+      list-style: none;
+      padding: 0;
       margin: 0;
-      padding: 0.2rem 0;
-      font-size: 0.9rem;
-    }
-    
-    /* Style for the standalone theme toggle button */
-    .standalone-toggle-wrapper {
-        position: fixed; /* Keep it visible */
-        top: 20px;
-        right: 20px;
-        z-index: 1000; /* Ensure it's above other elements */
     }
 
-    .theme-toggle {
-        background: var(--primary-color);
-        color: var(--white);
-        border: none;
-        padding: 10px;
-        border-radius: 50%;
-        cursor: pointer;
-        font-size: 1.2rem;
-        box-shadow: var(--shadow-medium);
-        transition: background 0.3s, transform 0.2s;
+    .footer-links li {
+      margin-bottom: 0.5rem;
     }
 
-    .theme-toggle:hover {
-        background: var(--primary-dark);
-        transform: scale(1.05);
+    .footer-links a {
+      color: #D1D5DB;
+      text-decoration: none;
+      transition: var(--transition);
     }
 
-    /* Dark mode toggle button style */
-    :root.dark .theme-toggle {
-        background: var(--secondary-color);
-        color: var(--black);
+    .footer-links a:hover {
+      color: var(--primary-green);
     }
 
-    :root.dark .theme-toggle:hover {
-        background: var(--secondary-dark);
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: center;
+      color: #9CA3AF;
+    }
+
+    .footer-bottom a {
+      color: #D1D5DB;
+      text-decoration: none;
+    }
+
+    .footer-bottom a:hover {
+      color: var(--primary-green);
+    }
+
+    /* ===== DARK MODE OVERRIDES ===== */
+    :root.dark .contact input,
+    :root.dark .contact textarea {
+      color: #E5E7EB;
+      background-color: #111827;
+      border-color: #374151;
+    }
+
+    :root.dark .contact-left {
+      background: #1F2937;
+    }
+
+    :root.dark .contact form input:focus,
+    :root.dark .contact form textarea:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2);
+    }
+
+    :root.dark .contact label {
+      color: #E5E7EB;
+    }
+
+    :root.dark .stats-section {
+      background: #1F2937;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .contact-container {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
     }
 
     @media (max-width: 768px) {
-        .content-wrapper {
-            padding: 0 1rem;
-        }
-        .standalone-toggle-wrapper {
-             top: 10px;
-             right: 10px;
-        }
+      .support-hero {
+        padding: 8rem 1.5rem 4rem;
+      }
+
+      .support-hero h1 {
+        font-size: 2rem;
+      }
+
+      .stats-container {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .section-header h2 {
+        font-size: 2rem;
+      }
+
+      .support-ways-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-menu {
+        position: fixed;
+        top: 70px;
+        left: -100%;
+        flex-direction: column;
+        background: var(--white);
+        width: 100%;
+        padding: 2rem;
+        box-shadow: var(--shadow-heavy);
+        transition: var(--transition);
+      }
+
+      .nav-menu.active {
+        left: 0;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      .user-actions {
+        gap: 10px;
+      }
+
+      .login-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+
+      .contact-left,
+      .contact-right {
+        padding: 2.5rem 2rem;
+      }
+
+      .main-title {
+        font-size: 2rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stats-container {
+        grid-template-columns: 1fr;
+      }
+
+      .support-hero h1 {
+        font-size: 1.8rem;
+      }
     }
   </style>
 </head>
+
 <body>
-    
-    <div class="standalone-toggle-wrapper">
-        <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
-            <i class="fas fa-moon"></i>
-        </button>
-    </div>
 
-    <header class="support-header">
-        <h1>Support Center</h1>
-        <p>How can we help you today?</p>
-    </header>
-
-    <div class="content-wrapper">
-    
-        <div class="support-container">
-            <section>
-              <h2 class="section-title-custom">Contact Our Support Team</h2>
-              <form class="contact-form-support">
-                <input type="text" placeholder="Your Name" required>
-                <input type="email" placeholder="Your Email" required>
-                <textarea rows="5" placeholder="Write your message here..." required></textarea>
-                <button type="submit">Send Message</button>
-              </form>
-            </section>
-        </div>
-
-        <div class="support-container">
-            <section>
-              <h2 class="section-title-custom">Frequently Asked Questions</h2>
-
-              <div class="faq">
-                <h3 class="faq-question">How can I donate surplus food? <i class="fas fa-chevron-down faq-icon"></i></h3>
-                <p>You can register your restaurant/household and schedule a pickup. Our partnered NGOs and volunteers will collect and distribute the food.</p>
-              </div>
-
-              <div class="faq">
-                <h3 class="faq-question">How do NGOs join the platform? <i class="fas fa-chevron-down faq-icon"></i></h3>
-                <p>NGOs can sign up through our registration form and get verified before they can start receiving donations. The registration form is available at the <a href="ngo-register.html">NGO Register page</a> mentioned in the footer.</p>
-              </div>
-
-              <div class="faq">
-                <h3 class="faq-question">Can volunteers join individually? <i class="fas fa-chevron-down faq-icon"></i></h3>
-                <p>Yes! Volunteers can sign up, and we’ll connect them with nearby NGOs for food distribution. They primarily act as collectors on the platform.</p>
-              </div>
-               <div class="faq">
-                <h3 class="faq-question">Is there a cost to use ShareBite? <i class="fas fa-chevron-down faq-icon"></i></h3>
-                <p>No, ShareBite is a Free platform dedicated to fighting food waste and hunger. Our services for donors, NGOs, and volunteers are completely free of charge.</p>
-              </div>
-            </section>
-        </div>
-    </div>
-    
-  <footer class="footer">
-      <div class="simplified-footer-container">
-        <p class="footer-credit">Made with 💚 by Angela Bera</p>
-        <p>
-          &copy; 2025 ShareBite. All rights reserved. 
-        </p>
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <a href="index.html" class="nav-logo-link">
+          <i class="fas fa-utensils"></i>
+          <span>ShareBite</span>
+        </a>
       </div>
-    </footer>
-    <script>
-    // FAQ toggle functionality
-    document.querySelectorAll(".faq h3").forEach(item => {
-      item.addEventListener("click", () => {
-        let content = item.nextElementSibling;
-        let icon = item.querySelector('.faq-icon');
-        
-        // Close all other open FAQs
-        document.querySelectorAll(".faq p").forEach(p => {
-            if(p !== content) {
-                p.style.display = "none";
-                p.previousElementSibling.classList.remove('open');
-                p.previousElementSibling.querySelector('.faq-icon').style.transform = "rotate(0deg)";
-            }
-        });
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="index.html#home" class="nav-link">Home</a></li>
+        <li><a href="index.html#features" class="nav-link">Features</a></li>
+        <li><a href="index.html#listings" class="nav-link">Listings</a></li>
+        <li><a href="index.html#about" class="nav-link">About</a></li>
+        <li><a href="support.html" class="nav-link active">Support</a></li>
+      </ul>
+      <div class="user-actions">
+        <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+          <i class="fas fa-moon"></i>
+        </button>
+        <button class="login-btn" onclick="window.location.href='login.html'">User Login</button>
+        <button class="login-btn" onclick="window.location.href='login_ngo.html'">NGO Login</button>
+      </div>
+      <div class="hamburger" id="menuToggle" tabindex="0" role="button" aria-label="Open navigation menu">
+        <span style="width: 25px; height: 3px; background: var(--text-dark); display: block;"></span>
+        <span style="width: 25px; height: 3px; background: var(--text-dark); display: block;"></span>
+        <span style="width: 25px; height: 3px; background: var(--text-dark); display: block;"></span>
+      </div>
+    </div>
+  </nav>
 
-        // Toggle current FAQ
-        if (content.style.display === "block") {
-            content.style.display = "none";
-            item.classList.remove('open');
-            icon.style.transform = "rotate(0deg)";
-        } else {
-            content.style.display = "block";
-            item.classList.add('open');
-            icon.style.transform = "rotate(180deg)";
-        }
-      });
-    });
+  <section class="support-hero">
+    <div class="container support-hero-content">
+      <h1>Support the Mission to End Hunger & Food Waste</h1>
 
-    // Simple form submission alert
-    document.querySelector(".contact-form-support").addEventListener("submit", (e) => {
-        e.preventDefault();
-        alert("✅ Thank you! Your message has been submitted to the support team.");
-        e.target.reset();
-    });
+      <p class="support-badge">
+        ✨ Small actions. Big impact. Together we make a difference.
+      </p>
+
+      <p class="support-description">
+        Join thousands of donors, volunteers, and organizations working together to create a world where no food goes to waste and no one goes hungry. Every contribution counts towards building a sustainable future.
+      </p>
+    </div>
+  </section>
+
+  <section class="stats-section">
+    <div class="stats-container">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-utensils"></i>
+        </div>
+        <span class="stat-number">50K+</span>
+        <span class="stat-label">Meals Donated</span>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <span class="stat-number">2,500+</span>
+        <span class="stat-label">Active Volunteers</span>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-building"></i>
+        </div>
+        <span class="stat-number">150+</span>
+        <span class="stat-label">Partner NGOs</span>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-heart"></i>
+        </div>
+        <span class="stat-number">100+</span>
+        <span class="stat-label">Cities Covered</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="about-sharebite">
+    <div class="section-header">
+      <h2>How You Can Support ShareBite</h2>
+      <p class="section-subtitle">Multiple ways to contribute and make a real impact in your community. Choose what works best for you.</p>
+    </div>
+    <div class="support-ways-grid">
+      <div class="way-card">
+        <div class="way-icon-wrapper">
+          <i class="fas fa-hand-holding-heart"></i>
+        </div>
+        <h4>Donate Surplus Food</h4>
+        <p>List your excess food directly on our platform — restaurants, households, and events welcome.</p>
+      </div>
+      <div class="way-card">
+        <div class="way-icon-wrapper">
+          <i class="fas fa-users"></i>
+        </div>
+        <h4>Become a Volunteer</h4>
+        <p>Join as a collector/volunteer to pick up and deliver food in your city.</p>
+      </div>
+      <div class="way-card">
+        <div class="way-icon-wrapper">
+          <i class="fas fa-handshake"></i>
+        </div>
+        <h4>Partner as an NGO</h4>
+        <p>Register your organization to receive verified donations regularly.</p>
+      </div>
+      <div class="way-card">
+        <div class="way-icon-wrapper">
+          <i class="fas fa-bullhorn"></i>
+        </div>
+        <h4>Spread Awareness</h4>
+        <p>Share our mission on social media, organize drives, or host awareness events.</p>
+      </div>
+      <div class="way-card">
+        <div class="way-icon-wrapper">
+          <i class="fas fa-donate"></i>
+        </div>
+        <h4>Financial Support</h4>
+        <p>Contribute funds to help us cover logistics, verification, and awareness campaigns.</p>
+      </div>
+      <div class="way-card">
+        <div class="way-icon-wrapper">
+          <i class="fas fa-store"></i>
+        </div>
+        <h4>Corporate Partnership</h4>
+        <p>Businesses can sponsor pickups, provide branding, or integrate with employee CSR programs.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <div class="faq-container">
+      <div class="section-header">
+        <h2>Frequently Asked Questions</h2>
+        <p class="section-subtitle">Find answers to common questions about how ShareBite works and how you can get involved.</p>
+      </div>
+
+      <div class="faq">
+        <h3>
+          <span>How do I donate surplus food on ShareBite?</span>
+          <div class="faq-icon-wrapper">
+            <i class="fas fa-chevron-down"></i>
+          </div>
+        </h3>
+        <p>Register or log in → click "Add Listing" → enter food type, quantity, freshness time, pickup location and contact details. Nearby NGOs and volunteers will be notified and can claim the donation quickly.</p>
+      </div>
+
+      <div class="faq">
+        <h3>
+          <span>How can NGOs and volunteers join the platform?</span>
+          <div class="faq-icon-wrapper">
+            <i class="fas fa-chevron-down"></i>
+          </div>
+        </h3>
+        <p>NGOs register on the NGO registration page and go through a quick verification process (documents + review). Individuals can sign up as volunteers and browse/claim available listings directly (subject to donor approval and safety checks).</p>
+      </div>
+
+      <div class="faq">
+        <h3>
+          <span>What kind of food is accepted and how is safety ensured?</span>
+          <div class="faq-icon-wrapper">
+            <i class="fas fa-chevron-down"></i>
+          </div>
+        </h3>
+        <p>We accept fresh, edible surplus food (cooked meals, bakery items, fruits, vegetables, unopened packaged food within expiry). Expired, spoiled or opened perishables are not allowed. Donors must provide preparation time & freshness window; collectors follow hygiene guidelines and can refuse suspicious donations.</p>
+      </div>
+
+      <div class="faq">
+        <h3>
+          <span>Is ShareBite free to use? Are there any costs involved?</span>
+          <div class="faq-icon-wrapper">
+            <i class="fas fa-chevron-down"></i>
+          </div>
+        </h3>
+        <p>Yes — completely free for everyone. Donors can list food, NGOs/volunteers can claim and coordinate pickups, and all core features have no charges. (Optional future donations/fundraising may appear to support platform operations.)</p>
+      </div>
+
+      <div class="faq">
+        <h3>
+          <span>What if no one claims my donation or I have another question?</span>
+          <div class="faq-icon-wrapper">
+            <i class="fas fa-chevron-down"></i>
+          </div>
+        </h3>
+        <p>You'll get reminders and can extend the availability time or cancel the listing. Many restaurants set up recurring pickups with regular partners. For any other questions, partnerships, impact tracking, or issues — use the contact form below, email <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="fb888e8b8b94898fbb88939a899e99928f9ed594899c">[email&#160;protected]</a>, or call +91 88888 99999 during business hours.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact-section" class="contact">
+    <h1 class="main-title">📞 Get In Touch With Us</h1>
+    <p class="main-subtitle">Have a question or want to get involved? We'd love to hear from you. Our team typically responds within 24 hours.</p>
     
-    // Theme toggle functionality
-    document.addEventListener('DOMContentLoaded', () => {
-        const themeToggle = document.getElementById('themeToggle');
-        if (themeToggle) {
-            // Check for existing theme preference (assuming 'dark' class is used)
-            const isDark = document.documentElement.classList.contains('dark');
-            // Use sun icon for light mode, moon for dark mode
-            themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+    <div class="contact-wrapper">
+      <div class="contact-container">
+        <div class="contact-left">
+          <h2 class="contact-title">Send Us a Message</h2>
+          <p class="contact-subtitle">Fill out the form and we'll get back to you shortly</p>
 
-            themeToggle.addEventListener('click', () => {
-                const isNowDark = document.documentElement.classList.toggle('dark');
-                document.documentElement.classList.toggle('dark-mode'); // For older style.css references
-                // Update icon based on the new theme
-                themeToggle.innerHTML = isNowDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-            });
+          <form id="contact-form">
+            <div class="form-group">
+              <label for="contact-name">Full Name</label>
+              <input type="text" id="contact-name" placeholder="John Doe" required />
+            </div>
+
+            <div class="form-group">
+              <label for="contact-email">Email Address</label>
+              <input type="email" id="contact-email" placeholder="john@example.com" required />
+            </div>
+
+            <div class="form-group">
+              <label for="contact-msg">Your Message</label>
+              <textarea id="contact-msg" placeholder="Tell us how we can help you..." required></textarea>
+            </div>
+
+            <button type="submit">Send Message</button>
+          </form>
+        </div>
+
+        <div class="contact-right">
+          <h3>Contact Information</h3>
+          <p>We're here to help and answer any questions you might have. We look forward to hearing from you!</p>
+
+          <div class="contact-info">
+            <div class="info-item">
+              <i class="fa-solid fa-house"></i>
+              <div>
+                <strong>Our Location</strong>
+                <p>ShareBite Building, Noida, India</p>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <i class="fa-solid fa-phone"></i>
+              <div>
+                <strong>Phone Number</strong>
+                <p>+91 8888889999</p>
+              </div>
+            </div>
+
+
+            <div class="info-item">
+              <i class="fa-solid fa-clock"></i>
+              <div>
+                <strong>Support Hours</strong>
+                <p>Monday – Saturday<br>9 AM – 7 PM IST</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="social-links">
+            <a href="#" aria-label="GitHub" title="GitHub"><i class="fa-brands fa-github" aria-hidden="true"></i></a>
+            <a href="#" aria-label="LinkedIn" title="LinkedIn"><i class="fa-brands fa-linkedin" aria-hidden="true"></i></a>
+            <a href="tel:+918888889999" aria-label="Call +91 8888889999" title="Call +91 8888889999"><i class="fa-solid fa-phone" aria-hidden="true"></i></a>
+            <a href="/cdn-cgi/l/email-protection#cdbea5acbfa8afa4b9a88dbeb8bdbda2bfb9e3aea2a0" aria-label="Email sharebite@support.com" title="Email sharebite@support.com"><i class="fa-solid fa-envelope" aria-hidden="true"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <i class="fas fa-utensils"></i>
+          <span>ShareBite</span>
+        </div>
+        <p>
+          Reducing food waste. Feeding communities.<br>
+          Join us in building a hunger-free and sustainable India.
+        </p>
+        <div class="social-links">
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html#home">Home</a></li>
+          <li><a href="index.html#features">How It Works</a></li>
+          <li><a href="index.html#listings">Food Listings</a></li>
+          <li><a href="index.html#about">About Us</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-links">
+        <h4>For Donors</h4>
+        <ul>
+          <li><a href="index.html#listings">List Food</a></li>
+          <li><a href="donor-guidelines.html">Donor Guidelines</a></li>
+          <li><a href="track-impact.html">Track Your Impact</a></li>
+          <li><a href="support.html">Support</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-links">
+        <h4>For Collectors</h4>
+        <ul>
+          <li><a href="index.html#listings">Find Food</a></li>
+          <li><a href="ngo-register.html">Register NGO</a></li>
+          <li><a href="volunteer_food.html">Volunteer</a></li>
+          <li><a href="support.html">Help & FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>Made with 💚 by <strong>Angela Bera</strong></p>
+      <p>
+        © <span id="current-year"></span> ShareBite. All rights reserved ·
+        <a href="License.html">License</a> ·
+        <a href="support.html">Support</a>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+      // --- 1. Current Year Update ---
+      const yearSpan = document.getElementById("current-year");
+      if (yearSpan) {
+        yearSpan.textContent = new Date().getFullYear();
+      }
+
+      // --- 2. FAQ Accordion Functionality ---
+      const faqHeaders = document.querySelectorAll(".faq h3");
+      faqHeaders.forEach(item => {
+        item.addEventListener("click", () => {
+          const parent = item.parentElement;
+          const isOpen = parent.classList.contains("open");
+
+          // Close all other open FAQs
+          document.querySelectorAll(".faq").forEach(f => {
+            f.classList.remove("open");
+            const p = f.querySelector("p");
+            if (p) p.style.display = "none";
+          });
+
+          // Toggle the clicked FAQ
+          if (!isOpen) {
+            parent.classList.add("open");
+            const p = item.nextElementSibling;
+            if (p) p.style.display = "block";
+          }
+        });
+      });
+
+      // --- 3. Contact Form Submission ---
+      const contactForm = document.getElementById("contact-form");
+      if (contactForm) {
+        contactForm.addEventListener("submit", e => {
+          e.preventDefault();
+
+          // Create success message element
+          const successMsg = document.createElement('div');
+          successMsg.style.cssText = 'text-align: center; padding: 3rem 2rem; animation: slideInUp 0.5s ease;';
+          successMsg.innerHTML = `
+            <i class="fas fa-check-circle" style="color: #4CAF50; font-size: 4rem; margin-bottom: 1.5rem; display: block;"></i>
+            <h3 style="margin-bottom: 1rem; color: var(--black); font-size: 1.8rem;">Message Sent Successfully!</h3>
+            <p style="color: var(--medium-gray); font-size: 1.1rem; max-width: 400px; margin: 0 auto;">Thank you for reaching out! Our support team will get back to you within 24 hours.</p>
+          `;
+
+          // Hide form and show success message
+          contactForm.style.display = 'none';
+          contactForm.parentNode.insertBefore(successMsg, contactForm.nextSibling);
+
+          // Reset form in background
+          e.target.reset();
+        });
+      }
+
+      // --- 4. Theme Toggle Logic ---
+      const themeToggle = document.getElementById('themeToggle');
+      const htmlEl = document.documentElement;
+
+      // Function to apply theme and update the icon
+      function applyTheme(isDark) {
+        if (isDark) {
+          htmlEl.classList.add('dark');
+          if (themeToggle) themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        } else {
+          htmlEl.classList.remove('dark');
+          if (themeToggle) themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
         }
+      }
+
+      // Check for saved user preference or system preference on load
+      const savedTheme = localStorage.getItem('theme');
+      const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+      // Initialize State
+      if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
+        applyTheme(true);
+      } else {
+        applyTheme(false);
+      }
+
+      // Handle Click Event
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          const isDarkNow = htmlEl.classList.contains('dark');
+          const newThemeIsDark = !isDarkNow;
+
+          applyTheme(newThemeIsDark);
+
+          // Save preference to LocalStorage
+          localStorage.setItem('theme', newThemeIsDark ? 'dark' : 'light');
+        });
+      }
+
+      // --- 5. Mobile Menu Toggle ---
+      const menuToggle = document.getElementById('menuToggle');
+      const navMenu = document.getElementById('navMenu');
+
+      if (menuToggle && navMenu) {
+        menuToggle.addEventListener('click', () => {
+          navMenu.classList.toggle('active');
+          menuToggle.classList.toggle('active');
+        });
+      }
     });
   </script>
 </body>
+
 </html>

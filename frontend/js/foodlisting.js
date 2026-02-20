@@ -1,5 +1,6 @@
 // ShareBite JavaScript - Interactive Food Waste Reduction Platform
 
+ feature/loading-spinner
 const spinner = document.getElementById("loading-spinner");
 const body = document.body;
 
@@ -12,6 +13,7 @@ const hideSpinner = () => {
   spinner.style.display = "none"; 
   body.classList.remove("loading");
 };
+ main
 
 class ShareBiteFoodListing {
     constructor() {
@@ -23,12 +25,17 @@ class ShareBiteFoodListing {
         this.claimedItems = this.loadClaimedItems();
         this.notifications = this.loadNotifications();
         this.api = window;
-        
+
         this.init();
         this.initTheme(); // add theme initialization after base init
     }
 
     init() {
+        // Refresh expiry countdown every minute
+        setInterval(() => {
+            this.renderFoodListings();
+        }, 60000);
+
         this.setupEventListeners();
         this.loadListingsFromDB();
         this.renderFoodListings();
@@ -73,31 +80,31 @@ class ShareBiteFoodListing {
     setupEventListeners() {
         // Navigation
         this.setupNavigation();
-        
+
         // Role switching
         this.setupRoleSwitch();
-        
+
         // Modal functionality
         this.setupModal();
-        
+
         // Form handling
         this.setupFormHandling();
-        
+
         // Date input confirmation functionality
         this.setupDateInputConfirmation();
-        
+
         // Time input confirmation functionality
         this.setupTimeInputConfirmation();
-        
+
         // Filtering and search
         this.setupFilteringAndSearch();
-        
+
         // Responsive navigation
         this.setupResponsiveNav();
-        
+
         // Statistics counter animation
         this.setupStatsAnimation();
-        
+
         // Scroll effects
         this.setupScrollEffects();
     }
@@ -128,11 +135,11 @@ class ShareBiteFoodListing {
     setupRoleSwitch() {
         const roleSwitch = document.getElementById('roleSwitch');
         const currentRoleSpan = document.getElementById('currentRole');
-        
+
         roleSwitch.addEventListener('click', () => {
             this.currentRole = this.currentRole === 'donor' ? 'collector' : 'donor';
             currentRoleSpan.textContent = this.currentRole.charAt(0).toUpperCase() + this.currentRole.slice(1);
-            
+
             // Update UI based on role
             this.updateUIForRole();
         });
@@ -143,12 +150,12 @@ class ShareBiteFoodListing {
         const findBtn = document.getElementById('findFood');
         const addListingBtn = document.getElementById('addListingBtn');
         const notificationBell = document.getElementById('notificationBell');
-        
+
         if (this.currentRole === 'collector') {
             if (donateBtn) donateBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
             if (findBtn) findBtn.innerHTML = '<i class="fas fa-heart"></i> Help Others';
             if (addListingBtn) addListingBtn.style.display = 'none';
-            
+
             // Show notification bell for collectors
             if (notificationBell) {
                 notificationBell.style.display = 'block';
@@ -157,260 +164,331 @@ class ShareBiteFoodListing {
             if (donateBtn) donateBtn.innerHTML = '<i class="fas fa-heart"></i> Donate Food';
             if (findBtn) findBtn.innerHTML = '<i class="fas fa-search"></i> Find Food';
             if (addListingBtn) addListingBtn.style.display = 'flex';
-            
+
             // Hide notification bell for donors (unless they have notifications)
             if (notificationBell && this.notifications.length === 0) {
                 notificationBell.style.display = 'none';
             }
         }
-        
+
         // Re-render food listings to update claim button states
         this.renderFoodListings();
     }
 
-   setupModal() {
-    const modal = document.getElementById('addListingModal');
-    const addListingBtn = document.getElementById('addListingBtn');
-    const closeModalBtn = document.querySelector('.close-modal');
-    const cancelBtn = document.getElementById('cancelForm');
+    setupModal() {
+        const modal = document.getElementById('addListingModal');
+        const addListingBtn = document.getElementById('addListingBtn');
+        const closeModalBtn = document.querySelector('.close-modal');
+        const cancelBtn = document.getElementById('cancelForm');
 
-    this.currentStep = 1;
-    this.totalSteps = 3;
+        const closeModal = () => {
+            // Close modal and restore page state
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
 
-    addListingBtn.addEventListener('click', () => {
-        modal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-        this.resetFormSteps();
-    });
+            // Reset form steps to initial state
+            this.resetFormSteps();
+        };
 
-    const closeModal = () => {
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-        this.resetForm();
-        this.resetFormSteps();
-    };
-
-    closeModalBtn.addEventListener('click', closeModal);
-    cancelBtn.addEventListener('click', closeModal);
-    
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeModal();
+        // Cancel button
+        if (cancelBtn) {
+            cancelBtn.onclick = (event) => {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                closeModal();
+            };
         }
-    });
 
-    this.setupFileUpload();
-    this.setupFormNavigation();
-}
+        closeModalBtn.addEventListener('click', closeModal);
 
-setupFormNavigation() {
-    const nextBtn = document.getElementById('nextStep');
-    const prevBtn = document.getElementById('prevStep');
-    const submitBtn = document.getElementById('submitForm');
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
 
-    // If the main `script.js` ShareBite class is present on the page,
-    // duplicate listeners that can bypass validation logic.
-    if (window.ShareBite) {
-        return;
+        // Reset steps
+        this.currentStep = 1;
+        this.totalSteps = 3;
+
+        // Open modal
+        addListingBtn.addEventListener('click', () => {
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            this.resetFormSteps();
+        });
+
+        this.setupFileUpload();
+        this.setupFormNavigation();
     }
 
-    nextBtn.addEventListener('click', () => {
-        if (this.validateCurrentStep()) {
-            this.goToStep(this.currentStep + 1);
+    setupFormNavigation() {
+        const nextBtn = document.getElementById('nextStep');
+        const prevBtn = document.getElementById('prevStep');
+        const submitBtn = document.getElementById('submitForm');
+
+        if (nextBtn) {
+            nextBtn.onclick = async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                if (nextBtn.disabled) return;
+                nextBtn.disabled = true;
+
+                console.log(`[Nav] Next clicked. Current step: ${this.currentStep}`);
+
+                if (this.validateCurrentStep()) {
+                    console.log('[Nav] Validation passed. Advancing...');
+                    this.goToStep(this.currentStep + 1);
+                } else {
+                    console.log('[Nav] Validation failed.');
+                }
+
+                // Re-enable after delay to prevent double-clicks
+                setTimeout(() => {
+                    nextBtn.disabled = false;
+                }, 500);
+            };
         }
-    });
 
-    prevBtn.addEventListener('click', () => {
-        this.goToStep(this.currentStep - 1);
-    });
-}
-
-goToStep(stepNumber) {
-    if (stepNumber < 1 || stepNumber > this.totalSteps) return;
-
-    document.querySelectorAll('.form-step').forEach(step => {
-        step.classList.remove('active');
-    });
-
-    const newStep = document.querySelector(`.form-step[data-step="${stepNumber}"]`);
-    if (newStep) {
-        newStep.classList.add('active');
+        if (prevBtn) {
+            prevBtn.onclick = (e) => {
+                e.preventDefault();
+                this.goToStep(this.currentStep - 1);
+            };
+        }
     }
 
-    this.updateProgress(stepNumber);
+    goToStep(stepNumber) {
+        console.log(`[goToStep] Switching to step ${stepNumber}`);
+        if (stepNumber < 1 || stepNumber > this.totalSteps) return;
 
-    this.updateNavigationButtons(stepNumber);
-
-    this.currentStep = stepNumber;
-}
-
-updateProgress(stepNumber) {
-    const steps = document.querySelectorAll('.progress-step');
-    
-    steps.forEach((step, index) => {
-        const stepNum = index + 1;
-        
-        if (stepNum < stepNumber) {
-            step.classList.add('completed');
+        document.querySelectorAll('.form-step').forEach(step => {
             step.classList.remove('active');
-        } else if (stepNum === stepNumber) {
-            step.classList.add('active');
-            step.classList.remove('completed');
+            step.style.setProperty('display', 'none', 'important');
+        });
+
+        const newStep = document.querySelector(`.form-step[data-step="${stepNumber}"]`);
+        if (newStep) {
+            console.log(`[goToStep] Showing step ${stepNumber}`, newStep);
+            newStep.classList.add('active');
+            newStep.style.setProperty('display', 'block', 'important');
+
+            // Initialize map if moving to step 2
+            if (stepNumber === 2) {
+                setTimeout(() => this.initMap(), 100); // Small delay for layout to settle
+            }
         } else {
-            step.classList.remove('active', 'completed');
+            console.error(`[goToStep] Could not find step ${stepNumber}`);
         }
-    });
-}
 
-updateNavigationButtons(stepNumber) {
-    const nextBtn = document.getElementById('nextStep');
-    const prevBtn = document.getElementById('prevStep');
-    const submitBtn = document.getElementById('submitForm');
+        this.updateProgress(stepNumber);
+        this.updateNavigationButtons(stepNumber);
+        this.currentStep = stepNumber;
+    }
 
-    prevBtn.style.display = stepNumber === 1 ? 'none' : 'flex';
-    nextBtn.style.display = stepNumber === this.totalSteps ? 'none' : 'flex';
-    submitBtn.style.display = stepNumber === this.totalSteps ? 'flex' : 'none';
-}
+    updateProgress(stepNumber) {
+        const steps = document.querySelectorAll('.progress-step');
 
-validateCurrentStep() {
-    const currentStepEl = document.querySelector(`.form-step[data-step="${this.currentStep}"]`);
-    const requiredInputs = currentStepEl.querySelectorAll('[required]');
-    
-    for (let input of requiredInputs) {
-        if (!input.value.trim()) {
-            input.focus();
-            this.showToast(`Please fill in the required field: ${input.previousElementSibling.textContent}`, 'error');
+        steps.forEach((step, index) => {
+            const stepNum = index + 1;
+
+            if (stepNum < stepNumber) {
+                step.classList.add('completed');
+                step.classList.remove('active');
+            } else if (stepNum === stepNumber) {
+                step.classList.add('active');
+                step.classList.remove('completed');
+            } else {
+                step.classList.remove('active', 'completed');
+            }
+        });
+    }
+
+    updateNavigationButtons(stepNumber) {
+        const nextBtn = document.getElementById('nextStep');
+        const prevBtn = document.getElementById('prevStep');
+        const submitBtn = document.getElementById('submitForm');
+
+        prevBtn.style.display = stepNumber === 1 ? 'none' : 'flex';
+        nextBtn.style.display = stepNumber === this.totalSteps ? 'none' : 'flex';
+        submitBtn.style.display = stepNumber === this.totalSteps ? 'flex' : 'none';
+    }
+
+    validateCurrentStep() {
+        // Select the currently active/visible step
+        const currentStepEl = document.querySelector('.form-step.active');
+        if (!currentStepEl) {
+            console.error(`Active form step not found`);
             return false;
         }
-        
-        // Special validation for contact information
-        if (input.id === 'contact') {
-            if (!this.validateContactInfo(input.value.trim())) {
+
+        // Define required fields per step
+        const requiredFieldIds = {
+            1: ['foodType', 'quantity', 'category'],
+            2: ['freshUntil', 'pickupTime', 'location', 'contact'],
+            3: [] // Step 3 (photo) is optional
+        };
+
+        const fieldsToCheck = requiredFieldIds[this.currentStep] || [];
+        let isValid = true;
+
+        for (let fieldId of fieldsToCheck) {
+            const input = document.getElementById(fieldId);
+            if (input && !input.value.trim()) {
                 input.focus();
-                this.showToast('Please enter a valid email address or phone number', 'error');
-                return false;
+                // Safely get label text or fallback
+                let labelText = fieldId;
+                if (input.previousElementSibling && input.previousElementSibling.textContent) {
+                    labelText = input.previousElementSibling.textContent.replace('*', '').trim();
+                } else if (input.placeholder) {
+                    labelText = input.placeholder;
+                }
+
+                this.showToast(`Please fill in the required field: ${labelText}`, 'error');
+                isValid = false;
+                break; // Stop at first error
+            }
+
+            // Special validation for contact information
+            if (fieldId === 'contact' && input) {
+                if (!this.validateContactInfo(input.value.trim())) {
+                    input.focus();
+                    this.showToast('Please enter a valid email address or phone number', 'error');
+                    isValid = false;
+                    break;
+                }
             }
         }
-    }
-    
-    return true;
-}
 
-// Validate contact information (email or phone number)
-validateContactInfo(contact) {
-    // Email regex pattern
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    
-    // Check if it's a valid email
-    if (emailPattern.test(contact)) {
-        return true;
+        return isValid;
     }
 
-    // Phone number regex pattern (Checks)
-    const phonePattern = /^\+?\d+$/;
+    // Validate contact information (email or phone number)
+    validateContactInfo(contact) {
+        // Email regex pattern
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-    // Check if it's a valid phone number
-    if (!phonePattern.test(contact)) {
-        return false;
-    }
-
-    // If phone number starts with '+', total digits (excluding '+') must be between 11 and 13
-    if (contact.startsWith('+')) {
-        const digitCount = contact.length - 1; // exclude '+'
-        return digitCount >= 11 && digitCount <= 13;
-    }
-
-    // If phone number does not contain country code, then check only for length
-    return contact.length === 10;
-}
-
-resetFormSteps() {
-    this.currentStep = 1;
-    this.goToStep(1);
-}
-
-setupFileUpload() {
-    const fileInput = document.getElementById('photo');
-    const uploadArea = document.getElementById('photoUpload');
-    const imagePreview = document.getElementById('imagePreview');
-
-    uploadArea.addEventListener('click', () => {
-        fileInput.click();
-    });
-
-    uploadArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadArea.classList.add('drag-over');
-    });
-
-    uploadArea.addEventListener('dragleave', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('drag-over');
-    });
-
-    uploadArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('drag-over');
-        const files = e.dataTransfer.files;
-        if (files.length > 0 && files[0].type.startsWith('image/')) {
-            fileInput.files = files;
-            this.handleFileSelect(files[0]);
-        } else {
-            this.showToast('Please upload a valid image file', 'error');
+        // Check if it's a valid email
+        if (emailPattern.test(contact)) {
+            return true;
         }
-    });
 
-    fileInput.addEventListener('change', (e) => {
-        if (e.target.files.length > 0) {
-            this.handleFileSelect(e.target.files[0]);
+        // Phone number regex pattern (Checks)
+        const phonePattern = /^\+?\d+$/;
+
+        // Check if it's a valid phone number
+        if (!phonePattern.test(contact)) {
+            return false;
         }
-    });
-}
 
-handleFileSelect(file) {
-    const imagePreview = document.getElementById('imagePreview');
-    const uploadArea = document.getElementById('photoUpload');
-    
-    if (!file.type.startsWith('image/')) {
-        this.showToast('Please select an image file', 'error');
-        return;
+        // If phone number starts with '+', total digits (excluding '+') must be between 11 and 13
+        if (contact.startsWith('+')) {
+            const digitCount = contact.length - 1; // exclude '+'
+            return digitCount >= 11 && digitCount <= 13;
+        }
+
+        // If phone number does not contain country code, then check only for length
+        return contact.length === 10;
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-        this.showToast('Image size should be less than 5MB', 'error');
-        return;
+    resetFormSteps() {
+        this.currentStep = 1;
+        this.goToStep(1);
     }
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        this.uploadedPhotoBase64 = e.target.result;
-        imagePreview.innerHTML = `
+    setupFileUpload() {
+        const fileInput = document.getElementById('photo');
+        const uploadArea = document.getElementById('photoUpload');
+        const imagePreview = document.getElementById('imagePreview');
+
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('drag-over');
+        });
+
+        uploadArea.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('drag-over');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('drag-over');
+            const files = e.dataTransfer.files;
+            if (files.length > 0 && files[0].type.startsWith('image/')) {
+                fileInput.files = files;
+                this.handleFileSelect(files[0]);
+            } else {
+                this.showToast('Please upload a valid image file', 'error');
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                this.handleFileSelect(e.target.files[0]);
+            }
+        });
+    }
+
+    handleFileSelect(file) {
+        const imagePreview = document.getElementById('imagePreview');
+        const uploadArea = document.getElementById('photoUpload');
+
+        if (!file.type.startsWith('image/')) {
+            this.showToast('Please select an image file', 'error');
+            return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+            this.showToast('Image size should be less than 5MB', 'error');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            this.uploadedPhotoBase64 = e.target.result;
+            imagePreview.innerHTML = `
             <img src="${e.target.result}" alt="Food preview">
             <button type="button" class="remove-image">
                 <i class="fas fa-times"></i>
             </button>
         `;
-        imagePreview.classList.add('active');
-        uploadArea.style.display = 'none';
+            imagePreview.classList.add('active');
+            uploadArea.style.display = 'none';
 
-        // Add remove functionality
-        const removeBtn = imagePreview.querySelector('.remove-image');
-        removeBtn.addEventListener('click', () => {
-            imagePreview.innerHTML = '';
-            imagePreview.classList.remove('active');
-            uploadArea.style.display = 'block';
-            document.getElementById('photo').value = '';
-            this.uploadedPhotoBase64 = null;
-        });
-    };
-    reader.readAsDataURL(file);
-}
+            // Add remove functionality
+            const removeBtn = imagePreview.querySelector('.remove-image');
+            removeBtn.addEventListener('click', () => {
+                imagePreview.innerHTML = '';
+                imagePreview.classList.remove('active');
+                uploadArea.style.display = 'block';
+                document.getElementById('photo').value = '';
+                this.uploadedPhotoBase64 = null;
+            });
+        };
+        reader.readAsDataURL(file);
+    }
 
 
 
     setupFormHandling() {
         const form = document.getElementById('listingForm');
-        
+        const submitBtn = document.getElementById('submitForm');
+
+        // Handle button click (since type="button")
+        if (submitBtn) {
+            submitBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.handleFormSubmission();
+            });
+        }
+
+        // Keep form submit as backup (though unlikely to fire with type="button")
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             this.handleFormSubmission();
@@ -424,39 +502,41 @@ handleFileSelect(file) {
 
     handleFormSubmission() {
         const formData = this.getFormData();
-        
+
         if (this.validateFormData(formData)) {
             try {
-            const backendData = {
-                foodType: formData.foodType,
-                quantity: formData.quantity,
-                category: formData.category,
-                description: formData.description,
-                freshUntil: formData.freshUntil,
-                pickupTime: formData.pickupTime,
-                pickupLocation: formData.location, 
-                contactInfo: formData.contact,
-                dietaryTags: formData.dietaryTags,
-                photos: formData.photos,
-            };
+                const backendData = {
+                    foodType: formData.foodType,
+                    quantity: formData.quantity,
+                    category: formData.category,
+                    description: formData.description,
+                    freshUntil: formData.freshUntil,
+                    pickupTime: formData.pickupTime,
+                    pickupLocation: formData.location,
+                    contactInfo: formData.contact,
+                    dietaryTags: formData.dietaryTags,
+                    photos: formData.photos,
+                    latitude: parseFloat(formData.latitude) || 0, // Ensure numeric
+                    longitude: parseFloat(formData.longitude) || 0, // Ensure numeric
+                };
 
-            const newListing = this.api.createFoodListing(backendData);
-            this.foodListings.unshift(newListing);
-            this.filterListings();
-            this.loadListingsFromDB();
-            this.renderFoodListings();
-            this.showSuccessMessage();
-            this.closeModalAndReset();
+                const newListing = this.api.createFoodListing(backendData);
+                this.foodListings.unshift(newListing);
+                this.filterListings();
+                this.loadListingsFromDB();
+                this.renderFoodListings();
+                this.showSuccessMessage();
+                this.closeModalAndReset();
 
             } catch (error) {
-            console.error('Error creating listing:', error);
-            // Handle auth errors specifically
-            if(error.status === 401) {
-                this.showToast('You must be logged in to add a listing', 'error');
-            } else {
-                this.showToast(error.message || 'Failed to create listing', 'error');
+                console.error('Error creating listing:', error);
+                // Handle auth errors specifically
+                if (error.status === 401) {
+                    this.showToast('You must be logged in to add a listing', 'error');
+                } else {
+                    this.showToast(error.message || 'Failed to create listing', 'error');
+                }
             }
-        }
 
         }
     }
@@ -464,9 +544,9 @@ handleFileSelect(file) {
     getFormData() {
 
         const selectedTags = [];
-    document.querySelectorAll('input[name="dietary"]:checked').forEach(checkbox => {
-        selectedTags.push(checkbox.value);
-    });
+        document.querySelectorAll('input[name="dietary"]:checked').forEach(checkbox => {
+            selectedTags.push(checkbox.value);
+        });
         return {
             foodType: document.getElementById('foodType').value,
             quantity: document.getElementById('quantity').value,
@@ -478,31 +558,33 @@ handleFileSelect(file) {
             contact: document.getElementById('contact').value,
             photos: this.uploadedPhotoBase64 ? [this.uploadedPhotoBase64] : [],
             dietaryTags: selectedTags,
+            latitude: document.getElementById('latitude').value,
+            longitude: document.getElementById('longitude').value,
         };
     }
 
     validateFormData(data) {
         const requiredFields = ['foodType', 'quantity', 'category', 'freshUntil', 'pickupTime', 'location', 'contact'];
-        
+
         for (let field of requiredFields) {
             if (!data[field] || data[field].trim() === '') {
                 this.showErrorMessage(`Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}.`);
                 return false;
             }
         }
-        
+
         const freshDate = new Date(data.freshUntil);
         if (freshDate <= new Date()) {
             this.showErrorMessage('Fresh until date must be in the future.');
             return false;
         }
-        
+
         // Validate contact information
         if (!this.validateContactInfo(data.contact)) {
             this.showErrorMessage('Please enter a valid email address or phone number for contact information.');
             return false;
         }
-        
+
         return true;
     }
 
@@ -522,7 +604,7 @@ handleFileSelect(file) {
             <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
             <span>${message}</span>
         `;
-        
+
         // Add toast styles
         toast.style.cssText = `
             position: fixed;
@@ -539,9 +621,9 @@ handleFileSelect(file) {
             animation: slideInRight 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
             box-shadow: var(--shadow-heavy);
         `;
-        
+
         document.body.appendChild(toast);
-        
+
         setTimeout(() => {
             if (toast.parentNode) {
                 toast.parentNode.removeChild(toast);
@@ -561,7 +643,7 @@ handleFileSelect(file) {
             <i class="fas fa-cloud-upload-alt"></i>
             <span>Click to upload or drag and drop</span>
         `;
-        
+
         // Reset minimum date
         const freshUntilInput = document.getElementById('freshUntil');
         const now = new Date();
@@ -571,74 +653,74 @@ handleFileSelect(file) {
 
 
     setupFilteringAndSearch() {
-    // --- Existing Category Filter Logic ---
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            filterBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            this.currentFilter = btn.getAttribute('data-filter');
-            this.filterListings();
-            this.renderFoodListings();
-        });
-    });
-
-    // --- Existing Search Input Logic ---
-    const searchInput = document.querySelector('.search-box input');
-    let searchTimeout;
-    searchInput.addEventListener('input', (e) => {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            this.searchQuery = e.target.value.toLowerCase();
-            this.filterListings();
-            this.renderFoodListings();
-        }, 300);
-    });
-
-    // --- NEW: Dropdown and Filtering Logic ---
-    const dietaryBtn = document.getElementById('dietary-filter-btn');
-    const dietaryDropdown = document.getElementById('dietary-dropdown');
-    const dietaryCheckboxes = document.querySelectorAll('input[name="dietary-filter"]');
-
-    if (dietaryBtn) {
-        // Toggle dropdown visibility
-        dietaryBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            dietaryDropdown.style.display = dietaryDropdown.style.display === 'block' ? 'none' : 'block';
-            dietaryBtn.classList.toggle('active');
-        });
-
-        // Add event listeners to checkboxes
-        dietaryCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', () => {
+        // --- Existing Category Filter Logic ---
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                this.currentFilter = btn.getAttribute('data-filter');
                 this.filterListings();
                 this.renderFoodListings();
-                
-                // Update button text to show selected count
-                const selectedCount = document.querySelectorAll('input[name="dietary-filter"]:checked').length;
-                const btnSpan = dietaryBtn.querySelector('span');
-                if (selectedCount > 0) {
-                    btnSpan.textContent = `Dietary Filters (${selectedCount})`;
-                } else {
-                    btnSpan.textContent = 'Dietary Filters';
-                }
             });
         });
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', () => {
-            if (dietaryDropdown.style.display === 'block') {
-                dietaryDropdown.style.display = 'none';
-                dietaryBtn.classList.remove('active');
-            }
+        // --- Existing Search Input Logic ---
+        const searchInput = document.querySelector('.search-box input');
+        let searchTimeout;
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                this.searchQuery = e.target.value.toLowerCase();
+                this.filterListings();
+                this.renderFoodListings();
+            }, 300);
         });
-        
-        // Prevent closing when clicking inside the dropdown
-        dietaryDropdown.addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
+
+        // --- NEW: Dropdown and Filtering Logic ---
+        const dietaryBtn = document.getElementById('dietary-filter-btn');
+        const dietaryDropdown = document.getElementById('dietary-dropdown');
+        const dietaryCheckboxes = document.querySelectorAll('input[name="dietary-filter"]');
+
+        if (dietaryBtn) {
+            // Toggle dropdown visibility
+            dietaryBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dietaryDropdown.style.display = dietaryDropdown.style.display === 'block' ? 'none' : 'block';
+                dietaryBtn.classList.toggle('active');
+            });
+
+            // Add event listeners to checkboxes
+            dietaryCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+                    this.filterListings();
+                    this.renderFoodListings();
+
+                    // Update button text to show selected count
+                    const selectedCount = document.querySelectorAll('input[name="dietary-filter"]:checked').length;
+                    const btnSpan = dietaryBtn.querySelector('span');
+                    if (selectedCount > 0) {
+                        btnSpan.textContent = `Dietary Filters (${selectedCount})`;
+                    } else {
+                        btnSpan.textContent = 'Dietary Filters';
+                    }
+                });
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', () => {
+                if (dietaryDropdown.style.display === 'block') {
+                    dietaryDropdown.style.display = 'none';
+                    dietaryBtn.classList.remove('active');
+                }
+            });
+
+            // Prevent closing when clicking inside the dropdown
+            dietaryDropdown.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        }
     }
-}
 
     filterListings() {
         const activeDietaryFilters = [];
@@ -648,15 +730,15 @@ handleFileSelect(file) {
 
         this.filteredListings = this.foodListings.filter(listing => {
             const matchesFilter = this.currentFilter === 'all' || listing.category === this.currentFilter;
-            
-            const matchesSearch = !this.searchQuery || 
+
+            const matchesSearch = !this.searchQuery ||
                 listing.foodType.toLowerCase().includes(this.searchQuery) ||
                 listing.location.toLowerCase().includes(this.searchQuery) ||
                 listing.description.toLowerCase().includes(this.searchQuery);
 
-            const matchesDietary = activeDietaryFilters.length === 0 || 
+            const matchesDietary = activeDietaryFilters.length === 0 ||
                 (listing.dietaryTags && activeDietaryFilters.every(filter => listing.dietaryTags.includes(filter)));
-            
+
             return matchesFilter && matchesSearch && matchesDietary;
         });
     }
@@ -664,26 +746,28 @@ handleFileSelect(file) {
     setupResponsiveNav() {
         const hamburger = document.querySelector('.hamburger');
         const navMenu = document.querySelector('.nav-menu');
-        
+        const userActions = document.querySelector('.user-actions');
+
         hamburger.addEventListener('click', () => {
             hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
+            if (userActions) userActions.classList.toggle('active');
         });
     }
 
     setupStatsAnimation() {
         const stats = document.querySelectorAll('.stat-number');
         let animated = false;
-        
+
         const animateStats = () => {
             if (animated) return;
-            
+
             stats.forEach(stat => {
                 const target = parseInt(stat.getAttribute('data-count'));
                 const duration = 2000;
                 const increment = target / (duration / 16);
                 let current = 0;
-                
+
                 const updateStat = () => {
                     current += increment;
                     if (current < target) {
@@ -693,13 +777,13 @@ handleFileSelect(file) {
                         stat.textContent = target;
                     }
                 };
-                
+
                 updateStat();
             });
-            
+
             animated = true;
         };
-        
+
         // Trigger animation when hero section is in view
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -708,7 +792,7 @@ handleFileSelect(file) {
                 }
             });
         });
-        
+
         const heroStats = document.querySelector('.hero-stats');
         if (heroStats) {
             observer.observe(heroStats);
@@ -728,7 +812,7 @@ handleFileSelect(file) {
         };
         window.addEventListener('scroll', handleScroll);
         handleScroll();
-        
+
         // Animate elements on scroll
         this.setupScrollAnimations();
     }
@@ -738,7 +822,7 @@ handleFileSelect(file) {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
         };
-        
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -746,7 +830,7 @@ handleFileSelect(file) {
                 }
             });
         }, observerOptions);
-        
+
         // Observe elements to animate
         const elementsToAnimate = document.querySelectorAll('.feature-card, .food-card, .impact-item');
         elementsToAnimate.forEach(el => {
@@ -775,6 +859,7 @@ async loadListingsFromDB() {
         this.filteredListings = this.foodListings;
         this.renderFoodListings();
 
+feature/loading-spinner
     } catch (error) {
         console.error("Failed to load listings:", error);
         this.foodListings = [];
@@ -782,6 +867,34 @@ async loadListingsFromDB() {
         this.showToast("Failed to connect to database", "error");
     } finally {
         hideSpinner();  // ⬅ Hide when done (success or error)
+
+    async loadListingsFromDB() {
+        try {
+            const listings = await getAllFoodListings();
+
+            this.foodListings = listings.map(item => ({
+                ...item,
+                id: item._id,
+                location: item.pickupLocation || item.location || 'Location not specified',
+                contact: item.contactInfo || item.contact || 'No contact info',
+                donor: item.donorId?.name || 'Anonymous Donor',
+                photoUrl: (item.photos && item.photos.length > 0) ? item.photos[0] : null,
+                category: item.category || 'general',
+                dietaryTags: item.dietaryTags || [],
+                createdAt: new Date(item.createdAt),
+            }));
+
+            this.foodListings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            this.filteredListings = this.foodListings;
+            this.renderFoodListings();
+
+        } catch (error) {
+            console.error("Failed to load listings:", error);
+            this.foodListings = [];
+            this.renderFoodListings(); // Will render the "No listings found" state
+            this.showToast("Failed to connect to database", "error");
+        }
+ main
     }
 }
 
@@ -795,32 +908,61 @@ async loadListingsFromDB() {
 
     renderFoodListings() {
         const foodGrid = document.getElementById('foodGrid');
-        
-        if (this.filteredListings.length === 0) {
+
+        // CASE 1: No food listings at all (backend empty / first load)
+        if (!this.foodListings || this.foodListings.length === 0) {
+            const emptyStateMsg = window.languageSwitcher ? window.languageSwitcher.getTranslation('listings.emptyState') : 'No food listings available right now 🍽️';
+            const emptyStateSubtext = window.languageSwitcher ? window.languageSwitcher.getTranslation('listings.emptyStateSubtext') : 'Check back later!';
             foodGrid.innerHTML = `
-                <div class="no-listings">
-                    <i class="fas fa-search" style="font-size: 3rem; color: var(--medium-gray); margin-bottom: 1rem;"></i>
-                    <h3>No listings found</h3>
-                    <p>Try adjusting your filters or search terms.</p>
-                </div>
-            `;
+         <div class="empty-state">
+            <i class="fas fa-utensils" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem;"></i>
+            <p>${emptyStateMsg}</p>
+            <span>${emptyStateSubtext}</span>
+        </div>
+`       ;
             return;
         }
-        
-        foodGrid.innerHTML = this.filteredListings.map(listing => this.createFoodCard(listing)).join('');
-        
+
+        // CASE 2: Listings exist, but filters remove all
+        if (this.filteredListings.length === 0) {
+            const noListingsMsg = window.languageSwitcher ? window.languageSwitcher.getTranslation('listings.noListingsFiltered') : 'No listings found';
+            foodGrid.innerHTML = `
+      <div class="no-listings">
+        <i class="fas fa-search" style="font-size: 3rem; color: var(--medium-gray); margin-bottom: 1rem;"></i>
+        <h3>${noListingsMsg}</h3>
+        <p>Try adjusting your filters or search terms.</p>
+      </div>
+    `;
+            return;
+        }
+
+        // ✅ CASE 3: Show listings
+        foodGrid.innerHTML = this.filteredListings
+            .map(listing => this.createFoodCard(listing))
+            .join('');
+
         // Add event listeners to food cards
         this.setupFoodCardInteractions();
     }
 
     createClaimButton(listing) {
+        const expiryStatus = this.getExpiryStatus(listing.freshUntil);
+
+        if (expiryStatus.expired) {
+            return `
+        <button class="claim-btn expired" disabled>
+            <i class="fas fa-times-circle"></i> Expired
+        </button>
+    `;
+        }
+
         const isClaimed = this.claimedItems.includes(listing.id);
         const isCollector = this.currentRole === 'collector';
         const username = JSON.parse(localStorage.getItem('user'))?.name;
 
-        if(username) {
+        if (username) {
             if (isClaimed) {
-            return `
+                return `
                 <button class="claim-btn claimed" disabled>
                     <i class="fas fa-check-circle"></i> Claimed
                 </button>
@@ -848,78 +990,116 @@ async loadListingsFromDB() {
     }
 
     createFoodCard(listing) {
-    const listingId = listing._id || listing.id;
-    const location = listing.pickupLocation || listing.location || 'Unknown Location';
-    const contact = listing.contactInfo || listing.contact;
-    const timeAgo = this.getTimeAgo(listing.createdAt);
-    const freshUntil = this.formatDateTime(listing.freshUntil);
-    const isClaimed = this.claimedItems.includes(listing.id);
+        const listingId = listing._id || listing.id;
+        const location = listing.pickupLocation || listing.location || 'Unknown Location';
+        const contact = listing.contactInfo || listing.contact;
+        const timeAgo = this.getTimeAgo(listing.createdAt);
+        const freshUntil = this.formatDateTime(listing.freshUntil);
+        const urgency = this.getUrgencyStatus(listing.freshUntil);
+        const isClaimed = this.claimedItems.includes(listing.id);
+        const expiryStatus = this.getExpiryStatus(listing.freshUntil);
 
-    // *** MODIFIED LOGIC START ***
-    let imgSource = '';
+        const statusClass = isClaimed ? 'reserved' : 'available';
+        const statusText = isClaimed ? 'Reserved' : 'Available';
 
-    if (listing.photoUrl) {
-        // 1. Use external/sample URL if provided
-        imgSource = listing.photoUrl;
-    } else if (listing.photo && typeof listing.photo === 'object' && listing.photo instanceof File) {
-        // 2. Use temporary URL for newly uploaded file objects
-        imgSource = URL.createObjectURL(listing.photo);
-    } 
-    // If neither photoUrl nor a valid File object exists, imgSource remains empty.
-    
-    // Create the image/icon HTML based on the determined source
-    const imageHTML = imgSource 
-        ? `<img src="${imgSource}" alt="${listing.foodType}">` 
-        : `<i class="fas fa-${this.getFoodIcon(listing.category)}"></i>`;
-    // *** MODIFIED LOGIC END ***
+        let imgSource = '';
+        if (listing.photoUrl) {
+            imgSource = listing.photoUrl;
+        } else if (listing.photo && typeof listing.photo === 'object' && listing.photo instanceof File) {
+            imgSource = URL.createObjectURL(listing.photo);
+        } else if (listing.photos && listing.photos.length > 0) {
+            imgSource = listing.photos[0];
+        }
 
-    // This logic generates the HTML for the tags
-    let tagsHTML = '';
-    if (listing.dietaryTags && listing.dietaryTags.length > 0) {
-        tagsHTML = `<div class="food-tags">` +
-            listing.dietaryTags.map(tag => `<span class="tag tag-${tag}">${tag}</span>`).join('') +
-        `</div>`;
-    }
-    
-    // The main HTML template now uses the correctly generated imageHTML
-    return `
-        <div class="food-card ${isClaimed ? 'claimed' : ''}" 
-             data-id="${listing.id}" 
-             data-tags="${listing.dietaryTags ? listing.dietaryTags.join(',') : ''}">
-            <div class="food-image">
+        const imageHTML = imgSource
+            ? `<img src="${imgSource}" alt="${listing.foodType}" style="width: 100%; height: 180px; object-fit: cover;">`
+            : `<div style="width: 100%; height: 180px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: #ddd;"><i class="fas fa-${this.getFoodIcon(listing.category)}"></i></div>`;
+
+        let tagsHTML = '';
+        if (listing.dietaryTags && listing.dietaryTags.length > 0) {
+            tagsHTML = `<div class="food-tags" style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.8rem;">` +
+                listing.dietaryTags.map(tag => `<span class="tag tag-${tag}" style="font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: #e0e0e0; color: #555;">${tag}</span>`).join('') +
+                `</div>`;
+        }
+
+        return `
+        <div class="food-card ${isClaimed ? 'claimed' : ''} ${statusClass}"
+             data-id="${listingId}" 
+             data-tags="${listing.dietaryTags ? listing.dietaryTags.join(',') : ''}"
+             style="display: flex; flex-direction: column; height: 100%; background: #fff; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); overflow: hidden; transition: transform 0.3s ease;">
+             
+            <div class="food-image" style="position: relative;">
                 ${imageHTML}
-                <div class="food-category">${this.capitalizeFirst(listing.category)}</div>
+                <span class="status-badge ${statusClass}" style="position: absolute; top: 12px; right: 12px; z-index: 2; padding: 4px 12px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; background: ${isClaimed ? '#999' : '#28a745'}; color: white;">${statusText}</span>
+                <div class="food-category" style="position: absolute; bottom: 12px; left: 12px; background: rgba(0,0,0,0.6); color: white; padding: 2px 10px; border-radius: 12px; font-size: 0.8rem;">${this.capitalizeFirst(listing.category)}</div>
             </div>
-            <div class="food-details">
-                <h3 class="food-title">${listing.foodType}</h3>
+            
+            <div class="food-details" style="display: flex; flex-direction: column; flex-grow: 1; padding: 1.25rem;">
+                <div class="food-header-row" style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                    <h3 class="food-title" style="margin: 0; font-size: 1.25rem; font-weight: 700; color: #333;">${listing.foodType}</h3>
+                </div>
+                
                 ${tagsHTML} 
-                <p class="food-description">${listing.description}</p>
-                <div class="food-meta">
-                    <span class="quantity"><i class="fas fa-utensils"></i> ${listing.quantity}</span>
-                    <span class="freshness"><i class="fas fa-clock"></i> ${freshUntil}</span>
+                
+                <p class="food-description" style="color: #666; margin-bottom: 1rem; flex-grow: 1; line-height: 1.5; font-size: 0.95rem;">${listing.description}</p>
+                
+                <div class="food-meta-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; font-size: 0.9rem; color: #555; margin-bottom: 1rem; background: #f9f9f9; padding: 0.8rem; border-radius: 8px;">
+                    <div class="meta-item">
+                        <i class="fas fa-utensils" style="color: var(--primary); width: 20px;"></i>
+                        <span style="font-weight: 500;">Qty:</span> ${listing.quantity || "N/A"}
+                    </div>
+                    <div class="meta-item">
+                         <i class="fas fa-clock" style="color: var(--primary); width: 20px;"></i>
+                         <span style="font-weight: 500;">Exp:</span> ${freshUntil}
+                    </div>
                 </div>
-                <div class="food-location">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>${listing.location}</span>
-                </div>
-                <div class="food-meta" style="margin-bottom: 1rem;">
-                    <span style="color: var(--medium-gray); font-size: 0.9rem;">
-                        <i class="fas fa-user"></i> ${listing.donor}
+
+                <div class="location-info" style="display: flex; align-items: flex-start; gap: 0.5rem; color: #555; font-size: 0.9rem; margin-bottom: 1rem;">
+                    <i class="fas fa-map-marker-alt" style="color: var(--primary); margin-top: 3px;"></i>
+                    <span style="line-height: 1.4;">
+                        ${location}
                     </span>
-                    <span style="color: var(--medium-gray); font-size: 0.9rem;">
-                        <i class="fas fa-clock"></i> ${timeAgo}
-                    </span>
                 </div>
-                <div class="food-actions">
-                    ${this.createClaimButton(listing)}
-                    <button class="contact-btn" data-contact="${listing.contact}">
-                        <i class="fas fa-phone"></i>
-                    </button>
+                
+                <div class="donor-info" style="display: flex; align-items: center; justify-content: space-between; padding-top: 1rem; border-top: 1px solid #eee; margin-top: auto; color: #888; font-size: 0.85rem;">
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <i class="fas fa-user-circle"></i>
+                        <span>${listing.donorId?.name || 'Anonymous'}</span>
+                    </div>
+                    <span>${timeAgo}</span>
+                </div>
+
+                <div class="card-actions" style="margin-top: 1rem;">
+                    ${this.getClaimButtonHTML(listing, expiryStatus)}
                 </div>
             </div>
         </div>
-    `;
-}
+        `;
+    }
+
+    getClaimButtonHTML(listing, isClaimed) {
+        // Donors see "View to Claim" (disabled/info) or nothing specific for now? 
+        // Requirements say: "Donors can see their listings"
+        // Receivers can claim.
+
+        // Actually, checking previous logic or standard logic:
+        // If I am the donor, maybe I shouldn't claim my own food? 
+        // But for now let's stick to the basic UI logic:
+
+        if (this.currentUser && this.currentUser.role === 'donor' && listing.donorId === this.currentUser.id) {
+            return `<button class="action-btn delete-btn" onclick="window.foodListingApp.deleteListing('${listing._id}')">Delete</button>`;
+        }
+
+        if (isClaimed) {
+            // If claimed by ME, show Undo
+            // We need to know who claimed it. The listing object should have 'claimedBy'
+            // assuming listing.claimedBy matches currentUser.id
+            // However, for safety, if just 'isClaimed' is true, show 'Claimed' disabled button unless logic permits undo.
+            return `<button class="action-btn secondary-btn" disabled>Unavailable</button>`;
+        }
+
+        return `<button class="action-btn primary-btn" onclick="window.foodListingApp.claimFood('${listing._id}')">Claim Food</button>`;
+    }
 
     setupFoodCardInteractions() {
         // Claim buttons
@@ -930,7 +1110,7 @@ async loadListingsFromDB() {
                 this.handleClaimFood(listingId);
             });
         });
-        
+
         // Contact buttons
         const contactBtns = document.querySelectorAll('.contact-btn');
         contactBtns.forEach(btn => {
@@ -944,22 +1124,22 @@ async loadListingsFromDB() {
     handleClaimFood(listingId) {
         const listing = this.foodListings.find(l => l.id === listingId);
         if (!listing) return;
-        
+
         // Check if already claimed
         if (this.claimedItems.includes(listingId)) {
             this.showToast('This item has already been claimed!', 'error');
             return;
         }
-        
+
         // Show confirmation dialog
         const confirmed = confirm(`Claim "${listing.foodType}" from ${listing.donor}?\n\nPickup: ${listing.location}\nTime: ${this.formatTime(listing.pickupTime)}\nContact: ${listing.contact}`);
-        
+
         if (confirmed) {
             this.api.deleteFoodListing(listingId);
             // Add to claimed items
             this.claimedItems.push(listingId);
             this.saveClaimedItems();
-            
+
             // Create notification
             const notification = {
                 id: Date.now(),
@@ -972,21 +1152,21 @@ async loadListingsFromDB() {
                 claimedAt: new Date(),
                 status: 'claimed'
             };
-            
+
             this.addNotification(notification);
-            
+
             // Update button appearance only
             const claimBtn = document.querySelector(`[data-id="${listingId}"]`);
-            
+
             if (claimBtn) {
                 claimBtn.classList.add('claimed');
                 claimBtn.innerHTML = '<i class="fas fa-check-circle"></i> Claimed';
                 claimBtn.disabled = true;
             }
-            
+
             // Show success message
             this.showToast(`Successfully claimed "${listing.foodType}"! Check notifications for pickup details.`, 'success');
-            
+
             // Update notification display
             this.updateNotificationDisplay();
         }
@@ -1029,7 +1209,7 @@ async loadListingsFromDB() {
         const diff = now - date;
         const minutes = Math.floor(diff / 60000);
         const hours = Math.floor(minutes / 60);
-        
+
         if (minutes < 60) {
             return `${minutes}m ago`;
         } else if (hours < 24) {
@@ -1045,7 +1225,7 @@ async loadListingsFromDB() {
         const now = new Date();
         const diff = date - now;
         const hours = Math.floor(diff / (1000 * 60 * 60));
-        
+
         if (hours < 24) {
             return `${hours}h left`;
         } else {
@@ -1053,6 +1233,21 @@ async loadListingsFromDB() {
             return `${days}d left`;
         }
     }
+    getUrgencyStatus(freshUntil) {
+        const now = new Date();
+        const expiry = new Date(freshUntil);
+        const diffMs = expiry - now;
+        const hoursLeft = diffMs / (1000 * 60 * 60);
+
+        if (hoursLeft > 6) {
+            return { label: "🟢 Fresh", className: "fresh" };
+        } else if (hoursLeft > 2) {
+            return { label: "🟡 Expiring Soon", className: "expiring" };
+        } else {
+            return { label: "🔴 Urgent", className: "urgent" };
+        }
+    }
+
 
     formatTime(timeString) {
         const [hours, minutes] = timeString.split(':');
@@ -1067,10 +1262,10 @@ async loadListingsFromDB() {
         featureCards.forEach((card, index) => {
             card.style.animationDelay = `${index * 0.2}s`;
         });
-        
+
         // Add floating animation to hero elements
         this.startFloatingAnimations();
-        
+
         // Add periodic pulse to CTA buttons
         this.startButtonPulse();
     }
@@ -1110,19 +1305,19 @@ async loadListingsFromDB() {
     setupNotificationSystem() {
         const notificationBell = document.getElementById('notificationBell');
         const notificationPanel = document.getElementById('notificationPanel');
-        
+
         if (!notificationBell) return;
-        
+
         // Show notification bell when in collector mode or when there are notifications
         if (this.currentRole === 'collector' || this.notifications.length > 0) {
             notificationBell.style.display = 'block';
         }
-        
+
         // Toggle notification panel
         notificationBell.addEventListener('click', (e) => {
             e.stopPropagation();
             const isActive = notificationPanel.classList.contains('active');
-            
+
             if (isActive) {
                 notificationPanel.classList.remove('active');
                 notificationBell.classList.remove('active');
@@ -1131,7 +1326,7 @@ async loadListingsFromDB() {
                 notificationBell.classList.add('active');
             }
         });
-        
+
         // Close panel when clicking outside
         document.addEventListener('click', (e) => {
             if (!notificationBell.contains(e.target)) {
@@ -1139,31 +1334,33 @@ async loadListingsFromDB() {
                 notificationBell.classList.remove('active');
             }
         });
-        
+
         // Prevent panel from closing when clicking inside
-        notificationPanel.addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
+        if (notificationPanel) {
+            notificationPanel.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        }
     }
-    
+
     loadClaimedItems() {
         const stored = localStorage.getItem('sharebite-claimed-items');
         return stored ? JSON.parse(stored) : [];
     }
-    
+
     saveClaimedItems() {
         localStorage.setItem('sharebite-claimed-items', JSON.stringify(this.claimedItems));
     }
-    
+
     loadNotifications() {
         const stored = localStorage.getItem('sharebite-notifications');
         return stored ? JSON.parse(stored) : [];
     }
-    
+
     saveNotifications() {
         localStorage.setItem('sharebite-notifications', JSON.stringify(this.notifications));
     }
-    
+
     addNotification(notification) {
         notification.read = false; // Mark new notifications as unread
         this.notifications.unshift(notification);
@@ -1186,15 +1383,15 @@ async loadListingsFromDB() {
         this.saveNotifications();
         this.updateNotificationDisplay();
     }
-    
+
     updateNotificationDisplay() {
         const notificationBell = document.getElementById('notificationBell');
         const notificationBadge = document.getElementById('notificationBadge');
-        
+
         if (!notificationBell || !notificationBadge) return;
-        
+
         const unreadCount = this.notifications.filter(n => !n.read).length;
-        
+
         if (unreadCount > 0) {
             notificationBell.style.display = 'block';
             notificationBadge.style.display = 'flex';
@@ -1206,14 +1403,14 @@ async loadListingsFromDB() {
                 notificationBell.style.display = 'none';
             }
         }
-        
+
         this.renderNotifications();
     }
-    
+
     renderNotifications() {
         const notificationList = document.getElementById('notificationList');
         if (!notificationList) return;
-        
+
         if (this.notifications.length === 0) {
             notificationList.innerHTML = `
                 <div class="no-notifications">
@@ -1224,21 +1421,31 @@ async loadListingsFromDB() {
             `;
             return;
         }
-        
+
         notificationList.innerHTML = `
             <div class="notification-content">
                 ${this.notifications.map(notification => this.createNotificationItem(notification)).join('')}
             </div>
         `;
-        
+
         // Add event listeners for notification actions
         this.setupNotificationActions();
     }
-    
+
+    getExpiryStatus(expiryDate) {
+        const now = new Date();
+        const expiry = new Date(expiryDate);
+        const hoursRemaining = (expiry - now) / (1000 * 60 * 60);
+
+        if (hoursRemaining < 0) return 'expired';
+        if (hoursRemaining < 2) return 'expiring-soon';
+        return 'active';
+    }
+
     createNotificationItem(notification) {
         const timeAgo = this.getTimeAgo(notification.claimedAt);
         const unreadClass = notification.read ? '' : 'unread';
-        
+
         return `
             <div class="notification-item ${unreadClass}" data-id="${notification.id}">
                 <div class="notification-item-header">
@@ -1272,10 +1479,10 @@ async loadListingsFromDB() {
             </div>
         `;
     }
-    
+
     setupNotificationActions() {
         const notificationItems = document.querySelectorAll('.notification-item');
-        
+
         notificationItems.forEach(item => {
             item.addEventListener('click', (e) => {
                 const notificationId = parseInt(item.getAttribute('data-id'));
@@ -1283,14 +1490,14 @@ async loadListingsFromDB() {
             });
         });
     }
-    
+
     viewNotificationDetails(notificationId) {
         const notification = this.notifications.find(n => n.id === notificationId);
         if (!notification) return;
-        
+
         // Mark as read when viewed
         this.markNotificationAsRead(notificationId);
-        
+
         const details = `
 Food: ${notification.foodType}
 Donor: ${notification.donor}
@@ -1301,7 +1508,7 @@ Claimed: ${new Date(notification.claimedAt).toLocaleString()}
 
 Contact information has been copied to clipboard.
         `;
-        
+
         // Copy contact to clipboard
         navigator.clipboard.writeText(notification.contact).then(() => {
             alert(details);
@@ -1309,13 +1516,96 @@ Contact information has been copied to clipboard.
             alert(details);
         });
     }
-    
+
     clearAllNotifications() {
         this.notifications = [];
         this.claimedItems = [];
         this.saveNotifications();
         this.saveClaimedItems();
         this.updateNotificationDisplay();
+    }
+
+    initMap() {
+        if (this.map) {
+            setTimeout(() => this.map.invalidateSize(), 100);
+            return;
+        }
+
+        const mapContainer = document.getElementById('map');
+        if (!mapContainer) return;
+
+        mapContainer.style.display = 'block';
+
+        // Default to a central location (e.g., New York or based on IP if possible)
+        const defaultLat = 40.7128;
+        const defaultLng = -74.0060;
+
+        this.map = L.map('map').setView([defaultLat, defaultLng], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(this.map);
+
+        this.marker = L.marker([defaultLat, defaultLng], { draggable: true }).addTo(this.map);
+
+        // Update inputs on drag end
+        this.marker.on('dragend', (e) => {
+            const position = this.marker.getLatLng();
+            this.updateLocationInputs(position.lat, position.lng);
+        });
+
+        // Update marker on map click
+        this.map.on('click', (e) => {
+            this.marker.setLatLng(e.latlng);
+            this.updateLocationInputs(e.latlng.lat, e.latlng.lng);
+        });
+
+        // Try to get user's current location
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                this.map.setView([lat, lng], 15);
+                this.marker.setLatLng([lat, lng]);
+                this.updateLocationInputs(lat, lng);
+            });
+        }
+    }
+
+    updateLocationInputs(lat, lng) {
+        document.getElementById('latitude').value = lat;
+        document.getElementById('longitude').value = lng;
+
+        // Reverse geocoding to set text address
+        this.reverseGeocode(lat, lng);
+    }
+
+    async reverseGeocode(lat, lng) {
+        try {
+            // Using BigDataCloud API as it's friendlier regarding CORS/Loalhost than Nominatim
+            const response = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`);
+            const data = await response.json();
+
+            if (data) {
+                // Construct address from available fields
+                const parts = [
+                    data.locality,
+                    data.city,
+                    data.principalSubdivision,
+                    data.countryName
+                ].filter(part => part); // Remove empty/null values
+
+                const address = parts.length > 0 ? parts.join(', ') : 'Location selected on map';
+
+                document.getElementById('location').value = address;
+            }
+        } catch (error) {
+            console.error('Geocoding error:', error);
+            // Fallback for user
+            if (!document.getElementById('location').value) {
+                document.getElementById('location').placeholder = "Please enter location name manually";
+            }
+        }
     }
 
     // Date Input Confirmation functionality
@@ -1334,12 +1624,12 @@ Contact information has been copied to clipboard.
         // Helper function to show checkmark only after date selection
         const handleDateChange = () => {
             const currentValue = freshUntilInput.value;
-            
+
             // If value has changed from previous, reset confirmation status
             if (currentValue !== previousValue) {
                 isDateConfirmed = false;
             }
-            
+
             // Only show checkmark if:
             // 1. There's a new value
             // 2. The value has changed from previous
@@ -1347,13 +1637,13 @@ Contact information has been copied to clipboard.
             if (currentValue && currentValue !== previousValue && !isDateConfirmed) {
                 checkmarkIcon.classList.remove('hidden');
             }
-            
+
             // If value is cleared, reset everything
             if (!currentValue) {
                 checkmarkIcon.classList.add('hidden');
                 isDateConfirmed = false;
             }
-            
+
             previousValue = currentValue;
         };
 
@@ -1362,13 +1652,13 @@ Contact information has been copied to clipboard.
             if (freshUntilInput.value && !isDateConfirmed) {
                 // Mark as confirmed
                 isDateConfirmed = true;
-                
+
                 // Hide the checkmark
                 checkmarkIcon.classList.add('hidden');
-                
+
                 // Show success toast
                 this.showToast('Date confirmed successfully!', 'success');
-                
+
                 // Move focus to next input field if available
                 const nextInput = freshUntilInput.closest('.form-group').parentElement.nextElementSibling?.querySelector('input');
                 if (nextInput) {
@@ -1431,12 +1721,12 @@ Contact information has been copied to clipboard.
         // Helper function to show checkmark only after time selection
         const handleTimeChange = () => {
             const currentValue = pickupTimeInput.value;
-            
+
             // If value has changed from previous, reset confirmation status
             if (currentValue !== previousValue) {
                 isTimeConfirmed = false;
             }
-            
+
             // Only show checkmark if:
             // 1. There's a new value
             // 2. The value has changed from previous
@@ -1444,13 +1734,13 @@ Contact information has been copied to clipboard.
             if (currentValue && currentValue !== previousValue && !isTimeConfirmed) {
                 checkmarkIcon.classList.remove('hidden');
             }
-            
+
             // If value is cleared, reset everything
             if (!currentValue) {
                 checkmarkIcon.classList.add('hidden');
                 isTimeConfirmed = false;
             }
-            
+
             previousValue = currentValue;
         };
 
@@ -1459,13 +1749,13 @@ Contact information has been copied to clipboard.
             if (pickupTimeInput.value && !isTimeConfirmed) {
                 // Mark as confirmed
                 isTimeConfirmed = true;
-                
+
                 // Hide the checkmark
                 checkmarkIcon.classList.add('hidden');
-                
+
                 // Show success toast
                 this.showToast('Time confirmed successfully!', 'success');
-                
+
                 // Move focus to next input field if available
                 const nextInput = pickupTimeInput.closest('.form-group').parentElement.nextElementSibling?.querySelector('input');
                 if (nextInput) {
@@ -1603,8 +1893,26 @@ function addDynamicStyles() {
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', () => {
+    // FORCE CLEAR CACHES AND SERVICE WORKERS FOR DEBUGGING
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function (registrations) {
+            for (let registration of registrations) {
+                registration.unregister();
+            }
+        });
+    }
+    if ('caches' in window) {
+        caches.keys().then(function (names) {
+            for (let name of names) {
+                caches.delete(name);
+            }
+        });
+    }
+
     addDynamicStyles();
-    new ShareBiteFoodListing();
+    
+    // Initialize and store the food listing manager globally for language switching
+    window.foodListingManager = new ShareBiteFoodListing();
 });
 
 // Service Worker registration for PWA capabilities (optional)
@@ -1624,7 +1932,7 @@ document.addEventListener('DOMContentLoaded', () => {
 window.ShareBiteFoodListing = ShareBiteFoodListing;
 
 // Clear caches and trigger SW skipWaiting for debugging updates
-window.clearShareBiteCaches = async function() {
+window.clearShareBiteCaches = async function () {
     if ('caches' in window) {
         const keys = await caches.keys();
         await Promise.all(keys.map(k => caches.delete(k)));
@@ -1635,4 +1943,8 @@ window.clearShareBiteCaches = async function() {
         console.log('[ShareBite] Sent SKIP_WAITING to service worker');
     }
 };
+feature/loading-spinner
+// End of ShareBiteFoodListing class and initialization
+
+ main
 

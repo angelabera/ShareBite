@@ -1,142 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Food Map | ShareBite</title>
-  <link rel="stylesheet" href="css/style.css?v=map-darklight">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
+  <title>Map View | ShareBite</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
   <!-- Leaflet Map CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
   <style>
     :root {
-      --bg-light: #ffffff;
-      --bg-dark: #121212;
-      --text-light: #111;
-      --text-dark: #f5f5f5;
-      --card-light: #f7f7f7;
-      --card-dark: #1e1e1e;
-      --primary: #ff6a00;
-      --primary-light: #ff8c42;
-      --secondary: #ee0979;
-      --secondary-light: #f5317f;
-      --accent: #00b894;
-      --accent-light: #26c9a6;
-      --info: #0984e3;
-      --info-light: #3498db;
-      --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
-      --gradient-light: linear-gradient(135deg, var(--primary-light), var(--secondary-light));
-      --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-      --shadow-dark: 0 4px 20px rgba(0, 0, 0, 0.3);
-      --radius: 12px;
-      --transition: all 0.3s ease;
+      --primary: #2ecc71;
+      --primary-dark: #27ae60;
+      --text-dark: #1e1e1e;
+      --text-light: #f5f5f5;
+      --glass-bg: rgba(255, 255, 255, 0.95);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+      --radius: 16px;
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
 
-    html{
-      height: 100%;
+    * {
+      box-sizing: border-box;
       margin: 0;
+      padding: 0;
     }
 
     body {
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      padding: 0;
-      transition: background 0.3s, color 0.3s;
-      background-color: var(--bg-light);
-      color: var(--text-light);
-      overflow-x: hidden;
+      font-family: 'Outfit', sans-serif;
+      overflow: hidden;
+      /* Full screen map */
+      height: 100vh;
+      width: 100vw;
+      color: var(--text-dark);
+    }
+
+    /* Full Screen Map */
+    #map {
       height: 100%;
-    }
-
-    body.dark {
-      background-color: var(--bg-dark);
-      color: var(--text-dark);
-    }
-
-    /* Enhanced Navigation */
-    .navbar {
-      position: fixed;
-      top: 0;
-      left: 0;
       width: 100%;
-      background: rgba(255, 255, 255, 0.95);
-      -webkit-backdrop-filter: blur(10px);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      transition: var(--transition);
-      z-index: 1000;
-      padding: 15px 0;
+      z-index: 1;
     }
-    
-    body.dark .navbar {
-      background: rgba(18, 18, 18, 0.95);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-    }
-    
-    .nav-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    
-    .nav-logo-link {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: green;
-      text-decoration: none;
-    }
-    
-    .nav-menu {
-      display: flex;
-      list-style: none;
-      gap: 30px;
-    }
-    
-    .nav-link {
-      color: var(--text-light);
-      text-decoration: none;
-      font-weight: 500;
-      transition: var(--transition);
-      position: relative;
-    }
-    
-    body.dark .nav-link {
-      color: var(--text-dark);
-    }
-    
-    .nav-link:hover,
-    .nav-link.active {
-      color: var(--primary);
-    }
-    
-    .nav-link.active::after {
-      content: '';
+
+    /* Floating UI Elements (Glassmorphism) */
+    .floating-panel {
       position: absolute;
-      bottom: -5px;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background: var(--primary);
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      z-index: 1000;
+      padding: 20px;
+      transition: var(--transition);
     }
-    
-    .user-actions {
+
+    /* 1. Top Left: Back Button & Logo */
+    .header-panel {
+      top: 20px;
+      left: 20px;
+      padding: 12px 20px;
       display: flex;
       align-items: center;
       gap: 15px;
     }
-    
-    /* Theme Toggle Button */
-    .theme-toggle {
-      background: transparent;
+
+    .back-btn {
+      background: #f0f2f5;
       border: none;
       width: 40px;
       height: 40px;
@@ -145,1292 +79,487 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: var(--transition);
-      color: var(--text-light);
-    }
-    
-    body.dark .theme-toggle {
-      color: var(--text-dark);
-    }
-    
-    .theme-toggle:hover {
-      background: rgba(0, 0, 0, 0.05);
-      transform: scale(1.05);
-    }
-    
-    body.dark .theme-toggle:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
-    
-    /* Notification Bell */
-    .notification-bell {
-      position: relative;
-      background: transparent;
-      border: none;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: var(--transition);
-      color: var(--text-light);
-    }
-    
-    body.dark .notification-bell {
-      color: var(--text-dark);
-    }
-    
-    .notification-bell:hover {
-      background: rgba(0, 0, 0, 0.05);
-      transform: scale(1.05);
-    }
-    
-    body.dark .notification-bell:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
-    
-    .notification-badge {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: var(--secondary);
-      color: white;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      font-size: 0.7rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-    }
-    
-    .notification-panel {
-      position: absolute;
-      top: 50px;
-      right: 0;
-      background: var(--card-light);
-      color: var(--text-light);
-      width: 300px;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      z-index: 1001;
-      opacity: 0;
-      visibility: hidden;
-      transition: var(--transition);
-    }
-    
-    body.dark .notification-panel {
-      background: var(--card-dark);
-      color: var(--text-dark);
-      box-shadow: var(--shadow-dark);
-    }
-    
-    .notification-bell.active .notification-panel {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
-    }
-    
-    .notification-header {
-      padding: 15px 20px;
-      border-bottom: 1px solid rgba(0,0,0,0.1);
-      font-weight: 600;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    body.dark .notification-header {
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
-    
-    .notification-list {
-      max-height: 300px;
-      overflow-y: auto;
-    }
-    
-    .notification-item {
-      padding: 15px 20px;
-      border-bottom: 1px solid rgba(0,0,0,0.05);
-      transition: var(--transition);
-    }
-    
-    body.dark .notification-item {
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-    
-    .notification-item:hover {
-      background: rgba(0,0,0,0.02);
-    }
-    
-    body.dark .notification-item:hover {
-      background: rgba(255,255,255,0.05);
-    }
-    
-    .notification-item:last-child {
-      border-bottom: none;
-    }
-    
-    .notification-title {
-      font-weight: 500;
-      margin-bottom: 5px;
-    }
-    
-    .notification-time {
-      font-size: 0.8rem;
-      color: var(--text-light);
-      opacity: 0.7;
-    }
-    
-    body.dark .notification-time {
-      color: var(--text-dark);
-    }
-    
-    .no-notifications {
-      padding: 20px;
-      text-align: center;
-      color: var(--text-light);
-      opacity: 0.7;
-    }
-    
-    body.dark .no-notifications {
-      color: var(--text-dark);
-    }
-    
-    .login-btn {
-      background: var(--gradient);
-      border: none;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 25px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--transition);
-      box-shadow: 0 4px 10px rgba(255, 106, 0, 0.3);
-    }
-    
-    .login-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(255, 106, 0, 0.4);
-    }
-
-    /* Enhanced Map Header */
-
-    .map-header {
-      text-align: center;
-      margin-top: 100px;
-      padding: 40px 20px;
-      background: linear-gradient(135deg, rgba(255, 106, 0, 0.05) 0%, rgba(238, 9, 121, 0.05) 100%);
-      position: relative;
-      overflow: hidden;
-    }
-    
-    body.dark .map-header {
-      background: linear-gradient(135deg, rgba(255, 106, 0, 0.1) 0%, rgba(238, 9, 121, 0.1) 100%);
-    }
-
-    .map-header::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ff6a00' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-      opacity: 0.5;
-    }
-
-    .map-header h2 {
-      font-size: 2.8rem;
-      margin-bottom: 15px;
-      background: var(--gradient);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      font-weight: 700;
-      position: relative;
-    }
-
-    .map-header p {
-      font-size: 1.2rem;
-      opacity: 0.8;
-      max-width: 600px;
-      margin: 0 auto;
-      position: relative;
-    }
-
-    /* Enhanced Map Container */
-    .map-container {
-      width: 100%;
-      margin-top: 20px;
-      position: relative;
-      overflow: visible;
-      padding: 0 20px;
-      max-width: 1200px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    #map {
-      height: 100%;
-      height: 600px; 
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      transition: var(--transition);
-    }
-    
-    body.dark #map {
-      box-shadow: var(--shadow-dark);
-    }
-
-    .legend {
-      position: absolute;
-      bottom: 10px;
-      left: 30px;
-      background: var(--card-light);
-      color: var(--text-light);
-      padding: 20px;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      font-size: 14px;
-      transition: var(--transition);
-      z-index: 1000;
-      border: 1px solid rgba(255,255,255,0.1);
-      min-width: 240px;
-    }
-    
-
-    body.dark .legend {
-      background: var(--card-dark);
-      color: var(--text-dark);
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .legend h4 {
-      margin: 0 0 15px 0;
-      font-size: 16px;
-      font-weight: 600;
-      background: var(--gradient);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .legend h4 i {
+      color: #555;
       font-size: 1.1rem;
+      transition: var(--transition);
     }
 
-    .legend div {
-      margin: 10px 0;
-      display: flex;
-      align-items: center;
-      padding: 5px 0;
+    .back-btn:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateX(-3px);
     }
 
-    .legend span {
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      margin-right: 12px;
-      border-radius: 50%;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-      flex-shrink: 0;
+    .logo-text {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      letter-spacing: -0.5px;
     }
 
-    .legend .donor { background: var(--primary); }
-    .legend .ngo { background: var(--accent); }
-    .legend .pickup { background: var(--info); }
-
-    /* Enhanced Map Controls */
-    .map-controls {
-      position: absolute;
+    /* 2. Top Right: Search & Action Controls */
+    .controls-panel {
       top: 20px;
       right: 20px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      z-index: 1000;
+      gap: 12px;
+      align-items: flex-end;
     }
 
-    .map-control-btn {
-      background: var(--card-light);
-      color: var(--text-light);
-      border: none;
-      width: 40px;
-      height: 40px;
+    .control-btn {
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
+      background: white;
+      border: none;
+      box-shadow: var(--shadow);
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      box-shadow: var(--shadow);
+      font-size: 1.1rem;
+      color: #555;
       transition: var(--transition);
     }
-    
-    body.dark .map-control-btn {
-      background: var(--card-dark);
-      color: var(--text-dark);
-      box-shadow: var(--shadow-dark);
+
+    .control-btn:hover {
+      transform: scale(1.1);
+      color: var(--primary);
     }
 
-    .map-control-btn:hover {
-      background: var(--primary);
-      color: white;
-      transform: scale(1.05);
-    }
-    
-    .search-panel {
-      position: absolute;
-      top: 20px;
-      left: 30px;
-      background: var(--card-light);
-      color: var(--text-light);
-      padding: 25px;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      transition: var(--transition);
-      z-index: 1000;
-      border: 1px solid rgba(255,255,255,0.1);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      width: 240px;
-      max-height: 350px; 
-    }
-     
-    body.dark .search-panel {
-      background: var(--card-dark);
-      color: var(--text-dark);
-      border: 1px solid rgba(255,255,255,0.05);
+    /* 3. Left Side: Search & Filter Card */
+    .search-card {
+      top: 90px;
+      left: 20px;
+      width: 300px;
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
     }
 
-    .search-panel h3 {
-      margin: 0 0 15px 0;
-      font-size: 1.2rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .search-box {
+    .search-box-wrapper {
       position: relative;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
     }
 
-    .search-box i {
+    .search-box-wrapper i {
       position: absolute;
       left: 15px;
       top: 50%;
       transform: translateY(-50%);
-      color: var(--text-light);
-      opacity: 0.7;
-    }
-    
-    body.dark .search-box i {
-      color: var(--text-dark);
+      color: #999;
     }
 
-    .search-box input {
+    .search-input {
       width: 100%;
-      padding: 12px 15px 12px 45px;
-      border: 1px solid rgba(0,0,0,0.1);
-      border-radius: var(--radius);
-      background: rgba(255,255,255,0.8);
+      padding: 12px 15px 12px 40px;
+      border: 1px solid #eee;
+      border-radius: 12px;
+      font-family: inherit;
+      background: rgba(255, 255, 255, 0.8);
+      outline: none;
       transition: var(--transition);
     }
-    
-    body.dark .search-box input {
-      background: rgba(30,30,30,0.8);
-      border-color: rgba(255,255,255,0.1);
-      color: var(--text-dark);
-    }
 
-    .search-box input:focus {
-      outline: none;
+    .search-input:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 0 2px rgba(255, 106, 0, 0.2);
+      box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1);
     }
 
-    .filter-options {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+    .filter-group h4 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #888;
+      margin-bottom: 12px;
     }
 
-    .filter-option {
+    .filter-item {
       display: flex;
       align-items: center;
-      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
       cursor: pointer;
-      padding: 8px 0;
-      transition: var(--transition);
+      transition: background 0.2s;
     }
 
-    .filter-option:hover {
-      color: var(--primary);
+    .filter-item:hover {
+      background: rgba(0, 0, 0, 0.03);
     }
 
-    .filter-option input {
-      margin: 0;
+    .filter-checkbox {
+      margin-right: 12px;
+      accent-color: var(--primary);
+      width: 16px;
+      height: 16px;
     }
 
-    .filter-color {
-      width: 12px;
-      height: 12px;
+    .legend-dot {
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
-      flex-shrink: 0;
+      margin-right: 10px;
     }
 
-    /* Enhanced Popup Styling */
+    /* 4. Bottom Right: Stats */
+    .stats-card {
+      bottom: 30px;
+      right: 20px;
+      display: flex;
+      gap: 20px;
+      padding: 15px 25px;
+    }
+
+    .stat-box {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: #666;
+      font-weight: 500;
+    }
+
+    /* Leaflet Customization */
     .leaflet-popup-content-wrapper {
-      background: var(--card-light);
-      color: var(--text-light);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 5px;
-    }
-    
-    body.dark .leaflet-popup-content-wrapper {
-      background: var(--card-dark);
-      color: var(--text-dark);
-      box-shadow: var(--shadow-dark);
-    }
-
-    .leaflet-popup-tip {
-      background: var(--card-light);
-    }
-    
-    body.dark .leaflet-popup-tip {
-      background: var(--card-dark);
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      border: none;
+      padding: 0;
+      overflow: hidden;
     }
 
     .leaflet-popup-content {
-      margin: 15px 20px;
-      line-height: 1.5;
+      margin: 0;
+      width: 280px !important;
     }
 
-    .popup-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    .popup-icon {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .popup-header-bg {
+      background: linear-gradient(135deg, #2ecc71, #27ae60);
+      padding: 15px 20px;
       color: white;
-      font-size: 0.9rem;
-    }
-
-    .popup-icon.donor {
-      background: var(--primary);
-    }
-
-    .popup-icon.ngo {
-      background: var(--accent);
-    }
-
-    .popup-icon.pickup {
-      background: var(--info);
     }
 
     .popup-title {
-      font-weight: 600;
       font-size: 1.1rem;
+      font-weight: 600;
       margin: 0;
     }
 
-    .popup-details {
-      margin: 10px 0;
+    .popup-body {
+      padding: 15px 20px;
     }
 
-    .popup-detail {
+    .popup-row {
       display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
-
-    .popup-detail i {
-      color: var(--primary);
-      margin-top: 2px;
-      flex-shrink: 0;
-    }
-
-    .popup-actions {
-      display: flex;
+      align-items: center;
       gap: 10px;
-      margin-top: 15px;
-    }
-
-    .popup-btn {
-      flex: 1;
-      padding: 8px 12px;
-      border: none;
-      border-radius: var(--radius);
-      font-weight: 500;
-      cursor: pointer;
-      transition: var(--transition);
+      margin-bottom: 8px;
+      color: #555;
       font-size: 0.9rem;
     }
 
-    .popup-btn.primary {
-      background: var(--primary);
-      color: white;
-    }
-
-    .popup-btn.secondary {
-      background: transparent;
-      border: 1px solid var(--primary);
+    .popup-row i {
+      width: 16px;
       color: var(--primary);
     }
 
-    .popup-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-
-    /* Enhanced Zoom Controls */
-    .leaflet-control-zoom a {
-      background: var(--card-light);
-      color: var(--text-light);
-      border-bottom: 1px solid rgba(0,0,0,0.1);
-      transition: var(--transition);
-    }
-    
-    body.dark .leaflet-control-zoom a {
-      background: var(--card-dark);
-      color: var(--text-dark);
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
-    
-    .leaflet-control-zoom a:hover {
-      background: var(--primary);
-      color: white;
-    }
-    
-    .stats-panel {
-      position: absolute;
-      bottom: 20px;
-      right: 30px;
-      background: var(--card-light);
-      color: var(--text-light);
-      padding: 20px;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      transition: var(--transition);
-      z-index: 1000;
-      border: 1px solid rgba(255,255,255,0.1);
-      min-width: 200px;
-    }
-    
-    body.dark .stats-panel {
-      background: var(--card-dark);
-      color: var(--text-dark);
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .stats-panel h4 {
-      margin: 0 0 15px 0;
-      font-size: 16px;
-      font-weight: 600;
+    .popup-footer {
+      padding: 12px 20px;
+      background: #f9f9f9;
       display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .stat-item {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 10px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid rgba(0,0,0,0.1);
-    }
-    
-    body.dark .stat-item {
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .stat-item:last-child {
-      margin-bottom: 0;
-      padding-bottom: 0;
-      border-bottom: none;
-    }
-
-    .stat-value {
-      font-weight: 600;
-      color: var(--primary);
-    }
-
-    /* Toast Notification */
-    .toast {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: var(--accent);
-      color: white;
-      padding: 15px 25px;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      z-index: 2000;
-      transition: transform 0.3s ease;
-      display: flex;
-      align-items: center;
       gap: 10px;
-      max-height: 100px;
     }
 
-    .toast.show {
-      transform: translateX(0);
+    .btn-claim {
+      flex: 1;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
     }
 
-    .toast i {
-      font-size: 1.2rem;
+    /* Toast */
+    #toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #333;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 30px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 2000;
     }
 
-    .mobile-fab {
-      display: none;
-    }
-
-    
-    /* Responsive Design */
-    @media (max-width: 768px) {
-
-      /* Header tweaks */
-      .map-header h2 {
-        font-size: 1.6rem;
-      }
-
-      .map-header p {
-        font-size: 0.95rem;
-      }
-
-      /* Make map fullscreen */
-      .map-container {
-        height: calc(100vh - 120px); /* navbar + header */
-        padding: 10px;
-      }
-
-      #map {
-        height: 100%;
-        width: 100%;
-      }
-
-      .mobile-fab {
-        display: flex;
-        position: fixed;
-        bottom: 20px;
-        right: 70px;
-        width: 56px;
-        height: 56px;
-        border-radius: 50%;
-        background: #ff6a00;
-        color: #fff;
-        border: none;
-        font-size: 20px;
-        align-items: center;
-        justify-content: center;
-        z-index: 9999; 
-      }
-
-      /* Turn filter into bottom sheet */
-      .search-panel {
-        position: fixed;
-        left: 0;
-        bottom: 0;
-        top: auto;
-        width: 100%;
-        height: 45vh;
-        background: var(--bg);
-        transform: translateY(100%);
-        transition: transform 0.3s ease;
-        border-radius: 16px 16px 0 0;
-        z-index: 2000;
-        overflow-y: auto;
-      }
-
-      .search-panel.active {
-        transform: translateY(0);
-      }
-
-      /* Hide these on mobile (IMPORTANT) */
-      .legend,
-      .stats-panel {
-        display: none;
-      }
-
-      /* Move map controls safely */
-      .map-controls {
-        top: auto;
-        bottom: 90px;
-        right: 16px;
-      }
-
-      /* Hide desktop nav */
-      .nav-menu {
-        display: none;
-      }
-
-      .notification-panel {
-        width: 260px;
-        right: 0;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .map-header {
-        padding: 30px 15px;
-      }
-      
-      .map-header h2 {
-        font-size: 1.8rem;
-      }
-      
-      .search-panel {
-        width: calc(100% - 20px);
-        left: 10px;
-      }
-      
-      .legend, .stats-panel {
-        position: relative;
-        margin: 10px;
-        width: calc(100% - 20px);
-        left: 0;
-        bottom: 0;
-        right: 0;
-      }
-      
-      .map-controls {
-        flex-direction: row;
-        top: auto;
-        bottom: 80px;
-        right: 10px;
-      }
-      
-      .notification-panel {
-        width: 260px;
-        right: -40px;
-      }
+    #toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
     }
   </style>
 </head>
 
 <body>
-  <!-- Navigation -->
-  <nav class="navbar">
-    <div class="nav-container">
-      <div class="nav-logo">
-        <a href="index.html" class="nav-logo-link">
-          <i class="fas fa-utensils"></i> <span>ShareBite</span>
-        </a>
-      </div>
-      <ul class="nav-menu">
-        <li><a href="index.html#home" class="nav-link">Home</a></li>
-        <li><a href="index.html#features" class="nav-link">Features</a></li>
-        <li><a href="foodlisting.html" class="nav-link">Listings</a></li>
-        <li><a href="map.html" class="nav-link active">Map</a></li>
-        <li><a href="index.html#contact-section" class="nav-link">Contact</a></li>
-      </ul>
-      <div class="user-actions">
-        <!-- Dark/Light Mode Toggle -->
-        <button id="themeToggle" class="theme-toggle" title="Toggle theme" aria-label="Toggle theme">
-          <i class="fas fa-moon"></i>
-        </button>
-        
-        <!-- Notification Bell -->
-        <div class="notification-bell" id="notificationBell">
-          <i class="fas fa-bell"></i>
-          <span class="notification-badge" id="notificationBadge">3</span>
-          <div class="notification-panel">
-            <div class="notification-header">
-              <span>Notifications</span>
-              <button class="clear-notifications" id="clearNotifications">Clear All</button>
-            </div>
-            <div class="notification-list" id="notificationList">
-              <div class="notification-item">
-                <div class="notification-title">New food donation available</div>
-                <div class="notification-time">5 minutes ago</div>
-              </div>
-              <div class="notification-item">
-                <div class="notification-title">Your food claim was successful</div>
-                <div class="notification-time">2 hours ago</div>
-              </div>
-              <div class="notification-item">
-                <div class="notification-title">New NGO joined ShareBite</div>
-                <div class="notification-time">1 day ago</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <button class="login-btn" onclick="window.location.href='login.html'">Login</button>
-      </div>
-    </div>
-  </nav>
 
-  <!-- Map Header -->
-  <div class="map-header">
-    <h2>Find Nearby Food Donations</h2>
-    <p>Explore local donors, NGOs, and pickup points on the map to reduce food waste and help those in need</p>
-  </div>
+  <!-- Full Screen Map -->
+  <div id="map"></div>
 
-  <!-- Map Container -->
-  <div class="map-container">
-    <div id="map"></div>
-    <button class="mobile-fab" id="filterToggle" aria-label="Toggle filters">
-      <i class="fas fa-filter"></i>
+  <!-- Header Panel -->
+  <div class="floating-panel header-panel">
+    <button class="back-btn" onclick="window.location.href='foodlisting.html'" title="Back to Listings">
+      <i class="fas fa-arrow-left"></i>
     </button>
-    <!-- Search Panel -->
-    <div class="search-panel">
-      <h3><i class="fas fa-filter"></i> Filter Locations</h3>
-      <div class="search-box">
-        <i class="fas fa-search"></i>
-        <input type="text" id="searchInput" placeholder="Search locations...">
-      </div>
-      <div class="filter-options">
-        <div class="filter-option" data-type="all">
-          <input type="checkbox" id="filter-all" checked>
-          <span class="filter-color" style="background: var(--primary);"></span>
-          <label for="filter-all">All Locations</label>
-        </div>
-        <div class="filter-option" data-type="donor">
-          <input type="checkbox" id="filter-donor" checked>
-          <span class="filter-color" style="background: var(--primary);"></span>
-          <label for="filter-donor">Donors</label>
-        </div>
-        <div class="filter-option" data-type="ngo">
-          <input type="checkbox" id="filter-ngo" checked>
-          <span class="filter-color" style="background: var(--accent);"></span>
-          <label for="filter-ngo">NGOs</label>
-        </div>
-        <div class="filter-option" data-type="pickup">
-          <input type="checkbox" id="filter-pickup" checked>
-          <span class="filter-color" style="background: var(--info);"></span>
-          <label for="filter-pickup">Pickup Points</label>
-        </div>
-      </div>
+    <div class="logo-text">
+      <i class="fas fa-utensils" style="color: var(--primary); margin-right: 5px;"></i> ShareBite Map
     </div>
-    
-    <!-- Map Controls -->
-    <div class="map-controls">
-      <button class="map-control-btn" id="locateMe" title="Find my location">
-        <i class="fas fa-location-arrow"></i>
-      </button>
-      <button class="map-control-btn" id="refreshMap" title="Refresh map">
-        <i class="fas fa-sync-alt"></i>
-      </button>
+  </div>
+
+  <!-- Search & Filter Panel -->
+  <div class="floating-panel search-card">
+    <div class="search-box-wrapper">
+      <i class="fas fa-search"></i>
+      <input type="text" id="searchInput" class="search-input" placeholder="Search food, location...">
     </div>
-    
-    <!-- Legend -->
-    <div class="legend">
-      <h4><i class="fas fa-map"></i> Map Legend</h4>
-      <div><span class="donor"></span> Donor Locations</div>
-      <div><span class="ngo"></span> NGO Centers</div>
-      <div><span class="pickup"></span> Pickup Points</div>
-    </div>
-    
-    <!-- Stats Panel -->
-    <div class="stats-panel">
-      <h4><i class="fas fa-chart-pie"></i> Statistics</h4>
-      <div class="stat-item">
-        <span>Total Locations:</span>
-        <span class="stat-value" id="totalLocations">5</span>
+
+    <div class="filter-group">
+      <h4>Filter Locations</h4>
+
+      <div class="filter-item" onclick="document.getElementById('filter-all').click()">
+        <input type="radio" name="filter" id="filter-all" class="filter-checkbox" checked data-type="all">
+        <span class="legend-dot" style="background: #ccc;"></span>
+        All Locations
       </div>
-      <div class="stat-item">
-        <span>Donors:</span>
-        <span class="stat-value" id="donorCount">2</span>
+
+      <div class="filter-item" onclick="document.getElementById('filter-food').click()">
+        <input type="radio" name="filter" id="filter-food" class="filter-checkbox" data-type="food">
+        <span class="legend-dot" style="background: #2ecc71;"></span>
+        Active Food Listings
       </div>
-      <div class="stat-item">
-        <span>NGOs:</span>
-        <span class="stat-value" id="ngoCount">2</span>
+
+      <div class="filter-item" onclick="document.getElementById('filter-donor').click()">
+        <input type="radio" name="filter" id="filter-donor" class="filter-checkbox" data-type="donor">
+        <span class="legend-dot" style="background: #ff6a00;"></span>
+        Donors
       </div>
-      <div class="stat-item">
-        <span>Pickup Points:</span>
-        <span class="stat-value" id="pickupCount">1</span>
+
+      <div class="filter-item" onclick="document.getElementById('filter-ngo').click()">
+        <input type="radio" name="filter" id="filter-ngo" class="filter-checkbox" data-type="ngo">
+        <span class="legend-dot" style="background: #00b894;"></span>
+        NGOs
       </div>
     </div>
   </div>
 
-  <!-- Toast Notification -->
-  <div id="toast" class="toast">
-    <i class="fas fa-check-circle"></i>
-    <span id="toastMessage">Location found successfully!</span>
+  <!-- Right Controls -->
+  <div class="floating-panel controls-panel" style="background: transparent; border: none; box-shadow: none;">
+    <button class="control-btn" id="locateMe" title="Locate Me">
+      <i class="fas fa-crosshairs"></i>
+    </button>
+    <button class="control-btn" id="refreshMap" title="Refresh Map">
+      <i class="fas fa-sync-alt"></i>
+    </button>
   </div>
 
-  <!-- Leaflet JS -->
+  <!-- Bottom Stats -->
+  <div class="floating-panel stats-card">
+    <div class="stat-box">
+      <span class="stat-number" id="totalLocations">0</span>
+      <span class="stat-label">Total</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-number" id="foodCount" style="color: #2ecc71;">0</span>
+      <span class="stat-label">Food</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-number" id="donorCount" style="color: #ff6a00;">0</span>
+      <span class="stat-label">Donors</span>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast">
+    <span id="toastMessage">Notification</span>
+  </div>
+
+  <!-- Scripts -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
   <script>
-    // Initialize map
-    const map = L.map('map').setView([19.0760, 72.8777], 12); // Mumbai default
-    const filterToggleBtn = document.getElementById("filterToggle");
-    const searchPanel = document.querySelector(".search-panel");
+    // Initialize Map
+    const map = L.map('map', {
+      zoomControl: false
+    }).setView([19.0760, 72.8777], 13); // Default Mumbai
 
-    if (filterToggleBtn && searchPanel) {
-      filterToggleBtn.addEventListener("click", () => {
-        searchPanel.classList.toggle("active");
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 19
+    }).addTo(map);
 
-        // CRITICAL: force Leaflet to recalculate map size
-        setTimeout(() => {
-          map.invalidateSize();
-        }, 350); // must match CSS transition duration
-      });
-    }
-    // Tile layers
-    const lightTiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; OpenStreetMap'
-    });
+    // Zoom Control (Custom Position)
+    L.control.zoom({
+      position: 'topright'
+    }).addTo(map);
 
-    const darkTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      maxZoom: 19,
-      attribution: '&copy; OpenStreetMap, &copy; CartoDB'
-    });
-
-    // Load saved theme
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    if (savedTheme === 'dark') {
-      document.body.classList.add('dark');
-      darkTiles.addTo(map);
-      document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
-    } else {
-      lightTiles.addTo(map);
-    }
-
-    // Toggle theme functionality
-    document.getElementById('themeToggle').addEventListener('click', () => {
-      document.body.classList.toggle('dark');
-      const isDark = document.body.classList.contains('dark');
-      localStorage.setItem('theme', isDark ? 'dark' : 'light');
-      
-      // Update map tiles
-      map.eachLayer(layer => map.removeLayer(layer));
-      (isDark ? darkTiles : lightTiles).addTo(map);
-      
-      // Update theme toggle icon
-      document.getElementById('themeToggle').innerHTML = isDark
-        ? '<i class="fas fa-sun"></i>'
-        : '<i class="fas fa-moon"></i>';
-      
-      // Re-add markers
-      markers.forEach(m => m.marker.addTo(markerLayer));
-      
-      // Re-add user location marker
-      if (userLocationMarker) {
-        userLocationMarker.addTo(map);
-      }
-    });
-
-    // Notification bell functionality
-    const notificationBell = document.getElementById('notificationBell');
-    const clearNotificationsBtn = document.getElementById('clearNotifications');
-    
-    notificationBell.addEventListener('click', (e) => {
-      e.stopPropagation();
-      notificationBell.classList.toggle('active');
-    });
-    
-    clearNotificationsBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      document.getElementById('notificationList').innerHTML = '<div class="no-notifications">No notifications</div>';
-      document.getElementById('notificationBadge').textContent = '0';
-      document.getElementById('notificationBadge').style.display = 'none';
-      notificationBell.classList.remove('active');
-    });
-    
-    // Close notification panel when clicking outside
-    document.addEventListener('click', () => {
-      notificationBell.classList.remove('active');
-    });
-
-    // Enhanced locations with more details
+    // Initial Data
     const locations = [
-      { 
-        type: "donor", 
-        name: "Sunrise Restaurant", 
-        coords: [19.0822, 72.8568], 
-        details: "10 portions of biryani until 9 PM",
-        contact: "Phone: 98765 43210",
-        hours: "8 AM - 10 PM",
-        status: "Available",
-        address: "123 Main Street, Mumbai"
-      },
-      { 
-        type: "ngo", 
-        name: "Helping Hands NGO", 
-        coords: [19.0938, 72.8385], 
-        details: "Community kitchen support",
-        contact: "Phone: 98765 43211",
-        hours: "9 AM - 6 PM",
-        status: "Open",
-        address: "456 NGO Lane, Mumbai"
-      },
-      { 
-        type: "pickup", 
-        name: "Local Pickup Point", 
-        coords: [19.0600, 72.8900], 
-        details: "Open until 7 PM",
-        contact: "Phone: 98765 43212",
-        hours: "10 AM - 7 PM",
-        status: "Available",
-        address: "789 Collection Center, Mumbai"
-      },
-      { 
-        type: "donor", 
-        name: "Green Cafe", 
-        coords: [19.0700, 72.8700], 
-        details: "Fresh sandwiches and salads",
-        contact: "Phone: 98765 43213",
-        hours: "7 AM - 9 PM",
-        status: "Available until 8 PM",
-        address: "321 Green Street, Mumbai"
-      },
-      { 
-        type: "ngo", 
-        name: "Food for All Foundation", 
-        coords: [19.0850, 72.8400], 
-        details: "Daily meal distribution",
-        contact: "Phone: 98765 43214",
-        hours: "8 AM - 8 PM",
-        status: "Open",
-        address: "654 Foundation Road, Mumbai"
-      },
-      { 
-        type: "pickup", 
-        name: "Community Center", 
-        coords: [19.0750, 72.8650], 
-        details: "Food distribution point",
-        contact: "Phone: 98765 43215",
-        hours: "9 AM - 5 PM",
-        status: "Available",
-        address: "987 Community Ave, Mumbai"
-      }
+      { type: "donor", name: "Fresh Foods Market", coords: [19.0760, 72.8777], details: "Vegetables & Fruits", status: "Available" },
+      { type: "donor", name: "Green Cafe", coords: [19.0700, 72.8700], details: "Fresh sandwiches", status: "Available" },
+      { type: "ngo", name: "Food for All", coords: [19.0850, 72.8400], details: "Distribution Center", status: "Open" }
     ];
 
-    // Custom icons
     const icons = {
-      donor: L.divIcon({
-        html: '<i class="fas fa-store" style="color: #ff6a00; font-size: 20px;"></i>',
-        iconSize: [30, 30],
-        className: 'custom-div-icon'
-      }),
-      ngo: L.divIcon({
-        html: '<i class="fas fa-hands-helping" style="color: #00b894; font-size: 20px;"></i>',
-        iconSize: [30, 30],
-        className: 'custom-div-icon'
-      }),
-      pickup: L.divIcon({
-        html: '<i class="fas fa-map-marker-alt" style="color: #0984e3; font-size: 20px;"></i>',
-        iconSize: [30, 30],
-        className: 'custom-div-icon'
-      })
+      donor: L.divIcon({ html: '<i class="fas fa-store" style="color: #ff6a00; font-size: 24px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));"></i>', iconSize: [30, 30], className: 'custom-div-icon' }),
+      ngo: L.divIcon({ html: '<i class="fas fa-hands-helping" style="color: #00b894; font-size: 24px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));"></i>', iconSize: [30, 30], className: 'custom-div-icon' }),
+      food: L.divIcon({ html: '<i class="fas fa-utensils" style="color: #2ecc71; font-size: 28px; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3));"></i>', iconSize: [36, 36], className: 'custom-div-icon' }),
+      pickup: L.divIcon({ html: '<i class="fas fa-map-marker-alt" style="color: #0984e3; font-size: 24px;"></i>', iconSize: [30, 30], className: 'custom-div-icon' })
     };
 
-    // Create markers
     const markers = [];
     const markerLayer = L.layerGroup().addTo(map);
 
-    locations.forEach(loc => {
-      const marker = L.marker(loc.coords, { icon: icons[loc.type] });
-      
-      // Enhanced popup content
+    async function fetchListings() {
+      try {
+        const response = await fetch('http://localhost:5000/api/food');
+        const listings = await response.json();
+
+        // Clear existing
+        markerLayer.clearLayers();
+        markers.length = 0;
+
+        // Add Demo Locations (Optional, if we want to mix them)
+        locations.forEach(loc => addMarker(loc.coords[0], loc.coords[1], loc.type, loc));
+
+        // Add Live Listings
+        listings.forEach(listing => {
+          if (listing.status === 'available' && listing.location?.coordinates) {
+            const [lng, lat] = listing.location.coordinates;
+            if (lat && lng) {
+              addMarker(lat, lng, 'food', listing);
+            }
+          }
+        });
+
+        updateStats();
+
+      } catch (error) {
+        console.error('Error fetching listings:', error);
+        showToast('Failed to connect to database. Showing offline locations.', 'error');
+        // Fallback to offline locations
+        locations.forEach(loc => addMarker(loc.coords[0], loc.coords[1], loc.type, loc));
+        updateStats();
+      }
+    }
+
+    function addMarker(lat, lng, type, data) {
+      const marker = L.marker([lat, lng], { icon: icons[type] || icons.food });
+
+      let title = data.name || data.foodType || 'Location';
+      let desc = data.details || data.description || 'No description';
+      let sub = type === 'food' ? `Exp: ${data.freshUntil ? new Date(data.freshUntil).toLocaleDateString() : 'N/A'}` : data.status;
+
       const popupContent = `
-        <div style="min-width: 250px;">
-          <div class="popup-header">
-            <div class="popup-icon ${loc.type}">
-              <i class="fas ${loc.type === 'donor' ? 'fa-store' : loc.type === 'ngo' ? 'fa-hands-helping' : 'fa-map-marker-alt'}"></i>
+            <div class="popup-header-bg">
+                <h3 class="popup-title">${title}</h3>
             </div>
-            <h3 class="popup-title">${loc.name}</h3>
-          </div>
-          <div class="popup-details">
-            <div class="popup-detail">
-              <i class="fas fa-info-circle"></i>
-              <span>${loc.details}</span>
+            <div class="popup-body">
+                <div class="popup-row"><i class="fas fa-info-circle"></i> <span>${desc}</span></div>
+                <div class="popup-row"><i class="fas fa-clock"></i> <span>${sub}</span></div>
             </div>
-            <div class="popup-detail">
-              <i class="fas fa-clock"></i>
-              <span>${loc.hours}</span>
+            <div class="popup-footer">
+                <button class="btn-claim" onclick="window.location.href='foodlisting.html'">View Details</button>
             </div>
-            <div class="popup-detail">
-              <i class="fas fa-phone"></i>
-              <span>${loc.contact}</span>
-            </div>
-            <div class="popup-detail">
-              <i class="fas fa-map-marker-alt"></i>
-              <span>${loc.address}</span>
-            </div>
-            <div class="popup-detail">
-              <i class="fas fa-circle"></i>
-              <span style="color: ${loc.status === 'Available' || loc.status === 'Open' ? '#00b894' : '#ff6a00'}">${loc.status}</span>
-            </div>
-          </div>
-          <div class="popup-actions">
-            <button class="popup-btn primary" onclick="claimFood('${loc.name}')">
-              <i class="fas fa-heart"></i> Claim
-            </button>
-            <button class="popup-btn secondary" onclick="getDirections(${loc.coords[0]}, ${loc.coords[1]})">
-              <i class="fas fa-route"></i> Directions
-            </button>
-          </div>
-        </div>
-      `;
-      
+        `;
+
       marker.bindPopup(popupContent);
       marker.addTo(markerLayer);
+
       markers.push({
         marker: marker,
-        type: loc.type,
-        name: loc.name
+        type: type,
+        name: title
+      });
+    }
+
+    // Filter Logic
+    const filterInputs = document.querySelectorAll('input[name="filter"]');
+    filterInputs.forEach(input => {
+      input.addEventListener('change', () => {
+        const type = input.dataset.type;
+        markers.forEach(item => {
+          if (type === 'all' || item.type === type) {
+            if (!map.hasLayer(item.marker)) item.marker.addTo(markerLayer);
+          } else {
+            if (map.hasLayer(item.marker)) markerLayer.removeLayer(item.marker);
+          }
+        });
+        updateStats();
       });
     });
 
-    // User Location
-    let userLocationMarker = null;
-    
-    // Locate me functionality
+    // Search Logic
+    document.getElementById('searchInput').addEventListener('input', function (e) {
+      const term = e.target.value.toLowerCase();
+      markers.forEach(item => {
+        if (item.name.toLowerCase().includes(term)) {
+          if (!map.hasLayer(item.marker)) item.marker.addTo(markerLayer);
+        } else {
+          if (map.hasLayer(item.marker)) markerLayer.removeLayer(item.marker);
+        }
+      });
+      updateStats();
+    });
+
+    function updateStats() {
+      const visible = markers.filter(m => map.hasLayer(m.marker));
+      document.getElementById('totalLocations').innerText = visible.length;
+      document.getElementById('foodCount').innerText = visible.filter(m => m.type === 'food').length;
+      document.getElementById('donorCount').innerText = visible.filter(m => m.type === 'donor').length;
+    }
+
+    function showToast(msg, type = 'info') {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMessage').innerText = msg;
+      toast.style.background = type === 'error' ? '#e74c3c' : '#333';
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    document.getElementById('refreshMap').addEventListener('click', () => {
+      map.setView([19.0760, 72.8777], 13);
+      fetchListings();
+      showToast('Map refreshed');
+    });
+
     document.getElementById('locateMe').addEventListener('click', () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(pos => {
-          const lat = pos.coords.latitude, lon = pos.coords.longitude;
-          
-          // Remove existing user location marker
-          if (userLocationMarker) {
-            map.removeLayer(userLocationMarker);
-          }
-          
-          userLocationMarker = L.circleMarker([lat, lon], {
-            radius: 10,
-            color: "#0984e3",
-            fillColor: "#74b9ff",
-            fillOpacity: 0.8,
-            weight: 3
-          }).addTo(map).bindPopup("<b>You are here</b>");
-          
-          map.setView([lat, lon], 13);
-          showToast("Your location has been found!");
-        }, () => {
-          showToast("Unable to retrieve your location", "error");
+          const { latitude, longitude } = pos.coords;
+          map.setView([latitude, longitude], 15);
+          L.marker([latitude, longitude], {
+            icon: L.divIcon({ html: '<i class="fas fa-dot-circle" style="color:#3498db; font-size:24px;"></i>', className: 'my-loc' })
+          }).addTo(map).bindPopup('You are here').openPopup();
+          showToast('Location found');
         });
-      } else {
-        showToast("Geolocation is not supported by your browser", "error");
       }
     });
 
-    // Refresh map functionality
-    document.getElementById('refreshMap').addEventListener('click', () => {
-      map.setView([19.0760, 72.8777], 12);
-      showToast("Map has been reset");
-    });
+    // Initialize
+    fetchListings();
 
-    // Filter functionality
-    const filterOptions = document.querySelectorAll('.filter-option input');
-    
-    filterOptions.forEach(option => {
-      option.addEventListener('change', updateMapFilters);
-    });
-
-    function updateMapFilters() {
-      const selectedTypes = [];
-      
-      filterOptions.forEach(option => {
-        if (option.checked && option.id !== 'filter-all') {
-          selectedTypes.push(option.closest('.filter-option').dataset.type);
-        }
-      });
-      
-      // If "All" is checked or no specific filters are selected, show all
-      const showAll = document.getElementById('filter-all').checked || selectedTypes.length === 0;
-      
-      markers.forEach(item => {
-        if (showAll || selectedTypes.includes(item.type)) {
-          if (!map.hasLayer(item.marker)) {
-            item.marker.addTo(markerLayer);
-          }
-        } else {
-          if (map.hasLayer(item.marker)) {
-            markerLayer.removeLayer(item.marker);
-          }
-        }
-      });
-      
-      updateStats();
-    }
-
-    // Search functionality
-    document.getElementById('searchInput').addEventListener('input', function() {
-      const searchTerm = this.value.toLowerCase();
-      
-      markers.forEach(item => {
-        if (item.name.toLowerCase().includes(searchTerm)) {
-          if (!map.hasLayer(item.marker)) {
-            item.marker.addTo(markerLayer);
-          }
-        } else {
-          if (map.hasLayer(item.marker)) {
-            markerLayer.removeLayer(item.marker);
-          }
-        }
-      });
-      
-      updateStats();
-    });
-
-    // Update statistics
-    function updateStats() {
-      const visibleMarkers = markers.filter(item => map.hasLayer(item.marker));
-      
-      document.getElementById('totalLocations').textContent = visibleMarkers.length;
-      document.getElementById('donorCount').textContent = visibleMarkers.filter(item => item.type === 'donor').length;
-      document.getElementById('ngoCount').textContent = visibleMarkers.filter(item => item.type === 'ngo').length;
-      document.getElementById('pickupCount').textContent = visibleMarkers.filter(item => item.type === 'pickup').length;
-    }
-
-    // Toast notification
-    function showToast(message, type = "success") {
-      const toast = document.getElementById('toast');
-      const toastMessage = document.getElementById('toastMessage');
-      
-      toastMessage.textContent = message;
-      
-      // Change color based on type
-      if (type === "error") {
-        toast.style.background = "var(--secondary)";
-      } else {
-        toast.style.background = "var(--accent)";
-      }
-      
-      toast.classList.add('show');
-      
-      setTimeout(() => {
-        toast.classList.remove('show');
-      }, 3000);
-    }
-
-    // Claim food function
-    function claimFood(locationName) {
-      showToast(`Food from ${locationName} has been claimed!`);
-      // In a real app, you would make an API call here
-    }
-
-    // Get directions function
-    function getDirections(lat, lng) {
-      // In a real app, this would open Google Maps or another navigation app
-      const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
-      window.open(url, '_blank');
-      showToast("Opening directions in Google Maps");
-    }
-
-    // Initialize stats
-    updateStats();
   </script>
 </body>
+
 </html>
