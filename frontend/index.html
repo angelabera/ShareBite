@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <meta property="og:title" content="ShareBite">
   <meta property="og:description"
     content="Reduce Food Waste, Feed Communities | Connect restaurants and households with NGOs and volunteers to redistribute fresh leftover food and fight hunger while reducing waste.">
@@ -11,19 +12,26 @@
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:type" content="website">
-  <link rel="stylesheet" href="css/style.css">
   <meta property="og:url" content="https://angelabera.github.io/ShareBite/">
-  <!-- Cache Control for Development -->
+
+  <title>ShareBite - Food Waste Reducer</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="./css/fontawesome/all.min.css">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
+
+  <!-- Cache Control -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <title>ShareBite - Food Waste Reducer</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-    rel="stylesheet">
-  <!--Locally imported fontawesome-->
-  <link rel="stylesheet" href="./css/fontawesome/all.min.css">
-  <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
+  <!-- Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
@@ -47,49 +55,15 @@
       </ul>
 
       <div class="user-actions">
-        <button id="theme-toggle" class="theme-toggle" title="Toggle Dark Mode">
+        <button id="theme-toggle" class="theme-toggle">
           <i class="fas fa-moon"></i>
         </button>
 
-        <!-- Language Selector -->
-        <div id="languageSelector" class="language-selector">
-          <button class="language-selector-button" title="Change Language">
-            <span class="language-flag">EN</span>
-          </button>
-          <div class="language-dropdown">
-            <div class="language-option" data-lang="en">
-              <span class="lang-flag">ᴇɴ</span>
-              <span class="lang-name">English</span>
-            </div>
-            <div class="language-option" data-lang="hi">
-              <span class="lang-flag">ʜɪ</span>
-              <span class="lang-name">हिन्दी</span>
-            </div>
-            <div class="language-option" data-lang="bn">
-              <span class="lang-flag">🇧🇳</span>
-              <span class="lang-name">বাংলা</span>
-            </div>
-            <div class="language-option" data-lang="mr">
-              <span class="lang-flag">ᴍʀ</span>
-              <span class="lang-name">मराठी</span>
-            </div>
-            <div class="language-option" data-lang="ta">
-              <span class="lang-flag">ᴛᴀ</span>
-              <span class="lang-name">தமிழ்</span>
-            </div>
-            <div class="language-option" data-lang="te">
-              <span class="lang-flag">ᴛᴇ</span>
-              <span class="lang-name">తెలుగు</span>
-            </div>
-            <div class="language-option" data-lang="gu">
-              <span class="lang-flag">ɢᴜ</span>
-              <span class="lang-name">ગુજરાતી</span>
-            </div>
-          </div>
-        </div>
+        <button class="login-btn login-outline"
+          onclick="window.location.href='login.html'">Login</button>
 
-        <button class="login-btn login-outline" onclick="window.location.href='login.html'">Login</button>
-        <button class="login-btn login-primary" onclick="window.location.href='login_ngo.html'">Partner with us</button>
+        <button class="login-btn login-primary"
+          onclick="window.location.href='login_ngo.html'">Partner with us</button>
       </div>
 
       <div class="hamburger" id="hamburger">
@@ -108,157 +82,21 @@
           Reduce Food Waste,<br />
           <span class="gradient-text">Feed Communities</span>
         </h1>
+
         <p class="hero-description">
-          Connect restaurants and households with NGOs and volunteers to
-          redistribute fresh leftover food and fight hunger while reducing
-          waste. A sustainable solution for a better future.
+          Connect restaurants and households with NGOs and volunteers to redistribute fresh leftover food.
         </p>
+
         <div class="hero-buttons">
-          <button class="btn btn-primary" id="donateFood" onclick="window.location.href='foodlisting.html'">
+          <button class="btn btn-primary"
+            onclick="window.location.href='foodlisting.html'">
             <i class="fas fa-heart"></i> Donate Food
           </button>
-          <button class="btn btn-secondary" id="findFood" onclick="window.location.href='foodlisting.html'">
+
+          <button class="btn btn-secondary"
+            onclick="window.location.href='foodlisting.html'">
             <i class="fas fa-search"></i> Find Food
           </button>
-        </div>
-
-        <div class="hero-stats">
-          <div class="stat">
-            <span class="stat-number">1.5k+</span>
-            <span class="stat-label">Meals Saved</span>
-          </div>
-          <div class="stat">
-            <span class="stat-number">250+</span>
-            <span class="stat-label">Active Donors</span>
-          </div>
-          <div class="stat">
-            <span class="stat-number">85+</span>
-            <span class="stat-label">NGO Partners</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="hero-visual">
-        <div class="plate"></div>
-        <div class="floating-card food-card-1">
-          <i class="fas fa-pizza-slice"></i>
-          <span>Hot Meals</span>
-        </div>
-        <div class="floating-card food-card-2">
-          <i class="fas fa-bread-slice"></i>
-          <span>Bakery Items</span>
-        </div>
-        <div class="floating-card food-card-3">
-          <i class="fas fa-apple-alt"></i>
-          <span>Fresh Produce</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Features Section -->
-  <section id="features" class="features">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">How ShareBite Works</h2>
-        <p class="section-subtitle">Simple steps to make a huge difference in your community.</p>
-      </div>
-
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-store"></i>
-          </div>
-          <h3>List Your Food</h3>
-          <p>Restaurants and households can easily list fresh leftover food with details about quantity and pickup
-            location.</p>
-          <div class="feature-step">01</div>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-handshake"></i>
-          </div>
-          <h3>Connect & Coordinate</h3>
-          <p>Our platform connects donors with NGOs and volunteers instantly for seamless pickup coordination.</p>
-          <div class="feature-step">02</div>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-heart"></i>
-          </div>
-          <h3>Feed Communities</h3>
-          <p>Collected food reaches those who need it most, reducing waste while fighting hunger locally.</p>
-          <div class="feature-step">03</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Gallery Section -->
-  <section id="gallery" class="section-padding" style="background: var(--bg-light);">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">Our Impact Gallery</h2>
-        <p class="section-subtitle">Moments of kindness and community.</p>
-      </div>
-
-      <div class="food-grid">
-        <!-- Gallery Item 1 -->
-        <div class="food-card">
-          <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800" alt="Community"
-            class="food-card-img">
-          <div class="food-card-content">
-            <h3 class="food-title">Community Distribution</h3>
-            <p class="text-muted">Over 500 meals served this weekend.</p>
-          </div>
-        </div>
-
-        <!-- Gallery Item 2 -->
-        <div class="food-card">
-          <img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?w=800" alt="Fresh Produce"
-            class="food-card-img">
-          <div class="food-card-content">
-            <h3 class="food-title">Fresh Harvest</h3>
-            <p class="text-muted">Local farms donating surplus vegetables.</p>
-          </div>
-        </div>
-
-        <!-- Gallery Item 3 -->
-        <div class="food-card">
-          <img src="https://images.unsplash.com/photo-1593113646773-028c64a8f1b8?w=800" alt="Volunteers"
-            class="food-card-img">
-          <div class="food-card-content">
-            <h3 class="food-title">Volunteer Heroes</h3>
-            <p class="text-muted">Our dedicated team sorting donations.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="text-center" style="margin-top: 3rem;">
-<button class="btn-redirect" onclick="window.location.href='./stories.html'">
-  View All Stories
-</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- About Section Preview -->
-  <section id="about" class="section-padding" style="background: white;">
-    <div class="container">
-      <div class="hero-container"> <!-- Reuse flex layout -->
-        <div class="hero-visual">
-          <img src="https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=600" alt="Happy Team"
-            style="border-radius: 20px; box-shadow: var(--shadow-lg);">
-        </div>
-        <div class="hero-content">
-          <h2 class="section-title" style="text-align: left;">About ShareBite</h2>
-          <p class="hero-description">
-            ShareBite is a revolutionary platform designed to tackle food waste while addressing hunger in communities.
-            We believe that fresh, good food should never go to waste when there are people who need it.
-          </p>
-          <button class="btn-redirect">Join Our Mission</button>
         </div>
       </div>
     </div>
@@ -272,40 +110,7 @@
           <i class="fas fa-utensils"></i>
           <span>ShareBite</span>
         </div>
-        <p>Making a difference, one meal at a time. Join us in the fight against food waste and hunger.</p>
-        <div class="social-links">
-          <a href="#"><i class="fab fa-facebook-f"></i></a>
-          <a href="#"><i class="fab fa-twitter"></i></a>
-          <a href="#"><i class="fab fa-instagram"></i></a>
-        </div>
-      </div>
-
-      <div>
-        <h4>Quick Links</h4>
-        <ul>
-          <li><a href="#home">Home</a></li>
-          <li><a href="#features">How It Works</a></li>
-          <li><a href="foodlisting.html">Listings</a></li>
-          <li><a href="#about">About Us</a></li>
-        </ul>
-      </div>
-
-      <div>
-        <h4>For Donors</h4>
-        <ul>
-          <li><a href="foodlisting.html">List Food</a></li>
-          <li><a href="donor-guidelines.html">Guidelines</a></li>
-          <li><a href="track-impact.html">Track Impact</a></li>
-        </ul>
-      </div>
-
-      <div>
-        <h4>For Collectors</h4>
-        <ul>
-          <li><a href="foodlisting.html">Find Food</a></li>
-          <li><a href="ngo-register.html">Register NGO</a></li>
-          <li><a href="login.html">Volunteer Login</a></li>
-        </ul>
+        <p>Making a difference, one meal at a time.</p>
       </div>
     </div>
 
@@ -318,12 +123,13 @@
     <i class="fas fa-arrow-up"></i>
   </button>
 
+  <!-- ✅ MERGE CONFLICT RESOLVED -->
   <script src="js/auth.js"></script>
   <script src="js/theme.js"></script>
+  <script src="js/shared/sharebite-core.js"></script>
   <script src="js/languages.js"></script>
   <script src="js/api.js"></script>
   <script src="js/script.js"></script>
 
 </body>
-
 </html>
