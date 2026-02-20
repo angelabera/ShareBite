@@ -1122,6 +1122,15 @@ async loadListingsFromDB() {
         } else {
             hideSpinner();
         }
+
+
+
+
+
+
+
+
+        
     }
 }
 
