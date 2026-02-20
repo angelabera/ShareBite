@@ -5413,4 +5413,36 @@ body.dark-mode .notification-bell:hover {
     .hamburger span {
         background-color: #4CAF50 !important; /* Forces green lines */
     }
+    
+}
+
+
+/* Spinner Styles */
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* full screen vertically */
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 6px solid #f3f3f3; /* light grey */
+  border-top: 6px solid #3498db; /* blue */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+/* Dim page while loading */
+body.loading #main-content {
+  opacity: 0.4;
+  pointer-events: none;
 }
