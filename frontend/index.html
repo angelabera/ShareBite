@@ -1,5 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
+ feature/loading-spinner
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta property="og:title" content="ShareBite">
+    <meta property="og:description" content="Reduce Food Waste, Feed Communities | Connect restaurants and households with NGOs and volunteers to redistribute fresh leftover food and fight hunger while reducing waste.">
+    <meta property="og:image" content="https://angelabera.github.io/ShareBite/logo/sharebite_logo.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://angelabera.github.io/ShareBite/">
+    <!-- Cache Control for Development -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>ShareBite - Food Waste Reducer</title>
+    <meta name="sharebite-build" content="v-gallery-update-2">
+    <meta name="sharebite-build" content="v-darkmode-fix-1">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=darkmode-fix-1">
+
+    <!-- CSS with timestamp cache busting -->
+    <script>
+      // Dynamic cache busting
+      document.write('<link rel="stylesheet" href="css/style.css?v=' + Date.now() + '">');
+    </script>
+    <noscript>
+      <link rel="stylesheet" href="css/style.css?v=gallery-update-2">
+    </noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> -->
+    <!--Locally imported fontawesome-->
+    <link rel="stylesheet" href="./css/fontawesome/all.min.css">
+    <link rel="icon" type="image/svg+xml" href="logo/logo.svg">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
+  <body>
+     <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="#home" class="nav-logo-link">
+                    <i class="fas fa-utensils"></i>
+                    <span>ShareBite</span>
+                </a>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#features" class="nav-link">Features</a></li>
+                <li><a href="#listings" class="nav-link" id ="listingsLink">Listings</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#contact-section" class="nav-link">Contact</a></li>
+            </ul>
+            <!-- Loading Spinner -->
+<div id="loading-spinner" class="spinner-container">
+  <div class="spinner"></div>
+</div>
+            <div class="user-actions">
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="notification-bell" id="notificationBell">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notificationBadge">3</span>
+                    <div class="notification-panel" id="notificationPanel">
+                        <div class="notification-header">
+                            <span>Notifications</span>
+                            <button class="clear-notifications" id="clearNotifications">Clear All</button>
+                        </div>
+                        <div class="notification-list" id="notificationList">
+                            <div class="notification-item">
+                                <div class="notification-title">New food donation available</div>
+                                <div class="notification-time">5 minutes ago</div>
+                            </div>
+                            <div class="notification-item">
+                                <div class="notification-title">Your listing was viewed 12 times</div>
+                                <div class="notification-time">1 hour ago</div>
+                            </div>
+                            <div class="notification-item">
+                                <div class="notification-title">Reminder: Pickup scheduled for today</div>
+                                <div class="notification-time">3 hours ago</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="role-switch" id="roleSwitch">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span id="currentRole">Donor</span>
+                </button>
+                <button class="login-btn" onclick="window.location.href='login.html'">Login as User</button>
+                <button class="login-btn" onclick="window.location.href='login_ngo.html'">Login as NGO</button>
+            </div>
+            <div class="hamburger" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+    
+    <div id="toast" class="toast"></div>
+ main
 
 <head>
   <meta charset="UTF-8" />
