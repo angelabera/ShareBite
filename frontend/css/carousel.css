@@ -1,0 +1,42 @@
+.carousel-container{
+  position: relative;
+  width: 450px;
+  height: 320px;
+  overflow: hidden;
+  margin: 40px auto;
+}
+
+.carousel-slide{
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.carousel-image{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none;
+  border-radius: 15px;
+}
+
+.carousel-image.active{
+  display: block;
+}
+
+.carousel-btn{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: white;
+  border: none;
+  font-size: 20px;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 50%;
+  z-index: 10;
+}
+
+.prev{ left: 10px; }
+.next{ right: 10px; }

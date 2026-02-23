@@ -7,7 +7,12 @@
   <meta property="og:title" content="ShareBite">
   <meta property="og:description"
     content="Reduce Food Waste, Feed Communities | Connect restaurants and households with NGOs and volunteers to redistribute fresh leftover food and fight hunger while reducing waste.">
-  <meta property="og:image" content="https://angelabera.github.io/ShareBite/logo/sharebite_logo.png">
+  
+
+   
+
+  
+    <meta property="og:image" content="https://angelabera.github.io/ShareBite/logo/sharebite_logo.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:type" content="website">
@@ -27,6 +32,9 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+  <link rel="stylesheet" href="css/carousel.css">
+  
+
 </head>
 
 <body>
@@ -138,22 +146,24 @@
         </div>
       </div>
 
-      <div class="hero-visual">
-        <div class="plate"></div>
-        <div class="floating-card food-card-1">
-          <i class="fas fa-pizza-slice"></i>
-          <span>Hot Meals</span>
-        </div>
-        <div class="floating-card food-card-2">
-          <i class="fas fa-bread-slice"></i>
-          <span>Bakery Items</span>
-        </div>
-        <div class="floating-card food-card-3">
-          <i class="fas fa-apple-alt"></i>
-          <span>Fresh Produce</span>
-        </div>
-      </div>
+     <div class="hero-visual">
+
+  <div class="carousel-container">
+    <button class="carousel-btn prev">&#10094;</button>
+
+    <div class="carousel-slide">
+      <img src="assets/food1.jpg" class="carousel-image active">
+      <img src="assets/food2.jpg" class="carousel-image">
+      <img src="assets/food3.jpg" class="carousel-image">
+      <img src="assets/food4.jpg" class="carousel-image">
+      <img src="assets/food5.jpg" class="carousel-image">
     </div>
+
+    <button class="carousel-btn next">&#10095;</button>
+  </div>
+
+</div>
+
   </section>
 
   <!-- Features Section -->
@@ -324,6 +334,15 @@
   <script src="js/api.js"></script>
   <script src="js/script.js"></script>
 
+<<<<<<< feature/homepage-carousel
+    hamburger.addEventListener('click', () => {
+      navMenu.classList.toggle('active');
+    });
+  </script>
+  
+<script src="js/carousel.js"></script>
+=======
+>>>>>>> main
 </body>
 
 </html>
