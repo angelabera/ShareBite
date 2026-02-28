@@ -523,6 +523,84 @@
       z-index: 1;
     }
 
+    /* How It Works Section */
+.how-it-works {
+  padding: 6rem 1.5rem;
+  background: var(--white);
+  position: relative;
+}
+
+.steps-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.step-card {
+  background: var(--gray);
+  padding: 2.5rem 2rem;
+  border-radius: var(--card-radius);
+  text-align: center;
+  max-width: 320px;
+  border: 2px solid transparent;
+  transition: var(--transition);
+  box-shadow: var(--shadow-md);
+}
+
+.step-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--primary-color);
+  box-shadow: var(--shadow-xl);
+}
+
+.step-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1.5rem;
+  border-radius: 50%;
+  background: var(--primary-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: var(--white);
+  box-shadow: 0 8px 20px rgba(76, 175, 80, 0.35);
+}
+
+.step-card h3 {
+  color: var(--primary-color);
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.step-card p {
+  color: var(--medium-gray);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.step-connector {
+  width: 60px;
+  height: 4px;
+  background: var(--primary-gradient);
+  border-radius: 2px;
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+  .steps-container {
+    flex-direction: column;
+  }
+
+  .step-connector {
+    width: 4px;
+    height: 40px;
+  }
+}
+
     /* Form Section */
     .form-section {
       padding: 6rem 1.5rem;
@@ -1509,6 +1587,46 @@
       </div>
     </div>
   </section>
+
+  <!-- How Volunteering Works Section -->
+<section class="how-it-works">
+  <div class="container">
+    <div class="section-header">
+      <h2>How <span class="highlight">Volunteering Works</span></h2>
+      <p>Understand the simple step-by-step journey to start making an impact with ShareBite.</p>
+    </div>
+
+    <div class="steps-container">
+      <div class="step-card">
+        <div class="step-icon">
+          <i class="fas fa-user-plus"></i>
+        </div>
+        <h3>Sign Up as a Volunteer</h3>
+        <p>Create your volunteer profile in minutes and tell us your availability and interests.</p>
+      </div>
+
+      <div class="step-connector"></div>
+
+      <div class="step-card">
+        <div class="step-icon">
+          <i class="fas fa-handshake"></i>
+        </div>
+        <h3>Get Matched with Tasks</h3>
+        <p>We connect you with nearby NGOs and food distribution tasks based on your location.</p>
+      </div>
+
+      <div class="step-connector"></div>
+
+      <div class="step-card">
+        <div class="step-icon">
+          <i class="fas fa-heart"></i>
+        </div>
+        <h3>Volunteer & Track Impact</h3>
+        <p>Start volunteering, help communities, and track the real impact you create.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
   <!-- Volunteer Form -->
   <section class="form-section" id="signup">
