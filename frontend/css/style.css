@@ -58,6 +58,7 @@ html.dark {
   --white: #1e1e1e;
   /* Dark card bg */
   --bg-light: #121212;
+  --bg-white: #1e1e1e;
   /* Main dark bg */
   --text-main: #f1f1f1;
   --text-muted: #b0b0b0;
