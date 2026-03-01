@@ -1166,6 +1166,45 @@ async handleFormSubmission() {
             observer.observe(el);
         });
     }
+async loadListingsFromDB() {
+    const MIN_SPINNER_TIME = 300; // Minimum time spinner stays (ms)
+    const startTime = Date.now();
+
+    showSpinner(); // Show spinner immediately
+
+    try {
+        const listings = await getAllFoodListings();
+
+        this.foodListings = listings.map(item => ({
+            ...item,
+            id: item._id,
+            location: item.pickupLocation || item.location || 'Location not specified',
+            contact: item.contactInfo || item.contact || 'No contact info',
+            donor: item.donorId?.name || 'Anonymous Donor',
+            photoUrl: (item.photos && item.photos.length > 0) ? item.photos[0] : null,
+            category: item.category || 'general',
+            dietaryTags: item.dietaryTags || [],
+            createdAt: new Date(item.createdAt),
+        }));
+
+        this.foodListings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        this.filteredListings = this.foodListings;
+        this.renderFoodListings();
+
+ feature/loading-spinner
+    } catch (error) {
+        console.error("Failed to load listings:", error);
+        this.foodListings = [];
+        this.renderFoodListings();
+        this.showToast("Failed to connect to database", "error");
+    } finally {
+        const elapsed = Date.now() - startTime;
+        const remaining = MIN_SPINNER_TIME - elapsed;
+
+        if (remaining > 0) {
+            setTimeout(() => hideSpinner(), remaining);
+        } else {
+            hideSpinner();
 
     async loadListingsFromDB() {
         try {
@@ -1196,8 +1235,19 @@ async handleFormSubmission() {
             this.foodListings = [];
             this.renderFoodListings(); // Will render the "No listings found" state
             this.showToast("Failed to connect to database", "error");
+main
         }
+
+
+
+
+
+
+
+
+        
     }
+}
 
     getRandomFutureDate() {
         const now = new Date();

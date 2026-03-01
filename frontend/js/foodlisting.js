@@ -1,5 +1,19 @@
 // ShareBite JavaScript - Interactive Food Waste Reduction Platform
 
+ feature/loading-spinner
+const spinner = document.getElementById("loading-spinner");
+const body = document.body;
+
+const showSpinner = () => { 
+  spinner.style.display = "flex"; 
+  body.classList.add("loading");
+};
+
+const hideSpinner = () => { 
+  spinner.style.display = "none"; 
+  body.classList.remove("loading");
+};
+ main
 
 class ShareBiteFoodListing {
     constructor() {
@@ -49,7 +63,8 @@ class ShareBiteFoodListing {
         this.setupNotificationSystem();
         this.updateNotificationDisplay();
         this.startAnimations();
-        this.hideLoadingOverlay();
+        // this.hideLoadingOverlay();
+        this.loadListingsFromDB();
     }
 
     initTheme() {
@@ -816,6 +831,36 @@ class ShareBiteFoodListing {
             observer.observe(el);
         });
     }
+async loadListingsFromDB() {
+    try {
+        showSpinner();   // ⬅ Show spinner before fetching
+
+        const listings = await getAllFoodListings(); 
+
+        this.foodListings = listings.map(item => ({
+            ...item,
+            id: item._id,
+            location: item.pickupLocation || item.location || 'Location not specified',
+            contact: item.contactInfo || item.contact || 'No contact info',
+            donor: item.donorId?.name || 'Anonymous Donor',
+            photoUrl: (item.photos && item.photos.length > 0) ? item.photos[0] : null,
+            category: item.category || 'general',
+            dietaryTags: item.dietaryTags || [],
+            createdAt: new Date(item.createdAt),
+        }));
+
+        this.foodListings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        this.filteredListings = this.foodListings;
+        this.renderFoodListings();
+
+feature/loading-spinner
+    } catch (error) {
+        console.error("Failed to load listings:", error);
+        this.foodListings = [];
+        this.renderFoodListings();
+        this.showToast("Failed to connect to database", "error");
+    } finally {
+        hideSpinner();  // ⬅ Hide when done (success or error)
 
     async loadListingsFromDB() {
         try {
@@ -843,7 +888,9 @@ class ShareBiteFoodListing {
             this.renderFoodListings(); // Will render the "No listings found" state
             this.showToast("Failed to connect to database", "error");
         }
+ main
     }
+}
 
 
     getRandomFutureDate() {
@@ -1810,6 +1857,8 @@ window.clearShareBiteCaches = async function () {
         console.log('[ShareBite] Sent SKIP_WAITING to service worker');
     }
 };
+feature/loading-spinner
 // End of ShareBiteFoodListing class and initialization
 
+ main
 
