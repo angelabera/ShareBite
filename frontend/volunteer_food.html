@@ -524,6 +524,159 @@
       z-index: 1;
     }
 
+    /* Volunteer Benefits Section */
+.benefits {
+  padding: 6rem 1.5rem;
+  background: var(--gray);
+  position: relative;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.benefit-card {
+  background: var(--white);
+  padding: 2.5rem 2rem;
+  border-radius: var(--card-radius);
+  text-align: center;
+  border: 2px solid transparent;
+  transition: var(--transition);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.benefit-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: var(--primary-gradient);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.benefit-card:hover {
+  transform: translateY(-10px);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--primary-color);
+}
+
+.benefit-card:hover::before {
+  transform: scaleX(1);
+}
+
+.benefit-icon {
+  width: 75px;
+  height: 75px;
+  margin: 0 auto 1.5rem;
+  border-radius: 50%;
+  background: var(--primary-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  color: var(--white);
+  box-shadow: 0 8px 20px rgba(76, 175, 80, 0.35);
+}
+
+.benefit-card h3 {
+  color: var(--primary-color);
+  font-size: 1.4rem;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+}
+
+.benefit-card p {
+  color: var(--medium-gray);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+    /* How It Works Section */
+.how-it-works {
+  padding: 6rem 1.5rem;
+  background: var(--white);
+  position: relative;
+}
+
+.steps-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.step-card {
+  background: var(--gray);
+  padding: 2.5rem 2rem;
+  border-radius: var(--card-radius);
+  text-align: center;
+  max-width: 320px;
+  border: 2px solid transparent;
+  transition: var(--transition);
+  box-shadow: var(--shadow-md);
+}
+
+.step-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--primary-color);
+  box-shadow: var(--shadow-xl);
+}
+
+.step-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1.5rem;
+  border-radius: 50%;
+  background: var(--primary-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: var(--white);
+  box-shadow: 0 8px 20px rgba(76, 175, 80, 0.35);
+}
+
+.step-card h3 {
+  color: var(--primary-color);
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.step-card p {
+  color: var(--medium-gray);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.step-connector {
+  width: 60px;
+  height: 4px;
+  background: var(--primary-gradient);
+  border-radius: 2px;
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+  .steps-container {
+    flex-direction: column;
+  }
+
+  .step-connector {
+    width: 4px;
+    height: 40px;
+  }
+}
+
     /* Form Section */
     .form-section {
       padding: 6rem 1.5rem;
@@ -1798,6 +1951,90 @@
       </div>
     </div>
   </section>
+
+  <!-- How Volunteering Works Section -->
+<section class="how-it-works">
+  <div class="container">
+    <div class="section-header">
+      <h2>How <span class="highlight">Volunteering Works</span></h2>
+      <p>Understand the simple step-by-step journey to start making an impact with ShareBite.</p>
+    </div>
+
+    <div class="steps-container">
+      <div class="step-card">
+        <div class="step-icon">
+          <i class="fas fa-user-plus"></i>
+        </div>
+        <h3>Sign Up as a Volunteer</h3>
+        <p>Create your volunteer profile in minutes and tell us your availability and interests.</p>
+      </div>
+
+      <div class="step-connector"></div>
+
+      <div class="step-card">
+        <div class="step-icon">
+          <i class="fas fa-handshake"></i>
+        </div>
+        <h3>Get Matched with Tasks</h3>
+        <p>We connect you with nearby NGOs and food distribution tasks based on your location.</p>
+      </div>
+
+      <div class="step-connector"></div>
+
+      <div class="step-card">
+        <div class="step-icon">
+          <i class="fas fa-heart"></i>
+        </div>
+        <h3>Volunteer & Track Impact</h3>
+        <p>Start volunteering, help communities, and track the real impact you create.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Volunteer Benefits Section -->
+<section class="benefits">
+  <div class="container">
+    <div class="section-header">
+      <h2>Volunteer <span class="highlight">Benefits & Perks</span></h2>
+      <p>Discover what you gain by becoming a part of the ShareBite volunteer community.</p>
+    </div>
+
+    <div class="benefits-grid">
+      <div class="benefit-card">
+        <div class="benefit-icon">
+          <i class="fas fa-certificate"></i>
+        </div>
+        <h3>Certificate of Contribution</h3>
+        <p>Receive an official certificate recognizing your volunteer efforts and impact.</p>
+      </div>
+
+      <div class="benefit-card">
+        <div class="benefit-icon">
+          <i class="fas fa-clock"></i>
+        </div>
+        <h3>Flexible Schedule</h3>
+        <p>Volunteer at your convenience with schedules that fit your lifestyle.</p>
+      </div>
+
+      <div class="benefit-card">
+        <div class="benefit-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <h3>Community & Networking</h3>
+        <p>Connect with NGOs, volunteers, and professionals working for social good.</p>
+      </div>
+
+      <div class="benefit-card">
+        <div class="benefit-icon">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <h3>Skill Development</h3>
+        <p>Gain real-world experience, leadership skills, and personal growth.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
   <!-- Volunteer Form -->
   <section class="form-section" id="signup">
